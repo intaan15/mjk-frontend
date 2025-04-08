@@ -1,14 +1,16 @@
 import React from 'react'
 
 import './App.css'
-import Loginpage from './pages/Loginpage'
+import Splashscreen from './pages/Splashscreen'
 import Loginakun from './pages/Loginakun'
+import Dashboard from './pages/Dashboard'
 
 
 function App() {
  return(
-  <Loginpage/>,
-  <Loginakun/>
+  <Splashscreen/>,
+  <Loginakun/>,
+  <Dashboard/>
   
  )
 }

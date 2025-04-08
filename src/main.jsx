@@ -4,14 +4,17 @@ import {createBrowserRouter,RouterProvider} from 'react-router-dom'
 import App from './App.jsx'
 import './index.css'
 import Loginakun from './pages/Loginakun.jsx'
-import Loginpage from './pages/Loginpage.jsx'
+import Splashscreen from './pages/Splashscreen.jsx'
+import Dashboard from './pages/Dashboard.jsx'
 
 
 const Router = createBrowserRouter([
   { path: '/', 
-    element: <Loginpage/>, },
+    element: <Splashscreen/>, },
   { path: '/login', 
     element: <Loginakun/>, },
+  { path: '/dashboardadmin', 
+    element: <Dashboard/>, },
 ])
 
 createRoot(document.getElementById('root')).render(
