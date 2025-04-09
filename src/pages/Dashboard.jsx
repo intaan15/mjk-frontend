@@ -3,7 +3,8 @@ import Sidebar from '../components/Sidebar.jsx'
 
 function Dashboard() {
   return (
-    <div>
+    <div className='container '>
+      <Sidebar/>,
       
     </div>
   )
