@@ -6,7 +6,10 @@ export default function Artikel() {
   const [open, setOpen] = useState(false);
   return (
     <div className="container flex flex-col w-screen h-screen justify-center items-center  bg-[#F2F2F2]">
-      <button className=" bg-red-200 rounded-xl px-4 py-2 cursor-pointer" onClick={() => setOpen(true)}>
+      <button
+        className=" bg-red-200 rounded-xl px-4 py-2 cursor-pointer"
+        onClick={() => setOpen(true)}
+      >
         Tambah Artikel
       </button>
 
@@ -20,15 +23,14 @@ export default function Artikel() {
           </button>
           <h1 className="text-2xl font-bold">Tambah Artikel</h1>
           <div className=" flex-1 flex-row">
-            <div className=" flex flex-column h-auto w-full justify-center items-center gap-10">
-              <p className=" w-1/5">Judul</p>
+            <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
+              <label
+                for="message"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
+              >
+                Judul
+              </label>
               <form class="w-4/5">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Your message
-                </label>
                 <textarea
                   id="message"
                   rows="4"
@@ -38,7 +40,13 @@ export default function Artikel() {
               </form>
             </div>
             <div className=" flex flex-column w-full justify-center items-start gap-10 mt-8">
-              <p className=" w-1/5">Foto Artikel</p>
+              <label
+                for="message"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
+              >
+                Foto Artikel
+              </label>
+
               <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-2">
                 <div class="flex items-center justify-center w-full">
                   <label
@@ -79,7 +87,12 @@ export default function Artikel() {
               </div>
             </div>
             <div className=" flex flex-column h-auto w-full justify-center items-center gap-10">
-              <p className=" w-1/5">Katergori</p>
+              <label
+                for="message"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
+              >
+                Kategori
+              </label>
 
               <form class="w-4/5">
                 <label
@@ -96,16 +109,15 @@ export default function Artikel() {
                 </select>
               </form>
             </div>
-            <div className=" flex flex-column h-auto w-full justify-center items-center gap-10">
-              <p className=" w-1/5">Deskripsi</p>
+            <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
+              <label
+                for="message"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
+              >
+                Deskripsi
+              </label>
 
               <form class="w-4/5">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >
-                  Your message
-                </label>
                 <textarea
                   id="message"
                   rows="4"
