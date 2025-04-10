@@ -1,5 +1,5 @@
 import React from 'react'
-import Sidebar from '../components/Sidebar.jsx'
+import Sidebar from '../components/Sidebar/Sidebar'
 
 function Dashboard() {
   return (
