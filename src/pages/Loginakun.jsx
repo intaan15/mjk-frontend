@@ -1,117 +1,187 @@
-import React from 'react';
-import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { VscAccount } from "react-icons/vsc";
-import { HiEye, HiEyeOff } from "react-icons/hi";
+import { HiEye, HiEyeOff, HiOutlineRefresh } from "react-icons/hi";
 import { TbLockPassword } from "react-icons/tb";
-import { HiOutlineRefresh } from "react-icons/hi";
-import ('../index.css')
+import axios from "axios";
+import "../index.css";
 
-function Loginakun () {
+function Loginakun() {
   const [showPassword, setShowPassword] = useState(false);
-
-    const togglePassword = () => {
-      setShowPassword(!showPassword);
-    };
+  const [captcha, setCaptcha] = useState("");
+  const [captchaId, setCaptchaId] = useState("");
+  const [text, setText] = useState("");
+  const [valid, setValid] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
-  
-  const generateCaptcha = () => {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    return Array.from({ length: 5 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-  };
-  const [captcha, setCaptcha] = useState(generateCaptcha());
-  const [userInput, setUserInput] = useState('');
-  const [status, setStatus] = useState('');
-  const refreshCaptcha = () => {
-    setCaptcha(generateCaptcha());
-    setUserInput('');
-    setStatus('');
-  };
-  const checkCaptcha = () => {
-    if (userInput.toUpperCase() === captcha) {
-      setStatus('✅ Captcha cocok!');
-    } else {
-      setStatus('❌ Captcha salah, coba lagi.');
+
+  const togglePassword = () => setShowPassword((prev) => !prev);
+
+  const fetchCaptcha = async () => {
+    try {
+      const res = await axios.get("http://localhost:3333/api/captcha/captcha");
+      setCaptcha(res.data.captcha);
+      setCaptchaId(res.data.captchaId);
+      setText("");
+      setValid(false);
+      setSuccess(false);
+      setLoginError("");
+    } catch (error) {
+      console.error("Gagal ambil captcha:", error);
     }
   };
 
+  useEffect(() => {
+    fetchCaptcha();
+    const interval = setInterval(fetchCaptcha, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-   return (
-    <div className=' flex flex-col justify-center items-center h-screen w-screen ' >
-          <div className='bg-[#025F96]/10  w-[400px] rounded-[10px]'>
-             {/* logo tengah */}
-                <div className='logo flex flex-col items-center justify-center pb-5 '>
-                    <img className='flex flex-row w-[200px] justify-center mt-5' src="/Logo Mojokerto Sehat.svg" alt="" />
-                    <p className='font-[raleway] font-extrabold text-[#025F96] text-[20px] items-center '>
-                      MOJOKERTO SEHAT</p>
-                    <p className='font-[raleway] text-[10px] text-[#438222] italic item-ends justify-end mr-0'>
-                      by DinKes Kab.Mojokerto</p>
-                </div>
+    try {
+      // Validasi CAPTCHA
+      const captchaRes = await axios.post(
+        "http://localhost:3333/api/captcha/validate",
+        {
+          captchaId,
+          userInput: text,
+        }
+      );
 
-                {/* form login*/}
-                <div className='bg- flex flex-row justify-center items-center '>
-                  <div className="mb-4 py-5 flex flex-col gap-5 justify-center items-center  ">
-                    {/* username */}
-                    <div className="relative w-[300px]">
-                      <VscAccount className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                      <input
-                        id="username"
-                        type="text"
-                        placeholder="Username"
-                        className="pl-10 pr-3 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-[nunito] italic"
-                      />
-                    </div>
+      if (!captchaRes.data.success) {
+        setValid(true);
+        setSuccess(false);
+        return;
+      }
 
-                    {/* password */}
-                    <div className="relative w-[300px] flex flex-row  ">
-                      <TbLockPassword className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"  />
-                      <input
-                        id="password"
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Password"
-                        className="pl-10 pr-3 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 font-[nunito] italic"
-                      />
-                      <button
-                        type="button"
-                        onClick={togglePassword}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600">
-                        {showPassword ? <HiEye className="w-5 h-5" /> : <HiEyeOff className="w-5 h-5" />}
-                      </button>
-                    </div>
+      setValid(false);
+      setSuccess(true);
 
-                    {/* captcha */}
-                    <div className="flex flex-row gap-2 w-[300px]" id='captcha'>
-                      <div className="bg-white px-4 py-2 rounded text-xl font-bold tracking-widest select-none h-[40px]">
-                        {captcha}
-                      </div>
-                      <button className="bg-[#004A76] text-white px-4 py-1 rounded hover:bg-blue-800 h-[40px]" 
-                        onClick={checkCaptcha}>
-                        <HiOutlineRefresh />
-                      </button>
-                      <button 
-                        className='text-blue-600 hover:text-blue-800 h-[40px]' 
-                        onClick={refreshCaptcha}>
-                      </button>
-                      <input 
-                        className='font-[nunito] italic pl-2 h-[40px] w-full border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600'
-                        type="text" 
-                        placeholder="Captcha" 
-                        id="captchatext" />
-                    </div>
+      // Login
+      const loginRes = await axios.post(
+        "http://localhost:3333/api/auth/login_superadmin",
+        {
+          username_superadmin: username,
+          password_superadmin: password,
+        }
+      );
 
-                    {/* buttonmasuk */}
-                    <button className=' font-[raleway] font-semibold bg-[#004A76] rounded-[4px] text-white w-full h-[48px] items-center justify-center hover:bg-[#003252] transition-all duration-300' 
-                    onClick={() => navigate ('/dashboardadmin')}>Masuk</button>
-                      
-                      
+      console.log(loginRes.data);
+      localStorage.setItem("token", loginRes.data.token);
+      navigate("/dashboardadmin");
+    } catch (error) {
+      console.error("Error saat login:", error);
+      setLoginError(
+        error.response?.data?.message || "Terjadi kesalahan saat login"
+        
+      );
+      console.error("Login error:", error.response);
 
-                  </div>
-                </div>
+      setSuccess(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col justify-center items-center h-screen w-screen">
+      <div className="bg-[#025F96]/10 px-10 py-6 rounded-[10px] w-[380px]">
+        {/* Logo */}
+        <div className="flex flex-col items-center mb-5">
+          <img
+            src="/Logo Mojokerto Sehat.svg"
+            alt="Logo"
+            className="w-[200px]"
+          />
+          <p className="font-raleway font-extrabold text-[#025F96] text-[20px]">
+            MOJOKERTO SEHAT
+          </p>
+          <p className="text-[#438222] italic text-[10px]">
+            by DinKes Kab.Mojokerto
+          </p>
+        </div>
+
+        {/* Form Login */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+          {/* Username */}
+          <div className="relative">
+            <VscAccount className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="pl-10 pr-3 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-600 font-nunito italic"
+            />
+          </div>
+
+          {/* Password */}
+          <div className="relative">
+            <TbLockPassword className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="pl-10 pr-10 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-600 font-nunito italic"
+            />
+            <button
+              type="button"
+              onClick={togglePassword}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600"
+            >
+              {showPassword ? (
+                <HiEye className="w-5 h-5" />
+              ) : (
+                <HiEyeOff className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+
+          {/* Captcha */}
+          <div className="flex items-center gap-2">
+            <div className="bg-white px-4 py-2 rounded text-xl font-bold tracking-widest h-auto">
+              {captcha}
             </div>
+            <button
+              type="button"
+              className="bg-[#004A76] text-white px-3 py-2 rounded hover:bg-blue-800"
+              onClick={fetchCaptcha}
+            >
+              <HiOutlineRefresh />
+            </button>
+            <input
+              type="text"
+              placeholder="Masukkan captcha"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              onFocus={() => setValid(false)}
+              className={`p-2 border rounded w-[150px] ${
+                valid ? "border-red-500" : ""
+              }`}
+            />
+          </div>
 
+          {/* Error Message */}
+          {valid && (
+            <p className="text-red-500 text-sm">Captcha tidak sesuai</p>
+          )}
+          {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
+
+          {/* Submit */}
+          <button
+            type="submit"
+            className="bg-[#004A76] text-white w-full h-[48px] rounded hover:bg-[#003252] transition-all font-raleway font-semibold"
+          >
+            Masuk
+          </button>
+        </form>
+      </div>
     </div>
-  )
+  );
 }
 
-export default Loginakun
+export default Loginakun;
