@@ -3,6 +3,10 @@ import { useState } from "react";
 import Modal1 from "../components/Modal1";
 import Sidebar from "../components/Sidebar/Sidebar";
 import { Card, Typography } from "@material-tailwind/react";
+import { FaUser } from "react-icons/fa";
+import { IoIosSearch } from "react-icons/io";
+
+
 
 const TABLE_HEAD = ["Image", "Nama Artikel", "Tanggal", "Detail", "Action"];
 
@@ -32,38 +36,70 @@ const TABLE_ROWS = [
     job: "Manager",
     date: "04/10/21",
   },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
 ];
 
 
 export default function Artikel() {
   const [open, setOpen] = useState(false);
   return (
-    <div className="container flex flex-row w-screen h-screen justify-center items-center  bg-[#F2F2F2]">
+    <div className="container flex flex-row w-screen h-screen justify-center items-center  bg-white">
       {/* kiri */}
       <div className=" w-1/6 bg-blue-200">
         <Sidebar />
       </div>
 
       {/* kanan  */}
-      <div className=" bg-red-200 w-5/6 h-screen flex flex-col p-4">
+      <div className="  w-5/6 h-screen flex flex-col p-4">
         {/* navbar */}
-        <div className="flex flex-row bg-yellow-200 justify-end gap-10 p-2 px-6 w-full">
-          <div className=" bg-red-500 ">search</div>
-          <div className=" bg-green-300">profil</div>
+        <div className="flex flex-row justify-between gap-10 p-2 px-6 w-full items-center">
+          <div className=" text-xl font-bold">Artikel</div>
+          <div className="flex flex-row gap-4 items-center">
+            <div className=" flex items-center rounded-xl px-14 justify-start py-1 border-2 border-gray-300 gap-2">
+              <IoIosSearch className="text-xl" />
+              Cari artikel
+            </div>
+            <div>
+              <FaUser className="text-[30px] item-center" />
+            </div>
+          </div>
         </div>
 
         <div className=" bg-black h-[2px] w-full" />
 
         {/* choose */}
-        <div className="flex flex-row justify-between w-full bg-blue-400 items-center px-10">
-          <div className="flex flex-row gap-5 bg-slate-300 p-2 rounded-2xl">
+        <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
+          <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-4xl items-center px-6">
             <div className="">Kategori : </div>
-            <div className="">Artikel Kesehatan</div>
-            <div className="">Artikel Obat</div>
+            <div className="bg-slate-300 rounded-4xl border-2 border-black px-4 py-1">
+              Artikel Kesehatan
+            </div>
+            <div className="bg-slate-300 rounded-4xl border-2 border-black px-4 py-1">
+              Artikel Obat
+            </div>
           </div>
           <div className="">
             <button
-              className=" bg-red-600 rounded-xl px-4 py-2 cursor-pointer"
+              className=" bg-[#033E61] rounded-xl px-4 py-2 cursor-pointer text-white"
               onClick={() => setOpen(true)}
             >
               + Tambah Data Artikel
@@ -72,80 +108,88 @@ export default function Artikel() {
         </div>
 
         {/* main  */}
-        <div className="">
-          <Card className="h-full w-full overflow-scroll">
-            <table className="w-full min-w-max table-auto text-left">
-              <thead>
-                <tr>
-                  {TABLE_HEAD.map((head) => (
-                    <th
-                      key={head}
-                      className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+        <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 ">
+          {/* <Card className="h-full w-full overflow-scroll"> */}
+          <table className="w-full min-w-max table-auto text-left">
+            <thead>
+              <tr>
+                {TABLE_HEAD.map((head) => (
+                  <th
+                    key={head}
+                    className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
                     >
+                      {head}
+                    </Typography>
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {TABLE_ROWS.map(({ name, job, date }, index) => {
+                const isLast = index === TABLE_ROWS.length - 1;
+                const classes = isLast
+                  ? "p-4"
+                  : "p-4 border-b border-blue-gray-50";
+
+                return (
+                  <tr key={name}>
+                    <td className={classes}>
                       <Typography
                         variant="small"
                         color="blue-gray"
-                        className="font-normal leading-none opacity-70"
+                        className="font-normal"
                       >
-                        {head}
+                        {name}
                       </Typography>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {TABLE_ROWS.map(({ name, job, date }, index) => {
-                  const isLast = index === TABLE_ROWS.length - 1;
-                  const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
-
-                  return (
-                    <tr key={name}>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {name}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {job}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {date}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          as="a"
-                          href="#"
-                          variant="small"
-                          color="blue-gray"
-                          className="font-medium"
-                        >
-                          Edit
-                        </Typography>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </Card>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {job}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {job}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {date}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        as="a"
+                        href="#"
+                        variant="small"
+                        color="blue-gray"
+                        className="font-medium"
+                      >
+                        Edit
+                      </Typography>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
 
         <Modal1 open={open} onClose={() => setOpen(false)}>
