@@ -8,6 +8,7 @@ import Loginakun from './pages/Loginakun.jsx'
 import Splashscreen from './pages/Splashscreen.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Artikel from './pages/Artikel.jsx'
+import Konsultasi from './pages/Konsultasi.jsx'
 
 
 const Router = createBrowserRouter([
@@ -19,6 +20,8 @@ const Router = createBrowserRouter([
     element: <Dashboard/>, },
   { path: '/artikel', 
     element: <Artikel/>, },
+  { path: '/Konsultasi', 
+    element: <Konsultasi/>, },
 ])
 
 createRoot(document.getElementById('root')).render(

@@ -45,27 +45,26 @@ function Dashboard() {
         <img src="line style.svg" alt="" />
 
 
-        <div className='flex flex-row gap-5 mt-5'>
+        <div className='flex flex-row gap-5 mt-5 pl-4'>
           <div className='w-[386px] h-[200px] bg-[#38B6FE]/28 rounded-lg shadow-2xl'>
-           <div className="z-10">
+           <div className="">
               <h2 className="text-lg font-bold text-gray-800">Good Morning , Admin.</h2>
               <p className="text-sm text-gray-700">Selamat datang di Website Mojokerto Sehat</p>
             </div>
-           <img src="blob_img_comp.svg" alt="" className='justify-beetwen h-[165px] w-[300px]'/>
-           <img src="img_org.svg" alt="" className='relative w-[350px] object-fill ' />
-
+           <img src="img_org.svg" alt="" className='absolute  w-[350px]  ' />
           </div>
-          <div class="relative max-w-sm">
-            <calendar-date class="cally bg-base-100 border border-base-300 shadow-lg rounded-box">
+          <div class="w-[30px]">
+            {/* <calendar-date class="cally bg-base-100 border border-base-300 shadow-lg rounded-box">
               <svg aria-label="Previous" className="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M15.75 19.5 8.25 12l7.5-7.5"></path></svg>
               <svg aria-label="Next" className="fill-current size-4" slot="next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
               <calendar-month></calendar-month>
-            </calendar-date>
+            </calendar-date> */}
           </div>
-
         </div>
-        <div>
-          ndjsjd
+
+        <div className='pl-4'>
+          <img src="public/sigma_dashboard.svgg" className='w-[500px] h-[137px]' alt="" />
+          
         </div>
       </main>
     </div>

@@ -5,6 +5,7 @@ import Splashscreen from './pages/Splashscreen'
 import Loginakun from './pages/Loginakun'
 import Dashboard from './pages/Dashboard'
 import Artikel from './pages/Artikel'
+import Konsultasi from './pages/Konsultasi'
 
 
 function App() {
@@ -12,8 +13,8 @@ function App() {
   <Splashscreen/>,
   <Loginakun/>,
   <Dashboard/>,
-  <Artikel/>
-  
+  <Artikel/>,
+  <Konsultasi/>
  )
 }
 
