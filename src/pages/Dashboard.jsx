@@ -5,7 +5,7 @@ import Sidebar from '../components/Sidebar/Sidebar'
 import { FaCircleUser } from "react-icons/fa6";
 
 
-import "cally"
+// import "cally"
 
 
 

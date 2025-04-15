@@ -1,6 +1,5 @@
-// import { X } from "react-feather";
 
-export default function Modal1({ open, onClose, children }) {
+export default function Modal({ open, onClose, children }) {
   return (
     // backdrop
     <div
