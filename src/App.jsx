@@ -6,6 +6,7 @@ import Loginakun from './pages/Loginakun'
 import Dashboard from './pages/Dashboard'
 import Artikel from './pages/Artikel'
 import Konsultasi from './pages/Konsultasi'
+import Dokter from './pages/Dokter'
 
 
 function App() {
@@ -14,7 +15,8 @@ function App() {
   <Loginakun/>,
   <Dashboard/>,
   <Artikel/>,
-  <Konsultasi/>
+  <Konsultasi/>,
+  <Dokter/>
  )
 }
 

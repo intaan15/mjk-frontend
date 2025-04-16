@@ -9,6 +9,7 @@ import Splashscreen from './pages/Splashscreen.jsx'
 import Dashboard from './pages/Dashboard.jsx'
 import Artikel from './pages/Artikel.jsx'
 import Konsultasi from './pages/Konsultasi.jsx'
+import Dokter from './pages/Dokter.jsx'
 
 
 const Router = createBrowserRouter([
@@ -22,6 +23,8 @@ const Router = createBrowserRouter([
     element: <Artikel/>, },
   { path: '/Konsultasi', 
     element: <Konsultasi/>, },
+  { path: '/dokter/datadokter', 
+    element: <Dokter/>, }
 ])
 
 createRoot(document.getElementById('root')).render(
