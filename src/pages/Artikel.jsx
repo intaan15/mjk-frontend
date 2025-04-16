@@ -98,7 +98,7 @@ export default function Artikel() {
   
 
   return (
-    <div className="container flex flex-row w-screen h-screen justify-center items-center  bg-white">
+    <div className="container flex flex-row w-screen h-screen bg-white">
       {/* kiri */}
       <div className=" w-1/6 bg-blue-200">
         <Sidebar />

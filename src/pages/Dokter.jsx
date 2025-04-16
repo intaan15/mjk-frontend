@@ -236,7 +236,7 @@ function Dokter() {
                       <div className="flex gap-2">
                         <Typography
                           as="button"
-                          onClick={handleDelete}
+                          onClick={() => openModal("detailprofildokter")}
                           variant="small"
                           color="blue-gray"
                           className="font-medium"

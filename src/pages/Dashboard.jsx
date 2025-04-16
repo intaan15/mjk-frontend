@@ -1,5 +1,5 @@
 import React from 'react'
-import "cally"
+// import "cally"
 import { useState, useRef, useEffect } from 'react';
 import Sidebar from '../components/Sidebar/Sidebar'
 
