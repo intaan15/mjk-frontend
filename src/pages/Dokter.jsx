@@ -151,7 +151,7 @@ function Dokter() {
               className=" bg-[#033E61] rounded-xl px-4 py-2 cursor-pointer text-white"
               onClick={() => openModal("tambahform")}
             >
-              + Tambah Data Artikel
+              + Tambah Data Artikell
             </button>
           </div>
         </div>
