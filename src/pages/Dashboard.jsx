@@ -102,16 +102,16 @@ function Dashboard() {
         </div>
 
         
-        <div className='bg-[#D9D9D9]/80 h-[170px] rounded-3xl flex flex-col gap-5 pt-10 justify-center items-center'>
-           <div className='flex flex-row gird-rows-2 w-full justify-between '>
-              <p className='font-[raleway] text-[20px] font-bold pl-5 pt-6  text-[#025f96] underline '>Log Aktivitas Pengguna </p>
-              <p className='font-[raleway] text-[20px] font-bold pl-5 pt-6  text-[#025f96] justify-end pr-10 '>16 April 2025 </p> 
+        <div className='bg-[#D9D9D9]/80 h-auto rounded-3xl flex flex-col gap-3 justify-center items-center'>
+           <div className='flex flex-row gird-rows-2 w-full justify-between pt-1'>
+              <p className='font-[raleway] text-[20px] font-bold pl-5  text-[#025f96] underline '>Log Aktivitas Pengguna </p>
+              <p className='font-[raleway] text-[20px] font-bold pl-5  text-[#025f96] justify-end pr-10 '>16 April 2025 </p> 
            </div>
-           <div className='flex flex-row justify-between px-10 pt-10 bg-amber-400 w-full '>
+           <div className='flex flex-row justify-between px-10 gap-10 w-full '>
               <div className="w-1/2">
                   <Bar />
               </div>
-              <div className="flex flex-row gap-12">
+              <div className="flex flex-row gap-12 w-full">
                 <div className='flex flex-col gap-4'>
                   <div>
                     <span className='text-[#025f96] font-semibold'>Konsultasi</span>
