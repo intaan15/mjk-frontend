@@ -59,24 +59,24 @@ const TABLE_ROWS = [
 function Konsultasi() {
   return (
     <div className='container'>
-      <div>
+      <div className='w-1/6'>
         <Sidebar/>
       </div>
 
       {/* Atas(search & profile) */}
-      <div className='pl-20 text-2xl  gap-12 flex items-center justify-end pr-[72px]'>
-        <div className=" flex items-center rounded-[19px] px-14 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
-          <IoIosSearch className="text-gray-400" />
+      <div className='ml-70 text-2xl  gap-12 flex items-center justify-end pr-[72px]'>
+        <div className=" mt-3 flex items-center rounded-[19px] px-14 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
+          <IoIosSearch className="text-gray-400 " />
           <p className='text-gray-400 text-[14px]'>Cari nama dokter</p>
         </div>
-        <div>
+        <div className='mt-3'>
           <FaUser className="text-[30px] item-center" />
         </div>
       </div>
-      <div className='pl-20 w-[100%] h-1 bg-[#1177B3] mt-1 mb-1'></div>
+      <div className='pl-70 w-[100%] h-1 bg-[#1177B3] mt-1 mb-1'></div>
 
       {/* Button Tengah */}
-      <div className='pl-20  flex items-center justify-center gap-[112px]'>
+      <div className='pl-70  flex items-center justify-center gap-[112px]'>
         <button className='bg-[#025F96] hover:bg-[#004A76] text-white flex w-[205px] h-[35px] items-center justify-center text-center rounded-[20px] text-[15px]'>
           Akan Datang
         </button>
@@ -86,7 +86,7 @@ function Konsultasi() {
       </div>
 
       {/* HEADER TABEL Filtering Tabel BLM FIX */}
-      <div className='pl-20 mt-5 flex items-center justify-center text-center '>
+      <div className='pl-70 mt-5 flex items-center justify-center text-center '>
         <div className='flex justify-center border-[1px] border-gray-100 rounded-l-[10px] h-[50px] w-[180px] text-center items-center bg-[#D5D5D5]'>Tanggal</div>
         <div className='flex justify-center border-[1px] border-gray-100 h-[50px] w-[180px] text-center items-center bg-[#D5D5D5]'>Kategori</div>
         <div className='flex justify-center border-[1px] border-gray-100 h-[50px] w-[180px] text-center items-center bg-[#D5D5D5]'>Nama Dokter</div>
@@ -95,7 +95,7 @@ function Konsultasi() {
       </div>
       
       {/* Isi Tabel */}
-      <div className='ml-20 mt-5 flex items-center justify-center text-center'>
+      <div className='ml-70 mt-5 flex items-center justify-center text-center'>
         <div className="border-2 border-gray-300 rounded-xl h-auto w-[900px] ">
           <table className="w-full min-w-max table-auto text-center">
             <tbody>
