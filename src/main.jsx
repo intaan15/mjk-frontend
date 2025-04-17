@@ -24,7 +24,9 @@ const Router = createBrowserRouter([
   { path: '/Konsultasi', 
     element: <Konsultasi/>, },
   { path: '/dokter/datadokter', 
-    element: <Dokter/>, }
+    element: <Dokter/>, },
+  { path: '/dokter/jadwal', 
+    element: <Jadwal/>, }
 ])
 
 createRoot(document.getElementById('root')).render(
