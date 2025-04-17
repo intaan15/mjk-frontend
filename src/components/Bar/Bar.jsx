@@ -8,7 +8,7 @@ function Bar() {
     datasets: [
       {
         label: '# of Votes',
-        data: [12, 19, 3,10,10],
+        data: [12, 19, 3,10],
         backgroundColor: [
           'rgba(255, 99, 132, 0.5)',
           'rgba(54, 162, 235, 0.5)',

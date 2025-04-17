@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 
 // import "cally"
 import Sidebar from '../components/Sidebar/Sidebar';
+import Calendar from '../components/Calendar';
 import Bar from '../components/Bar/Bar';
 
 
@@ -35,8 +36,8 @@ function Dashboard() {
 
 
       {/* kanan */}
-      <main className=' w-5/6 flex flex-col pl-18 pr-5 gap-2 '>
-        <div className='flex flex-row grid-2 items-center justify-between  pt-3'>
+      <main className=' w-5/6 flex flex-col pl-18 pr-5 gap-1 '>
+        <div className='flex flex-row grid-2 items-center justify-between  pt-2'>
           <p className='text-[25px] font-[raleway] font-bold text-[#025f96]'>Dashboard</p>
           <button onClick={toggleDropdown} className="flex items-center space-x-2 focus:outline-none cursor-pointer">
             <TiUser className='w-[30px] h-[30px] text-[#292D32]'> </TiUser>
@@ -57,21 +58,23 @@ function Dashboard() {
         <img src="line style.svg" alt="" />
 
         
-        <div className='flex flex-row pt-1 pl-1'>
-          <div className='relative w-[330px] h-[200px] '>
-            <img src="img_org.svg" alt="" className='absolute  ' />
-            <div className="font-bold text-black pl-3 pt-3   ">
-                <h2 className="text-lg font-bold text-black ">Hello, Admin</h2>
-                <p className="text-sm text-black">Selamat datang di Website Mojokerto Sehat</p> 
+        {/* row 1 */}
+        <div className='flex flex-row pl-1'>
+          <div className='relative w-full h-[220px]'>
+            <div className="font-bold text-white pl-3 absolute flex flex-col pt-5  gap-16   ">
+              <div className='justify-center items-center pt-2'>
+                <Calendar className="w-5 h-5"/>
+              </div>
+              <div className='items-end '>
+                <h2 className="text-[28px] font-semibold  ">Hi, Admin</h2>
+                <p className="text-[22px] text-gray-700 font-medium italic">Selamat datang di Website Mojokerto Sehat</p>
+              </div>   
             </div>
-          </div>
-           
-          <div class="w-[30px]">
-            <h1>Calender</h1>
+            <img src="img_org.svg" alt="" className='' />
           </div>
         </div>
 
-        <div className='bg-[#004A76]/80 h-[80px] rounded-2xl flex flex-row gap-8 justify-center items-center'>
+        <div className='bg-[#004A76]/80 h-[70px] rounded-xl flex flex-row justify-center items-center'>
           <div className='w-[400px] h-[90px] flex flex-row justify-center gap-3 items-center'>
             <div className='bg-[#38B6FE]/30 rounded-full p-4'>
               <BsFillBarChartFill className='w-[30px] h-[30px] text-white' />
@@ -102,12 +105,47 @@ function Dashboard() {
         </div>
 
         
-        <div className='bg-[#D9D9D9]/80 h-auto rounded-3xl flex flex-col gap-3 justify-center items-center'>
-           <div className='flex flex-row gird-rows-2 w-full justify-between pt-1'>
+        <div className='w-full h-auto rounded-3xl flex flex-col gap-3'>
+            <div>
+              <p className='font-[raleway] text-[20px] font-bold pl-5  text-[#025f96] justify-between '>Log Aktivitas Pengguna </p>
+            </div>
+
+            <div className='flex flex-row gird-rows-2 w-full gap-8 justify-between'>
+
+              <div className=' bg-[#D9D9D9] w-[530px] rounded-xl flex flex-row justify-center items-center'>
+                <div className='flex flex-col gap-4'>
+                  <div>
+                    <span className='text-[#025f96] font-semibold'>Konsultasi</span>
+                    <p className='text-[15px] font-regular'>35 Orang</p>
+                  </div>
+                  <div className=''>
+                    <span className='text-[#025f96] font-semibold'>Dokter Aktif</span>
+                    <p className='text-[15px] font-regular'>90 Orang</p>
+                  </div>
+                </div>
+                
+                <div className='flex flex-col gap-4'>
+                  <div>
+                    <span className='text-[#025f96] font-semibold'>Akun Baru</span>
+                    <p className='text-[15px] font-regular'>35 Orang</p>
+                  </div>
+                  <div className=''>
+                    <span className='text-[#025f96] font-semibold'>Verifikasi</span>
+                    <p className='text-[15px] font-regular'>90 Orang</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className='bg-[#D9D9D9] w-[530px] rounded-xl flex flex-row justify-center items-center'>
+                <Bar />
+              </div>
+            </div>
+        
+           {/* <div className='flex flex-row gird-rows-2 w-full justify-between pt-1'>
               <p className='font-[raleway] text-[20px] font-bold pl-5  text-[#025f96] underline '>Log Aktivitas Pengguna </p>
               <p className='font-[raleway] text-[20px] font-bold pl-5  text-[#025f96] justify-end pr-10 '>16 April 2025 </p> 
-           </div>
-           <div className='flex flex-row justify-between px-10 gap-10 w-full '>
+           </div> */}
+           {/* <div className='flex flex-row justify-between px-10 gap-10 w-full '>
               <div className="w-1/2">
                   <Bar />
               </div>
@@ -135,7 +173,7 @@ function Dashboard() {
                 </div>
                   
               </div>
-           </div>
+           </div> */}
              
         </div>
       </main>
