@@ -1,13 +1,19 @@
+// komponen  react
 import React from 'react'
-// import "cally"
 import { useState, useRef, useEffect } from 'react';
-import Sidebar from '../components/Sidebar/Sidebar'
+
+// import "cally"
+import Sidebar from '../components/Sidebar/Sidebar';
+import Bar from '../components/Bar/Bar';
 
 
 // icon
+
 import { FaCircleUser } from "react-icons/fa6";
 import { TiUser } from "react-icons/ti";
-import { IoBarChart } from "react-icons/io5";
+import { BsFillBarChartFill } from "react-icons/bs";
+import { GrArticle } from "react-icons/gr";
+import { FaUserClock } from "react-icons/fa";
 
 
 
@@ -16,8 +22,8 @@ import { IoBarChart } from "react-icons/io5";
 function Dashboard() {
 
     const [isOpen, setIsOpen] = useState(false);
-  
     const toggleDropdown = () => setIsOpen(!isOpen);
+
 
   return (
     <div className='flex flex-row '>
@@ -29,7 +35,7 @@ function Dashboard() {
 
 
       {/* kanan */}
-      <main className=' w-5/6 flex flex-col pl-18 pr-5 '>
+      <main className=' w-5/6 flex flex-col pl-18 pr-5 gap-2 '>
         <div className='flex flex-row grid-2 items-center justify-between  pt-3'>
           <p className='text-[25px] font-[raleway] font-bold text-[#025f96]'>Dashboard</p>
           <button onClick={toggleDropdown} className="flex items-center space-x-2 focus:outline-none cursor-pointer">
@@ -50,9 +56,9 @@ function Dashboard() {
         </div>
         <img src="line style.svg" alt="" />
 
-
-        <div className='flex flex-row gap-5 mt-5 pl-1'>
-          <div className='relative w-[380px] h-[230px] '>
+        
+        <div className='flex flex-row pt-1 pl-1'>
+          <div className='relative w-[330px] h-[200px] '>
             <img src="img_org.svg" alt="" className='absolute  ' />
             <div className="font-bold text-black pl-3 pt-3   ">
                 <h2 className="text-lg font-bold text-black ">Hello, Admin</h2>
@@ -62,22 +68,75 @@ function Dashboard() {
            
           <div class="w-[30px]">
             <h1>Calender</h1>
-           
           </div>
         </div>
 
-        <div className='bg-[#004A76]/80 h-[100px] rounded-3xl flex flex-row gap-10 justify-center items-center'>
-          <div className='w-[100px] h-[100px] bg-amber-300 flex flex-row'>
-            <IoBarChart className='w-[50px] h-[50px]' />
-            <div>
-              {/* <p className='text-[20px] font-bold'>Jumlah Pengguna</p>
-              <p className='text-[20px] font-bold'>Artikel</p>  Janlupa diganti */}
+        <div className='bg-[#004A76]/80 h-[80px] rounded-2xl flex flex-row gap-8 justify-center items-center'>
+          <div className='w-[400px] h-[90px] flex flex-row justify-center gap-3 items-center'>
+            <div className='bg-[#38B6FE]/30 rounded-full p-4'>
+              <BsFillBarChartFill className='w-[30px] h-[30px] text-white' />
+            </div>
+            <div className='flex flex-col'>
+              <p className='text-[18px] font-bold text-white underline'>Jumlah Pengguna</p>
+              <p className='text-[17px] font-bold text-white' >2.502</p>  {/*Janlupa diganti*/}
             </div>
           </div>
-          <div>ppp</div>
-          <div>ppp</div>
+          <div className='w-[500px] h-[100px] flex flex-row justify-center gap-3 items-center'>
+            <div className='bg-[#38B6FE]/30 rounded-full p-4'>
+              <GrArticle className='w-[30px] h-[30px] text-white' />
+            </div>
+            <div className='flex flex-col'>
+              <p className='text-[18px] font-bold text-white underline'>Artikel Publish </p>
+              <p className='text-[17px] font-bold text-white' >2.502</p>  {/*Janlupa diganti*/}
+            </div>
+          </div>
+          <div className='w-[500px] h-[100px] flex flex-row justify-center gap-3 items-center'>
+            <div className='bg-[#38B6FE]/30 rounded-full p-4'>
+              <FaUserClock  className='w-[30px] h-[30px] text-white' />
+            </div>
+            <div className='flex flex-col'>
+              <p className='text-[18px] font-bold text-white underline'>Verifikasi Pengguna</p>
+              <p className='text-[17px] font-bold text-white' >2.502</p>  {/*Janlupa diganti*/}
+            </div>
+          </div>
+        </div>
 
-          
+        
+        <div className='bg-[#D9D9D9]/80 h-[170px] rounded-3xl flex flex-col gap-5 pt-10 justify-center items-center'>
+           <div className='flex flex-row gird-rows-2 w-full justify-between '>
+              <p className='font-[raleway] text-[20px] font-bold pl-5 pt-6  text-[#025f96] underline '>Log Aktivitas Pengguna </p>
+              <p className='font-[raleway] text-[20px] font-bold pl-5 pt-6  text-[#025f96] justify-end pr-10 '>16 April 2025 </p> 
+           </div>
+           <div className='flex flex-row justify-between px-10 pt-10 bg-amber-400 w-full '>
+              <div className="w-1/2">
+                  <Bar />
+              </div>
+              <div className="flex flex-row gap-12">
+                <div className='flex flex-col gap-4'>
+                  <div>
+                    <span className='text-[#025f96] font-semibold'>Konsultasi</span>
+                    <p className='text-lg font-bold'>35 Orang</p>
+                  </div>
+                  <div className=''>
+                    <span className='text-[#025f96] font-semibold'>Verifikasi</span>
+                    <p className='text-lg font-bold'>90 Orang</p>
+                  </div>
+                </div>
+                
+                <div className='flex flex-col gap-4'>
+                  <div>
+                    <span className='text-[#025f96] font-semibold'>Konsultasi</span>
+                    <p className='text-lg font-bold'>35 Orang</p>
+                  </div>
+                  <div className=''>
+                    <span className='text-[#025f96] font-semibold'>Verifikasi</span>
+                    <p className='text-lg font-bold'>90 Orang</p>
+                  </div>
+                </div>
+                  
+              </div>
+           </div>
+             
         </div>
       </main>
     </div>
