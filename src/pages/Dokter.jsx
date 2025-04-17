@@ -5,9 +5,8 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import { Card, Typography } from "@material-tailwind/react";
 import { FaUser } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
-import renderModalContent  from "../components/ModalContent";
+import renderModalContent from "../components/ModalContent";
 import Swal from "sweetalert2";
-
 
 const handleDelete = () => {
   Swal.fire({
@@ -27,8 +26,14 @@ const handleDelete = () => {
   });
 };
 
-
-const TABLE_HEAD = ["Image", "Nama Artikel", "Spesialis","Tanggal", "Detail", "Action"];
+const TABLE_HEAD = [
+  "Image",
+  "Nama Artikel",
+  "Spesialis",
+  "Tanggal",
+  "Detail",
+  "Action",
+];
 
 const TABLE_ROWS = [
   {
@@ -91,28 +96,148 @@ const TABLE_ROWS = [
     job: "Manager",
     date: "04/10/21",
   },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
 ];
 
 function Dokter() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalType, setModalType] = useState("");
-    
-  
-    const openModal = (type) => {
-      setModalType(type);
-      setIsModalOpen(true);
-    };
-  
-    const closeModal = () => {
-      setIsModalOpen(false);
-      setModalType("");
-    };
+  const [modalType, setModalType] = useState("");
+
+  const openModal = (type) => {
+    setModalType(type);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalType("");
+  };
   return (
-    <div className="w-screen h-screen flex flex-row bg-white">
+    <div className="w-screen h-screen flex flex-row bg-white ">
       {/* kiri */}
       <div className="w-1/6 bg-blue-200">
         <Sidebar />
       </div>
+
       {/* kanan */}
       <div className="  w-5/6 h-screen flex flex-col p-4 overflow-x-hidden">
         {/* navbar */}
@@ -129,7 +254,8 @@ function Dokter() {
           </div>
         </div>
 
-        <img src="line style.svg" alt="" />
+        {/* <img src="line style.svg" alt="foto rusak"/> */}
+        <div className="h-[18px] bg-[#1177B3] " />
 
         {/* choose */}
         <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
@@ -138,12 +264,8 @@ function Dokter() {
               <FaUser className="text-[30px] item-center" />
             </div>
             <div className="flex flex-col">
-              <div className="font-bold text-[15px]">
-                Jumlah Dokter
-              </div>
-              <div className="font-bold text-[15px]">
-                20 orang
-              </div>
+              <div className="font-bold text-[15px]">Jumlah Dokter</div>
+              <div className="font-bold text-[15px]">20 orang</div>
             </div>
           </div>
           <div className="">
@@ -157,15 +279,15 @@ function Dokter() {
         </div>
 
         {/* main  */}
-        <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 ">
+        <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-hidden">
           {/* <Card className="h-full w-full overflow-scroll"> */}
           <table className="w-full min-w-max table-auto text-left">
-            <thead>
+            <thead className="bg-slate-300 sticky top-0 z-10">
               <tr>
                 {TABLE_HEAD.map((head) => (
                   <th
                     key={head}
-                    className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
+                    className="p-4 border-b border-blue-gray-100 bg-slate-300"
                   >
                     <Typography
                       variant="small"
@@ -278,4 +400,4 @@ function Dokter() {
   );
 }
 
-export default Dokter
+export default Dokter;

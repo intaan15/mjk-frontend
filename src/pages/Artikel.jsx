@@ -76,6 +76,91 @@ const TABLE_ROWS = [
     job: "Manager",
     date: "04/10/21",
   },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
+  {
+    name: "Richard Gran",
+    job: "Manager",
+    date: "04/10/21",
+  },
 ];
 
 
@@ -120,7 +205,7 @@ export default function Artikel() {
           </div>
         </div>
 
-        <div className=" bg-black h-[2px] w-full" />
+        <img src="line style.svg" alt="" />
 
         {/* choose */}
         <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
@@ -144,27 +229,28 @@ export default function Artikel() {
         </div>
 
         {/* main  */}
-        <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 ">
+        <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4   overflow-x-hidden">
           {/* <Card className="h-full w-full overflow-scroll"> */}
           <table className="w-full min-w-max table-auto text-left">
-            <thead>
-              <tr>
-                {TABLE_HEAD.map((head) => (
-                  <th
-                    key={head}
-                    className="border-b border-blue-gray-100 bg-blue-gray-50 p-4"
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal leading-none opacity-70"
-                    >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
+            <thead className="bg-slate-300 sticky top-0 z-10">
+  <tr>
+    {TABLE_HEAD.map((head) => (
+      <th
+        key={head}
+        className="p-4 border-b border-blue-gray-100 bg-slate-300"
+      >
+        <Typography
+          variant="small"
+          color="blue-gray"
+          className="font-normal leading-none opacity-70"
+        >
+          {head}
+        </Typography>
+      </th>
+    ))}
+  </tr>
+</thead>
+
             <tbody>
               {TABLE_ROWS.map(({ name, job, date }, index) => {
                 const isLast = index === TABLE_ROWS.length - 1;
@@ -230,7 +316,6 @@ export default function Artikel() {
                         >
                           Edit
                         </Typography>
-                        
                       </div>
                     </td>
                   </tr>
