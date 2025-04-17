@@ -5,9 +5,8 @@ import Sidebar from "../components/Sidebar/Sidebar";
 import { Card, Typography } from "@material-tailwind/react";
 import { FaUser } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
-import renderModalContent  from "../components/ModalContent";
+import renderModalContent from "../components/ModalContent";
 import Swal from "sweetalert2";
-
 
 const handleDelete = () => {
   Swal.fire({
@@ -26,7 +25,6 @@ const handleDelete = () => {
     }
   });
 };
-
 
 const TABLE_HEAD = ["Image", "Nama Artikel", "Tanggal", "Detail", "Action"];
 
@@ -163,12 +161,9 @@ const TABLE_ROWS = [
   },
 ];
 
-
-
 export default function Artikel() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("");
-  
 
   const openModal = (type) => {
     setModalType(type);
@@ -179,8 +174,6 @@ export default function Artikel() {
     setIsModalOpen(false);
     setModalType("");
   };
-
-  
 
   return (
     <div className="container flex flex-row w-screen h-screen bg-white">
@@ -233,23 +226,23 @@ export default function Artikel() {
           {/* <Card className="h-full w-full overflow-scroll"> */}
           <table className="w-full min-w-max table-auto text-left">
             <thead className="bg-slate-300 sticky top-0 z-10">
-  <tr>
-    {TABLE_HEAD.map((head) => (
-      <th
-        key={head}
-        className="p-4 border-b border-blue-gray-100 bg-slate-300"
-      >
-        <Typography
-          variant="small"
-          color="blue-gray"
-          className="font-normal leading-none opacity-70"
-        >
-          {head}
-        </Typography>
-      </th>
-    ))}
-  </tr>
-</thead>
+              <tr>
+                {TABLE_HEAD.map((head) => (
+                  <th
+                    key={head}
+                    className="p-4 border-b border-blue-gray-100 bg-slate-300"
+                  >
+                    <Typography
+                      variant="small"
+                      color="blue-gray"
+                      className="font-normal leading-none opacity-70"
+                    >
+                      {head}
+                    </Typography>
+                  </th>
+                ))}
+              </tr>
+            </thead>
 
             <tbody>
               {TABLE_ROWS.map(({ name, job, date }, index) => {
