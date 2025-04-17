@@ -8,6 +8,7 @@ import Artikel from './pages/Artikel'
 import Konsultasi from './pages/Konsultasi'
 import Dokter from './pages/Dokter'
 import Bar from './components/Bar/Bar'
+import Jadwal from './pages/Jadwal'
 
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
   <Artikel/>,
   <Konsultasi/>,
   <Dokter/>,
-  <Bar/>
+  <Bar/>,
+  <Jadwal/>
  )
 }
 

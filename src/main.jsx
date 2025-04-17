@@ -10,6 +10,8 @@ import Dashboard from './pages/Dashboard.jsx'
 import Artikel from './pages/Artikel.jsx'
 import Konsultasi from './pages/Konsultasi.jsx'
 import Dokter from './pages/Dokter.jsx'
+import Jadwal from './pages/Jadwal.jsx'
+
 
 
 const Router = createBrowserRouter([
