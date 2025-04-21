@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom'
 import { useMediaQuery } from "@uidotdev/usehooks";
 
 import Sidebar from '../../components/Sidebar/Sidebar'
-import Dashboard from '../Dashboard'
+import Dashboard from '../Dashboard/Dashboard'
 
 
 const Layout = () => {
@@ -19,10 +19,10 @@ const Layout = () => {
   return (
     
     <div className='flex flex-row min-h-screen'>
-        <div className='min-w-1/6 bg-white h-screen fixed md:static '>
+        <div className='min-w-1/6 md:max-w-64 bg-white h-screen fixed md:static '>
             <Sidebar/>
         </div>
-        <div className='flex-1 ml-64 md:ml-0 bg-gray-100 overflow-y-auto'>
+        <div className='w-64 md:w-5/6 bg-gray-100 overflow-y-auto'>
             <Outlet/>
         </div>
 
