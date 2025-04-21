@@ -115,7 +115,7 @@ const TABLE_ROWS = [
 function Jadwal() {
     return (
         <div className='flex flex-row w-full h-screen bg-white overflow-hidden'>
-          <main className='w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100'>
+          <main className='w-full md:5/6 flex flex-col pl-14 pr-1 gap-1 bg-gray-100'>
             <div className="w-full h-screen flex flex-col p-4">
               {/* Atas */}   
               <div className='flex items-end  justify-between'>
