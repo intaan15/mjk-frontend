@@ -118,22 +118,24 @@ function Jadwal() {
           <main className='w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100'>
             <div className="w-full h-screen flex flex-col p-4">
               {/* Atas */}   
-              <div className="text-2xl gap-12 flex items-center justify-end ">
-                  <div className=" mt-3 flex items-center rounded-[19px] px-14 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
-                  <IoIosSearch className="text-gray-400 " />
-                  <p className="text-gray-400 text-[14px]">Cari nama dokter</p>
-                  </div>
-                  <div className="mt-3">
-                  <FaUser className="text-[30px] item-center" />
-                  </div>
+              <div className='flex items-end  justify-between'>
+                <div className='text-xl font-bold text-[#025F96]'> Jadwal Dokter</div>
+                <div className="text-2xl gap-12 flex items-center justify-end ">
+                    <div className=" mt-3 flex items-center rounded-[19px] px-14 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
+                    <IoIosSearch className="text-gray-400 " />
+                    <p className="text-gray-400 text-[14px]">Cari nama dokter</p>
+                    </div>
+                    <div className="mt-3">
+                    <FaUser className="text-[30px] item-center text-[#292D32]" />
+                    </div>
+                </div>
               </div>
 
               {/* Garis biru */}
               <div className="w-[100%] h-1 bg-[#1177B3] mt-4 mb-4"></div>
 
               {/* tabel */}
-              <div className="border-2 border-gray-300 rounded-xl h-auto w-[95%] ml-auto flex overflow-x-auto">
-                {/* <div className='w-full min-w-[700px]'>  */}
+              <div className="border-2 border-gray-300 rounded-xl h-auto w-full ml-auto flex overflow-x-auto">
                   <table className="w-full min-w-max table-auto text-left">
                     <thead className="bg-slate-300 sticky top-0 z-10">
                         <tr>
@@ -165,7 +167,6 @@ function Jadwal() {
                         })}
                     </tbody>
                   </table>
-                {/* </div> */}
                 </div>
               </div>
           </main>
