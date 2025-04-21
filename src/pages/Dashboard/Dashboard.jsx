@@ -72,12 +72,12 @@ function Dashboard() {
             </div>
           </button>
         </div>
-        <img src="line style.svg" alt="w-full md:5/6 " />
+        <img src="line style.svg" alt="" />
 
         
         {/* col 1 */}
         <div className='flex flex-row pl-1'>
-          <div className='relative w-full h-[220px] md-fixed'>
+          <div className=''>
             <div className="font-bold text-white pl-3 absolute flex flex-col pt-5  gap-16   ">
               <div className='justify-center items-center pt-2'>
                 <Calendar className="w-5 h-5"/>
@@ -148,12 +148,12 @@ function Dashboard() {
               <div className='bg-[#D9D9D9] w-[530px] rounded-xl flex flex-row justify-center items-center'>
                 <Bar />
                 <div>
-                  <div className="text-sm space-y-1">
-                    <p><span className="inline-block w-3 h-3 rounded-full bg-pink-400 mr-2"></span>Konsultasi (300)</p>
-                    <p><span className="inline-block w-3 h-3 rounded-full bg-teal-400 mr-2"></span>Masyarakat (1200)</p>
-                    <p><span className="inline-block w-3 h-3 rounded-full bg-blue-400 mr-2"></span>Dokter (150)</p>
-                    <p><span className="inline-block w-3 h-3 rounded-full bg-yellow-400 mr-2"></span>Artikel (500)</p>
-                  </div>
+                <div className="text-sm space-y-1">
+                  <p><span className="inline-block w-3 h-3 rounded-full bg-pink-400 mr-2"></span>Konsultasi (300)</p>
+                  <p><span className="inline-block w-3 h-3 rounded-full bg-teal-400 mr-2"></span>Masyarakat (1200)</p>
+                  <p><span className="inline-block w-3 h-3 rounded-full bg-blue-400 mr-2"></span>Dokter (150)</p>
+                  <p><span className="inline-block w-3 h-3 rounded-full bg-yellow-400 mr-2"></span>Artikel (500)</p>
+                </div>
                 </div>
               </div>
             </div>
