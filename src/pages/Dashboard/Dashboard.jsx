@@ -72,7 +72,7 @@ function Dashboard() {
             </div>
           </button>
         </div>
-        <img src="line style.svg" alt="" />
+        <img src="line style.svg" alt="w-full md:5/6 " />
 
         
         {/* col 1 */}
@@ -122,31 +122,39 @@ function Dashboard() {
             <div className='flex flex-row gird-rows-2 w-full gap-8 justify-between'>
 
               <div className=' bg-[#D9D9D9] w-[530px] rounded-xl flex flex-row justify-center items-center'>
-                <div className='flex flex-col gap-4'>
-                  <div>
-                    <span className='text-[#025f96] font-semibold'>Konsultasi</span>
-                    <p className='text-[15px] font-regular'>35 Orang</p>
-                  </div>
-                  <div className=''>
-                    <span className='text-[#025f96] font-semibold'>Dokter Aktif</span>
-                    <p className='text-[15px] font-regular'>90 Orang</p>
-                  </div>
-                </div>
                 
                 <div className='flex flex-col gap-4'>
-                  <div>
-                    <span className='text-[#025f96] font-semibold'>Akun Baru</span>
-                    <p className='text-[15px] font-regular'>35 Orang</p>
-                  </div>
-                  <div className=''>
-                    <span className='text-[#025f96] font-semibold'>Verifikasi</span>
-                    <p className='text-[15px] font-regular'>90 Orang</p>
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="font-semibold underline">Konsultasi</p>
+                      <p className="text-gray-600">35 Orang</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold underline">Akun Baru</p>
+                      <p className="text-gray-600">20 Akun</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold underline">Dokter Aktif</p>
+                      <p className="text-gray-600">5 Orang</p>
+                    </div>
+                    <div>
+                      <p className="font-semibold underline">Artikel Publish</p>
+                      <p className="text-gray-600">3 Artikel</p>
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div className='bg-[#D9D9D9] w-[530px] rounded-xl flex flex-row justify-center items-center'>
                 <Bar />
+                <div>
+                  <div className="text-sm space-y-1">
+                    <p><span className="inline-block w-3 h-3 rounded-full bg-pink-400 mr-2"></span>Konsultasi (300)</p>
+                    <p><span className="inline-block w-3 h-3 rounded-full bg-teal-400 mr-2"></span>Masyarakat (1200)</p>
+                    <p><span className="inline-block w-3 h-3 rounded-full bg-blue-400 mr-2"></span>Dokter (150)</p>
+                    <p><span className="inline-block w-3 h-3 rounded-full bg-yellow-400 mr-2"></span>Artikel (500)</p>
+                  </div>
+                </div>
               </div>
             </div>
         
