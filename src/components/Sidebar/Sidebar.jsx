@@ -67,7 +67,7 @@ const Sidebar = () => {
   // Tampilan sidebar
   return (
   
-    <div className={`bg-white h-screen shadow-lg p-6 pt-10 fixed ${isOpen ? "w-64" : "w-16"} transition-all duration-300`}>
+    <div className={`bg-white h-screen shadow-lg p-6 pt-10 fixed w-64 min-w-1/6 transition-all duration-300`}>
       <div className="flex justify-end mb-4">
         {/* <button onClick={() => setIsOpen(!isOpen)} 
           className="p-1 bg-gray-200 rounded hover:bg-gray-300 transition">
