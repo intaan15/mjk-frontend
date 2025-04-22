@@ -55,7 +55,7 @@ function Dashboard() {
       {/* navbar */}
       <main className=' w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100 '>
         <div className='flex flex-row grid-2 items-center justify-between  pt-2'>
-          <p className='text-[25px] font-[raleway] font-bold text-[#025f96]'>Dashboard</p>
+          <p className='text-[25px] font-[raleway] font-bold text-[#004A76]'>Dashboard</p>
           <button onClick={toggleDropdown} className="flex items-center space-x-2 focus:outline-none cursor-pointer">
             <TiUser className='w-[30px] h-[30px] text-[#292D32]'> </TiUser>
             <div>
@@ -92,7 +92,7 @@ function Dashboard() {
         </div>
           
         {/* tengah/col2 */}
-        <div className='bg-[#004A76] h-[80px] rounded-xl flex flex-row justify-center items-center'>
+        <div className='bg-[#004A76] h-[80px] rounded-xl flex flex-row justify-center items-center shadow-md'>
           <StatBox
             icon={<BsFillBarChartFill className='w-[30px] h-[30px] text-white' />}
             title="Jumlah Pengguna"
@@ -121,26 +121,27 @@ function Dashboard() {
 
             <div className='flex flex-row gird-rows-2 w-full gap-8 justify-between'>
 
-              <div className=' bg-[#D9D9D9] w-[530px] rounded-xl flex flex-row justify-center items-center'>
+              <div className='  w-[530px] rounded-xl flex flex-row justify-center items-center'>
                 
-                <div className='flex flex-col gap-4'>
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="font-semibold underline">Konsultasi</p>
-                      <p className="text-gray-600">35 Orang</p>
+                <div className='flex flex-row gap-4'>
+                <div className="grid grid-cols-4 gap-2 p-4">
+                    <div className="bg-white p-4 rounded-xl shadow-md">
+                      <p className="text-sm text-gray-500">Konsultasi</p>
+                      <p className="text-xl font-bold text-blue-900">35 Orang</p>
                     </div>
-                    <div>
-                      <p className="font-semibold underline">Akun Baru</p>
-                      <p className="text-gray-600">20 Akun</p>
+                    <div className="bg-white p-4 rounded-xl shadow-md">
+                      <p className="text-sm text-gray-500">Konsultasi</p>
+                      <p className="text-xl font-bold text-blue-900">35 Orang</p>
                     </div>
-                    <div>
-                      <p className="font-semibold underline">Dokter Aktif</p>
-                      <p className="text-gray-600">5 Orang</p>
+                    <div className="bg-white p-4 rounded-xl shadow-md">
+                      <p className="text-sm text-gray-500">Konsultasi</p>
+                      <p className="text-xl font-bold text-blue-900">35 Orang</p>
                     </div>
-                    <div>
-                      <p className="font-semibold underline">Artikel Publish</p>
-                      <p className="text-gray-600">3 Artikel</p>
+                    <div className="bg-white p-4 rounded-xl shadow-md">
+                      <p className="text-sm text-gray-500">Konsultasi</p>
+                      <p className="text-xl font-bold text-blue-900">35 Orang</p>
                     </div>
+                    
                   </div>
                 </div>
               </div>

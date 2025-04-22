@@ -31,13 +31,42 @@ const handleDelete = () => {
   });
 };
 
-const TABLE_HEAD = ["Tanggal", "Kategori", "Nama Dokter", "Jumlah Konsultasi", "Status"];
+const TABLE_HEAD = ["Nama Pasien", "Poli", "Nama Dokter", "Waktu/Tanggal Konsultasi", "Status"];
 
 const TABLE_ROWS = [
   {
     name: "John Michael",
-    job: "Manager",
-    date: "23/04/18",
+    poli: "Jantung",
+    doctor: "Dr.wiratno.Sp.JP",
+    time:"09.45-2030 | 23/04/18",
+    status: "Selesai",
+  },
+  {
+    name: "John Michael",
+    poli: "Jantung",
+    doctor: "Dr.wiratno.Sp.JP",
+    time:"09.45-2030 | 23/04/18",
+    status: "Selesai",
+  },
+  {
+    name: "John Michael",
+    poli: "Jantung",
+    doctor: "Dr.wiratno.Sp.JP",
+    time:"09.45-2030 | 23/04/18",
+    status: "Selesai",
+  },
+  {
+    name: "John Michael",
+    poli: "Jantung",
+    doctor: "Dr.wiratno.Sp.JP",
+    time:"09.45-2030 | 23/04/18",
+    status: "Selesai",
+  },
+  {
+    name: "John Michael",
+    poli: "Jantung",
+    doctor: "Dr.wiratno.Sp.JP",
+    time:"09.45-2030 | 23/04/18",
     status: "Selesai",
   },
  
@@ -50,16 +79,19 @@ function Konsultasi() {
   const [modalType, setModalType] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => setIsOpen(!isOpen);
+  const filterData = (status) => {
+    return TABLE_ROWS.filter((row) => row.status.toLowerCase() === status);
+  };
   
-    const openModal = (type) => {
-      setModalType(type);
-      setIsModalOpen(true);
-    };
-  
-    const closeModal = () => {
-      setIsModalOpen(false);
-      setModalType("");
-    };
+  const openModal = (type) => {
+    setModalType(type);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalType("");
+  };
   return (
     <div className="flex flex-row">
       <main className=' w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100 '>
@@ -89,21 +121,21 @@ function Konsultasi() {
         <img src="/line style.svg" alt="" />
 
         {/* Button Tengah */}
-        <div className="flex-row w-full justify-beetwen items-center py-2">
+        <div className="flex flex-row justify-center w-full py-2 gap-20">
           <button
-            onClick={() => setFilterStatus("akan-datang")}
+            onClick={() => setFilterStatus("sedang-diproses")}
             className={`${
-              filterStatus === "akan-datang" ? "bg-[#004A76]" : "bg-[#B3B3B3]"
-            } hover:opacity-80 text-white w-[205px] h-[35px] rounded-[20px] text-[15px]`}>
-            Akan Datang
+               filterStatus === "sedang-diproses" ? "bg-[#004A76]" : "bg-[#B3B3B3]"
+             } hover:opacity-80 text-white w-[205px] h-[35px] rounded-[20px] text-[15px]`}>
+             Akan Datan
           </button>
 
           <button
-            onClick={() => setFilterStatus("selesai")}
+            onClick={() => setFilterStatus("sedang-diproses")}
             className={`${
-              filterStatus === "selesai" ? "bg-[#004A76]" : "bg-[#B3B3B3]"
+              filterStatus === "sedang-diproses" ? "bg-[#004A76]" : "bg-[#B3B3B3]"
             } hover:opacity-80 text-white w-[205px] h-[35px] rounded-[20px] text-[15px]`}>
-            Selesai
+            Sedang Diproses
           </button>
         </div>
 
@@ -114,7 +146,7 @@ function Konsultasi() {
 
         {/* HEADER TABEL Filtering Tabel BLM FIX */}
         <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-hidden">
-          <table className="w-full min-w-max table-auto text-left">
+          <table className="w-full min-w-max table-auto text-left font-[Nunito] font-bold">
             <thead className="bg-slate-300 sticky top-0 z-10">
               <tr>
                 {TABLE_HEAD.map((head) => ( 
@@ -135,7 +167,7 @@ function Konsultasi() {
             </thead>
 
              <tbody>
-              {TABLE_ROWS.map(({ name, job, date, status }, index) => {
+              {TABLE_ROWS.map(({ name, poli, doctor, time,status }, index) => {
                 const isLast = index === TABLE_ROWS.length - 1;
                 const classes = isLast
                   ? "p-4"
@@ -158,7 +190,7 @@ function Konsultasi() {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {job}
+                        {poli}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -167,7 +199,7 @@ function Konsultasi() {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {job}
+                        {doctor}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -176,7 +208,7 @@ function Konsultasi() {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {date}
+                        {time}
                       </Typography>
                     </td>
                     <td className={classes}>
