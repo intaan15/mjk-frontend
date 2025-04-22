@@ -46,7 +46,7 @@ function DataMasyarakat() {
     <div className='flex flex-row'>
         <main className=' w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100 '>
             <div className='flex flex-row grid-2 items-center justify-between  pt-2'>
-                <p className='text-[25px] font-[raleway] font-bold text-[#025f96]'>Data Masyarakat</p>
+                <p className='text-[25px] font-[raleway] font-bold text-[#004A76]'>Data Masyarakat</p>
                 <button onClick={toggleDropdown} className="flex items-center space-x-2 focus:outline-none cursor-pointer">
                 <TiUser className='w-[30px] h-[30px] text-[#292D32]'> </TiUser>
                 <div>

@@ -60,7 +60,7 @@ function Dashboard() {
             <TiUser className='w-[30px] h-[30px] text-[#292D32]'> </TiUser>
             <div>
             {isOpen && (
-              <div className="absolute right-0 mt-2 w-44 origin-top-right rounded-md shadow-lg bg-white ring-1 ring-blue ring-opacity-3 z-50 ">
+              <div className="absolute right-0 mt-2 w-44 origin-top-right rounded-md shadow-lg bg-white ring-1  ring-opacity-3 z-50 ">
                 
                 <div className="py-1">
                   <a href="#" className="block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Profil Admin</a>

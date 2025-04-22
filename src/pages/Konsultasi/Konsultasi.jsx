@@ -65,36 +65,35 @@ function Konsultasi() {
       <main className=' w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100 '>
         
         {/* Atas(search & profile) */}
-        <div className='flex flex-row grid-2 items-center justify-between  pt-2'>
-          <p className='text-[25px] font-[raleway] font-bold text-[#025f96]'>Konsultasi</p>
-            <div className="flex flex-row gap-2 items-center justify-center">
-              <div className=" mt-3 flex items-center rounded-[19px] px-14 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
-                <IoIosSearch className="text-gray-400 " />
+        <div className='flex flex-row  justify-between  pt-2'>
+          <p className='text-[25px] font-[raleway] font-bold text-[#004A76]'>Konsultasi</p>
+          <div className="flex flex-row">
+            <div className=" mt-3 flex items-center rounded-[19px] px-14 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
+                <IoIosSearch className="text-gray-400" />
                 <p className="text-gray-400 text-[14px]">Cari nama dokter</p>
-              </div>
-            </div> 
-            <button onClick={toggleDropdown} className="flex items-center space-x-2 focus:outline-none cursor-pointer">
-              <TiUser className='w-[30px] h-[30px] text-[#292D32]'> </TiUser>
-              <div>
-                {isOpen && (
-                  <div className="absolute right-0 mt-2 w-44 origin-top-right rounded-md shadow-lg bg-white ring-1 ring-blue ring-opacity-3 z-50 ">
-                    
-                    <div className="py-1">
-                      <a href="#" className="block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Profil Admin</a>
-                      <a href="/" className="block py-2 text-sm text-gray-700 hover:bg-gray-100"> Log Out</a>
-                    </div>
-                  </div>)}
-              </div>
-            </button>
-          </div>
+            </div>
+            <button onClick={toggleDropdown} className="flex items-centerfocus:outline-none cursor-pointer">
+                <TiUser className='w-[30px] h-[30px] text-[#292D32]'> </TiUser>
+                <div>
+                  {isOpen && (
+                    <div className="absolute right-0 mt-2 w-44 origin-top-right rounded-md shadow-lg bg-white ring-1 ring-blue ring-opacity-3 z-50 ">
+                      <div className="py-1">
+                        <a href="#" className="block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Profil Admin</a>
+                        <a href="/" className="block py-2 text-sm text-gray-700 hover:bg-gray-100"> Log Out</a>
+                      </div>
+                    </div>)}
+                </div>
+              </button> 
+          </div> 
+        </div>
         <img src="/line style.svg" alt="" />
 
         {/* Button Tengah */}
-        <div className="flex flex-row w-full  items-center px-10 py-2">
+        <div className="flex-row w-full justify-beetwen items-center py-2">
           <button
             onClick={() => setFilterStatus("akan-datang")}
             className={`${
-              filterStatus === "akan-datang" ? "bg-[#025F96]" : "bg-[#B3B3B3]"
+              filterStatus === "akan-datang" ? "bg-[#004A76]" : "bg-[#B3B3B3]"
             } hover:opacity-80 text-white w-[205px] h-[35px] rounded-[20px] text-[15px]`}>
             Akan Datang
           </button>
@@ -102,7 +101,7 @@ function Konsultasi() {
           <button
             onClick={() => setFilterStatus("selesai")}
             className={`${
-              filterStatus === "selesai" ? "bg-[#025F96]" : "bg-[#B3B3B3]"
+              filterStatus === "selesai" ? "bg-[#004A76]" : "bg-[#B3B3B3]"
             } hover:opacity-80 text-white w-[205px] h-[35px] rounded-[20px] text-[15px]`}>
             Selesai
           </button>

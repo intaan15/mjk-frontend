@@ -119,7 +119,7 @@ function Jadwal() {
             <div className="w-full h-screen flex flex-col p-4">
               {/* Atas */}   
               <div className='flex items-end  justify-between'>
-                <div className='text-xl font-bold text-[#025F96]'> Jadwal Dokter</div>
+                <div className='text-xl font-bold text-[#004A76]'> Jadwal Dokter</div>
                 <div className="text-2xl gap-12 flex items-center justify-end ">
                     <div className=" mt-3 flex items-center rounded-[19px] px-14 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
                     <IoIosSearch className="text-gray-400 " />
