@@ -184,7 +184,7 @@ function Konsultasi() {
                 <IoIosSearch className="text-gray-400"/>
                 <input
                   type="text"
-                  placeholder="Cari nama dokter"
+                  placeholder="Search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="text-gray-700 text-sm outline-none bg-transparent"

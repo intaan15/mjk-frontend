@@ -38,7 +38,7 @@ function Dashboard() {
     const [isOpen, setIsOpen] = useState(false);
     const toggleDropdown = () => setIsOpen(!isOpen);
     const [stats, setStats] = useState({
-      jumlahPengguna: 20,
+      jumlahPengguna: 40,
       artikelPublish: 100,
       verifikasiPengguna: 1000
     });
@@ -53,9 +53,9 @@ function Dashboard() {
     <div className='flex flex-row '>
 
       {/* navbar */}
-      <main className=' w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100 '>
+      <main className=' w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-50 '>
         <div className='flex flex-row grid-2 items-center justify-between  pt-2'>
-          <p className='text-[25px] font-[raleway] font-bold text-[#004A76]'>Dashboard</p>
+          <p className='text-[25px] font-[Nunito Sans] font-bold text-[#004A76]'>Dashboard</p>
           <button onClick={toggleDropdown} className="flex items-center space-x-2 focus:outline-none cursor-pointer">
             <TiUser className='w-[30px] h-[30px] text-[#292D32]'> </TiUser>
             <div>
@@ -83,8 +83,8 @@ function Dashboard() {
                 <Calendar className="w-5 h-5"/>
               </div>
               <div className='items-end relative '>
-                <h2 className="text-[28px] font-bold text-white">Hi, Admin</h2>
-                <p className="text-[20px] text-white font-medium ">Selamat datang di Website Mojokerto Sehat</p>
+                <h2 className="font-[raleway] text-[28px] font-bold text-white">Hi, Admin</h2>
+                <p className="font-[Nunito Sans] italic text-[20px] text-white font-medium ">Selamat datang di Website Mojokerto Sehat</p>
               </div>   
             </div>
             <img src="img_org.svg" alt="" className='' />
@@ -94,7 +94,7 @@ function Dashboard() {
         {/* tengah/col2 */}
         <div className='bg-[#004A76] h-[80px] rounded-xl flex flex-row justify-center items-center shadow-md'>
           <StatBox
-            icon={<BsFillBarChartFill className='w-[30px] h-[30px] text-white' />}
+            icon={<BsFillBarChartFill className='w-[30px] h-[30px] text-white font-[Nunito Sans]' />}
             title="Jumlah Pengguna"
             value={stats.jumlahPengguna}
           />
@@ -116,32 +116,30 @@ function Dashboard() {
         {/* col 3 */}
           <div className='w-full h-auto rounded-3xl flex flex-col gap-3'>
             <div>
-              <p className='font-[raleway] text-[20px] font-bold pl-5  text-[#025f96] justify-between '>Log Aktivitas Pengguna </p>
+              <p className='font-[Nunito Sans] text-[20px] font-bold pl-5  text-[#025f96] justify-between '>Log Aktivitas Pengguna </p>
             </div>
 
             <div className='flex flex-row gird-rows-2 w-full gap-8 justify-between'>
 
-              <div className='  w-[530px] rounded-xl flex flex-row justify-center items-center'>
-                
-                <div className='flex flex-row gap-4'>
-                <div className="grid grid-cols-4 gap-2 p-4">
-                    <div className="bg-white p-4 rounded-xl shadow-md">
-                      <p className="text-sm text-gray-500">Konsultasi</p>
-                      <p className="text-xl font-bold text-blue-900">35 Orang</p>
+              <div className='rounded-xl flex flex-row justify-center items-center'>
+                <div className='flex flex-row '>
+                  <div className="grid grid-cols-2 gap-1 bg-[#D9D9D9] h-auto w-[430px] justify-center  rounded-xl p-4">
+                    <div>
+                      <h3 className="font-bold text-[16px] text-black underline">Konsultasi</h3>
+                      <p className="text-[15px] text-black">35 Konsultasi</p>
                     </div>
-                    <div className="bg-white p-4 rounded-xl shadow-md">
-                      <p className="text-sm text-gray-500">Konsultasi</p>
-                      <p className="text-xl font-bold text-blue-900">35 Orang</p>
+                    <div>
+                      <h3 className="font-bold text-[16px] text-black underline">Akun Baru</h3>
+                      <p className="text-[15px] text-black">35 Akun Baru</p>
                     </div>
-                    <div className="bg-white p-4 rounded-xl shadow-md">
-                      <p className="text-sm text-gray-500">Konsultasi</p>
-                      <p className="text-xl font-bold text-blue-900">35 Orang</p>
+                    <div>
+                      <h3 className="font-bold text-[16px] text-black underline">Dokter Aktif</h3>
+                      <p className="text-[15px] text-black">35 Akun Dokter</p>
                     </div>
-                    <div className="bg-white p-4 rounded-xl shadow-md">
-                      <p className="text-sm text-gray-500">Konsultasi</p>
-                      <p className="text-xl font-bold text-blue-900">35 Orang</p>
+                    <div>
+                      <h3 className="font-bold text-[16px] text-black underline">Artikel Publish</h3>
+                      <p className="text-[15px] text-black">35 Artikel</p>
                     </div>
-                    
                   </div>
                 </div>
               </div>

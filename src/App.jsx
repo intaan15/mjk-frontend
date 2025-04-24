@@ -1,5 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import axios from 'axios'
 
 import './App.css'
 import  './app.css'
@@ -17,6 +18,7 @@ import Verifikasi from './pages/Masyarakat/Verifikasi'
 
 
 function App() {
+    
  return(
     // <Router>
     //     <Routes>
