@@ -3,7 +3,6 @@ import React from 'react'
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
-
 // import "cally"
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Calendar from '../../components/Dashboard/Calendar';
@@ -11,7 +10,6 @@ import Bar from '../../components/Bar/Bar';
 
 
 // icon
-
 import { FaCircleUser } from "react-icons/fa6";
 import { TiUser } from "react-icons/ti";
 import { BsFillBarChartFill } from "react-icons/bs";
@@ -42,9 +40,10 @@ function Dashboard() {
       artikelPublish: 100,
       verifikasiPengguna: 1000
     });
-
+    
+    // endpoint untuk ambil data
     useEffect(() => {
-      axios.get('http://localhost:5000/api/dashboard-stats')
+      axios.get('https://mjk-backend-five.vercel.app/api/auth/login_superadmin')
         .then(res => setStats(res.data))
         .catch(err => console.error(err));
     }, []);
