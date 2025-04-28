@@ -22,7 +22,7 @@ function Loginakun() {
 
   const fetchCaptcha = async () => {
     try {
-      const res = await axios.get("http://localhost:3333/api/captcha/captcha");
+      const res = await axios.get("https://mjk-backend-five.vercel.app/api/captcha/captcha");
       setCaptcha(res.data.captcha);
       setCaptchaId(res.data.captchaId);
       setText("");
@@ -46,7 +46,7 @@ function Loginakun() {
     try {
       // Validasi CAPTCHA
       const captchaRes = await axios.post(
-        "http://localhost:3333/api/captcha/validate",
+        "https://mjk-backend-five.vercel.app/api/captcha/validate",
         {
           captchaId,
           userInput: text,
@@ -64,7 +64,7 @@ function Loginakun() {
 
       // Login
       const loginRes = await axios.post(
-        "http://localhost:3333/api/auth/login_superadmin",
+        "https://mjk-backend-five.vercel.app/api/auth/login_superadmin",
         {
           username_superadmin: username,
           password_superadmin: password,
@@ -114,7 +114,7 @@ function Loginakun() {
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="pl-10 pr-3 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-600 font-nunito italic"
+              className="pl-10 pr-3 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-100 font-[Nunito-Sans]"
             />
           </div>
 
@@ -126,7 +126,7 @@ function Loginakun() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pl-10 pr-10 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-600 font-nunito italic"
+              className="pl-10 pr-10 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-100 font-[Nunito-Sans]"
             />
             <button
               type="button"
@@ -142,8 +142,8 @@ function Loginakun() {
           </div>
 
           {/* Captcha */}
-          <div className="flex items-center gap-2">
-            <div className="bg-white px-4 py-2 rounded text-xl font-bold tracking-widest h-auto">
+          <div className="flex flex-row items-center gap-2">
+            <div className="bg-white px-4 py-2 rounded text-xl font-bold tracking-widest w-[130px] h-auto overflow-hidden">
               {captcha}
             </div>
             <button
@@ -159,9 +159,7 @@ function Loginakun() {
               value={text}
               onChange={(e) => setText(e.target.value)}
               onFocus={() => setValid(false)}
-              className={`p-2 border rounded w-[150px] ${
-                valid ? "border-red-500" : ""
-              }`}
+              className={`p-2 border rounded w-[140px] text-sm ${valid ? "border-red-500" : ""}`}
             />
           </div>
 

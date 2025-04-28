@@ -15,27 +15,19 @@ import Bar from './components/Bar/Bar'
 import Jadwal from './pages/Dokter/Jadwal'
 import DataMasyarakat from './pages/Masyarakat/DataMasyarakat';
 import Verifikasi from './pages/Masyarakat/Verifikasi'
+import Modal from './components/Modal'
 
 
 function App() {
     
  return(
-    // <Router>
-    //     <Routes>
-    //         <Route path="/" element={<Splashscreen />} />
-    //         <Route path="/login" element={<Loginakun />} />
-    //         <Route path="/dashboardadmin" element={<Dashboard />} />
-    //         <Route path="/artikel" element={<Artikel />} />
-    //         <Route path="/konsultasi" element={<Konsultasi />} />
-    //         <Route path="/dokter/datadokter" element={<Dokter />} />
-    //         <Route path="/dokter/jadwal" element={<Jadwal />} />
-    //     </Routes>
-
-    // </Router>
+    
     <Router >
         <Routes>
             <Route path="/" element={<Splashscreen />} />
             <Route path="/login" element={<Loginakun />} />
+            <Route path="/modal" element={<Modal />} />
+            
             <Route path="/"  element={<Layout />}>
                 <Route path="/dashboardadmin" element={<Dashboard />} />
                 <Route path="/artikel" element={<Artikel />} />

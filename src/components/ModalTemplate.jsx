@@ -1,4 +1,8 @@
-export default function Modal({ open, onClose, children }) {
+import { useEffect, useState } from "react";
+export default function Modal({ open, onClose, children }) {  
+  if (!open) return null;
+
+
   return (
     // backdrop
     <div

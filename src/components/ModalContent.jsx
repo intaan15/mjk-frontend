@@ -43,7 +43,7 @@ export default function renderModalContent(modalType, onClose) {
 
                 <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-2">
                   <div class="flex items-center justify-center w-full">
-                    <label
+                    <label    
                       for="dropzone-file"
                       class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
                     >
