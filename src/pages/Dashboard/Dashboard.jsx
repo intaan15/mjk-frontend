@@ -3,8 +3,7 @@ import React from 'react'
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
-// import "cally"
-import Sidebar from '../../components/Sidebar/Sidebar';
+
 import Calendar from '../../components/Dashboard/Calendar';
 import Bar from '../../components/Bar/Bar';
 
@@ -35,18 +34,45 @@ function Dashboard() {
 
     const [isOpen, setIsOpen] = useState(false);
     const toggleDropdown = () => setIsOpen(!isOpen);
-    const [stats, setStats] = useState({
-      jumlahPengguna: 40,
-      artikelPublish: 100,
-      verifikasiPengguna: 1000
-    });
+    const [stats, setStats] = useState({});
     
     // endpoint untuk ambil data
     useEffect(() => {
-      axios.get('https://mjk-backend-five.vercel.app/api/auth/login_superadmin')
-        .then(res => setStats(res.data))
+      axios.get('https://mjk-backend-production.up.railway.app/api/masyarakat/getall')
+        .then(res => {
+          const jumlah = res.data.length;
+          setStats(prevStats => ({
+            ...prevStats,
+            jumlahPengguna: jumlah,  
+
+          }));
+        })
         .catch(err => console.error(err));
     }, []);
+
+    // ambil data artikel
+    axios.get('https://mjk-backend-production.up.railway.app/api/artikel/getall')
+    .then(res => {
+      const jumlahArtikel = res.data.length;
+      setStats(prevStats => ({
+        ...prevStats,
+        artikelPublish: jumlahArtikel
+      }));
+    })
+    .catch(err => console.error(err));
+
+    //ambildataverifikasi
+    axios.get('https://mjk-backend-production.up.railway.app/api/verifikasi/getall')
+    .then(res => {
+      const jumlahVerifikasi = res.data.length;
+      setStats(prevStats => ({
+        ...prevStats,
+        verifikasiPengguna: jumlahVerifikasi
+      }));
+    })
+    .catch(err => console.error(err));
+
+
 
   return (
     <div className='flex flex-row '>
