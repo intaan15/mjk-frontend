@@ -6,6 +6,7 @@ import { Typography } from "@material-tailwind/react";
 
 import { TiUser } from 'react-icons/ti'
 import { FaUser } from 'react-icons/fa'
+import { FaEdit } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { FaUserAlt } from "react-icons/fa";
 import { BsExclamationCircle } from "react-icons/bs";
@@ -40,10 +41,11 @@ function DataMasyarakat() {
       };
 
       useEffect(() => {
-        axios.get('https://mjk-backend-production.up.railway.app/api/masyarakat/getall')
+        axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
             .then((res) => {
-            console.log(res.data);
-            setData(res.data);
+              const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Terima');
+              console.log(res.data);
+              setData(filteredData);
             })
             .catch((err) => {
             console.error('Error fetching data:', err);
@@ -84,7 +86,7 @@ function DataMasyarakat() {
           <div className='flex flex-row grid-2 items-center justify-between  pt-2'>
             <p className='text-[25px] font-[raleway] font-bold text-[#004A76]'>Data Masyarakat</p>
             <div className="flex flex-row gap-4">
-              <div className=" mt-3 flex items-center rounded-[19px] px-14 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
+              <div className=" mt-3 flex items-center rounded-[19px]  px-2 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
                   <IoIosSearch className="text-gray-400"/>
                   <input
                       type="text"
@@ -112,9 +114,9 @@ function DataMasyarakat() {
 
           {/* jumlahPengguna */}
           <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
-              <div className="flex flex-row gap-8 bg-[#033E61] h-auto p-2 rounded-xl items-center px-6">
+              <div className="flex flex-row gap-8 bg-[#033E61] h-[80px] p-2 rounded-xl items-center px-6">
                   <div className="bg-white p-3 rounded-full flex items-center justify-center">
-                      <FaUserAlt className="text-[30px] item-center text-[#396AFF] " />
+                      <FaUserAlt className="text-[30px] item-center text-[#979797] " />
                   </div>
                   <div className="flex flex-col">
                       <div className="font-[raleway] text-white font-bold text-[15px]">Jumlah Pengguna</div>
@@ -132,11 +134,11 @@ function DataMasyarakat() {
                       {TABLE_HEAD.map((item, index) => ( 
                         <th
                           key={index}
-                          className="p-4 border-b border-blue-gray-100 bg-[#C3E9FF]">
+                          className="p-4 border-b border-blue-gray-100 font-extrabold bg-[#C3E9FF]">
                           <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal leading-none opacity-70">
+                              className="leading-none opacity-70 font-bold ">
                             {item}
                           </Typography>
                         </th>
@@ -199,8 +201,8 @@ function DataMasyarakat() {
                               <div className="flex gap-2">
                                   <button
                                     onClick={() => openModal("detailprofildokter", { foto_profil_masyarakat, nama_masyarakat, email_masyarakat, notlp_masyarakat, nik_masyarakat })}
-                                    className="items-center gap-2 px-3 py-1 text-black rounded-lg hover:bg-gray-200" >
-                                    <BsExclamationCircle />
+                                    className="items-center gap-2 px-3 py-1 text-black rounded-lg hover:bg-gray-200 bg-[#B2E2FF]" >
+                                    <FaEdit />
                                   </button> 
                               </div>
                           </td>
