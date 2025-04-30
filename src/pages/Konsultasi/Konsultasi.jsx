@@ -177,10 +177,10 @@ function Konsultasi() {
       <main className=' w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100 '>
         
         {/* Atas(search & profile) */}
-        <div className='flex flex-row  justify-between  pt-2'>
+        <div className='flex flex-row   justify-between  pt-2'>
           <p className='text-[25px] font-[raleway] font-bold text-[#004A76]'>Konsultasi</p>
           <div className="flex flex-row gap-4">
-            <div className=" mt-3 flex items-center rounded-[19px] px-14 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
+            <div className=" mt-3 flex items-center rounded-[19px]  px-2 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
                 <IoIosSearch className="text-gray-400"/>
                 <input
                   type="text"
@@ -238,12 +238,12 @@ function Konsultasi() {
                 {TABLE_HEAD.map((head) => ( 
                   <th
                     key={head}
-                    className="p-4 border-b border-blue-gray-100 bg-slate-300"
+                    className="p-4 border-b border-blue-gray-100 font-extrabold bg-[#C3E9FF]"
                   >
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="font-normal leading-none opacity-70"
+                      className="leading-none opacity-70"
                     >
                       {head}
                     </Typography>
@@ -316,11 +316,11 @@ function Konsultasi() {
                       </Typography>
                     </td>
                     <td className={classes}>
-                        <div className={`text-white text-sm font-semibold px-4 py-1 rounded-[20px] w-fit
-                          ${status === "Akan Datang" ? "bg-[#007bff]" : 
-                            status === "Berlangsung" ? "bg-[#facc15]" : 
-                            status === "Ditolak" ? "bg-[#EF3826]" : 
-                            status === "Selesai" ? "bg-[#10b981]" : "bg-gray-400"}
+                        <div className={`text-white text-sm font-medium px-4 py-1 rounded-[10px] w-fit
+                          ${status === "Akan Datang" ? "bg-[#1177B3]" : 
+                            status === "Berlangsung" ? "bg-[#F2C94C]" : 
+                            status === "Ditolak" ? "bg-[#B31111]" : 
+                            status === "Selesai" ? "bg-[#74E03C]" : "bg-gray-400"}
                         `}>
                           {status}
                         </div>

@@ -35,6 +35,7 @@ function Dashboard() {
     const [isOpen, setIsOpen] = useState(false);
     const toggleDropdown = () => setIsOpen(!isOpen);
     const [stats, setStats] = useState({});
+    const [data, setData] = useState([]);''
     
     // endpoint untuk ambil data
     useEffect(() => {
@@ -62,15 +63,16 @@ function Dashboard() {
     .catch(err => console.error(err));
 
     //ambildataverifikasi
-    axios.get('https://mjk-backend-production.up.railway.app/api/verifikasi/getall')
-    .then(res => {
-      const jumlahVerifikasi = res.data.length;
-      setStats(prevStats => ({
-        ...prevStats,
-        verifikasiPengguna: jumlahVerifikasi
-      }));
+    axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
+    .then((res) => {
+        const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Pending');
+        console.log(res.data);
+        setData(filteredData);
     })
-    .catch(err => console.error(err));
+    .catch((err) => {
+    console.error('Error fetching data:', err);
+    });
+
 
 
 
@@ -131,7 +133,7 @@ function Dashboard() {
           <StatBox
             icon={<FaUserClock className='w-[30px] h-[30px] text-white' />}
             title="Verifikasi Pengguna"
-            value={stats.verifikasiPengguna}
+            value={stats.filteredData}
           />
         </div>
         
