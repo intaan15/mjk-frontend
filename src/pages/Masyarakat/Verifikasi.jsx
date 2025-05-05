@@ -5,7 +5,6 @@ import { Typography } from "@material-tailwind/react";
 
 
 import { TiUser } from 'react-icons/ti'
-import { FaUser } from 'react-icons/fa'
 import { FaUserAlt } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
@@ -103,7 +102,7 @@ function Verifikasi() {
    
    
                <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
-                   <div className="flex flex-row gap-8 bg-[#035C90] p-2 rounded-2xl items-center px-6 h-[80px]">
+                   <div className="flex flex-row gap-8 bg-[#90CAF9] p-2 rounded-2xl items-center px-6 h-[80px]">
                        <div className="bg-white p-3 rounded-full flex items-center justify-center">
                            <FaUserAlt className="text-[30px] item-center text-[#979797]" />
                        </div>
@@ -112,7 +111,7 @@ function Verifikasi() {
                            <div className="font-[Nunito] text-white font-medium text-[12px]">{data.length}</div>
                        </div>
                    </div>
-                   <div className="flex flex-row gap-8 bg-[#438222] p-2 rounded-2xl items-center px-6 h-[80px]">
+                   <div className="flex flex-row gap-8 bg-[#A5D6A7] p-2 rounded-2xl items-center px-6 h-[80px]">
                        <div className="bg-[#FFF5D9] p-3 rounded-full flex items-center justify-center">
                            <FaUserCheck className="text-[30px] item-center text-[#FFBB38]" />
                        </div>
@@ -121,17 +120,17 @@ function Verifikasi() {
                            <div className="font-[Nunito] text-white font-medium text-[12px]">20 orang</div>
                        </div>
                    </div>
-                   <div className="flex flex-row gap-8 bg-[#EF3826] p-2 rounded-2xl items-center px-6 h-[80px]">
+                   <div className="flex flex-row gap-8 bg-[#EF9A9A] p-2 rounded-2xl items-center px-6 h-[80px]">
                        <div className="bg-[#FFE0EB] p-3 rounded-full flex items-center justify-center">
                            <FaUserMinus className="text-[30px] item-center text-" />
                        </div>
                        <div className="flex flex-col">
-                           <div className="font-[raleway] text-white font-bold text-[15px]">Total Data</div>
+                           <div className="font-[raleway] text-white font-bold text-[15px]">Ditolak</div>
                            <div className="font-[Nunito] text-white font-medium text-[12px]">20 orang</div>
                        </div>
                    </div>
                </div>
-                <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
+                <div className="flex flex-row justify-between w-full  items-center px-4 py-1">
                     <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-4xl items-center px-6">
                         <div className="">Kategori :</div>
                         <div
@@ -162,7 +161,7 @@ function Verifikasi() {
                 </div>
    
                {/* main  */}
-               <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-hidden  overflow-y-auto max-h-[400px]">
+               <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-hidden  overflow-y-auto max-h-[280px]">
                    {/* <Card className="h-full w-full overflow-scroll"> */}
                  <table className="w-full min-w-max table-auto text-left font-[Nunito]">
                    <thead className="sticky top-0 z-10">

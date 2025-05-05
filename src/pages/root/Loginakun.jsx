@@ -22,7 +22,7 @@ function Loginakun() {
 
   const fetchCaptcha = async () => {
     try {
-      const res = await axios.get("https://mjk-backend-five.vercel.app/api/captcha/captcha");
+      const res = await axios.get("https://mjk-backend-production.up.railway.app/api/captcha/captcha");
       setCaptcha(res.data.captcha);
       setCaptchaId(res.data.captchaId);
       setText("");
@@ -46,7 +46,7 @@ function Loginakun() {
     try {
       // Validasi CAPTCHA
       const captchaRes = await axios.post(
-        "https://mjk-backend-five.vercel.app/api/captcha/validate",
+        "https://mjk-backend-production.up.railway.app/api/captcha/validate",
         {
           captchaId,
           userInput: text,
@@ -64,7 +64,7 @@ function Loginakun() {
 
       // Login
       const loginRes = await axios.post(
-        "https://mjk-backend-five.vercel.app/api/auth/login_superadmin",
+        "https://mjk-backend-production.up.railway.app/api/auth/login_superadmin",
         {
           username_superadmin: username,
           password_superadmin: password,

@@ -18,7 +18,7 @@ import Modal from "../../components/ModalTemplate";
 function DataMasyarakat() {
     const [searchTerm, setSearchTerm] = useState("");
     const [isOpen, setIsOpen] = useState(false);
-    const [modalType, setModalType] = useState("detailprofildokter");
+    const [modalType, setModalType] = useState("detailprofilmasyarakat");
     const [isModalVisible, setModalVisible] = useState(true);
     const [user, setUser] = useState(null);
     const [data, setData] = useState([]);''
@@ -138,7 +138,7 @@ function DataMasyarakat() {
                           <Typography
                               variant="small"
                               color="blue-gray"
-                              className="leading-none opacity-70 font-bold ">
+                              className="leading-none opacity-70 font-bold text-center ">
                             {item}
                           </Typography>
                         </th>
@@ -159,7 +159,7 @@ function DataMasyarakat() {
                         <tr key={`${nik_masyarakat}-${index}`}>
                          <td className={classes}>
                             {foto_profil_masyarakat ? (
-                              <img src={foto_profil_masyarakat} alt="Foto Profil" className="w-10 h-10 rounded-full object-cover" />
+                              <img src={foto_profil_masyarakat} alt="Foto Profil" className="w-10 h-10 rounded-full object-cover text-center" />
                             ) : (
                               <div className="w-10 h-10 rounded-full bg-gray-300" /> // kalau foto kosong
                             )}
@@ -169,7 +169,7 @@ function DataMasyarakat() {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal">
+                              className="font-normal text-center">
                             {nama_masyarakat}
                             </Typography>
                           </td>
@@ -177,7 +177,7 @@ function DataMasyarakat() {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal">
+                              className="font-normal text-center">
                             {email_masyarakat}
                             </Typography>
                           </td>
@@ -185,7 +185,7 @@ function DataMasyarakat() {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal">
+                              className="font-normal text-center">
                             {notlp_masyarakat}
                             </Typography>
                           </td> 
@@ -193,15 +193,15 @@ function DataMasyarakat() {
                             <Typography
                               variant="small"
                               color="blue-gray"
-                              className="font-normal">
+                              className="font-normal text-center">
                             {nik_masyarakat}
                             </Typography>
                           </td>     
                           <td className={classes}>
-                              <div className="flex gap-2">
+                              <div className="flex gap-2 ">
                                   <button
-                                    onClick={() => openModal("detailprofildokter", { foto_profil_masyarakat, nama_masyarakat, email_masyarakat, notlp_masyarakat, nik_masyarakat })}
-                                    className="items-center gap-2 px-3 py-1 text-black rounded-lg hover:bg-gray-200 bg-[#B2E2FF]" >
+                                    onClick={() => openModal("detailprofilmasyarakat", { foto_profil_masyarakat, nama_masyarakat, email_masyarakat, notlp_masyarakat, nik_masyarakat })}
+                                    className="items-center gap-2 px-3 py-1 text-black rounded-lg hover:bg-gray-200 bg-[#B2E2FF] text-center" >
                                     <FaEdit />
                                   </button> 
                               </div>
