@@ -6,8 +6,6 @@ import { TiUser } from "react-icons/ti";
 
 
 // import Trash from "./icons/Trash";
-import Modal from "../../components/ModalTemplate";
-import Sidebar from "../../components/Sidebar/Sidebar";
 import { Card, Typography } from "@material-tailwind/react";
 import { FaUser } from "react-icons/fa";
 import renderModalContent from "../../components/ModalContent";
@@ -33,124 +31,7 @@ const handleDelete = () => {
 
 const TABLE_HEAD = ["NIK","Nama Pasien", "Poli", "Nama Dokter", "Waktu ","Tanggal Konsultasi", "Status"];
 
-const TABLE_ROWS = [
-  {
-    nik: "896789",
-    name: "John Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Selesai",
-  },
-  {
-    nik: "809879",
-    name: "John Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Selesai",
-  },
-  {
-    nik: "1234",
-    name: "John Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Selesai",
-  },
-  {
-    nik: "87523",
-    name: "John Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Selesai",
-  },
-  {
-    nik: "956783",
-    name: "John Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Akan Datang",
-  },
-  {
-    nik: "6788765",
-    name: "John Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Akan Datang",
-  },
-  {
-    nik: "4509256",
-    name: "John Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Berlangsung",
-  },
-  {
-    nik: "8745692",
-    name: "John Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Berlangsung",
-  },
-  {
-    nik: "76544",
-    name: "John Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Berlangsung",
-  },
-  {
-    nik: "9456782",
-    name: "John Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Berlangsung",
-  },
-  {
-    nik: "6544567",
-    name: "John Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Berlangsung",
-  },
-  {
-    name: "walidaun Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Berlangsung",
-  },
-  {
-    name: "walidaun Michael",
-    poli: "Jantung",
-    doctor: "Dr.wiratno.Sp.JP",
-    time :"09.45-20.30",
-    date:"23/04/18",
-    status: "Ditolak",
-  },
- 
-];
+const TABLE_ROWS = [ ];
 
 
 function Konsultasi() {
@@ -177,8 +58,8 @@ function Konsultasi() {
       <main className=' w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100 '>
         
         {/* Atas(search & profile) */}
-        <div className='flex flex-row   justify-between  pt-2'>
-          <p className='text-[25px] font-[raleway] font-bold text-[#004A76]'>Konsultasi</p>
+        <div className='flex flex-row  items-center justify-between  pt-2'>
+          <p className='text-[25px] font-[Nunito Sans] font-bold text-[#004A76]'>Konsultasi</p>
           <div className="flex flex-row gap-4">
             <div className=" mt-3 flex items-center rounded-[19px]  px-2 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
                 <IoIosSearch className="text-gray-400"/>
@@ -196,7 +77,7 @@ function Konsultasi() {
                   {isOpen && (
                     <div className="absolute right-3 w-44 origin-top-right mt-2 shadow-xl rounded-xl bg-white ring-1 ring-blue ring-opacity-3 z-50 ">
                       <div className="py-1">
-                        <a href="#" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Profil Admin</a>
+                        <a href="#" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Administrator</a>
                         <a href="/" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100"> Log Out</a>
                       </div>
                     </div>)}
@@ -205,6 +86,7 @@ function Konsultasi() {
           </div> 
         </div>
         <img src="/line style.svg" alt="" />
+
 
         {/* Button Tengah */}
         <div className="flex flex-row justify-center w-full py-2 gap-20">

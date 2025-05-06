@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios' //library untuk melakukan request HTTP
 import { useState,useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Typography } from "@material-tailwind/react";
 
 
@@ -17,31 +18,19 @@ function Verifikasi() {
     const [allRows, setAllRows] = useState([]);
     const [data, setData] = useState([]);''
     const [isOpen, setIsOpen] = useState(false);
-    const toggleDropdown = () => {
-           setIsOpen(!isOpen);};
+    const navigate = useNavigate(); 
+    const toggleDropdown = () => {setIsOpen(!isOpen);};
 
     const TABLE_HEAD = [
         "Foto",
-        "Nama",
+        "Nama Pasien",
         "Email",
         "Kontak",
         "NIK",
         "Detail",
-        "Status",
+        "Status Konfirmasi",
     ];
          
-    useEffect(() => {
-        axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
-            .then((res) => {
-                const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Pending');
-                setAllRows(filteredData);
-                console.log(filteredData);
-                setData(filteredData);
-            })
-            .catch((err) => {
-            console.error('Error fetching data:', err);
-            });
-        }, []);
     
     const filteredRows = allRows.filter((item) => {
         const search = searchTerm.toLowerCase();
@@ -56,17 +45,50 @@ function Verifikasi() {
             filterStatus === "semua" || item.status_verifikasi === filterStatus;
         
         return matchSearch && matchStatus;
-        });
+    });
 
-    useEffect(() => {
-    console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
+    useEffect(() => {console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
     }, [filteredRows]);
 
-    const getStatusBadge = (status) => {
-        if (status === "Diterima") return <span className="bg-green-200 px-2 py-1 rounded-xl">Diterima</span>;
-        if (status === "Ditolak") return <span className="bg-red-200 px-2 py-1 rounded-xl">Ditolak</span>;
-        return <span className="bg-yellow-200 px-2 py-1 rounded-xl">Menunggu</span>;
+
+    // ENDPOINT UPDATE STATUS VERIFIKASI
+    const handleVerifikasi = (status, _id) => {
+        axios.patch(`https://mjk-backend-production.up.railway.app/api/masyarakat/update/${_id}`, {
+            verifikasi_akun_masyarakat: status,
+          })
+          .then(() => {
+            console.log("Status verifikasi berhasil diperbarui (PATCH)");
+            console.log("NIK yang dikirim:", _id);
+
+            setAllRows((prevRows) =>
+              prevRows.map((item) =>
+                item._id === _id ? { ...item, verifikasi_akun_masyarakat: status } : item)
+            );
+            setData((prevData) => prevData.filter((item) => item._id !== _id));
+            if (status === "diterima") {
+                navigate("/masyarakat/data");}
+          })
+          .catch((err) => {
+            console.error("Gagal update status", err);
+          });
     };
+
+    // ENDPOINT MENDAPATKAN DATA
+    useEffect(() => {
+        axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
+            .then((res) => {
+                const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Pending');
+                setAllRows(filteredData);
+                console.log(filteredData);
+                setData(filteredData);
+            })
+            .catch((err) => {
+            console.error('Error fetching data:', err);
+            });
+        }, []);
+      
+
+   
  
     return (
        <div className='flex flex-row'>
@@ -90,7 +112,7 @@ function Verifikasi() {
                             {isOpen && (
                             <div className="absolute right-3 w-44 origin-top-right mt-2 shadow-xl rounded-xl bg-white ring-1 ring-blue ring-opacity-3 z-50 ">
                                 <div className="py-1">
-                                <a href="#" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Profil Admin</a>
+                                <a href="#" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Administrator</a>
                                 <a href="/" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100"> Log Out</a>
                                 </div>
                             </div>)}
@@ -102,7 +124,7 @@ function Verifikasi() {
    
    
                <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
-                   <div className="flex flex-row gap-8 bg-[#90CAF9] p-2 rounded-2xl items-center px-6 h-[80px]">
+                   <div className="flex flex-row gap-8 bg-[#007BBA] p-2 rounded-2xl items-center px-6 h-[80px]">
                        <div className="bg-white p-3 rounded-full flex items-center justify-center">
                            <FaUserAlt className="text-[30px] item-center text-[#979797]" />
                        </div>
@@ -111,7 +133,7 @@ function Verifikasi() {
                            <div className="font-[Nunito] text-white font-medium text-[12px]">{data.length}</div>
                        </div>
                    </div>
-                   <div className="flex flex-row gap-8 bg-[#A5D6A7] p-2 rounded-2xl items-center px-6 h-[80px]">
+                   <div className="flex flex-row gap-8 bg-[#4CAF50] p-2 rounded-2xl items-center px-6 h-[80px]">
                        <div className="bg-[#FFF5D9] p-3 rounded-full flex items-center justify-center">
                            <FaUserCheck className="text-[30px] item-center text-[#FFBB38]" />
                        </div>
@@ -120,7 +142,7 @@ function Verifikasi() {
                            <div className="font-[Nunito] text-white font-medium text-[12px]">20 orang</div>
                        </div>
                    </div>
-                   <div className="flex flex-row gap-8 bg-[#EF9A9A] p-2 rounded-2xl items-center px-6 h-[80px]">
+                   <div className="flex flex-row gap-8 bg-[#E57373] p-2 rounded-2xl items-center px-6 h-[80px]">
                        <div className="bg-[#FFE0EB] p-3 rounded-full flex items-center justify-center">
                            <FaUserMinus className="text-[30px] item-center text-" />
                        </div>
@@ -130,29 +152,29 @@ function Verifikasi() {
                        </div>
                    </div>
                </div>
-                <div className="flex flex-row justify-between w-full  items-center px-4 py-1">
-                    <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-4xl items-center px-6">
-                        <div className="">Kategori :</div>
+                <div className="flex flex-row gap-2  w-full  items-center px-4 py-1">
+                    <div className="font-bold text-[#033E61]">Kategori :</div>
+                    <div className="flex flex-row gap-8 bg-[#D9D9D9]/50 p-2 rounded-3xl items-center px-6">
                         <div
                             onClick={() => setFilterStatus("semua")}
-                            className={`cursor-pointer rounded-4xl border-2 px-4 py-1 ${
-                            filterStatus === "semua" ? "bg-black text-white" : "bg-slate-300 border-black"
+                            className={`cursor-pointer rounded-4xl border-2 px-4 py-1 border-[#033E61] ${
+                            filterStatus === "semua" ? "bg-[#025F96] text-white border-[#033E61]" : "bg-[#D9D9D9]/50 "
                             }`}>
                             Semua
                         </div>
 
                         <div
                             onClick={() => setFilterStatus("diterima")}
-                            className={`cursor-pointer rounded-4xl border-2 px-4 py-1 ${
-                            filterStatus === "diterima" ? "bg-green-600 text-white" : "bg-slate-300 border-black"
+                            className={`cursor-pointer rounded-4xl border-2 px-4 py-1 border-[#033E61]  ${
+                            filterStatus === "diterima" ? "bg-[#025F96] text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
                             }`}>
                             Diterima
                         </div>
 
                         <div
                             onClick={() => setFilterStatus("ditolak")}
-                            className={`cursor-pointer rounded-4xl border-2 px-4 py-1 ${
-                                filterStatus === "ditolak" ? "bg-red-600 text-white" : "bg-slate-300 border-black"
+                            className={`cursor-pointer rounded-4xl border-2 px-4 py-1 border-[#033E61]  ${
+                                filterStatus === "ditolak" ? "bg-[#025F96] text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
                             }`}>
                             Ditolak
                         </div> 
@@ -161,7 +183,7 @@ function Verifikasi() {
                 </div>
    
                {/* main  */}
-               <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-hidden  overflow-y-auto max-h-[280px]">
+               <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-h_idden  overflow-y-auto max-h-[280px]">
                    {/* <Card className="h-full w-full overflow-scroll"> */}
                  <table className="w-full min-w-max table-auto text-left font-[Nunito]">
                    <thead className="sticky top-0 z-10">
@@ -183,8 +205,9 @@ function Verifikasi() {
                        </tr>
                    </thead>
                    <tbody>
-                       { filteredRows.map(({ foto_profil_masyarakat,nama_masyarakat,email_masyarakat,detail, notlp_masyarakat,nik_masyarakat}, index) => {
-                        console.log({ foto_profil_masyarakat, nama_masyarakat, email_masyarakat,detail, notlp_masyarakat, nik_masyarakat }); 
+                       { filteredRows.map(({ _id,foto_profil_masyarakat,nama_masyarakat,email_masyarakat,detail, notlp_masyarakat,nik_masyarakat,verifikasi_akun_masyarakat}, index) => {
+                        console.log({ foto_profil_masyarakat, nama_masyarakat, email_masyarakat,detail, notlp_masyarakat, nik_masyarakat,verifikasi_akun_masyarakat }); 
+                        console.log("Row data:", filteredRows);
                         const isLast = index === filteredRows.length - 1;
                         const classes = isLast
                             ? "p-4"
@@ -239,59 +262,26 @@ function Verifikasi() {
                                 <div className="flex gap-2">
                                     <button
                                     onClick={() => openModal("detailprofildokter", { foto_profil_masyarakat, nama_masyarakat, email_masyarakat, notlp_masyarakat, nik_masyarakat })}
-                                    className="items-center gap-2 px-3 py-1 text-black rounded-lg hover:bg-gray-200 bg-[#B2E2FF]" >
+                                    className="items-center gap-2 px-3 py-1 text-black rounded-lg hover:bg-gray-200 " >
                                     <FaEdit />
                                     </button> 
                                 </div>
                             </td>
-                            <td className={classes}>
-                                    <div className="flex gap-2">
-                                        <button
-                                        onClick={() => handleVerifikasi("diterima", nik)}
-                                        className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                                        >
-                                        Diterima
-                                        </button>
-                                        <button
-                                        onClick={() => handleVerifikasi("ditolak", nik)}
-                                        className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                                        >
-                                        Ditolak
-                                        </button>
-                                    </div>
+                            <td key={_id} className={classes}>
+                                <div className="flex gap-2">
+                                    <button
+                                    onClick={() => handleVerifikasi("diterima",_id)}
+                                    className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                                    Diterima
+                                    </button>
+                                    <button
+                                    onClick={() => handleVerifikasi("ditolak",_id)}
+                                    className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                                    >
+                                    Ditolak
+                                    </button>
+                                </div>
                             </td>
-                           
-                           {/* <td className={classes}>
-                               <div className="flex gap-2">
-                               <Typography
-                                   as="button"
-                                   onClick={() => openModal("detailprofildokter")}
-                                   variant="small"
-                                   color="blue-gray"
-                                   className="font-medium"
-                               >
-                                   Detail
-                               </Typography>
-                               <Typography
-                                   as="button"
-                                   onClick={handleDelete}
-                                   variant="small"
-                                   color="blue-gray"
-                                   className="font-medium"
-                               >
-                                   Hapus
-                               </Typography>
-                               <Typography
-                                   as="button"
-                                   onClick={() => openModal("editform")}
-                                   variant="small"
-                                   color="blue-gray"
-                                   className="font-medium"
-                               >
-                                   Edit
-                               </Typography>
-                               </div>
-                           </td> */}
                        </tr>
                        );
                        })}

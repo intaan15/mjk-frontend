@@ -41,10 +41,10 @@ function Dashboard() {
     useEffect(() => {
       axios.get('https://mjk-backend-production.up.railway.app/api/masyarakat/getall')
         .then(res => {
-          const jumlah = res.data.length;
+          const jumlahPengguna = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Terima');
           setStats(prevStats => ({
             ...prevStats,
-            jumlahPengguna: jumlah,  
+            jumlahPengguna: jumlahPengguna.length,  
 
           }));
         })
@@ -84,13 +84,13 @@ function Dashboard() {
         <div className='flex flex-row grid-2 items-center justify-between  pt-2'>
           <p className='text-[25px] font-[Nunito Sans] font-bold text-[#004A76]'>Dashboard</p>
           <button onClick={toggleDropdown} className="flex items-center space-x-2 focus:outline-none cursor-pointer">
-            <TiUser className='w-[30px] h-[30px] text-[#292D32]'> </TiUser>
+            <TiUser className='w-[40px] h-[40px] text-[#292D32]'> </TiUser>
             <div>
             {isOpen && (
               <div className="absolute right-0 mt-2 w-44 origin-top-right rounded-md shadow-lg bg-white ring-1  ring-opacity-3 z-50 ">
                 
                 <div className="py-1">
-                  <a href="#" className="block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Profil Admin</a>
+                  <a href="#" className="block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Administrator   </a>
                   <a href="/" className="block py-2 text-sm text-gray-700 hover:bg-gray-100"> Log Out</a>
                 </div>
 

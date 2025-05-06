@@ -43,7 +43,7 @@ function DataMasyarakat() {
       useEffect(() => {
         axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
             .then((res) => {
-              const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Terima');
+              const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'diterima');
               console.log(res.data);
               setData(filteredData);
             })
@@ -102,7 +102,7 @@ function DataMasyarakat() {
                       {isOpen && (
                       <div className="absolute right-3 w-44 origin-top-right mt-2 shadow-xl rounded-xl bg-white ring-1 ring-blue ring-opacity-3 z-50 ">
                           <div className="py-1">
-                          <a href="#" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Profil Admin</a>
+                          <a href="#" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Administrator</a>
                           <a href="/" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100"> Log Out</a>
                           </div>
                       </div>)}
