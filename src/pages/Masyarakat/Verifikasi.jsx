@@ -3,6 +3,8 @@ import axios from 'axios' //library untuk melakukan request HTTP
 import { useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Typography } from "@material-tailwind/react";
+import renderModalContent  from "../../components/ModalContent";
+import Modal from "../../components/ModalTemplate";
 
 
 import { TiUser } from 'react-icons/ti'
@@ -15,11 +17,21 @@ import { FaUserMinus } from "react-icons/fa6";
 function Verifikasi() {
     const [searchTerm, setSearchTerm] = useState("");
     const [filterStatus, setFilterStatus] = useState("semua");
+    const [modalType, setModalType] = useState("detailprofilmasyarakat");
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [allRows, setAllRows] = useState([]);
     const [data, setData] = useState([]);''
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate(); 
     const toggleDropdown = () => {setIsOpen(!isOpen);};
+    const openModal = (type) => {
+        setModalType(type);
+        setIsModalOpen(true);
+      };
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setModalType("");
+    };
 
     const TABLE_HEAD = [
         "Foto",
@@ -30,7 +42,8 @@ function Verifikasi() {
         "Detail",
         "Status Konfirmasi",
     ];
-         
+       
+   
     
     const filteredRows = allRows.filter((item) => {
         const search = searchTerm.toLowerCase();
@@ -64,6 +77,10 @@ function Verifikasi() {
               prevRows.map((item) =>
                 item._id === _id ? { ...item, verifikasi_akun_masyarakat: status } : item)
             );
+            setData((prevData) => prevData.filter((item) => item._id !== _id));
+            if (status === "diterima") {
+                navigate("/masyarakat/data");}
+
             setData((prevData) => prevData.filter((item) => item._id !== _id));
             if (status === "diterima") {
                 navigate("/masyarakat/data");}
@@ -261,7 +278,7 @@ function Verifikasi() {
                             <td className={classes}>
                                 <div className="flex gap-2">
                                     <button
-                                    onClick={() => openModal("detailprofildokter", { foto_profil_masyarakat, nama_masyarakat, email_masyarakat, notlp_masyarakat, nik_masyarakat })}
+                                    onClick={() => openModal("detailprofilmasyarakat", { id: item._id })}
                                     className="items-center gap-2 px-3 py-1 text-black rounded-lg hover:bg-gray-200 " >
                                     <FaEdit />
                                     </button> 
@@ -287,6 +304,9 @@ function Verifikasi() {
                        })}
                    </tbody>
                    </table>
+                   <Modal open={isModalOpen} onClose={closeModal}>
+                        {renderModalContent(modalType, closeModal)}
+                    </Modal>
                </div>
    
                    

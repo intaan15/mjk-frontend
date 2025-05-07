@@ -1,4 +1,6 @@
 import React from "react";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
 export default function renderModalContent(modalType, onClose) {
   const setOpen = () => {
@@ -328,11 +330,10 @@ export default function renderModalContent(modalType, onClose) {
           <div className="text-start ">
             <button
               onClick={() => setOpen(false)}
-              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
-            >
+              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold">
               &times;
             </button>
-            <h1 className="text-2xl font-bold">Detail Profil Dokter</h1>
+            <h1 className="text-2xl font-bold">Profil Masyarakat</h1>
 
             <div className="flex flex-col justify-center items-center gap-4">
               <div className="bg-red-200 rounded-full p-12">foto</div>

@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import axios from "axios";
+
 // import Trash from "./icons/Trash";
 import Modal from "../../components/ModalTemplate";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { Card, Typography } from "@material-tailwind/react";
 import { FaUser } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
+import { TiUser } from 'react-icons/ti'
 import renderModalContent from "../../components/ModalContent";
 import Swal from "sweetalert2";
 
@@ -26,201 +29,15 @@ const handleDelete = () => {
   });
 };
 
-const TABLE_HEAD = [
-  "Image",
-  "Nama Artikel",
-  "Spesialis",
-  "Tanggal",
-  "Detail",
-  "Action",
-];
 
-const TABLE_ROWS = [
-  {
-    name: "John Michael",
-    job: "Manager",
-    date: "23/04/18",
-  },
-  {
-    name: "Alexa Liras",
-    job: "Developer",
-    date: "23/04/18",
-  },
-  {
-    name: "Laurent Perrier",
-    job: "Executive",
-    date: "19/09/17",
-  },
-  {
-    name: "Michael Levi",
-    job: "Developer",
-    date: "24/12/08",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-  {
-    name: "Richard Gran",
-    job: "Manager",
-    date: "04/10/21",
-  },
-];
+
 
 function Dokter() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const toggleDropdown = () => {setIsOpen(!isOpen);};
+  const [isOpen, setIsOpen] = useState(false);
 
   const openModal = (type) => {
     setModalType(type);
@@ -231,21 +48,61 @@ function Dokter() {
     setIsModalOpen(false);
     setModalType("");
   };
+
+  const TABLE_HEAD = [
+    "Foto",
+    "Nama Dokter",
+    "Spesialis",
+    "Kontak",
+    "Detail",
+    "Action",
+  ];
+
+  useEffect(() => {
+    axios.get(`https://mjk-backend-production.up.railway.app/api/dokter/getall`)
+        .then((res) => {
+          console.log(res.data);
+          setData(filteredData);
+        })
+        .catch((err) => {
+        console.error('Error fetching data:', err);
+        });
+    }, []);
+
+    useEffect(() => {
+      console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
+    }, [filteredRows]);
+
   return (
-    <div className="flex flex-row w-full h-screen bg-white overflow-hidden">
+    <div className="flex flex-rown">
       <main className="w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100">
         <div className="w-full  flex flex-col pt-4">
           {/* kanan */}
           <div className='flex items-end  justify-between'>
-            <div className='text-xl font-bold text-[#025F96]'> Data Dokter</div>
+            <div className='text-[25px] font-[raleway] font-bold text-[#004A76]'> Data Dokter</div>
             <div className="text-2xl gap-12 flex items-center justify-end ">
                 <div className=" mt-3 flex items-center rounded-[19px] px-14 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
-                <IoIosSearch className="text-gray-400 " />
-                <p className="text-gray-400 text-[14px]">Cari nama dokter</p>
+                <IoIosSearch className="text-gray-400"/>
+                  <input
+                      type="text"
+                      placeholder="Search"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="text-gray-700 text-sm outline-none bg-transparent"
+                  />
                 </div>
-                <div className="mt-3">
-                <FaUser className="text-[30px] item-center text-[#292D32]" />
-                </div>
+                <button onClick={toggleDropdown} className="items-center focus:outline-none cursor-pointer pt-3">
+                  <TiUser className='w-[40px] h-[40px] text-[#292D32]'> </TiUser>
+                  <div>
+                      {isOpen && (
+                      <div className="absolute right-3 w-44 origin-top-right mt-2 shadow-xl rounded-xl bg-white ring-1 ring-blue ring-opacity-3 z-50 ">
+                          <div className="py-1">
+                          <a href="#" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Administrator</a>
+                          <a href="/" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100"> Log Out</a>
+                          </div>
+                      </div>)}
+                  </div>
+                </button>
             </div>
           </div>
           
@@ -257,12 +114,12 @@ function Dokter() {
           {/* choose */}
           <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
             <div className="flex flex-row gap-8 bg-gray-300 p-2 rounded-[25px] items-center px-6">
-              <div className="">
-                <FaUser className="text-[30px] item-center" />
+              <div className="bg-white p-3 rounded-full flex items-center justify-center">
+                <FaUser className="text-[30px] item-center text-[#979797]" />
               </div>
               <div className="flex flex-col">
-                <div className="font-bold text-[15px]">Jumlah Dokter</div>
-                <div className="font-bold text-[15px]">20 orang</div>
+                <div className="font-[raleway] text-white font-bold text-[15px]">Jumlah Pengguna</div>
+                <div className="font-[Nunito] text-white font-medium text-[15px]">{data.length}</div>
               </div>
             </div>
             <div className="">
@@ -297,8 +154,9 @@ function Dokter() {
                 </tr>
               </thead>
               <tbody>
-                {TABLE_ROWS.map(({ name, job, date }, index) => {
-                  const isLast = index === TABLE_ROWS.length - 1;
+                {filteredRows.map(({ nama_dokter,username_dokter,spesialis_dokter, str_dokter,p_masyarakat}, index) => {
+                  console.log({ foto_profil_dokter, username_dokter, email_masyarakat, notlp_masyarakat, nik_masyarakat }); 
+                  const isLast = index === filteredRows.length - 1;
                   const classes = isLast
                     ? "p-4"
                     : "p-4 border-b border-blue-gray-50";

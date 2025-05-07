@@ -5,7 +5,6 @@ import { Typography } from "@material-tailwind/react";
 
 
 import { TiUser } from 'react-icons/ti'
-import { FaUser } from 'react-icons/fa'
 import { FaEdit } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { FaUserAlt } from "react-icons/fa";
