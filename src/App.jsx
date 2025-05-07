@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import axios from "axios";
 
 import "./App.css";
-import "./app.css";
 import Layout from "./pages/MainLayOut/Layout";
 import Splashscreen from "./pages/root/Splashscreen";
 import Loginakun from "./pages/root/Loginakun";
@@ -11,7 +10,6 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Artikel from "./pages/Artikel/Artikel";
 import Konsultasi from "./pages/Konsultasi/Konsultasi";
 import Dokter from "./pages/Dokter/Dokter";
-import Bar from "./components/Bar/Bar";
 import Jadwal from "./pages/Dokter/Jadwal";
 import DataMasyarakat from "./pages/Masyarakat/DataMasyarakat";
 import Verifikasi from "./pages/Masyarakat/Verifikasi";
