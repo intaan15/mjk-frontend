@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+
 import { useState } from "react";
 import { useEffect } from "react";
 
@@ -8,10 +8,10 @@ import { useEffect } from "react";
 // import Trash from "./icons/Trash";
 import { IoIosSearch } from "react-icons/io";
 import { TiUser } from "react-icons/ti";
+import { HiOutlineUser } from "react-icons/hi2";
+import { TbLogout } from "react-icons/tb";
 import { Card, Typography } from "@material-tailwind/react";
-import { FaUser } from "react-icons/fa";
-import renderModalContent from "../../components/ModalContent";
-import Swal from "sweetalert2";
+
 
 
 
@@ -25,13 +25,16 @@ function Konsultasi() {
   const TABLE_ROWS = [ ];
 
 
-  // filterstatus {group}
+  // filterstatus button diproses
   const [filterStatus, setFilterStatus] = useState("Diproses");
+  const [username, setUsername] = useState('');
   const [allRows, setAllRows] = useState([]);
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => setIsOpen(!isOpen);
+
+  // filterstatus
   const filteredRows = data.filter((row) => {
     const statusMatch =
       filterStatus === "Diproses"
@@ -39,13 +42,22 @@ function Konsultasi() {
         : filterStatus === "Selesai"
         ? row.status_konsul === "selesai" || row.status_konsul === "ditolak"
         : true;
-  
-       
-    return statusMatch && (row.status_konsul || "").toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Filter berdasarkan nama pasien
+    const nameMatch = row.masyarakat_id?.nama_masyarakat?.toLowerCase().includes(searchTerm.toLowerCase());
+    return statusMatch && nameMatch;
+
   });
 
+  const handleLogout = () => {
+    // Hapus token dari localStorage
+    localStorage.removeItem("token");
 
-  // ENDPOINT GET DATA
+    // Redirect ke halaman login
+    navigate("/login");
+  };
+
+  // ENDPOINT GET DATA jadwal
   useEffect(() => {
     axios.get(`https://mjk-backend-production.up.railway.app/api/jadwal/getall`)
         .then((res) => {
@@ -54,6 +66,24 @@ function Konsultasi() {
             console.log(data);
             setData(data);
         })
+        .catch((err) => {
+        console.error('Error fetching data:', err);
+        });
+
+      
+    axios.get(`https://mjk-backend-production.up.railway.app/api/superadmin/getall`)
+        .then((res) => {
+            const data = res.data;
+            setAllRows(data);
+            console.log(data);
+            setData(data);
+
+            // Ambil username dari data superadmin
+            if (data.length > 0) {
+              setUsername(data[0].username_superadmin);
+            }
+        })
+        
         .catch((err) => {
         console.error('Error fetching data:', err);
         });
@@ -68,24 +98,34 @@ function Konsultasi() {
         <div className='flex flex-row  items-center justify-between  pt-2'>
           <p className='text-[25px] font-[Nunito Sans] font-bold text-[#004A76]'>Konsultasi</p>
           <div className="flex flex-row gap-4">
+
+            {/* search */}
             <div className=" mt-3 flex items-center rounded-[19px]  px-2 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
                 <IoIosSearch className="text-gray-400"/>
                 <input
                   type="text"
-                  placeholder="Search"
+                  placeholder="Masukkan Nama Pasien"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="text-gray-700 text-sm outline-none bg-transparent"
                 />
             </div>
+
+            {/* akun */}
             <button onClick={toggleDropdown} className="items-center focus:outline-none cursor-pointer pt-3">
                 <TiUser className='w-[40px] h-[40px] text-[#292D32]'> </TiUser>
                 <div>
                   {isOpen && (
-                    <div className="absolute right-3 w-44 origin-top-right mt-2 shadow-xl rounded-xl bg-white ring-1 ring-blue ring-opacity-3 z-50 ">
-                      <div className="py-1">
-                        <a href="#" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Administrator</a>
-                        <a href="/" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100"> Log Out</a>
+                    <div className="absolute right-3 w-44 mt-2 origin-top-right bg-white rounded-xl shadow-lg ring-1 ring-blue-500 ring-opacity-10 z-50 transition-all ease-in-out duration-200 transform opacity-100">
+                      <div className="py-1 px-3">
+                        <div className='flex flex-row items-center gap-2'>
+                          <HiOutlineUser />
+                          <a href="#" className="block py-2 text-sm text-gray-800 hover:bg-gray-200 rounded-lg font-[raleway] transition duration-200 ease-in-out transform hover:scale-105">{username}</a>
+                        </div>
+                        <div className='flex flex-row items-center gap-2'>
+                          <TbLogout />
+                          <a href="/" onClick={handleLogout} className="block py-2 text-sm text-gray-800 hover:bg-gray-200 rounded-lg font-[raleway] transition duration-200 ease-in-out transform hover:scale-105"> Log Out</a>
+                        </div>
                       </div>
                     </div>)}
                 </div>
