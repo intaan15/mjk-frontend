@@ -36,7 +36,7 @@ function App() {
           <Route path="/artikel" element={<Artikel />} />
           <Route path="/konsultasi" element={<Konsultasi />} />
           <Route path="/dokter/datadokter" element={<Dokter />} />
-          <Route path="/dokter/jadwal" element={<Jadwal />} />
+          <Route path="/dokter/jadwal" element={<Jadwal />} /> 
           <Route path="/masyarakat/data" element={<DataMasyarakat />} />
           <Route path="/masyarakat/verifikasi" element={<Verifikasi />} />
         </Route>

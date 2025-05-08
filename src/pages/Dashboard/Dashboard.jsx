@@ -9,7 +9,6 @@ import Bar from '../../components/Bar/Bar';
 
 
 // icon
-import { FaCircleUser } from "react-icons/fa6";
 import { TiUser } from "react-icons/ti";
 import { BsFillBarChartFill } from "react-icons/bs";
 import { GrArticle } from "react-icons/gr";
@@ -66,12 +65,15 @@ function Dashboard() {
     //ambildataverifikasi
     axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
     .then((res) => {
-        const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Pending');
-        console.log(res.data);
-        setData(filteredData);
+      const filtered = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Pending');
+      setStats(prev => ({
+        ...prev,
+        jumlahPengguna: res.data.length,
+        filteredData: filtered.length
+      }));
     })
     .catch((err) => {
-    console.error('Error fetching data:', err);
+      console.error('Error fetching data:', err);
     });
 
 

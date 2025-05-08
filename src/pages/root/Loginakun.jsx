@@ -17,7 +17,6 @@ function Loginakun() {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
-
   const togglePassword = () => setShowPassword((prev) => !prev);
 
   const fetchCaptcha = async () => {
@@ -96,7 +95,7 @@ function Loginakun() {
             alt="Logo"
             className="w-[200px]"
           />
-          <p className="font-raleway font-extrabold text-[#025F96] text-[20px]">
+          <p className="font-[raleway] font-extrabold text-[#025F96] text-[20px]">
             MOJOKERTO SEHAT
           </p>
           <p className="text-[#438222] italic text-[10px]">
@@ -143,7 +142,7 @@ function Loginakun() {
 
           {/* Captcha */}
           <div className="flex flex-row items-center gap-2">
-            <div className="bg-white px-4 py-2 rounded text-xl font-bold tracking-widest w-[130px] h-auto overflow-hidden">
+            <div className="bg-white px-4 py-2 rounded text-xl font-[Nunito] font-bold tracking-widest w-[140px] h-auto overflow-hidden">
               {captcha}
             </div>
             <button

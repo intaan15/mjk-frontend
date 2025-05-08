@@ -1,56 +1,63 @@
 import React from 'react'
-
-import { IoIosSearch } from "react-icons/io";
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import { useState } from "react";
-import { TiUser } from "react-icons/ti";
+import { useEffect } from "react";
 
 
 // import Trash from "./icons/Trash";
+import { IoIosSearch } from "react-icons/io";
+import { TiUser } from "react-icons/ti";
 import { Card, Typography } from "@material-tailwind/react";
 import { FaUser } from "react-icons/fa";
 import renderModalContent from "../../components/ModalContent";
 import Swal from "sweetalert2";
 
-const handleDelete = () => {
-  Swal.fire({
-    title: "Yakin mau hapus?",
-    text: "Data yang dihapus tidak bisa dikembalikan!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Ya, hapus!",
-    cancelButtonText: "Batal",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Lanjutkan proses delete
-      Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
-    }
-  });
-};
 
-const TABLE_HEAD = ["NIK","Nama Pasien", "Poli", "Nama Dokter", "Waktu ","Tanggal Konsultasi", "Status"];
 
-const TABLE_ROWS = [ ];
+
 
 
 function Konsultasi() {
-  const [filterStatus, setFilterStatus] = useState("akan-datang");
+
+
+  const TABLE_HEAD = ["Nama Pasien", "Poli", "Nama Dokter", "Waktu ","Tanggal Konsultasi", "Status"];
+  const TABLE_ROWS = [ ];
+
+
+  // filterstatus {group}
+  const [filterStatus, setFilterStatus] = useState("Diproses");
+  const [allRows, setAllRows] = useState([]);
+  const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => setIsOpen(!isOpen);
   const filteredRows = TABLE_ROWS.filter((row) => {
     const statusMatch =
-    filterStatus === "Akan Datang"
-      ? row.status === "Akan Datang" || row.status === "Berlangsung"
-      : filterStatus === "Selesai"
-      ? row.status === "Selesai" || row.status === "Ditolak"
-      : true;
-
+      filterStatus === "Diproses"
+        ? row.status === "menunggu" || row.status === "berlangsung" || row.status === "diterima"
+        : filterStatus === "Selesai"
+        ? row.status === "selesai" || row.status === "ditolak"
+        : true;
+  
     const searchMatch = row.name.toLowerCase().includes(searchTerm.toLowerCase());
     return statusMatch && searchMatch;
-    
   });
+
+
+  // ENDPOINT GET DATA
+  useEffect(() => {
+    axios.get(`https://mjk-backend-production.up.railway.app/api/jadwal/getall`)
+        .then((res) => {
+            const data = res.data;
+            setAllRows(data);
+            console.log(data);
+            setData(data);
+        })
+        .catch((err) => {
+        console.error('Error fetching data:', err);
+        });
+  }, []);
   
   
   return (
@@ -91,26 +98,27 @@ function Konsultasi() {
         {/* Button Tengah */}
         <div className="flex flex-row justify-center w-full py-2 gap-20">
           <button
-            onClick={() => setFilterStatus("Akan Datang")}
+            onClick={() => setFilterStatus("Diproses")}
             className={`${
-               filterStatus === "Akan Datang" ? "bg-[#004A76]": "bg-[#B3B3B3]" 
+               filterStatus === "Diproses"
+                ? "bg-[#004A76] font-bold font-[raleway]"
+                : "bg-[#B3B3B3]" 
              } hover:opacity-80 text-white w-[205px] h-[35px] rounded-[20px] text-[15px] border-[#E3F0F8]`}>
-             Akan Datang
+             Diproses 
           </button>
 
           <button
             onClick={() => setFilterStatus("Selesai")}
             className={`${
-              filterStatus === "Selesai" ? "bg-[#004A76]" :"bg-[#B3B3B3]"
-            } hover:opacity-80 text-white w-[205px] h-[35px] rounded-[20px] text-[15px] border-[#E3F0F8] border-2 focus-ring-2`}>
-            Selesai
+              filterStatus === "Selesai"
+               ?"bg-[#004A76] font-bold font-[raleway]" 
+               :"bg-[#B3B3B3]"
+            } hover:opacity-80 text-white w-[205px] h-[35px] rounded-[20px] text-[15px] border-[#E3F0F8] border-2 focus-ring-2 `}>
+            Riwayat
           </button>
         </div>
 
         
-     
-       
-
 
         {/* HEADER TABEL Filtering Tabel BLM FIX */}
         <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-hidden overflow-y-auto max-h-[400px]">
@@ -120,7 +128,7 @@ function Konsultasi() {
                 {TABLE_HEAD.map((head) => ( 
                   <th
                     key={head}
-                    className="p-4 border-b border-blue-gray-100 font-extrabold bg-[#C3E9FF]"
+                    className="p-4 border-b border-blue-gray-100 font-[Nunito] font-bold bg-[#C3E9FF]"
                   >
                     <Typography
                       variant="small"
@@ -135,30 +143,21 @@ function Konsultasi() {
             </thead>
 
              <tbody>
-              {filteredRows.map(({ nik,name, poli, doctor, date,time,status }, index) => {
+              {data.map(({_id,nama_masyarakat, poli, nama_dokter, tgl_konsul,jam_konsul,status_konsul }, index) => {
                 const isLast = index === TABLE_ROWS.length - 1;
                 const classes = isLast
                   ? "p-4"
                   : "p-2 border-b border-blue-gray-50";
 
                 return (
-                  <tr key={`${nik}-${index}`}>
+                  <tr key={`${_id}-${index}`}>
                     <td className={classes}>
                       <Typography
                         variant="small"
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {nik}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {name}
+                        {nama_masyarakat}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -176,7 +175,7 @@ function Konsultasi() {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {doctor}
+                        {nama_dokter}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -185,7 +184,7 @@ function Konsultasi() {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {time}
+                        {jam_konsul}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -194,17 +193,17 @@ function Konsultasi() {
                         color="blue-gray"
                         className="font-normal items-center"
                       >
-                        {date}
+                        {tgl_konsul}
                       </Typography>
                     </td>
                     <td className={classes}>
                         <div className={`text-white text-sm font-medium px-4 py-1 rounded-[10px] w-fit
-                          ${status === "Akan Datang" ? "bg-[#1177B3]" : 
-                            status === "Berlangsung" ? "bg-[#F2C94C]" : 
-                            status === "Ditolak" ? "bg-[#B31111]" : 
-                            status === "Selesai" ? "bg-[#74E03C]" : "bg-gray-400"}
+                          ${status_konsul === "Menunggu" ? "bg-[#E0F4FF]" : 
+                            status_konsul === "Berlangsung" ? "bg-[#3498DB]" : 
+                            status_konsul === "Ditolak" ? "bg-[#B31111]" : 
+                            status_konsul === "Selesai" ? "bg-[#27AE60]" : "bg-gray-400"}
                         `}>
-                          {status}
+                          {status_konsul}
                         </div>
                     </td>
                     
