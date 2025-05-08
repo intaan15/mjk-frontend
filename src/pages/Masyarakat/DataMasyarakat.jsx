@@ -133,7 +133,7 @@ function DataMasyarakat() {
                       {TABLE_HEAD.map((item, index) => ( 
                         <th
                           key={index}
-                          className="p-4 border-b border-blue-gray-100 font-extrabold bg-[#C3E9FF]">
+                          className="p-3 border-b border-blue-gray-100 font-extrabold bg-[#C3E9FF]">
                           <Typography
                               variant="small"
                               color="blue-gray"

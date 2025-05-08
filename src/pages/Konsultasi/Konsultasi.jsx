@@ -32,7 +32,7 @@ function Konsultasi() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => setIsOpen(!isOpen);
-  const filteredRows = TABLE_ROWS.filter((row) => {
+  const filteredRows = data.filter((row) => {
     const statusMatch =
       filterStatus === "Diproses"
         ? row.status === "menunggu" || row.status === "berlangsung" || row.status === "diterima"
@@ -40,7 +40,7 @@ function Konsultasi() {
         ? row.status === "selesai" || row.status === "ditolak"
         : true;
   
-    const searchMatch = row.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchMatch = row.masyarakat_id?.nama_masyarakat?.toLowerCase().includes(searchTerm.toLowerCase());
     return statusMatch && searchMatch;
   });
 
@@ -122,13 +122,14 @@ function Konsultasi() {
 
         {/* HEADER TABEL Filtering Tabel BLM FIX */}
         <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-hidden overflow-y-auto max-h-[400px]">
-          <table className="w-full min-w-max table-auto text-left font-[Nunito] font-extrabold ">
-            <thead className=" sticky top-0 z-10 ">
+          <table className="w-full min-w-max table-auto text-left font-extrabold " style={{ fontFamily: '"Nunito Sans"' }}>
+            <thead className=" sticky top-0 z-10 " >
               <tr>
                 {TABLE_HEAD.map((head) => ( 
                   <th
                     key={head}
-                    className="p-4 border-b border-blue-gray-100 font-[Nunito] font-bold bg-[#C3E9FF]"
+                    className="p-3 border-b border-blue-gray-100  font-bold bg-[#C3E9FF]"
+                    
                   >
                     <Typography
                       variant="small"
@@ -143,11 +144,11 @@ function Konsultasi() {
             </thead>
 
              <tbody>
-              {data.map(({_id,nama_masyarakat, poli, nama_dokter, tgl_konsul,jam_konsul,status_konsul }, index) => {
-                const isLast = index === TABLE_ROWS.length - 1;
+              {filteredRows.map(({_id,masyarakat_id,dokter_id, tgl_konsul,jam_konsul,status_konsul}, index) => {
+                const isLast = index === filteredRows.length - 1;
                 const classes = isLast
                   ? "p-4"
-                  : "p-2 border-b border-blue-gray-50";
+                  : "p-2 border-b border-blue-gray-50 items-center";
 
                 return (
                   <tr key={`${_id}-${index}`}>
@@ -155,36 +156,9 @@ function Konsultasi() {
                       <Typography
                         variant="small"
                         color="blue-gray"
-                        className="font-normal"
+                        className="font-normal items-center"
                       >
-                        {nama_masyarakat}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {poli}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {nama_dokter}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal"
-                      >
-                        {jam_konsul}
+                        {masyarakat_id?.nama_masyarakat || "-"}
                       </Typography>
                     </td>
                     <td className={classes}>
@@ -193,17 +167,45 @@ function Konsultasi() {
                         color="blue-gray"
                         className="font-normal items-center"
                       >
-                        {tgl_konsul}
+                        {dokter_id?.spesialis_dokter|| "-"}
                       </Typography>
                     </td>
                     <td className={classes}>
-                        <div className={`text-white text-sm font-medium px-4 py-1 rounded-[10px] w-fit
-                          ${status_konsul === "Menunggu" ? "bg-[#E0F4FF]" : 
-                            status_konsul === "Berlangsung" ? "bg-[#3498DB]" : 
-                            status_konsul === "Ditolak" ? "bg-[#B31111]" : 
-                            status_konsul === "Selesai" ? "bg-[#27AE60]" : "bg-gray-400"}
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal items-center"
+                      >
+                        {dokter_id?.nama_dokter|| "-"}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal items-center"
+                      >
+                        {jam_konsul}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal items-center justify-center p-2"
+                      >
+                        {tgl_konsul?.split("T")[0]}
+                      </Typography>
+                    </td>
+                    <td className={classes}>
+                        <div className={`text-sm font-medium px-4 py-1 rounded-[10px] w-[90px] items-center text-center
+                          ${status_konsul === "menunggu" ? "bg-[#FFF3CD] text-[#856404]" : 
+                            status_konsul === "berlangsung" ? "bg-[#3498DB]  text-[#FFFFFF]" : 
+                            status_konsul === "diterima" ? "bg-[#BCE2C5]  text-[#155724]" : 
+                            status_konsul === "ditolak" ? "bg-[#B31111] text-white" : 
+                            status_konsul === "selesai" ? "bg-[#27AE60]" : "bg-gray-400"}
                         `}>
-                          {status_konsul}
+                          {status_konsul.charAt(0).toUpperCase() + status_konsul.slice(1)}
                         </div>
                     </td>
                     

@@ -208,7 +208,7 @@ function Verifikasi() {
                        {TABLE_HEAD.map((head) => (
                            <th
                            key={head}
-                           className="p-4 border-b border-blue-gray-100 bg-[#C3E9FF] text-center"
+                           className="p-3 border-b border-blue-gray-100 bg-[#C3E9FF] text-center"
                            >
                            <Typography
                                variant="small"
