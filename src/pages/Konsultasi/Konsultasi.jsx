@@ -35,13 +35,13 @@ function Konsultasi() {
   const filteredRows = data.filter((row) => {
     const statusMatch =
       filterStatus === "Diproses"
-        ? row.status === "menunggu" || row.status === "berlangsung" || row.status === "diterima"
+        ? row.status_konsul === "menunggu" || row.status_konsul === "berlangsung" || row.status_konsul === "diterima"
         : filterStatus === "Selesai"
-        ? row.status === "selesai" || row.status === "ditolak"
+        ? row.status_konsul === "selesai" || row.status_konsul === "ditolak"
         : true;
   
-    const searchMatch = row.masyarakat_id?.nama_masyarakat?.toLowerCase().includes(searchTerm.toLowerCase());
-    return statusMatch && searchMatch;
+       
+    return statusMatch && (row.status_konsul || "").toLowerCase().includes(searchTerm.toLowerCase());
   });
 
 
@@ -145,7 +145,7 @@ function Konsultasi() {
 
              <tbody>
               {filteredRows.map(({_id,masyarakat_id,dokter_id, tgl_konsul,jam_konsul,status_konsul}, index) => {
-                const isLast = index === filteredRows.length - 1;
+                const isLast = index === TABLE_ROWS.length - 1;
                 const classes = isLast
                   ? "p-4"
                   : "p-2 border-b border-blue-gray-50 items-center";
