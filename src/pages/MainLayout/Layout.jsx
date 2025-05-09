@@ -18,15 +18,14 @@ const Layout = () => {
 
   return (
     
-    <div className='flex flex-row min-h-screen overflow-x-auto'>
-        <div className='min-w-1/6 md:max-w-64 bg-white h-screen fixed md:static '>
+    <div className='flex flex-row min-h-screen overflow-x-auto overflow-y-auto'>
+        <div className='md:block md:w-64 md:h-screen bg-white fixed md:static '>
             <Sidebar/>
         </div>
-        <div className='w-64 lg:w-5/6 bg-gray-100 overflow-y-auto'>
-            <Outlet/>
+        <div className='md:w-64 lg:w-5/6 lg:screen md:h-auto bg-gray-100 overflow-y-auto'>
+            <Outlet/> 
         </div>
 
-      
     </div>
   )
 }

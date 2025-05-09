@@ -31,52 +31,13 @@ const StatBox = ({ icon, title, value }) => (
 
 
 function Dashboard() {
-
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [jumlahKonsultasi, setJumlahKonsultasi] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const toggleDropdown = () => setIsOpen(!isOpen);
     const [stats, setStats] = useState({});
     const [data, setData] = useState([]);''
-    
-    // endpoint untuk ambil data
-    useEffect(() => {
-      axios.get('https://mjk-backend-production.up.railway.app/api/masyarakat/getall')
-        .then(res => {
-          const jumlahPengguna = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Terima');
-          setStats(prevStats => ({
-            ...prevStats,
-            jumlahPengguna: jumlahPengguna.length,  
-
-          }));
-        })
-        .catch(err => console.error(err));
-    }, []);
-
-    // ambil data artikel
-    axios.get('https://mjk-backend-production.up.railway.app/api/artikel/getall')
-    .then(res => {
-      const jumlahArtikel = res.data.length;
-      setStats(prevStats => ({
-        ...prevStats,
-        artikelPublish: jumlahArtikel
-      }));
-    })
-    .catch(err => console.error(err));
-
-    //ambildataverifikasi
-    axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
-    .then((res) => {
-      const filtered = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Pending');
-      setStats(prev => ({
-        ...prev,
-        jumlahPengguna: res.data.length,
-        filteredData: filtered.length
-      }));
-    })
-    .catch((err) => {
-      console.error('Error fetching data:', err);
-    });
-
-
+    const today = new Date().toISOString().split('T')[0];  
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -87,14 +48,96 @@ function Dashboard() {
       navigate("/login");
     };
 
+    useEffect(() => {
+      console.log('Tanggal yang dipilih:', selectedDate);
+    }, [selectedDate]);
+
+
+    // endpoint untuk ambil data
+    useEffect(() => {
+      
+      axios.get('https://mjk-backend-production.up.railway.app/api/masyarakat/getall')
+        .then(res => {
+          const jumlahPengguna = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Terima');
+          setStats(prevStats => ({
+            ...prevStats,
+            jumlahPengguna: jumlahPengguna.length,  
+
+          }));
+        })
+        .catch(err => console.error(err));
+      }, []);
+
+      // ambil data artikel
+      axios.get('https://mjk-backend-production.up.railway.app/api/artikel/getall')
+      .then(res => {
+        const jumlahArtikel = res.data.length;
+          if (selectedDate instanceof Date && !isNaN(selectedDate)) {
+            const selected = selectedDate.toISOString().split('T')[0];
+            const artikelToday = res.data.filter(item => {
+              const tgl_terbit_artikel = new Date(item.tgl_terbit_artikel).toISOString().split('T')[0];
+        return tgl_terbit_artikel === selected && jumlahArtikel;
+      });
+        setStats(prevStats => ({
+          ...prevStats,
+          artikelPublish: jumlahArtikel,
+          artikelHariIni: artikelToday.length,
+
+        }));
+  }})
+      .catch(err => console.error(err));
+
+      //ENDPOINT UNTUK DATA MASYARAKAT
+      axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
+      .then((res) => {
+        // jumlah pengguna
+        const jumlahPengguna = res.data.length;
+
+        // JUMLAH VERIFIKASI
+        const pendingCount = data.filter(item => item.verifikasi_akun_masyarakat === 'pending').length;
+
+
+        // log data akun baru - filter berdasarkan tanggal
+        const filtered = res.data.filter(item => {
+          const createdAt = new Date(item.createdAt).toISOString().split('T')[0]; // Ambil tanggal dari createdAt
+          const selected = selectedDate.toISOString().split('T')[0]; // Ambil tanggal yang dipilih dari calendar
+          return createdAt === selected && item.verifikasi_akun_masyarakat === 'pending';
+        });
+        
+        setStats(prev => ({
+          ...prev,
+          jumlahPengguna: res.data.length,
+          filteredData: filtered.length
+        }));
+      })
+      .catch((err) => {
+        console.error('Error fetching data:', err);
+      });
+
+
+      axios.get(`https://mjk-backend-production.up.railway.app/api/jadwal/getall`)
+      .then((res) => {
+          const filtered = res.data.filter(item => {
+          const tgl = new Date(item.tgl_konsul).toISOString().split('T')[0];
+          const selected = selectedDate?.toISOString().split('T')[0];
+          return tgl === selected && item.verifikasi_akun_masyarakat === 'Pending';
+        });
+        setJumlahKonsultasi(filtered.length)
+      })
+      .catch((err) => {
+        console.error('Error fetching data:', err);
+      },[selectedDate]);
+
+
+   
 
 
   return (
     <div className="flex flex-row ">
       {/* navbar */}
-      <main className=" w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-50 ">
+      <main className=" md:w-full lg:h-screen flex flex-col pl-18 pr-5 gap-1 bg-gray-50 ">
         <div className="flex flex-row grid-2 items-center justify-between  pt-2">
-          <p className="text-[25px] font-[Nunito Sans] font-bold text-[#004A76]">
+          <p className="text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
             Dashboard
           </p>
           <button
@@ -133,7 +176,11 @@ function Dashboard() {
           <div className="">
             <div className="font-bold text-white pl-3 absolute flex flex-col pt-5  gap-16   ">
               <div className="justify-center items-center pt-2">
-                <Calendar className="w-5 h-5" />
+                <Calendar 
+                className="w-5 h-5" 
+                onChange={(date) => setSelectedDate(date)} 
+                value={selectedDate}/>
+                
               </div>
               <div className="items-end relative ">
                 <h2 className="font-[raleway] text-[28px] font-bold text-white">
@@ -149,7 +196,7 @@ function Dashboard() {
         </div>
 
         {/* tengah/col2 */}
-        <div className="bg-[#004A76] h-[80px] rounded-xl flex flex-row justify-center items-center shadow-md">
+        <div className="bg-[#004A76] h-20 md:h-20 md:min-h-auto min-h-screen rounded-xl flex flex-row justify-center items-center shadow-md">
           <StatBox
             icon={
               <BsFillBarChartFill className="w-[30px] h-[30px] text-white font-[Nunito Sans]" />
@@ -172,26 +219,26 @@ function Dashboard() {
         {/* col 3 */}
         <div className="w-full h-auto rounded-3xl flex flex-col gap-3">
           <div>
-            <p className="font-[Nunito Sans] text-[20px] font-bold pl-5  text-[#025f96] justify-between ">
+            <p className="font-[Nunito Sans] text-2xl font-bold pl-5  text-[#025f96] justify-between ">
               Log Aktivitas Pengguna{" "}
             </p>
           </div>
 
           <div className="flex flex-row gird-rows-2 w-full gap-8 justify-between">
-            <div className="rounded-xl flex flex-row justify-center items-center">
+            <div className="rounded-xl flex flex-row justify-center items-center lg:h-auto">
               <div className="flex flex-row ">
-                <div className="grid grid-cols-2 gap-1 bg-[#D9D9D9] h-auto w-[430px] justify-center  rounded-xl p-4">
+                <div className="grid grid-cols-2 gap-1 bg-[#D9D9D9] h-auto md:w-[430px] justify-center  rounded-xl p-4">
                   <div>
                     <h3 className="font-bold text-[16px] text-black underline">
                       Konsultasi
                     </h3>
-                    <p className="text-[15px] text-black">35 Konsultasi</p>
+                    <p className="text-[15px] text-black">{jumlahKonsultasi}</p>
                   </div>
                   <div>
                     <h3 className="font-bold text-[16px] text-black underline">
                       Akun Baru
                     </h3>
-                    <p className="text-[15px] text-black">35 Akun Baru</p>
+                    <p className="text-[15px] text-black">{stats.filteredData}</p>
                   </div>
                   <div>
                     <h3 className="font-bold text-[16px] text-black underline">
@@ -201,9 +248,9 @@ function Dashboard() {
                   </div>
                   <div>
                     <h3 className="font-bold text-[16px] text-black underline">
-                      Artikel Publish
+                      Artikel Hari Ini
                     </h3>
-                    <p className="text-[15px] text-black">35 Artikel</p>
+                    <p className="text-[15px] text-black">{stats.artikelHariIni}</p>
                   </div>
                 </div>
               </div>
@@ -215,11 +262,11 @@ function Dashboard() {
                 <div className="text-sm space-y-1">
                   <p>
                     <span className="inline-block w-3 h-3 rounded-full bg-pink-400 mr-2"></span>
-                    Konsultasi (300)
+                    Konsultasi ({jumlahKonsultasi})
                   </p>
                   <p>
                     <span className="inline-block w-3 h-3 rounded-full bg-teal-400 mr-2"></span>
-                    Masyarakat (1200)
+                    Masyarakat ({stats.filteredData})
                   </p>
                   <p>
                     <span className="inline-block w-3 h-3 rounded-full bg-blue-400 mr-2"></span>
@@ -227,7 +274,7 @@ function Dashboard() {
                   </p>
                   <p>
                     <span className="inline-block w-3 h-3 rounded-full bg-yellow-400 mr-2"></span>
-                    Artikel (500)
+                    Artikel ({stats.artikelHariIni})
                   </p>
                 </div>
               </div>
