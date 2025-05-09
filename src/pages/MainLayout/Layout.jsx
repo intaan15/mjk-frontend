@@ -22,7 +22,7 @@ const Layout = () => {
         <div className='min-w-1/6 md:max-w-64 bg-white h-screen fixed md:static '>
             <Sidebar/>
         </div>
-        <div className='w-64 md:w-5/6 bg-gray-100 overflow-y-auto'>
+        <div className='w-64 lg:w-5/6 bg-gray-100 overflow-y-auto'>
             <Outlet/>
         </div>
 
