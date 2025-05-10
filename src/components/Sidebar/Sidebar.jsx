@@ -78,7 +78,7 @@ const Sidebar = () => {
 
 
 
-      <ul className="space-y-1 pt-6">
+      <ul className="space-y-4 pt-6">
         {menuItems.map((item, idx) => (
           <li key={idx}>
             {item.children ? (
@@ -93,7 +93,7 @@ const Sidebar = () => {
                   <div className="flex items-center gap-3 text-[#025F96]">
                     <span className="w-6 h-6">{item.icon}</span>
                     <span
-                      className={`transition-all duration-300 origin-left ${
+                      className={`transition-all duration-300 origin-left text-md ${
                         isOpen ? "opacity-100 scale-100" : "opacity-0 scale-0"
                       }`}
                     >

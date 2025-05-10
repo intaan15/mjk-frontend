@@ -170,7 +170,7 @@ function Dashboard() {
                         href="#"
                         className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
                         <HiOutlineUser className='text-[30px]' />
-                        {usernameadmin}
+                        Administrator
                       </a>
                       
                       <a
@@ -190,6 +190,8 @@ function Dashboard() {
         </div>
         <img src="line style.svg" alt="" className='w-screen' />
 
+
+        
         <div className="flex flex-row ">
           <div className="font-bold text-white pl-3 flex  flex-col pt-5 absolute gap-10  ">
             {/* calender */}
@@ -210,7 +212,27 @@ function Dashboard() {
               </p>
             </div>
           </div>
-          <img src="img_org.svg" alt="" className="" />
+          <img src="img_org.svg" alt="" className="w-screen lg:max-w-screen" />
+        </div>
+
+        <div className="bg-[#004A76]  lg:min-h- rounded-xl flex flex-row justify-center items-center shadow-md">
+          {/* <StatBox
+            icon={
+              <BsFillBarChartFill className="w-[30px] h-[30px] text-white font-[Nunito Sans]" />
+            }
+            title="Jumlah Pengguna"
+            value={stats.jumlahPengguna}
+          />
+          <StatBox
+            icon={<GrArticle className="w-[30px] h-[30px] text-white" />}
+            title="Artikel Publish"
+            value={stats.artikelPublish}
+          />
+          <StatBox
+            icon={<FaUserClock className="w-[30px] h-[30px] text-white" />}
+            title="Verifikasi Pengguna"
+            value={stats.filteredData}
+          /> */}
         </div>
 
 
