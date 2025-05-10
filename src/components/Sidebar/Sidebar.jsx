@@ -62,13 +62,7 @@ const Sidebar = () => {
   // Tampilan sidebar
   return (
   
-    <div className={`bg-white h-screen shadow-lg p-6 pt-10 fixed w-64 min-w-1/6 transition-all duration-300`}>
-      <div className="flex justify-end mb-4">
-        {/* <button onClick={() => setIsOpen(!isOpen)} 
-          className="p-1 bg-gray-200 rounded hover:bg-gray-300 transition">
-          {isOpen ? <RxHamburgerMenu /> : <RxHamburgerMenu />}
-        </button>  */}
-      </div>
+    <div className={`bg-white min-h-screen shadow-lg p-6 pt-10 w-1/6 lg:w-64 transition-all duration-300`}>
 
       <div className={`flex items-center gap-3 mb-6 ${!isOpen }`}>
           <div className='flex flex-row gap-2  w-[300px] overflow-hidden'>

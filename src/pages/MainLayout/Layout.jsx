@@ -8,21 +8,15 @@ import Dashboard from '../Dashboard/Dashboard'
 
 
 const Layout = () => {
-  const isDesktopDevice = useMediaQuery("(min-width: 768px)");
-  const [collapsed, setCollapsed] = useState(!isDesktopDevice);
-
-    useEffect(() => {
-      setCollapsed(!isDesktopDevice);
-    }, [isDesktopDevice]);
 
 
   return (
     
-    <div className='flex flex-row min-h-screen overflow-x-auto overflow-y-auto'>
-        <div className='md:block md:w-64 md:h-screen bg-white fixed md:static '>
+    <div className='flex flex-row min-h-screen '>
+        <div className=' w-1/6 lg:w-64 bg-amber-600 hidden md:block md:h-auto'>
             <Sidebar/>
         </div>
-        <div className='md:w-64 lg:w-5/6 lg:screen md:h-auto bg-gray-100 overflow-y-auto'>
+        <div className='h-screen  w-5/6 lg:w-screen overflow-y-auto bg-amber-300'>
             <Outlet/> 
         </div>
 
