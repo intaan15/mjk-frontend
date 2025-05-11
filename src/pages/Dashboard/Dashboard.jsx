@@ -149,7 +149,7 @@ function Dashboard() {
   return (
     <div className="flex flex-row ">
      {/* container main */}
-      <main className="flex flex-col pl-8 pr-3 gap-1 bg-[#FAFBFD] ">
+      <main className="flex flex-col pl-8 pr-3 gap-1 bg-gray-100 ">
         <div className="flex flex-row  items-center justify-between pt-2">
           <p className="text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
             Dashboard
@@ -192,8 +192,8 @@ function Dashboard() {
 
 
         
-        <div className="flex flex-row ">
-          <div className="font-bold text-white pl-3 flex  flex-col pt-5 absolute gap-10  ">
+        <div className="flex flex-row items-center justify-between w-full bg-[#004A76] rounded-xl p-6">
+          <div className="font-bold text-white pl-3 flex  flex-col pt-5 gap-10  ">
             {/* calender */}
             <div className="justify-center items-center pt-2 ">
               <Calendar 
@@ -203,37 +203,131 @@ function Dashboard() {
             </div>
 
             {/* heading */}
-            <div className="">
+            <div className="sticky">
               <h2 className="font-[raleway] text-3xl font-bold text-white">
                 Hi, Admin
               </h2>
-              <p className="font-[NunitoSans] italic text-2xl text-white font-medium ">
+              <p className="font-[NunitoSans] italic text-2xl text-[#004A76] font-bold ">
                 Selamat datang di Website Mojokerto Sehat
               </p>
             </div>
           </div>
-          <img src="img_org.svg" alt="" className="w-screen lg:max-w-screen" />
+          <img src="img_org.svg" alt="" className="h-auto object-contain" />
         </div>
 
-        <div className="bg-[#004A76]  lg:min-h- rounded-xl flex flex-row justify-center items-center shadow-md">
-          {/* <StatBox
-            icon={
-              <BsFillBarChartFill className="w-[30px] h-[30px] text-white font-[Nunito Sans]" />
-            }
-            title="Jumlah Pengguna"
-            value={stats.jumlahPengguna}
-          />
-          <StatBox
-            icon={<GrArticle className="w-[30px] h-[30px] text-white" />}
-            title="Artikel Publish"
-            value={stats.artikelPublish}
-          />
-          <StatBox
-            icon={<FaUserClock className="w-[30px] h-[30px] text-white" />}
-            title="Verifikasi Pengguna"
-            value={stats.filteredData}
-          /> */}
+        {/* statistik  */}
+        <div className="bg-[#004A76]  p-1 rounded-md">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-white items-center pl-3">
+               <div className="flex items-center gap-3">
+                   <StatBox
+                      icon={
+                      <BsFillBarChartFill className="w-[30px] h-[30px] text-white font-[Nunito Sans]"/>}
+                      title="Jumlah Pengguna"
+                      value={stats.jumlahPengguna}
+                    />
+               </div>
+
+               <div className="flex items-center gap-3">
+                    <StatBox
+                      icon={<GrArticle className="w-[30px] h-[30px] text-white" />}
+                      title="Artikel Publish"
+                      value={stats.artikelPublish}
+                    />
+                </div>
+
+               <div className="flex items-center gap-3">
+                  <StatBox
+                    icon={<FaUserClock className="w-[30px] h-[30px] text-white" />}
+                    title="Verifikasi Pengguna"
+                    value={stats.filteredData}
+                  />
+               </div>
+          </div>
         </div>
+
+        {/* LogPengguna */}
+        <div className='flex flex-col gap-3'>
+          <div>
+            <p className="font-[Nunito Sans] text-2xl font-bold pl-5  text-[#025f96] justify-between ">
+              Log Aktivitas Pengguna{" "}
+            </p>
+          </div>
+
+          <div className="flex flex-row gap-8 justify-center items-center lg:h-auto ">
+            <div className="flex flex-row md:w-full  ">
+              <div className="grid grid-cols-2 gap-6 ">
+                <div className="grid grid-cols-2 gap-4 bg-[#D9D9D9] h-auto  lg:w- justify-center rounded-xl p-4">
+                  <div>
+                    <h3 className="font-bold text-[16px] text-black underline">
+                      Konsultasi
+                    </h3>
+                    <p className="text-[15px] text-black">{jumlahKonsultasi}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[16px] text-black underline">
+                      Akun Baru
+                    </h3>
+                    <p className="text-[15px] text-black">{stats.filteredData}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[16px] text-black underline">
+                      Dokter Aktif  
+                    </h3>
+                    <p className="text-[15px] text-black">35 Akun Dokter</p>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-[16px] text-black underline">
+                      Artikel Hari Ini
+                    </h3>
+                    <p className="text-[15px] text-black">{stats.artikelHariIni}</p>
+                  </div>
+                </div>
+              </div>
+
+
+              <div className="flex flex-row md:w-full gap-8 justify-center items-center lg:h-auto">
+                <div className="flex flex-row ">
+                  <div className="grid grid-cols-2 gap-6 ">
+                    <div className="grid grid-cols-2 gap-4 bg-[#D9D9D9] h-auto  lg:w- justify-center rounded-xl p-4">
+                      <div>
+                        <h3 className="font-bold text-[16px] text-black underline">
+                          Konsultasi
+                        </h3>
+                        <p className="text-[15px] text-black">{jumlahKonsultasi}</p>
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-[16px] text-black underline">
+                          Akun Baru
+                        </h3>
+                        <p className="text-[15px] text-black">{stats.filteredData}</p>
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-[16px] text-black underline">
+                          Dokter Aktif  
+                        </h3>
+                        <p className="text-[15px] text-black">35 Akun Dokter</p>
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-[16px] text-black underline">
+                          Artikel Hari Ini
+                        </h3>
+                        <p className="text-[15px] text-black">{stats.artikelHariIni}</p>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+            </div>
+           </div>
+         </div>
+
+
+          
+        
+
+        </div>
+       
+
+       
 
 
         

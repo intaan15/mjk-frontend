@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { TiUser } from "react-icons/ti";
 import { HiOutlineUser } from "react-icons/hi2";
-import { TbLogout } from "react-icons/tb";
+import { IoLogOutOutline } from "react-icons/io5";
 import { Card, Typography } from "@material-tailwind/react";
 
 
@@ -69,30 +69,12 @@ function Konsultasi() {
         .catch((err) => {
         console.error('Error fetching data:', err);
         });
-
-      
-    axios.get(`https://mjk-backend-production.up.railway.app/api/superadmin/getall`)
-        .then((res) => {
-            const data = res.data;
-            setAllRows(data);
-            console.log(data);
-            setData(data);
-
-            // Ambil username dari data superadmin
-            if (data.length > 0) {
-              setUsername(data[0].username_superadmin);
-            }
-        })
-        
-        .catch((err) => {
-        console.error('Error fetching data:', err);
-        });
   }, []);
   
   
   return (
-    <div className="flex flex-row">
-      <main className=' w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100 '>
+    <div className="flex flex-row h-full">
+      <main className='flex flex-col pl-18 pr-3 gap-1 w-full'>
         
         {/* Atas(search & profile) */}
         <div className='flex flex-row  items-center justify-between  pt-2'>
@@ -101,35 +83,50 @@ function Konsultasi() {
 
             {/* search */}
             <div className=" mt-3 flex items-center rounded-[19px]  px-2 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
-                <IoIosSearch className="text-gray-400"/>
-                <input
-                  type="text"
-                  placeholder="Masukkan Nama Pasien"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="text-gray-700 text-sm outline-none bg-transparent"
-                />
+              <IoIosSearch className="text-gray-400"/>
+              <input
+                type="text"
+                placeholder="Masukkan Nama Pasien"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="text-gray-700 text-sm outline-none bg-transparent" />             
             </div>
 
             {/* akun */}
-            <button onClick={toggleDropdown} className="items-center focus:outline-none cursor-pointer pt-3">
-                <TiUser className='w-[40px] h-[40px] text-[#292D32]'> </TiUser>
-                <div>
-                  {isOpen && (
-                    <div className="absolute right-3 w-44 mt-2 origin-top-right bg-white rounded-xl shadow-lg ring-1 ring-blue-500 ring-opacity-10 z-50 transition-all ease-in-out duration-200 transform opacity-100">
-                      <div className="py-1 px-3">
-                        <div className='flex flex-row items-center gap-2'>
-                          <HiOutlineUser />
-                          <a href="#" className="block py-2 text-sm text-gray-800 hover:bg-gray-200 rounded-lg font-[raleway] transition duration-200 ease-in-out transform hover:scale-105">{username}</a>
-                        </div>
-                        <div className='flex flex-row items-center gap-2'>
-                          <TbLogout />
-                          <a href="/" onClick={handleLogout} className="block py-2 text-sm text-gray-800 hover:bg-gray-200 rounded-lg font-[raleway] transition duration-200 ease-in-out transform hover:scale-105"> Log Out</a>
-                        </div>
+            <div className="flex flex-row gap-4 relative">
+              <button
+                onClick= {toggleDropdown}
+                className="flex items-center space-x-2 focus:outline-none cursor-pointer">
+                <TiUser className="w-[40px] h-[40px] text-[#292D32]"> </TiUser>
+              </button>
+
+              <div>
+                {isOpen && (
+                  <>
+                    <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setIsOpen(false)}></div>
+                    <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
+                      <div className="py-1 justify-center">
+                        <a
+                          href=""
+                          className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
+                          <HiOutlineUser className='text-[30px]' />
+                          Administrator
+                        </a>
+                        
+                        <a
+                          href="#"
+                          onClick={handleLogout}
+                          className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
+                          <IoLogOutOutline className='text-[30px]' />
+                          {" "}
+                          Log Out
+                        </a>
                       </div>
-                    </div>)}
-                </div>
-              </button> 
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
           </div> 
         </div>
         <img src="/line style.svg" alt="" />
@@ -158,8 +155,7 @@ function Konsultasi() {
           </button>
         </div>
 
-        
-
+    
         {/* HEADER TABEL Filtering Tabel BLM FIX */}
         <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-hidden overflow-y-auto max-h-[400px]">
           <table className="w-full min-w-max table-auto text-left font-extrabold " style={{ fontFamily: '"Nunito Sans"' }}>
@@ -254,7 +250,7 @@ function Konsultasi() {
               })}
             </tbody>
           </table>
-        </div> 
+        </div>
       </main>
     </div>
     
