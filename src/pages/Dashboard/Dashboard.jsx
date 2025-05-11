@@ -147,10 +147,10 @@ function Dashboard() {
 
 
   return (
-    <div className="flex flex-row ">
+    <div className="flex flex-row h-full">
      {/* container main */}
-      <main className="flex flex-col pl-8 pr-3 gap-1 bg-gray-100 ">
-        <div className="flex flex-row  items-center justify-between pt-2">
+      <main className="flex flex-col pl-8 pr-3 gap-1 ">
+        <div className="flex flex-row  items-center justify-between pt-3">
           <p className="text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
             Dashboard
           </p>
@@ -158,7 +158,7 @@ function Dashboard() {
             <button
               onClick= {toggleDropdown}
               className="flex items-center space-x-2 focus:outline-none cursor-pointer">
-              <TiUser className="w-[40px] h-[40px] text-[#292D32]"> </TiUser>
+              <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
             </button>
             <div>
               {isOpen && (

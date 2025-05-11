@@ -64,7 +64,7 @@ const Sidebar = () => {
   
     <div className={`bg-white min-h-screen shadow-lg p-6 pt-10 w-1/6 lg:w-64 transition-all duration-300`}>
 
-      <div className={`flex items-center gap-3 mb-6 ${!isOpen }`}>
+      <div className={`flex items-center justify-center gap-3 mb-6 ${!isOpen }`}>
           <div className='flex flex-row gap-2  w-[300px] overflow-hidden'>
                  <img className={`transition-all duration-500 relative ${open ? "w-[80px]" : "w-[50px]"}`}
                  src="/Logo Mojokerto Sehat.svg" 
@@ -78,7 +78,7 @@ const Sidebar = () => {
 
 
 
-      <ul className="space-y-4 pt-6">
+      <ul className="space-y-4 pt-6 items-center justify-center">
         {menuItems.map((item, idx) => (
           <li key={idx}>
             {item.children ? (
@@ -87,13 +87,13 @@ const Sidebar = () => {
                   onClick={() => toggleDropdown(item.label)}
                   className={`flex items-center justify-between px-2 py-2 cursor-pointer hover:bg-gray-100 rounded-md ${
                     item.children.some(child => location.pathname === child.to)
-                      ? "bg-[#E0F2FE] text-[#025F96] font-semibold"
+                      ? "bg-[#E0F2FE] text-[#025F96] font-semibold "
                       : "text-[#025F96]"
                     }`} >
                   <div className="flex items-center gap-3 text-[#025F96]">
                     <span className="w-6 h-6">{item.icon}</span>
                     <span
-                      className={`transition-all duration-300 origin-left text-md ${
+                      className={`transition-all duration-300 origin-left text-md  justify-center items-center${
                         isOpen ? "opacity-100 scale-100" : "opacity-0 scale-0"
                       }`}
                     >

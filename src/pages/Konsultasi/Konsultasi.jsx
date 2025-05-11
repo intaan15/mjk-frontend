@@ -11,7 +11,7 @@ import { TiUser } from "react-icons/ti";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
 import { Card, Typography } from "@material-tailwind/react";
-
+import { BiSort } from "react-icons/bi";
 
 
 
@@ -74,19 +74,19 @@ function Konsultasi() {
   
   return (
     <div className="flex flex-row h-full">
-      <main className='flex flex-col pl-18 pr-3 gap-1 w-full'>
+      <main className='flex flex-col pl-8 gap-1 w-full pr-3 '>
         
         {/* Atas(search & profile) */}
-        <div className='flex flex-row  items-center justify-between  pt-2'>
-          <p className='text-[25px] font-[Nunito Sans] font-bold text-[#004A76]'>Konsultasi</p>
-          <div className="flex flex-row gap-4">
+        <div className='flex flex-row  items-center justify-between pt-3'>
+          <p className='text-3xl font-[Nunito Sans] font-bold text-[#004A76]'>Konsultasi</p>
+          <div className="flex flex-row gap-4 relative">
 
             {/* search */}
-            <div className=" mt-3 flex items-center rounded-[19px]  px-2 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
+            <div className="flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
               <IoIosSearch className="text-gray-400"/>
               <input
                 type="text"
-                placeholder="Masukkan Nama Pasien"
+                placeholder="Pencarian"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="text-gray-700 text-sm outline-none bg-transparent" />             
@@ -97,7 +97,7 @@ function Konsultasi() {
               <button
                 onClick= {toggleDropdown}
                 className="flex items-center space-x-2 focus:outline-none cursor-pointer">
-                <TiUser className="w-[40px] h-[40px] text-[#292D32]"> </TiUser>
+                <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
               </button>
 
               <div>
@@ -129,7 +129,7 @@ function Konsultasi() {
             </div>
           </div> 
         </div>
-        <img src="/line style.svg" alt="" />
+       <div className="w-[100%] h-1 bg-[#1177B3]"></div>
 
 
         {/* Button Tengah */}
