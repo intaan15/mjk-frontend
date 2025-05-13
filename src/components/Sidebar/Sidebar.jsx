@@ -47,8 +47,8 @@ const Sidebar = () => {
       label: "Data Dokter",
       icon: <FaUserDoctor className='w-8 h-8 text-[#004A76]'/>,
       children: [
-        { label: "Data Jadwal", to: "/dokter/jadwal" },
-        { label: "Data Dokter", to: "/dokter/datadokter" }
+        { label: "Data Dokter", to: "/dokter/datadokter" },
+        { label: "Data Jadwal", to: "/dokter/jadwal" }
       ]
     },
     {

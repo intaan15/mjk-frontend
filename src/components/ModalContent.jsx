@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-export default function renderModalContent(modalType, onClose) {
+export default function renderModalContent(modalType, onClose,data) {
   const setOpen = () => {
     onClose(false);
   };
@@ -260,25 +260,26 @@ export default function renderModalContent(modalType, onClose) {
     case "detailprofildokter":
       return (
         <>
-          <div className="text-start ">
+          <detailprofildokter data={data} onClose={onClose} />
+          <div className="">
             <button
               onClick={() => setOpen(false)}
               className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold">Detail Profil Dokter</h1>
+            <p className="text-center text-xl font-bold items-center py-2">Detail Profil Dokter</p>
 
             <div className="flex flex-col justify-center items-center gap-4">
               <div className="bg-red-200 rounded-full p-12">foto</div>
               <div className="grid grid-cols-2 gap-4 w-full text-center">
                 <div>
                   <div className="text-[#025F96]">Nama</div>
-                  <div>isinama</div>
+                  <div>{data.nama_dokter}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Username</div>
-                  <div>isinama</div>
+                  <div>{data.username_dokter}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Email</div>
@@ -290,34 +291,37 @@ export default function renderModalContent(modalType, onClose) {
                 </div>
                 <div>
                   <div className="text-[#025F96]">Bidang Dokter</div>
-                  <div>isinama</div>
+                  <div>{data.spesialis_dokter}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Nomor Telepon</div>
-                  <div>isinama</div>
+                  <div>09876543234567</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Jenis Kelamin</div>
-                  <div>isinama</div>
+                  <div>Perempuan</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Tanggal Lahir</div>
                   <div>isinama</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Foto KTP</div>
-                  <div className=" bg-orange-200 h-50 rounded-xl">isinama</div>
+                  <div className="text-[#025F96]">Nomor.STR Kedokteran</div>
+                  <div>isinama</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Selfie dengan KTP</div>
-                  <div className="bg-orange-200 h-50 rounded-xl">isinama</div>
+                  <div className="text-[#025F96]">Alamat</div>
+                  <div>isinama</div>
                 </div>
+                
               </div>
             </div>
 
             <div className=" text-center">
-              <button className="px-4 py-2 bg-red-200 rounded-xl cursor-pointer mt-5">
-                Save change
+              <button className="px-4 py-2 bg-[#1177B3] text-white rounded-xl cursor-pointer mt-5
+               onClick={() => setShowModal(false)}
+              ">
+                Tutup
               </button>
             </div>
           </div>

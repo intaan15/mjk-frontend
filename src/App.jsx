@@ -15,6 +15,8 @@ import DataMasyarakat from "./pages/Masyarakat/DataMasyarakat";
 import Verifikasi from "./pages/Masyarakat/Verifikasi";
 import Modal from "./components/Modal";
 import PrivateRoute from "./components/Privateroutes";
+import Outtabel from "./components/Table/Outtabel";
+
 
 function App() {
   return (
@@ -39,6 +41,7 @@ function App() {
           <Route path="/dokter/jadwal" element={<Jadwal />} /> 
           <Route path="/masyarakat/data" element={<DataMasyarakat />} />
           <Route path="/masyarakat/verifikasi" element={<Verifikasi />} />
+          <Route path="/outable" element={<Outtabel/>} />
         </Route>
       </Routes>
     </Router>

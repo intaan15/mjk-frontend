@@ -73,11 +73,11 @@ function Konsultasi() {
   
   
   return (
-    <div className="flex flex-row h-full">
+    <div className="flex flex-row ">
       <main className='flex flex-col pl-8 gap-1 w-full pr-3 '>
         
         {/* Atas(search & profile) */}
-        <div className='flex flex-row  items-center justify-between pt-3'>
+        <div className='flex flex-row  items-center justify-between pt-2'>
           <p className='text-3xl font-[Nunito Sans] font-bold text-[#004A76]'>Konsultasi</p>
           <div className="flex flex-row gap-4 relative">
 
@@ -157,7 +157,7 @@ function Konsultasi() {
 
     
         {/* HEADER TABEL Filtering Tabel BLM FIX */}
-        <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-hidden overflow-y-auto max-h-[400px]">
+        <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-hidden overflow-y-auto ">
           <table className="w-full min-w-max table-auto text-left font-extrabold " style={{ fontFamily: '"Nunito Sans"' }}>
             <thead className=" sticky top-0 z-10 " >
               <tr>
