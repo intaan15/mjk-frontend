@@ -8,12 +8,11 @@ import axios from "axios";
 import Modal from "../../components/ModalTemplate";
 import Basetable from "../../components/Table/Basetable";
 import { FaTrashAlt } from "react-icons/fa";
-import { Card, Typography } from "@material-tailwind/react";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
-import { TiUser } from 'react-icons/ti'
+import { TiUser } from 'react-icons/ti';
 import { FaEdit } from "react-icons/fa"; 
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";

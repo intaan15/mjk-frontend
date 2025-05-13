@@ -147,9 +147,9 @@ function Dashboard() {
 
 
   return (
-    <div className="flex flex-row h-full">
+    <div className="flex flex-row bg-amber-300">
      {/* container main */}
-      <main className="flex flex-col pl-8 pr-3 gap-1 ">
+      <main className="flex flex-col pl-8 pr-3 gap-1 bg-[#131927]/5  ">
         <div className="flex flex-row  items-center justify-between pt-3">
           <p className="text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
             Dashboard
@@ -192,10 +192,10 @@ function Dashboard() {
 
 
         
-        <div className="flex flex-row items-center justify-between w-full bg-[#004A76] rounded-xl p-6">
-          <div className="font-bold text-white pl-3 flex  flex-col pt-5 gap-10  ">
+        <div className="flex flex-row pl-1">
+          <div className="font-bold text-white pl-3 flex  flex-col pt-5 absolute gap-15 ">
             {/* calender */}
-            <div className="justify-center items-center pt-2 ">
+            <div className="justify-center items-center pt-2  ">
               <Calendar 
               className="w-5 h-5" 
               onChange={(date) => setSelectedDate(date)} 
@@ -203,20 +203,20 @@ function Dashboard() {
             </div>
 
             {/* heading */}
-            <div className="sticky">
-              <h2 className="font-[raleway] text-3xl font-bold text-white">
+            <div className="items-end relative ">
+              <h2 className="font-[Poppins] text-3xl font-bold text-white">
                 Hi, Admin
               </h2>
-              <p className="font-[NunitoSans] italic text-2xl text-[#004A76] font-bold ">
+              <p className="italic text-xl text-[#004A76] font-medium font-[Poppins]">
                 Selamat datang di Website Mojokerto Sehat
               </p>
             </div>
           </div>
-          <img src="img_org.svg" alt="" className="h-auto object-contain" />
+          <img src="img_org.svg" alt="" className="" />
         </div>
 
         {/* statistik  */}
-        <div className="bg-[#004A76]  p-1 rounded-md">
+        <div className="bg-[#004A76]  flex flex-row pl-1 rounded-lg">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-white items-center pl-3">
                <div className="flex items-center gap-3">
                    <StatBox
@@ -319,12 +319,7 @@ function Dashboard() {
             </div>
            </div>
          </div>
-
-
-          
-        
-
-        </div>
+        </div> 
        
 
        

@@ -100,7 +100,7 @@ function Konsultasi() {
                 <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
               </button>
 
-              <div>
+             <div>
                 {isOpen && (
                   <>
                     <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setIsOpen(false)}></div>
