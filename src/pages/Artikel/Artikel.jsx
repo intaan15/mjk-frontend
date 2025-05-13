@@ -7,6 +7,7 @@ import Basetable from "../../components/Table/Basetable";
 
 
 import { FaUser } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
 import { TiUser } from 'react-icons/ti';
 import { FaEdit } from "react-icons/fa";
 import { HiOutlineUser } from "react-icons/hi2";
@@ -55,7 +56,8 @@ export default function Artikel() {
   const [isOpen, setIsOpen] = useState(false);
 
   
-  const [selectedKategori, setSelectedKategori] = useState("obat");
+  const [selectedKategori, setSelectedKategori] = useState("kesehatan");
+  const [artikel, setArtikel] = useState([]); 
 
 
 
@@ -77,12 +79,29 @@ export default function Artikel() {
     navigate("/login");
   };
 
+  // FILTER ARTIKEL
+  const filteredData = artikel?.filter((item) =>
+    item.kategori_artikel.toLowerCase() === selectedKategori.toLowerCase()
+  );
+
+  // FORMAT TANGGAL
+  const formatTanggal = (isoDateString) => {
+  const date = new Date(isoDateString);
+    return date.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+
+
   // ENDPOINT GET DATA
   useEffect(() => {
     axios.get(`https://mjk-backend-production.up.railway.app/api/artikel/getall`)
         .then((res) => {
           console.log(res.data);
-          setData(res.data);
+           setArtikel(res.data);
         })
         .catch((err) => {
         console.error('Error fetching data:', err);
@@ -116,6 +135,7 @@ export default function Artikel() {
     accessorKey: "tgl_terbit_artikel",
     header: "Tgl.Terbit",
     enableSorting: false,
+    cell: info => formatTanggal(info.getValue()),
   },
   {
     accessorKey: "kategori_artikel",
@@ -127,9 +147,9 @@ export default function Artikel() {
     header: "Detail",
     enableSorting: false,
     cell: ({ row }) => (
-    <div className="flex gap-2 items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797]">
+    <div className="flex gap-2 items-center bg-[#FAFBFD]">
       <button onClick={() => handleEdit(row.original)} title="Edit">
-        <FaEdit className="text-gray-600 hover:text-[#004A76] text-lg" />
+        <FaEdit className="w-7  h-7 p-1 flex text-center justify-center bg-red-100 text-red-600 hover:bg-red-200 rounded-sm transition" />
       </button>
     </div>),
   },
@@ -138,9 +158,13 @@ export default function Artikel() {
     header: "Aksi",
     enableSorting: false,
     cell: ({ row }) => (
-    <div className="flex gap-2 items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797]">
+    <div className="inline-flex overflow-hidden items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797]">
       <button onClick={() => handleEdit(row.original)} title="Edit">
-        <FaEdit className="text-gray-600 hover:text-[#004A76] text-lg" />
+        <FaEdit className="w-5 h-5 text-gray-600 hover:text-[#004A76] text-lg" />
+      </button>
+
+      <button onClick={() =>deleteDokterById(_id)} title="Hapus">
+        <FaTrashAlt className="w-5 h-5 text-red-500 hover:text-red-700 text-lg" />
       </button>
     </div>),
   },]
@@ -206,11 +230,11 @@ export default function Artikel() {
         
         {/* choose */}
         <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
-          <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-4xl items-center px-6">
-            <span className="font-medium text-gray-700">Kategori :</span>
+          <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-4xl items-center">
+            <span className="font-bold text-gray-700">Kategori :</span>
             <button
               onClick={() => setSelectedKategori("kesehatan")}
-              className={`px-4 py-1 rounded-full border-2 transition-all duration-200 ${
+              className={` w-50 px-4 py-1 rounded-full border-2 transition-all duration-200 ${
                 selectedKategori === "kesehatan"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
@@ -221,7 +245,7 @@ export default function Artikel() {
 
             <button
                 onClick={() => setSelectedKategori("obat")}
-                className={`px-4 py-1 rounded-full border-2 transition-all duration-200 ${
+                className={` w-50 px-4 py-1 rounded-full border-2 transition-all duration-200 ${
                   selectedKategori === "obat"
                     ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                     : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
@@ -246,7 +270,7 @@ export default function Artikel() {
             <p>Loading data...</p>
           ) : (
             <>
-              <Basetable data={data} columns={columns} />
+              <Basetable data={filteredData} columns={columns} />
             </>
             
           )}
