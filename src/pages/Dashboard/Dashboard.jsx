@@ -143,13 +143,19 @@ function Dashboard() {
       },[]);
 
 
-   
+      const formatTanggal = (tanggal) => {
+        const dateObj = new Date(tanggal);
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();
+        return `${day}-${month}-${year}`;
+      };
 
 
   return (
-    <div className="flex flex-row bg-amber-300">
+    <div className="flex flex-row h-full">
      {/* container main */}
-      <main className="flex flex-col pl-8 pr-3 gap-1 bg-[#131927]/5  ">
+      <main className="flex flex-col pl-8 pr-3 gap-1 bg-[#131927]/5 pb-3 h-full">
         <div className="flex flex-row  items-center justify-between pt-3">
           <p className="text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
             Dashboard
@@ -190,34 +196,34 @@ function Dashboard() {
         </div>
         <img src="line style.svg" alt="" className='w-screen' />
 
+        {/* header */}
+        <div className='relative w-full'>
+          {/* Gambar sebagai latar */}
+          <img src="img_org.svg" alt="" className="w-full object-cover h-auto" />
 
-        
-        <div className="flex flex-row pl-1">
-          <div className="font-bold text-white pl-3 flex  flex-col pt-5 absolute gap-15 ">
-            {/* calender */}
-            <div className="justify-center items-center pt-2  ">
-              <Calendar 
-              className="w-5 h-5" 
-              onChange={(date) => setSelectedDate(date)} 
-              value={selectedDate}/>
+          {/* Overlay teks dan kalender */}
+          <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-5 ">
+            {/* Kalender */}
+            <div className="rounded p-2">
+              <Calendar
+                className="w-5 h-5"
+                onChange={(date) => setSelectedDate(date)}
+                value={selectedDate}
+              />
             </div>
-
-            {/* heading */}
-            <div className="items-end relative ">
-              <h2 className="font-[Poppins] text-3xl font-bold text-white">
-                Hi, Admin
-              </h2>
+            {/* Heading */}
+            <div className="text-white ml-2">
+              <h2 className="font-[Poppins] text-3xl font-bold">Hi, Admin</h2>
               <p className="italic text-xl text-[#004A76] font-medium font-[Poppins]">
                 Selamat datang di Website Mojokerto Sehat
               </p>
             </div>
           </div>
-          <img src="img_org.svg" alt="" className="" />
         </div>
 
         {/* statistik  */}
-        <div className="bg-[#004A76]  flex flex-row pl-1 rounded-lg">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-white items-center pl-3">
+        <div className="bg-[#004A76] flex flex-row rounded-lg mt-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-white items-center">
                <div className="flex items-center gap-3">
                    <StatBox
                       icon={
@@ -248,78 +254,51 @@ function Dashboard() {
         {/* LogPengguna */}
         <div className='flex flex-col gap-3'>
           <div>
-            <p className="font-[Nunito Sans] text-2xl font-bold pl-5  text-[#025f96] justify-between ">
-              Log Aktivitas Pengguna{" "}
+            <p className="font-[Nunito Sans] text-2xl font-bold pt-2  text-[#025f96] justify-between ">
+              Log Aktivitas Pengguna
             </p>
           </div>
 
-          <div className="flex flex-row gap-8 justify-center items-center lg:h-auto ">
-            <div className="flex flex-row md:w-full  ">
-              <div className="grid grid-cols-2 gap-6 ">
-                <div className="grid grid-cols-2 gap-4 bg-[#D9D9D9] h-auto  lg:w- justify-center rounded-xl p-4">
-                  <div>
-                    <h3 className="font-bold text-[16px] text-black underline">
-                      Konsultasi
-                    </h3>
-                    <p className="text-[15px] text-black">{jumlahKonsultasi}</p>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-[16px] text-black underline">
-                      Akun Baru
-                    </h3>
-                    <p className="text-[15px] text-black">{stats.filteredData}</p>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-[16px] text-black underline">
-                      Dokter Aktif  
-                    </h3>
-                    <p className="text-[15px] text-black">35 Akun Dokter</p>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-[16px] text-black underline">
-                      Artikel Hari Ini
-                    </h3>
-                    <p className="text-[15px] text-black">{stats.artikelHariIni}</p>
-                  </div>
-                </div>
+          <div className='flex'>
+            <div className="grid grid-cols-2 gap-6 w-3/6 ">
+              {/* Kartu 1 */}
+              <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
+                <p className="text-5xl font-bold text-[#004A76]">{jumlahKonsultasi}</p>
+                <p className="text-lg text-[#004A76] font-semibold">Konsultasi</p>
+                <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
 
+              {/* Kartu 2 */}
+              <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
+                <p className="text-5xl font-bold text-[#004A76]">{stats.filteredData}</p>
+                <p className="text-lg text-[#004A76] font-semibold">Akun Baru</p>
+                <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
+              </div>
 
-              <div className="flex flex-row md:w-full gap-8 justify-center items-center lg:h-auto">
-                <div className="flex flex-row ">
-                  <div className="grid grid-cols-2 gap-6 ">
-                    <div className="grid grid-cols-2 gap-4 bg-[#D9D9D9] h-auto  lg:w- justify-center rounded-xl p-4">
-                      <div>
-                        <h3 className="font-bold text-[16px] text-black underline">
-                          Konsultasi
-                        </h3>
-                        <p className="text-[15px] text-black">{jumlahKonsultasi}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-[16px] text-black underline">
-                          Akun Baru
-                        </h3>
-                        <p className="text-[15px] text-black">{stats.filteredData}</p>
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-[16px] text-black underline">
-                          Dokter Aktif  
-                        </h3>
-                        <p className="text-[15px] text-black">35 Akun Dokter</p>
-                      </div>
-                      <div>
-                        <h3 className="font-bold text-[16px] text-black underline">
-                          Artikel Hari Ini
-                        </h3>
-                        <p className="text-[15px] text-black">{stats.artikelHariIni}</p>
-                      </div>
-                    </div>
-                  </div>
+              {/* Kartu 3 */}
+              <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
+                <p className="text-5xl font-bold text-[#004A76]">5</p>
+                <p className="text-lg text-[#004A76] font-semibold">Dokter Aktif</p>
+                <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
+              </div>
+
+              {/* Kartu 4 */}
+              <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
+                <p className="text-5xl font-bold text-[#004A76]">{stats.artikelHariIni}</p>
+                <p className="text-lg text-[#004A76] font-semibold">Artikel Publish</p>
+                <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
             </div>
-           </div>
-         </div>
-        </div> 
+
+            {/* Chart Donut */}
+            <div className=' flex justify-center w-3/6'>
+              <div className="flex justify-center w-5/6 bg-white rounded-xl shadow-md">
+                <Bar />
+              </div>
+            </div>
+          </div>
+        </div>
+
        
 
        

@@ -62,7 +62,7 @@ const Sidebar = () => {
   // Tampilan sidebar
   return (
   
-    <div className={`bg-white min-h-screen shadow-lg p-6 pt-10 w-1/6 lg:w-64 transition-all duration-300`}>
+    <div className={`bg-white h-full shadow-lg p-6 pt-10 w-1/6 lg:w-64 transition-all duration-300`}>
 
       <div className={`flex items-center justify-center gap-3 mb-6 ${!isOpen }`}>
           <div className='flex flex-row gap-2  w-[300px] overflow-hidden'>
