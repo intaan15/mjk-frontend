@@ -344,15 +344,15 @@ export default function renderModalContent(modalType, onClose,data) {
               <div className="grid grid-cols-2 gap-4 w-full text-center">
                 <div>
                   <div className="text-[#025F96]">Nama</div>
-                  <div>isinama</div>
+                  <div>{data.nama_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Username</div>
-                  <div>isinama</div>
+                  <div>{data.username_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Email</div>
-                  <div>isinama</div>
+                  <div>{}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">NIK</div>

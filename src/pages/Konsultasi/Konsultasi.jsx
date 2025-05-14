@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import Basetable from "../../components/Table/Basetable";
 
 import { useState } from "react";
 import { useEffect } from "react";
@@ -10,6 +11,7 @@ import { IoIosSearch } from "react-icons/io";
 import { TiUser } from "react-icons/ti";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
+import { FaEdit } from "react-icons/fa";
 import { Card, Typography } from "@material-tailwind/react";
 import { BiSort } from "react-icons/bi";
 
@@ -21,9 +23,6 @@ import { BiSort } from "react-icons/bi";
 function Konsultasi() {
 
 
-  const TABLE_HEAD = ["Nama Pasien", "Poli", "Nama Dokter", "Waktu ","Tanggal Konsultasi", "Status"];
-  const TABLE_ROWS = [ ];
-
 
   // filterstatus button diproses
   const [filterStatus, setFilterStatus] = useState("Diproses");
@@ -33,6 +32,7 @@ function Konsultasi() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => setIsOpen(!isOpen);
+  const [loading, setLoading] = useState(false);
 
   // filterstatus
   const filteredRows = data.filter((row) => {
@@ -57,6 +57,17 @@ function Konsultasi() {
     navigate("/login");
   };
 
+
+   const formatTanggal = (isoDateString) => {
+  const date = new Date(isoDateString);
+    return date.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+
   // ENDPOINT GET DATA jadwal
   useEffect(() => {
     axios.get(`https://mjk-backend-production.up.railway.app/api/jadwal/getall`)
@@ -70,10 +81,113 @@ function Konsultasi() {
         console.error('Error fetching data:', err);
         });
   }, []);
+
+   const columns = [
+      {
+          accessorKey: "foto_profil_dokter",
+          header: "Foto",
+          enableSorting: false,
+          cell: ({ getValue }) => {
+          const imageUrl = getValue();
+          return (
+              <img 
+              src="foto"
+              alt="Foto Dokter" 
+              className="w-10 h-10 object-cover rounded-full" 
+              />
+          );} 
+      },
+          {
+              accessorKey: "nama_masyarakat",
+              header: "Nama",
+              enableSorting: false,
+              cell: ({ row }) => row.original.masyarakat_id?.nama_masyarakat || "-"
+          },
+          {
+              accessorKey: "spesialis_dokter",
+              header: "Poli",
+              enableSorting: false,
+              cell: ({ row }) => row.original.dokter_id?.spesialis_dokter || "-"
+          },
+          {
+              accessorKey: "nama_dokter",
+              header: "Nama Dokter",
+              enableSorting: false,
+              cell: ({ row }) =>  row.original.dokter_id?.nama_dokter || "-"
+
+          },
+          {
+              accessorKey: "jam_konsul",
+              header: "Waktu",
+              enableSorting: false,
+
+          },
+          {
+              accessorKey: "tgl_konsul",
+              header: "Tgl. Konsultasi",
+              enableSorting: false,
+              cell: info => formatTanggal(info.getValue()),
+
+          },
+          {
+              accessorKey: "status_konsul",
+              header: "Status",
+              enableSorting: false,
+              cell: ({ row }) => {
+                const status = row.original.status_konsul;
+
+                let bgColor = "";
+                let textColor = "";
+                let label = "";
+
+                switch (status) {
+                  case "selesai":
+                    bgColor = "bg-[#27AE60]";
+                    textColor = "text-white";
+                    label = "Selesai";
+                    break;
+                  case "ditolak":
+                    bgColor = "bg-[#EF3826]";
+                    textColor = "text-white";
+                    label = "Ditolak";
+                    break;
+                  case "diterima":
+                    bgColor = "bg-[#BCE2C5]";
+                    textColor = "text-[#155724]";
+                    label = "Diterima";
+                    break;
+                  case "berlangsung":
+                    bgColor = "bg-[#3498DB]";
+                    textColor = "text-white";
+                    label = "Berlangsung";
+                    break;
+                  case "menunggu":
+                    bgColor = "bg-[#E0F4FF]";
+                    textColor = "text-[#004A76]";
+                    label = "Menunggu";
+                    break;
+                  default:
+                    bgColor = "bg-gray-200";
+                    textColor = "text-gray-800";
+                    label = "Tidak diketahui";
+                }
+                return (
+                  <span className={`px-2 py-1 rounded-full text-sm font-medium ${bgColor} ${textColor}`}>
+                    {label}
+                  </span>
+                );
+             }
+              
+
+          },
+        
+          
+      ];
+      
   
   
   return (
-    <div className="flex flex-row ">
+    <div className="flex flex-row h-screen">
       <main className='flex flex-col pl-8 gap-1 w-full pr-3 '>
         
         {/* Atas(search & profile) */}
@@ -157,100 +271,18 @@ function Konsultasi() {
 
     
         {/* HEADER TABEL Filtering Tabel BLM FIX */}
-        <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-hidden overflow-y-auto ">
-          <table className="w-full min-w-max table-auto text-left font-extrabold " style={{ fontFamily: '"Nunito Sans"' }}>
-            <thead className=" sticky top-0 z-10 " >
-              <tr>
-                {TABLE_HEAD.map((head) => ( 
-                  <th
-                    key={head}
-                    className="p-3 border-b border-blue-gray-100  font-bold bg-[#C3E9FF]"
-                    
-                  >
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="leading-none opacity-70"
-                    >
-                      {head}
-                    </Typography>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-
-             <tbody>
-              {filteredRows.map(({_id,masyarakat_id,dokter_id, tgl_konsul,jam_konsul,status_konsul}, index) => {
-                const isLast = index === TABLE_ROWS.length - 1;
-                const classes = isLast
-                  ? "p-4"
-                  : "p-2 border-b border-blue-gray-50 items-center";
-
-                return (
-                  <tr key={`${_id}-${index}`}>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal items-center"
-                      >
-                        {masyarakat_id?.nama_masyarakat || "-"}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal items-center"
-                      >
-                        {dokter_id?.spesialis_dokter|| "-"}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal items-center"
-                      >
-                        {dokter_id?.nama_dokter|| "-"}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal items-center"
-                      >
-                        {jam_konsul}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal items-center justify-center p-2"
-                      >
-                        {tgl_konsul?.split("T")[0]}
-                      </Typography>
-                    </td>
-                    <td className={classes}>
-                        <div className={`text-sm font-medium px-4 py-1 rounded-[10px] w-[90px] items-center text-center
-                          ${status_konsul === "menunggu" ? "bg-[#FFF3CD] text-[#856404]" : 
-                            status_konsul === "berlangsung" ? "bg-[#3498DB]  text-[#FFFFFF]" : 
-                            status_konsul === "diterima" ? "bg-[#BCE2C5]  text-[#155724]" : 
-                            status_konsul === "ditolak" ? "bg-[#B31111] text-white" : 
-                            status_konsul === "selesai" ? "bg-[#27AE60]" : "bg-gray-400"}
-                        `}>
-                          {status_konsul.charAt(0).toUpperCase() + status_konsul.slice(1)}
-                        </div>
-                    </td>
-                    
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div className="py-2">
+            {loading ? (
+                <p>Loading data...</p>
+            ) : (
+                <>
+                <Basetable data={filteredRows} columns={columns} />
+                
+                </>
+            )}
+            
         </div>
+        
       </main>
     </div>
     

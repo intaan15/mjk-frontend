@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Typography } from "@material-tailwind/react";
 import renderModalContent  from "../../components/ModalContent";
 import Modal from "../../components/ModalTemplate";
+import Basetable from "../../components/Table/Basetable";
 
 
 import { TiUser } from 'react-icons/ti'
@@ -13,6 +14,8 @@ import { FaEdit } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { FaUserCheck } from "react-icons/fa";
 import { FaUserMinus } from "react-icons/fa6";
+import { HiOutlineUser } from "react-icons/hi2";
+import { IoLogOutOutline } from "react-icons/io5";
 
 function Verifikasi() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -22,6 +25,7 @@ function Verifikasi() {
     const [allRows, setAllRows] = useState([]);
     const [data, setData] = useState([]);''
     const [isOpen, setIsOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate(); 
     const toggleDropdown = () => {setIsOpen(!isOpen);};
     const openModal = (type) => {
@@ -33,17 +37,14 @@ function Verifikasi() {
         setModalType("");
     };
 
-    const TABLE_HEAD = [
-        "Foto",
-        "Nama Pasien",
-        "Email",
-        "Kontak",
-        "NIK",
-        "Detail",
-        "Status Konfirmasi",
-    ];
-       
-   
+
+   const handleLogout = () => {
+    // Hapus token dari localStorage
+    localStorage.removeItem("token");
+
+    // Redirect ke halaman login
+    navigate("/login");
+  };
     
     const filteredRows = allRows.filter((item) => {
         const search = searchTerm.toLowerCase();
@@ -82,7 +83,7 @@ function Verifikasi() {
                 navigate("/masyarakat/data");}
 
             setData((prevData) => prevData.filter((item) => item._id !== _id));
-            if (status === "diterima") {
+            if (status === "ditolak") {
                 navigate("/masyarakat/data");}
           })
           .catch((err) => {
@@ -94,48 +95,153 @@ function Verifikasi() {
     useEffect(() => {
         axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
             .then((res) => {
-                const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Pending');
+                // const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending');
+                const filteredData = res.data;
                 setAllRows(filteredData);
                 console.log(filteredData);
                 setData(filteredData);
+                setLoading(false);
             })
             .catch((err) => {
             console.error('Error fetching data:', err);
+            setLoading(false);
             });
-        }, []);
+    }, []);
+
+
+    // HEADER TABLE
+    const columns = [
+        {
+            accessorKey: "foto_profil_dokter",
+            header: "Foto",
+            enableSorting: false,
+            cell: ({ getValue }) => {
+            const imageUrl = getValue();
+            return (
+                <img 
+                src="foto"
+                alt="Foto Dokter" 
+                className="w-10 h-10 object-cover rounded-full" 
+                />
+            );} 
+        },
+        {
+            accessorKey: "nama_masyarakat",
+            header: "Nama",
+            enableSorting: false,
+        },
+        {
+            accessorKey: "email_masyarakat",
+            header: "Email",
+            enableSorting: false,
+        },
+        {
+            accessorKey: "notlp_masyarakat",
+            header: "Kontak",
+            enableSorting: false,
+        },
+        {
+            accessorKey: "nik_masyarakat",
+            header: "NIK",
+            enableSorting: false,
+        },
+        {
+            accessorKey: "detail",
+            header: "Detail",
+            enableSorting: false,
+            cell: ({ row }) => (
+            <div className="flex gap-2 items-center bg-[#FAFBFD]">
+            <button onClick={() => handleEdit(row.original)} title="Edit">
+                <FaEdit className="w-7  h-7 p-1 flex text-center justify-center bg-red-100 text-black hover:bg-red-200 rounded-sm transition" />
+            </button>
+            </div>),
+        },
+    
+        {
+            accessorKey: "actions",
+            header: "Status Konfirmasi",
+            enableSorting: false,
+            cell: ({ row }) => (
+                <div className="flex gap-2 items-center bg-[#FAFBFD]">
+                    <button
+                        onClick={() =>handleVerifikasi(row.original)}
+                        title="Terima"
+                        className="bg-green-100 text-green-600 hover:bg-green-200 p-1 rounded-sm transition"
+                    >
+                        Terima
+                    </button>
+                    <button
+                        onClick={() => handleVerifikasi(row.original)}
+                        title="Tolak"
+                        className="bg-red-100 text-red-600 hover:bg-red-200 p-1 rounded-sm transition"
+                    >
+                        Tolak
+                    </button>
+                </div>
+            ),
+            
+        },
+    ];
+    
+
+
+
       
 
    
  
     return (
        <div className='flex flex-row'>
-           <main className=' w-full md:5/6 flex flex-col pl-18 pr-5 gap-1 bg-gray-100 '>
-               <div className='flex flex-row items-center justify-between  pt-2'>
-                   <p className='text-[25px] font-[raleway] font-bold text-[#004A76]'>Verifikasi Data Masyarakat</p>
-                   <div className="flex flex-row gap-4">
-                    <div className=" mt-3 flex items-center rounded-[19px] px-2 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
-                        <IoIosSearch className="text-gray-400"/>
-                        <input
-                            type="text"
-                            placeholder="Search"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="text-gray-700 text-sm outline-none bg-transparent"
-                        />
-                    </div>
-                    <button onClick={toggleDropdown} className="items-center focus:outline-none cursor-pointer pt-3">
-                        <TiUser className='w-[40px] h-[40px] text-[#292D32]'> </TiUser>
-                        <div>
-                            {isOpen && (
-                            <div className="absolute right-3 w-44 origin-top-right mt-2 shadow-xl rounded-xl bg-white ring-1 ring-blue ring-opacity-3 z-50 ">
-                                <div className="py-1">
-                                <a href="#" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100 ">Administrator</a>
-                                <a href="/" className="font-[raleway] block py-2 text-sm text-gray-700 hover:bg-gray-100"> Log Out</a>
-                                </div>
-                            </div>)}
+           <main className='flex flex-col pl-8 gap-1 w-full pr-3'>
+               <div className='flex flex-row items-center justify-between pt-1'>
+                   <p className='text-3xl font-[Nunito Sans] font-bold text-[#004A76]'>Verifikasi Data Masyarakat</p>
+                   <div className="flex flex-row gap-4 relative">
+                        <div className=" flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2 ">
+                            <IoIosSearch className="text-gray-400"/>
+                            <input
+                                type="text"
+                                placeholder="Pencarian"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="text-gray-700 text-sm outline-none bg-transparent"
+                            />
                         </div>
-                    </button> 
-                </div> 
+
+                        <div className="flex flex-row gap-4 relative">
+                            <button 
+                            onClick={toggleDropdown} 
+                            className="flex items-center focus:outline-none cursor-pointer">
+                            <TiUser className='w-11 h-11 text-[#292D32]'> </TiUser>
+                            </button>
+        
+                            <div>
+                            {isOpen && (
+                                <>
+                                <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setIsOpen(false)}></div>
+                                <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
+                                    <div className="py-1 justify-center">
+                                    <a
+                                        href=""
+                                        className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
+                                        <HiOutlineUser className='text-[30px]' />
+                                        Administrator
+                                    </a>
+                                    
+                                    <a
+                                        href="#"
+                                        onClick={handleLogout}
+                                        className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
+                                        <IoLogOutOutline className='text-[30px]' />
+                                        {" "}
+                                        Log Out
+                                    </a>
+                                    </div>
+                                </div>
+                                </>
+                            )}
+                            </div>
+                        </div>
+                    </div> 
                </div>
                <img src="/line style.svg" alt="" />
    
@@ -200,116 +306,16 @@ function Verifikasi() {
                 </div>
    
                {/* main  */}
-               <div className="border-2 border-gray-300 rounded-xl h-auto w-full mt-4 overflow-x-h_idden  overflow-y-auto max-h-[280px]">
-                   {/* <Card className="h-full w-full overflow-scroll"> */}
-                 <table className="w-full min-w-max table-auto text-left font-[Nunito]">
-                   <thead className="sticky top-0 z-10">
-                       <tr>
-                       {TABLE_HEAD.map((head) => (
-                           <th
-                           key={head}
-                           className="p-3 border-b border-blue-gray-100 bg-[#C3E9FF] text-center"
-                           >
-                           <Typography
-                               variant="small"
-                               color="blue-gray"
-                               className="font-normal leading-none opacity-70"
-                           >
-                               {head}
-                           </Typography>
-                           </th>
-                       ))}
-                       </tr>
-                   </thead>
-                   <tbody>
-                       { filteredRows.map(({ _id,foto_profil_masyarakat,nama_masyarakat,email_masyarakat,detail, notlp_masyarakat,nik_masyarakat,verifikasi_akun_masyarakat}, index) => {
-                        console.log({ foto_profil_masyarakat, nama_masyarakat, email_masyarakat,detail, notlp_masyarakat, nik_masyarakat,verifikasi_akun_masyarakat }); 
-                        console.log("Row data:", filteredRows);
-                        const isLast = index === filteredRows.length - 1;
-                        const classes = isLast
-                            ? "p-4"
-                            : "p-2 border-b border-blue-gray-50";
-       
-                       return (
-                           <tr key={`${nik_masyarakat}-${index}`}>
-                            <td className={classes}>
-                                {foto_profil_masyarakat ? (
-                                <img src={foto_profil_masyarakat} alt="Foto Profil" className="w-10 h-10 rounded-full object-cover" />
-                                ) : (
-                                <div className="w-10 h-10 rounded-full bg-gray-300" /> // kalau foto kosong
-                                )}
-                            </td>
-                            <td className={classes}>
-                                <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal text-center"
-                                >
-                                {nama_masyarakat}
-                                </Typography>
-                            </td>
-                            <td className={classes}>
-                                <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal text-center"
-                                >
-                                {email_masyarakat}
-                                </Typography>
-                            </td>
-                            <td className={classes}>
-                                <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal text-center"
-                                >
-                                {notlp_masyarakat}
-                                </Typography>
-                            </td>
-                            <td className={classes}>
-                                <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal text-center"
-                                >
-                                {nik_masyarakat}
-                                </Typography>
-                            </td>
-                            <td className={classes}>
-                                <div className="flex gap-2">
-                                    <button
-                                    onClick={() => openModal("detailprofilmasyarakat", { id: item._id })}
-                                    className="items-center gap-2 px-3 py-1 text-black rounded-lg hover:bg-gray-200 " >
-                                    <FaEdit />
-                                    </button> 
-                                </div>
-                            </td>
-                            <td key={_id} className={classes}>
-                                <div className="flex gap-2">
-                                    <button
-                                    onClick={() => handleVerifikasi("diterima",_id)}
-                                    className="px-3 py-1 bg-green-500 text-white rounded-lg hover:bg-green-600">
-                                    Diterima
-                                    </button>
-                                    <button
-                                    onClick={() => handleVerifikasi("ditolak",_id)}
-                                    className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                                    >
-                                    Ditolak
-                                    </button>
-                                </div>
-                            </td>
-                       </tr>
-                       );
-                       })}
-                   </tbody>
-                   </table>
-                   <Modal open={isModalOpen} onClose={closeModal}>
-                        {renderModalContent(modalType, closeModal)}
-                    </Modal>
-               </div>
-   
-                   
+                <div className="py-2">
+                    {loading ? (
+                        <p>Loading data...</p>
+                    ) : (
+                        <>
+                        <Basetable data={data} columns={columns} />
+                        
+                        </>
+                    )}
+                </div>
            </main>
        </div>
      )

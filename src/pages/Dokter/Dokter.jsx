@@ -129,9 +129,10 @@ function Dokter() {
         enableSorting: false,
         cell: ({ getValue }) => {
           const imageUrl = getValue();
+          console.log("Image URL:", imageUrl);
           return (
             <img 
-              src="foto"
+              src={`https://mjk-backend-production.up.railway.ap/api/dokter/${imageUrl}`}
               alt="Foto Dokter" 
               className="w-10 h-10 object-cover rounded-full" 
             />
@@ -185,7 +186,7 @@ function Dokter() {
     
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-row ">
       <main className="flex flex-col pl-8 gap-1 w-full pr-3">
           {/* kanan */}
           <div className='flex flex-row items-center justify-between pt-1'>

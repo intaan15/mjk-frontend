@@ -1,181 +1,117 @@
-import React from 'react'
-import Sidebar from '../../components/Sidebar/Sidebar'
-import { IoIosSearch } from "react-icons/io";
-import { FaUser } from "react-icons/fa";
-import { Typography } from "@material-tailwind/react";
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 
-const TABLE_HEAD = ["Nama", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
 
-const TABLE_ROWS = [
-  {
-    name: "John Michael",
-    monday: "07.00-12.00",
-    tuesday: "07.00-12.00",
-    wednesday: "07.00-12.00",
-    thursday: "07.00-12.00",
-    friday: "07.00-12.00",
-    saturday: "07.00-12.00",
-    sunday: "07.00-12.00",
-  },
-  {
-    name: "John Michael",
-    monday: "07.00-12.00",
-    tuesday: "07.00-12.00",
-    wednesday: "07.00-12.00",
-    thursday: "07.00-12.00",
-    friday: "07.00-12.00",
-    saturday: "07.00-12.00",
-    sunday: "07.00-12.00",
-  },
-  {
-    name: "John Michael",
-    monday: "07.00-12.00",
-    tuesday: "07.00-12.00",
-    wednesday: "07.00-12.00",
-    thursday: "07.00-12.00",
-    friday: "07.00-12.00",
-    saturday: "07.00-12.00",
-    sunday: "07.00-12.00",
-  },
-  {
-    name: "John Michael",
-    monday: "07.00-12.00",
-    tuesday: "07.00-12.00",
-    wednesday: "07.00-12.00",
-    thursday: "07.00-12.00",
-    friday: "07.00-12.00",
-    saturday: "07.00-12.00",
-    sunday: "07.00-12.00",
-  },
-  {
-    name: "John Michael",
-    monday: "07.00-12.00",
-    tuesday: "07.00-12.00",
-    wednesday: "07.00-12.00",
-    thursday: "07.00-12.00",
-    friday: "07.00-12.00",
-    saturday: "07.00-12.00",
-    sunday: "07.00-12.00",
-  },
-  {
-    name: "John Michael",
-    monday: "07.00-12.00",
-    tuesday: "07.00-12.00",
-    wednesday: "07.00-12.00",
-    thursday: "07.00-12.00",
-    friday: "07.00-12.00",
-    saturday: "07.00-12.00",
-    sunday: "07.00-12.00",
-  },
-  {
-    name: "John Michael",
-    monday: "07.00-12.00",
-    tuesday: "07.00-12.00",
-    wednesday: "07.00-12.00",
-    thursday: "07.00-12.00",
-    friday: "07.00-12.00",
-    saturday: "07.00-12.00",
-    sunday: "07.00-12.00",
-  },
-  {
-    name: "John Michael",
-    monday: "07.00-12.00",
-    tuesday: "07.00-12.00",
-    wednesday: "07.00-12.00",
-    thursday: "07.00-12.00",
-    friday: "07.00-12.00",
-    saturday: "07.00-12.00",
-    sunday: "07.00-12.00",
-  },
-  {
-    name: "John Michael",
-    monday: "07.00-12.00",
-    tuesday: "07.00-12.00",
-    wednesday: "07.00-12.00",
-    thursday: "07.00-12.00",
-    friday: "07.00-12.00",
-    saturday: "07.00-12.00",
-    sunday: "07.00-12.00",
-  },
-  {
-    name: "John Michael",
-    monday: "07.00-12.00",
-    tuesday: "07.00-12.00",
-    wednesday: "07.00-12.00",
-    thursday: "07.00-12.00",
-    friday: "07.00-12.00",
-    saturday: "07.00-12.00",
-    sunday: "07.00-12.00",
-  },
+const Jadwal = ({ dokterId }) => {
+  const [jadwal, setJadwal] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const JadwalDokter = ({ dokter }) => {
+  const _id = dokter._id;};
   
-];
+  const columns = [
+    {
+      accessorKey: 'nama_dokter', // Akses waktu
+      header: 'Nama',
+    },
+    {
+      accessorKey: 'time', // Akses waktu
+      header: 'Senin',
+    },
+    {
+      accessorKey: 'time', // Akses waktu
+      header: 'Selasa ',
+    },
+    {
+      accessorKey: 'time', // Akses waktu
+      header: 'Rabu',
+    },
+    {
+      accessorKey: 'time', // Akses waktu
+      header: 'Kamis',
+    },
+    {
+      accessorKey: 'time', // Akses waktu
+      header: 'Jumat',
+    },
+    {
+      accessorKey: 'time', // Akses waktu
+      header: 'Sabtu',
+    },
+    {
+      accessorKey: 'time', // Akses waktu
+      header: 'Minggu',
+    },
+    {
+      accessorKey: 'available',
+      header: 'Status',
+      cell: ({ getValue }) => (getValue() ? 'Tersedia' : 'Tidak Tersedia'),
+    },
+  ];
 
 
-function Jadwal() {
-    return (
-        <div className='flex flex-row w-full h-screen bg-white overflow-hidden'>
-          <main className='w-full md:5/6 flex flex-col pl-14 pr-1 gap-1 bg-gray-100'>
-            <div className="w-full h-screen flex flex-col p-4">
-              {/* Atas */}   
-              <div className='flex items-end  justify-between'>
-                <div className='text-xl font-bold text-[#004A76]'> Jadwal Dokter</div>
-                <div className="text-2xl gap-12 flex items-center justify-end ">
-                    <div className=" mt-3 flex items-center rounded-[19px] px-14 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
-                    <IoIosSearch className="text-gray-400 " />
-                    <p className="text-gray-400 text-[14px]">Cari nama dokter</p>
-                    </div>
-                    <div className="mt-3">
-                    <FaUser className="text-[30px] item-center text-[#292D32]" />
-                    </div>
-                </div>
-              </div>
 
-              {/* Garis biru */}
-              <div className="w-[100%] h-1 bg-[#1177B3] mt-4 mb-4"></div>
+  const konversiJadwal = (dataJadwal) => {
+  console.log(dataJadwal); 
+  const hariList = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
-              {/* tabel */}
-              <div className="border-2 border-gray-300 rounded-xl h-auto w-full ml-auto flex overflow-x-auto">
-                  <table className="w-full min-w-max table-auto text-left">
-                    <thead className="bg-slate-300 sticky top-0 z-10">
-                        <tr>
-                        {TABLE_HEAD.map((head) => (
-                            <th key={head} className="p-4 border-b border-blue-gray-100 bg-slate-300">
-                            <Typography variant="small" color="blue-gray" className="font-normal leading-none opacity-70">
-                                {head}
-                            </Typography>
-                            </th>
-                        ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {TABLE_ROWS.map(({ name, monday, tuesday, wednesday, thursday, friday, saturday, sunday }, index) => {
-                        const isLast = index === TABLE_ROWS.length - 1;
-                        const classes = isLast ? "p-4" : "p-4 border-b border-blue-gray-50";
-                        return (
-                            <tr key={index}>
-                            <td className={classes}><Typography variant="small" color="blue-gray" className="font-normal">{name}</Typography></td>
-                            <td className={classes}><Typography variant="small" className="font-normal text-[#035E94]">{monday}</Typography></td>
-                            <td className={classes}><Typography variant="small" className="font-normal text-[#035E94]">{tuesday}</Typography></td>
-                            <td className={classes}><Typography variant="small" className="font-normal text-[#035E94]">{wednesday}</Typography></td>
-                            <td className={classes}><Typography variant="small" className="font-normal text-[#035E94]">{thursday}</Typography></td>
-                            <td className={classes}><Typography variant="small" className="font-normal text-[#035E94]">{friday}</Typography></td>
-                            <td className={classes}><Typography variant="small" className="font-normal text-[#035E94]">{saturday}</Typography></td>
-                            <td className={classes}><Typography variant="small" className="font-normal text-[#035E94]">{sunday}</Typography></td>
-                            </tr>
-                          );
-                        })}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-          </main>
+  const jadwalPerHari = {
+    Senin: '', Selasa: '', Rabu: '', Kamis: '', Jumat: '', Sabtu: '', Minggu: '',
+  };
+
+  if (dataJadwal && dataJadwal.jadwal) {
+    // Proses untuk menyiapkan jadwal berdasarkan tanggal dan jam
+    dataJadwal.jadwal.forEach(j => {
+      if (j.tanggal && j.jam) {
+        const hari = hariList[new Date(j.tanggal).getDay()];
+
+        // Ambil semua jam yang tersedia pada hari tersebut
+        const jamAvailable = j.jam
+          .filter(jam => jam.available)  // Hanya ambil jam yang tersedia
+          .map(jam => jam.time);  // Ambil waktu jam-nya
+
+        // Jika ada jam yang tersedia, gabungkan dalam format string
+        if (jamAvailable.length > 0) {
+          jadwalPerHari[hari] = jamAvailable.join(', ');
+        }
+      }
+    });
+  }
+
+  return [{
+    nama_dokter: data._id || 'N/A',
+    nama_dokter: data?.nama_dokter || 'N/A',
+    ...jadwalPerHari
+  }];
+};
+
+  useEffect(() => {
+    axios.get(`https://mjk-backend-production.up.railway.app/api/dokter/getall`)
+      .then((res) => {
+        const dataJadwal = konversiJadwal(res.data);
+        setJadwal(dataJadwal); // sesuaikan sesuai struktur data dari API
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
 
 
+  return (
+    <div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div>
+          <h2>Jadwal Praktek Dokter</h2>
+          <Basetable data={jadwal} columns={columns} />
         </div>
+      )}
+    </div>
+  );
+};
 
 
-    )
-}
-
-export default Jadwal
+export default Jadwal;

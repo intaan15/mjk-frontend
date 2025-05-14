@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios' //library untuk melakukan request HTTP
-import { useState, useEffect } from 'react' //hook untuk state dan efek samping
+import { useState, useEffect, } from 'react' //hook untuk state dan efek samping
+import { useNavigate } from 'react-router-dom';
 import { Typography } from "@material-tailwind/react";
 
 
@@ -18,15 +19,19 @@ import Modal from "../../components/ModalTemplate";
 function DataMasyarakat() {
     const [searchTerm, setSearchTerm] = useState("");
     const [isOpen, setIsOpen] = useState(false);
+    const [selectedData, setSelectedData] = useState(null);
     const [modalType, setModalType] = useState("detailprofilmasyarakat");
     const [isModalVisible, setModalVisible] = useState(true);
     const [user, setUser] = useState(null);
     const [data, setData] = useState([]);''
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+
+
     const openModal = (type) => {
       // OPEN MODAL SESUAI TYPE
       setModalType(type);
+      setEditData(item);
 
       // SETMODALDIBUKA
       setIsModalOpen(true);
@@ -38,7 +43,11 @@ function DataMasyarakat() {
     };
   
 
-
+    const handleEdit = (data) => {
+      setSelectedData(data);
+      setIsModalOpen(true);
+      navigate(`/detail/${data._id}`);
+    };
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -125,7 +134,7 @@ function DataMasyarakat() {
     
 
   return (
-    <div className='flex flex-row'>
+    <div className='flex flex-row '>
       <main className='flex flex-col pl-8 gap-1 w-full pr-3 '>
 
         {/* <footer> */}
@@ -201,6 +210,11 @@ function DataMasyarakat() {
               ) : (
                 <>
                   <Basetable data={data} columns={columns} />
+                   {isModalOpen && (
+                      <Modal open={isModalOpen} onClose={closeModal}>
+                      {renderModalContent(modalType, closeModal, selectedData)}
+                    </Modal>
+                  )}
                 </>
                 
               )}
