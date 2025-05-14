@@ -15,6 +15,7 @@ import { FaUserCheck } from "react-icons/fa";
 import { FaUserMinus } from "react-icons/fa6";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
+import { HiOutlineUsers } from "react-icons/hi2";
 
 function Verifikasi() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -251,21 +252,21 @@ function Verifikasi() {
    
    
                <div className="flex flex-row justify-between items-center py-3 px-6 bg-amber-400">
-                   <div className="flex flex-row gap-8 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-[80px]">
+                   <div className="flex flex-row gap-8 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm">
                        <div className="bg-white p-3 rounded-full flex items-center justify-center">
-                           <FaUserAlt className="text-[30px] item-center text-[#979797]" />
+                           <HiOutlineUsers className="text-[50px] item-center text-[#38B6FE]" />
                        </div>
                        <div className="flex flex-col">
-                           <div className="font-[raleway] text-white font-bold text-[15px]">Total Verifikasi</div>
-                           <div className="font-[Nunito] text-white font-medium text-[12px]">{data.length}</div>
+                           <div className="font-[raleway] text-white font-bold text-md underline"  style={{ fontFamily: "Nunito Sans" }}>Total Verifikasi</div>
+                           <div className="font-[Nunito] text-white font-extrabold text-4xl">{data.length}</div>
                        </div>
                    </div>
-                   <div className="flex flex-row gap-8 bg-[#4CAF50] p-2 rounded-2xl items-center px-6 h-[80px]">
+                   <div className="flex flex-row gap-8 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm">
                        <div className="bg-[#FFF5D9] p-3 rounded-full flex items-center justify-center">
                            <FaUserCheck className="text-[30px] item-center text-[#FFBB38]" />
                        </div>
                        <div className="flex flex-col">
-                           <div className="font-[raleway] text-white font-bold text-[15px]">Diterima</div>
+                           <div className="font-[raleway] text-white font-bold text-[15px]"  style={{ fontFamily: "Nunito Sans" }}>Diterima</div>
                            <div className="font-[Nunito] text-white font-medium text-[12px]">20 orang</div>
                        </div>
                    </div>
