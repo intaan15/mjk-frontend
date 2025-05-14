@@ -3,8 +3,7 @@ import axios from 'axios' //library untuk melakukan request HTTP
 import { useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Typography } from "@material-tailwind/react";
-import renderModalContent  from "../../components/ModalContent";
-import Modal from "../../components/ModalTemplate";
+import renderModalContent  from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
 
 
@@ -112,6 +111,11 @@ function Verifikasi() {
     // HEADER TABLE
     const columns = [
         {
+            header: "No",
+            enableSorting: false,
+            cell: ({ row }) => row.index + 1,
+        },
+        {
             accessorKey: "foto_profil_dokter",
             header: "Foto",
             enableSorting: false,
@@ -192,7 +196,7 @@ function Verifikasi() {
  
     return (
        <div className='flex flex-row'>
-           <main className='flex flex-col pl-8 gap-1 w-full pr-3'>
+           <main className='flex flex-col pl-8 gap-1 w-full pr-3 h-screen'>
                <div className='flex flex-row items-center justify-between pt-1'>
                    <p className='text-3xl font-[Nunito Sans] font-bold text-[#004A76]'>Verifikasi Data Masyarakat</p>
                    <div className="flex flex-row gap-4 relative">
@@ -246,8 +250,8 @@ function Verifikasi() {
                <img src="/line style.svg" alt="" />
    
    
-               <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
-                   <div className="flex flex-row gap-8 bg-[#007BBA] p-2 rounded-2xl items-center px-6 h-[80px]">
+               <div className="flex flex-row justify-between items-center py-3 px-6 bg-amber-400">
+                   <div className="flex flex-row gap-8 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-[80px]">
                        <div className="bg-white p-3 rounded-full flex items-center justify-center">
                            <FaUserAlt className="text-[30px] item-center text-[#979797]" />
                        </div>

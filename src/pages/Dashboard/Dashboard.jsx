@@ -153,9 +153,9 @@ function Dashboard() {
 
 
   return (
-    <div className="flex flex-row h-full">
+    <div className="flex flex-row h-screen">
      {/* container main */}
-      <main className="flex flex-col pl-8 pr-3 gap-1 bg-[#131927]/5 pb-3 h-full">
+      <main className="flex flex-col pl-8 pr-3 gap-1 bg-amber-200 pb-3 h-screen">
         <div className="flex flex-row  items-center justify-between pt-3">
           <p className="text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
             Dashboard

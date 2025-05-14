@@ -9,10 +9,11 @@ import { TiUser } from 'react-icons/ti'
 import { FaEdit } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
 import { FaUserAlt } from "react-icons/fa";
+import { HiOutlineUser } from "react-icons/hi2";
 import { BsExclamationCircle } from "react-icons/bs";
 import Basetable from "../../components/Table/Basetable";
-import renderModalContent  from "../../components/ModalContent";
-import Modal from "../../components/ModalTemplate";
+import renderModalContent  from "../../components/Modal/ModalContent";
+import Modal from "../../components/Modal/Modal";
 
 
 
@@ -32,8 +33,6 @@ function DataMasyarakat() {
       // OPEN MODAL SESUAI TYPE
       setModalType(type);
       setEditData(item);
-
-      // SETMODALDIBUKA
       setIsModalOpen(true);
     };
 
@@ -42,6 +41,13 @@ function DataMasyarakat() {
       setModalType("");
     };
   
+     const handleLogout = () => {
+    // Hapus token dari localStorage
+      localStorage.removeItem("token");
+
+      // Redirect ke halaman login
+      navigate("/login");
+    };
 
     const handleEdit = (data) => {
       setSelectedData(data);
@@ -69,6 +75,11 @@ function DataMasyarakat() {
 
     // paramater tabel
     const columns = [
+    {
+      header: "No",
+      enableSorting: false,
+      cell: ({ row }) => row.index + 1,
+    },
     {
       accessorKey: "foto_profil_dokter",
       header: "Foto",

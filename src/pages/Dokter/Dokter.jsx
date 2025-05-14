@@ -5,7 +5,7 @@ import axios from "axios";
 
 
 // icon
-import Modal from "../../components/ModalTemplate";
+import Modal from "../../components/Modal/ModalTemplate";
 import Basetable from "../../components/Table/Basetable";
 import { FaTrashAlt } from "react-icons/fa";
 import { HiOutlineUser } from "react-icons/hi2";
@@ -16,7 +16,7 @@ import { TiUser } from 'react-icons/ti';
 import { FaEdit } from "react-icons/fa"; 
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
-import renderModalContent from "../../components/ModalContent";
+import renderModalContent from "../../components/Modal/ModalContent";
 import Swal from "sweetalert2";
 
 const handleDelete = () => {

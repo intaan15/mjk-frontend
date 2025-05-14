@@ -13,7 +13,7 @@ import Dokter from "./pages/Dokter/Dokter";
 import Jadwal from "./pages/Dokter/Jadwal";
 import DataMasyarakat from "./pages/Masyarakat/DataMasyarakat";
 import Verifikasi from "./pages/Masyarakat/Verifikasi";
-import Modal from "./components/Modal";
+import Modal from "./components/Modal/Modal";
 import PrivateRoute from "./components/Privateroutes";
 import Outtabel from "./components/Table/Outtabel";
 

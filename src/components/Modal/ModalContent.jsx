@@ -344,7 +344,12 @@ export default function renderModalContent(modalType, onClose,data) {
               <div className="grid grid-cols-2 gap-4 w-full text-center">
                 <div>
                   <div className="text-[#025F96]">Nama</div>
-                  <div>{data.nama_masyarakat}</div>
+                      <input
+                        type="text"
+                        value={data.nama_masyarakat}
+                        onChange={(e) =>
+                          setData({ ...data, nama_masyarakat: e.target.value })
+                        } className="border border-gray-300 rounded px-2 py-1 w-full"/>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Username</div>
@@ -352,27 +357,27 @@ export default function renderModalContent(modalType, onClose,data) {
                 </div>
                 <div>
                   <div className="text-[#025F96]">Email</div>
-                  <div>{}</div>
+                  <div>{data.email_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">NIK</div>
-                  <div>isinama</div>
+                  <div>{data.nik_masyarakat}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Bidang Dokter</div>
-                  <div>isinama</div>
+                  <div className="text-[#025F96]">Alamat</div>
+                  <div>{data.alamat_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Nomor Telepon</div>
-                  <div>isinama</div>
+                  <div>{data.notlp_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Jenis Kelamin</div>
-                  <div>isinama</div>
+                  <div>{data.jeniskelamin_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Tanggal Lahir</div>
-                  <div>isinama</div>
+                  <div>{data.tgl_lahir_masyarakat?.slice(0, 10)}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Foto KTP</div>

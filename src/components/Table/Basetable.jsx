@@ -22,9 +22,9 @@ const Basetable = ({ data, columns }) => {
   });
 
   return (
-    <div className="border-1 border-gray-300 rounded-xl h-auto w-full overflow-x-hidden overflow-y-auto ">
+    <div className="border-1 border-gray-300 rounded-xl max-h-[350px] w-full overflow-x-hidden overflow-y-auto ">
       <table className="w-full min-w-max table-auto text-left" style={{ fontFamily: '"Nunito Sans"' }}>
-        <thead className="sticky z-10 ">
+        <thead className="sticky z-30 top-0">
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
@@ -56,7 +56,7 @@ const Basetable = ({ data, columns }) => {
         </thead>
         <tbody>
           {table.getRowModel().rows.map(row => (
-            <tr key={row.id} className="hover:bg-gray-50 text-sm  ">
+            <tr key={row.id} className="hover:bg-gray-100 text-sm  ">
               {row.getVisibleCells().map(cell => (
                 <td key={cell.id} className={`border-b text-sm font-[Nunito Sans] p-2 ${
                     ["str_dokter"].includes(cell.column.id) ? "text-center" : "text-left"

@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useState,useEffect } from "react";
 import { Card, Typography } from "@material-tailwind/react";
-import Modal from "../../components/ModalTemplate";
-import renderModalContent from "../../components/ModalContent";
+import Modal from "../../components/Modal/ModalTemplate";
+import renderModalContent from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
 
 
