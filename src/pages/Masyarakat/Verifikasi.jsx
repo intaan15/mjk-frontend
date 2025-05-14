@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios' //library untuk melakukan request HTTP
-import { useState,useEffect } from 'react'
+import { useState,useEffect,useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Typography } from "@material-tailwind/react";
 import renderModalContent  from "../../components/Modal/ModalContent";
@@ -16,6 +16,8 @@ import { FaUserMinus } from "react-icons/fa6";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
 import { HiOutlineUsers } from "react-icons/hi2";
+import { HiOutlineUserAdd } from "react-icons/hi";
+import { HiOutlineUserMinus } from "react-icons/hi2";
 
 function Verifikasi() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -46,7 +48,7 @@ function Verifikasi() {
     navigate("/login");
   };
     
-    const filteredRows = allRows.filter((item) => {
+    const filteresearch = allRows.filter((item) => {
         const search = searchTerm.toLowerCase();
         
         const matchSearch =
@@ -61,9 +63,16 @@ function Verifikasi() {
         return matchSearch && matchStatus;
     });
 
-    useEffect(() => {console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
-    }, [filteredRows]);
+    useEffect(() => {console.log(filteresearch); // Ini untuk memeriksa apakah filteresearch berisi data
+    }, [filteresearch]);
 
+    const filteredRows = useMemo(() => {
+         if (filterStatus === "semua") {
+            return allRows.filter(item => item.verifikasi_akun_masyarakat === "pending");
+        }
+        return allRows.filter(item => item.verifikasi_akun_masyarakat === filterStatus);
+    }, [allRows, filterStatus]);
+ 
 
     // ENDPOINT UPDATE STATUS VERIFIKASI
     const handleVerifikasi = (status, _id) => {
@@ -72,7 +81,7 @@ function Verifikasi() {
           })
           .then(() => {
             console.log("Status verifikasi berhasil diperbarui (PATCH)");
-            console.log("NIK yang dikirim:", _id);
+            console.log("ID yang dikirim:", _id);
 
             setAllRows((prevRows) =>
               prevRows.map((item) =>
@@ -96,7 +105,7 @@ function Verifikasi() {
         axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
             .then((res) => {
                 // const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending');
-                const filteredData = res.data;
+                const filteredData = res.data
                 setAllRows(filteredData);
                 console.log(filteredData);
                 setData(filteredData);
@@ -107,6 +116,8 @@ function Verifikasi() {
             setLoading(false);
             });
     }, []);
+
+    
 
 
     // HEADER TABLE
@@ -169,14 +180,14 @@ function Verifikasi() {
             cell: ({ row }) => (
                 <div className="flex gap-2 items-center bg-[#FAFBFD]">
                     <button
-                        onClick={() =>handleVerifikasi(row.original)}
+                        onClick={() =>handleVerifikasi("diterima",row.original)}
                         title="Terima"
                         className="bg-green-100 text-green-600 hover:bg-green-200 p-1 rounded-sm transition"
                     >
                         Terima
                     </button>
                     <button
-                        onClick={() => handleVerifikasi(row.original)}
+                        onClick={() => handleVerifikasi("ditolak",row.original)}
                         title="Tolak"
                         className="bg-red-100 text-red-600 hover:bg-red-200 p-1 rounded-sm transition"
                     >
@@ -251,32 +262,32 @@ function Verifikasi() {
                <img src="/line style.svg" alt="" />
    
    
-               <div className="flex flex-row justify-between items-center py-3 px-6 bg-amber-400">
-                   <div className="flex flex-row gap-8 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm">
+               <div className="flex flex-wrap justify-between items-center py-3 px-6 ">
+                   <div className="flex flex-row gap-8 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
                        <div className="bg-white p-3 rounded-full flex items-center justify-center">
-                           <HiOutlineUsers className="text-[50px] item-center text-[#38B6FE]" />
+                           <HiOutlineUsers className="text-[45px] item-center text-[#38B6FE]" />
                        </div>
                        <div className="flex flex-col">
-                           <div className="font-[raleway] text-white font-bold text-md underline"  style={{ fontFamily: "Nunito Sans" }}>Total Verifikasi</div>
-                           <div className="font-[Nunito] text-white font-extrabold text-4xl">{data.length}</div>
+                           <span className=" text-white font-bold text-md "  style={{ fontFamily: "Nunito Sans" }}>Total Verifikasi</span>
+                           <span className=" text-white font-extrabold text-4xl" style={{ fontFamily: "Nunito Sans" }}>{data.length}</span>
                        </div>
                    </div>
-                   <div className="flex flex-row gap-8 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm">
-                       <div className="bg-[#FFF5D9] p-3 rounded-full flex items-center justify-center">
-                           <FaUserCheck className="text-[30px] item-center text-[#FFBB38]" />
+                   <div className="flex flex-row gap-4 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
+                       <div className="bg-white p-3 rounded-full flex items-center justify-center">
+                           <HiOutlineUserAdd className="text-[45px] item-center text-[#6AC03D]" />
                        </div>
                        <div className="flex flex-col">
-                           <div className="font-[raleway] text-white font-bold text-[15px]"  style={{ fontFamily: "Nunito Sans" }}>Diterima</div>
-                           <div className="font-[Nunito] text-white font-medium text-[12px]">20 orang</div>
+                           <span className=" text-white font-bold text-md"  style={{ fontFamily: "Nunito Sans" }}>Verifikasi Diterima</span>
+                           <span className=" text-white font-extrabold text-4xl" style={{ fontFamily: "Nunito Sans" }}>20</span>
                        </div>
                    </div>
-                   <div className="flex flex-row gap-8 bg-[#E57373] p-2 rounded-2xl items-center px-6 h-[80px]">
-                       <div className="bg-[#FFE0EB] p-3 rounded-full flex items-center justify-center">
-                           <FaUserMinus className="text-[30px] item-center text-" />
+                   <div className="flex flex-row gap-4 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
+                       <div className="bg-white p-3 rounded-full flex items-center justify-center">
+                           <HiOutlineUserMinus className="text-[45px] item-center text-[#EF3826]" />
                        </div>
                        <div className="flex flex-col">
-                           <div className="font-[raleway] text-white font-bold text-[15px]">Ditolak</div>
-                           <div className="font-[Nunito] text-white font-medium text-[12px]">20 orang</div>
+                           <span className="text-white font-bold text-md" style={{ fontFamily: "Nunito Sans" }}>Verifikasi Ditolak</span>
+                           <span className="text-white font-extrabold text-4xl"  style={{ fontFamily: "Nunito Sans" }}>8</span>
                        </div>
                    </div>
                </div>
@@ -288,7 +299,7 @@ function Verifikasi() {
                             className={`cursor-pointer rounded-4xl border-2 px-4 py-1 border-[#033E61] ${
                             filterStatus === "semua" ? "bg-[#025F96] text-white border-[#033E61]" : "bg-[#D9D9D9]/50 "
                             }`}>
-                            Semua
+                            Verifikasi
                         </div>
 
                         <div
@@ -316,7 +327,7 @@ function Verifikasi() {
                         <p>Loading data...</p>
                     ) : (
                         <>
-                        <Basetable data={data} columns={columns} />
+                        <Basetable data={filteredRows} columns={columns} />
                         
                         </>
                     )}
