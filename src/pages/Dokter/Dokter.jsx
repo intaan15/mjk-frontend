@@ -57,7 +57,7 @@ function Dokter() {
   };
 
   const closeModal = () => {
-     setIsModalOpen(false);
+    setIsModalOpen(false);
     setModalType(null);
     setSelectedData(null);
   };

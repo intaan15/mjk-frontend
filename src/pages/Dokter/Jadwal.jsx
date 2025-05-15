@@ -1,117 +1,70 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-
-
-const Jadwal = ({ dokterId }) => {
-  const [jadwal, setJadwal] = useState([]);
+export default function JadwalHariIni({ id }) {
+  const [jadwalHariIni, setJadwalHariIni] = useState([]);
+  const [namaDokter, setNamaDokter] = useState("");
   const [loading, setLoading] = useState(true);
-  const JadwalDokter = ({ dokter }) => {
-  const _id = dokter._id;};
-  
-  const columns = [
-    {
-      accessorKey: 'nama_dokter', // Akses waktu
-      header: 'Nama',
-    },
-    {
-      accessorKey: 'time', // Akses waktu
-      header: 'Senin',
-    },
-    {
-      accessorKey: 'time', // Akses waktu
-      header: 'Selasa ',
-    },
-    {
-      accessorKey: 'time', // Akses waktu
-      header: 'Rabu',
-    },
-    {
-      accessorKey: 'time', // Akses waktu
-      header: 'Kamis',
-    },
-    {
-      accessorKey: 'time', // Akses waktu
-      header: 'Jumat',
-    },
-    {
-      accessorKey: 'time', // Akses waktu
-      header: 'Sabtu',
-    },
-    {
-      accessorKey: 'time', // Akses waktu
-      header: 'Minggu',
-    },
-    {
-      accessorKey: 'available',
-      header: 'Status',
-      cell: ({ getValue }) => (getValue() ? 'Tersedia' : 'Tidak Tersedia'),
-    },
-  ];
 
+useEffect(() => {
+  if (!id) return;
 
+  axios.get(`https://mjk-backend-production.up.railway.app/api/dokter/getbyid/${id}`)
+    .then((res) => {
+      const dokter = res.data;
+      console.log("Data dokter:", dokter); // 👈 log data yang masuk
+      setNamaDokter(dokter.nama_dokter);
 
-  const konversiJadwal = (dataJadwal) => {
-  console.log(dataJadwal); 
-  const hariList = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      const today = new Date().toISOString().slice(0, 10);
+      const jadwalHariIni = dokter.jadwal.find(j => j.tanggal.slice(0, 10) === today);
+      console.log("Jadwal hari ini:", jadwalHariIni); // 👈 log hasil filter
 
-  const jadwalPerHari = {
-    Senin: '', Selasa: '', Rabu: '', Kamis: '', Jumat: '', Sabtu: '', Minggu: '',
-  };
-
-  if (dataJadwal && dataJadwal.jadwal) {
-    // Proses untuk menyiapkan jadwal berdasarkan tanggal dan jam
-    dataJadwal.jadwal.forEach(j => {
-      if (j.tanggal && j.jam) {
-        const hari = hariList[new Date(j.tanggal).getDay()];
-
-        // Ambil semua jam yang tersedia pada hari tersebut
-        const jamAvailable = j.jam
-          .filter(jam => jam.available)  // Hanya ambil jam yang tersedia
-          .map(jam => jam.time);  // Ambil waktu jam-nya
-
-        // Jika ada jam yang tersedia, gabungkan dalam format string
-        if (jamAvailable.length > 0) {
-          jadwalPerHari[hari] = jamAvailable.join(', ');
-        }
+      if (jadwalHariIni) {
+        setJadwalHariIni(jadwalHariIni.jam);
+      } else {
+        setJadwalHariIni([]);
       }
+
+      setLoading(false);
+    })
+    .catch((err) => {
+      console.error("Gagal ambil data dokter:", err);
+      setLoading(false);
     });
-  }
+}, [id]);
 
-  return [{
-    nama_dokter: data._id || 'N/A',
-    nama_dokter: data?.nama_dokter || 'N/A',
-    ...jadwalPerHari
-  }];
-};
-
-  useEffect(() => {
-    axios.get(`https://mjk-backend-production.up.railway.app/api/dokter/getall`)
-      .then((res) => {
-        const dataJadwal = konversiJadwal(res.data);
-        setJadwal(dataJadwal); // sesuaikan sesuai struktur data dari API
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
-
+  if (loading) return <p>Loading...</p>;
 
   return (
-    <div>
-      {loading ? (
-        <p>Loading...</p>
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Jadwal Dokter Hari Ini</h2>
+      <p className="mb-2 text-gray-700">Nama Dokter: <strong>{namaDokter}</strong></p>
+      {jadwalHariIni.length === 0 ? (
+        <p className="text-red-500">Tidak ada jadwal hari ini.</p>
       ) : (
-        <div>
-          <h2>Jadwal Praktek Dokter</h2>
-          <Basetable data={jadwal} columns={columns} />
-        </div>
+        <table className="w-full border border-gray-300">
+          <thead className="bg-blue-100">
+            <tr>
+              <th className="py-2 px-4 border">Jam</th>
+              <th className="py-2 px-4 border">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {jadwalHariIni.map((slot) => (
+              <tr key={slot._id}>
+                <td className="py-2 px-4 border text-center">{slot.time}</td>
+                <td className="py-2 px-4 border text-center">
+                  {slot.available ? (
+                    <span className="text-green-600 font-semibold">Tersedia</span>
+                  ) : (
+                    <span className="text-red-500 font-semibold">Tidak Tersedia</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
-};
-
-
-export default Jadwal;
+}

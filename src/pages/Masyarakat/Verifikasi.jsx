@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { Typography } from "@material-tailwind/react";
 import renderModalContent  from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
+import Modal from "../../components/Modal/Modal";
 
 
 import { TiUser } from 'react-icons/ti'
@@ -16,38 +17,51 @@ import { FaUserMinus } from "react-icons/fa6";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
 import { HiOutlineUsers } from "react-icons/hi2";
+import { HiOutlineUserPlus } from "react-icons/hi2";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { HiOutlineUserMinus } from "react-icons/hi2";
 
 function Verifikasi() {
     const [searchTerm, setSearchTerm] = useState("");
     const [filterStatus, setFilterStatus] = useState("semua");
-    const [modalType, setModalType] = useState("detailprofilmasyarakat");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalType, setModalType] = useState(null);
     const [allRows, setAllRows] = useState([]);
     const [data, setData] = useState([]);''
     const [isOpen, setIsOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate(); 
+    const [selectedData, setSelectedData] = useState(null);
     const toggleDropdown = () => {setIsOpen(!isOpen);};
-    const openModal = (type) => {
+
+    const openModal = (type,data) => {
         setModalType(type);
+        setSelectedData(data);
         setIsModalOpen(true);
-      };
+        console.log("Modal type", type, data);
+    };
     const closeModal = () => {
+        console.log("closeModal");
         setIsModalOpen(false);
-        setModalType("");
+        setModalType(null);
+        setSelectedData(null);
     };
 
+    const handleEdit = (data) => {
+      setSelectedData(data);
+      setIsModalOpen(true);
+    };
 
-   const handleLogout = () => {
-    // Hapus token dari localStorage
-    localStorage.removeItem("token");
+    const handleLogout = () => {
+        // Hapus token dari localStorage
+        localStorage.removeItem("token");
 
-    // Redirect ke halaman login
-    navigate("/login");
-  };
+        // Redirect ke halaman login
+        navigate("/login");
+    };
     
+
+    // Filtersearch
     const filteresearch = allRows.filter((item) => {
         const search = searchTerm.toLowerCase();
         
@@ -72,7 +86,30 @@ function Verifikasi() {
         }
         return allRows.filter(item => item.verifikasi_akun_masyarakat === filterStatus);
     }, [allRows, filterStatus]);
- 
+
+
+    // Swtich status
+    const countStatus = useMemo(() => {
+        return allRows.reduce((acc, item) => {
+            const status = item.verifikasi_akun_masyarakat;
+            if (status === "pending") acc.pending += 1;
+            if (status === "diterima") acc.diterima += 1;
+            if (status === "ditolak") acc.ditolak += 1;
+            return acc;
+        }, { pending: 0, diterima: 0, ditolak: 0 });
+    }, [allRows]);
+
+
+    // mengatur format tanggal 
+    const formatTanggal = (isoDateString) => {
+    const date = new Date(isoDateString);
+        return date.toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        });
+    };
+    
 
     // ENDPOINT UPDATE STATUS VERIFIKASI
     const handleVerifikasi = (status, _id) => {
@@ -87,13 +124,14 @@ function Verifikasi() {
               prevRows.map((item) =>
                 item._id === _id ? { ...item, verifikasi_akun_masyarakat: status } : item)
             );
+            setFilterStatus(status);
             setData((prevData) => prevData.filter((item) => item._id !== _id));
             if (status === "diterima") {
-                navigate("/masyarakat/data");}
+                navigate("/masyarakat/verifikasi");}
 
             setData((prevData) => prevData.filter((item) => item._id !== _id));
             if (status === "ditolak") {
-                navigate("/masyarakat/data");}
+                navigate("/masyarakat/verifikasi");}
           })
           .catch((err) => {
             console.error("Gagal update status", err);
@@ -102,19 +140,22 @@ function Verifikasi() {
 
     // ENDPOINT MENDAPATKAN DATA
     useEffect(() => {
-        axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
-            .then((res) => {
-                // const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending');
-                const filteredData = res.data
-                setAllRows(filteredData);
-                console.log(filteredData);
-                setData(filteredData);
-                setLoading(false);
-            })
-            .catch((err) => {
+        const fetchData = async () => {
+        try {
+            const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`);
+            // const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending');
+            const filteredData = res.data;
+            setAllRows(filteredData);
+            console.log(filteredData);
+            setData(filteredData);
+            } catch (err) {
             console.error('Error fetching data:', err);
+            } finally {
             setLoading(false);
-            });
+            }
+        };
+
+        fetchData();
     }, []);
 
     
@@ -128,7 +169,7 @@ function Verifikasi() {
             cell: ({ row }) => row.index + 1,
         },
         {
-            accessorKey: "foto_profil_dokter",
+            accessorKey: "foto_profil_masyarakat",
             header: "Foto",
             enableSorting: false,
             cell: ({ getValue }) => {
@@ -162,13 +203,19 @@ function Verifikasi() {
             enableSorting: false,
         },
         {
+            accessorKey: "createdAt",
+            header: "Tgl. Registrasi",
+            enableSorting: true,
+            cell: info => formatTanggal(info.getValue()),
+        },
+        {
             accessorKey: "detail",
             header: "Detail",
             enableSorting: false,
             cell: ({ row }) => (
-            <div className="flex gap-2 items-center bg-[#FAFBFD]">
-            <button onClick={() => handleEdit(row.original)} title="Edit">
-                <FaEdit className="w-7  h-7 p-1 flex text-center justify-center bg-red-100 text-black hover:bg-red-200 rounded-sm transition" />
+            <div className="flex gap-2 items-center ">
+            <button onClick={() =>openModal("detailprofilmasyarakat", row.original)} title="Detail">
+                <FaEdit className="w-7  h-7 p-1 flex text-center justify-center  text-[#033E61] rounded-sm transition" />
             </button>
             </div>),
         },
@@ -177,25 +224,34 @@ function Verifikasi() {
             accessorKey: "actions",
             header: "Status Konfirmasi",
             enableSorting: false,
-            cell: ({ row }) => (
+            cell: ({ row }) => {
+                const status = row.original.verifikasi_akun_masyarakat;
+
+                if (status === "diterima") {
+                    return <span className="bg-[#27AE60] text-white w-15 hover:bg-green-200 hover:text-[#27AE60] p-1 rounded-[10px] transition">Diterima</span>;
+                }
+
+                if (status === "ditolak") {
+                    return <span className="bg-[#FF1700] text-white w-15  hover:bg-red-200 p-1 hover:text-[#FF1700] rounded-[10px] transition">Ditolak</span>;
+                }
+
+                return (
                 <div className="flex gap-2 items-center bg-[#FAFBFD]">
                     <button
-                        onClick={() =>handleVerifikasi("diterima",row.original)}
+                        onClick={() => handleVerifikasi("diterima", row.original._id)}
                         title="Terima"
-                        className="bg-green-100 text-green-600 hover:bg-green-200 p-1 rounded-sm transition"
-                    >
+                        className="bg-[#27AE60] text-white w-15 hover:bg-green-200 hover:text-[#27AE60] p-1 rounded-[10px] transition">
                         Terima
                     </button>
                     <button
-                        onClick={() => handleVerifikasi("ditolak",row.original)}
+                        onClick={() => handleVerifikasi("ditolak", row.original._id)}
                         title="Tolak"
-                        className="bg-red-100 text-red-600 hover:bg-red-200 p-1 rounded-sm transition"
-                    >
+                        className="bg-[#FF1700] text-white w-15  hover:bg-red-200 p-1 hover:text-[#FF1700] rounded-[10px] transition">
                         Tolak
                     </button>
                 </div>
-            ),
-            
+                );
+            }
         },
     ];
     
@@ -269,7 +325,7 @@ function Verifikasi() {
                        </div>
                        <div className="flex flex-col">
                            <span className=" text-white font-bold text-md "  style={{ fontFamily: "Nunito Sans" }}>Total Verifikasi</span>
-                           <span className=" text-white font-extrabold text-4xl" style={{ fontFamily: "Nunito Sans" }}>{data.length}</span>
+                           <span className=" text-white font-extrabold text-4xl" style={{ fontFamily: "Nunito Sans" }}>{countStatus.pending}</span>
                        </div>
                    </div>
                    <div className="flex flex-row gap-4 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
@@ -278,7 +334,7 @@ function Verifikasi() {
                        </div>
                        <div className="flex flex-col">
                            <span className=" text-white font-bold text-md"  style={{ fontFamily: "Nunito Sans" }}>Verifikasi Diterima</span>
-                           <span className=" text-white font-extrabold text-4xl" style={{ fontFamily: "Nunito Sans" }}>20</span>
+                           <span className=" text-white font-extrabold text-4xl" style={{ fontFamily: "Nunito Sans" }}>{countStatus.diterima}</span>
                        </div>
                    </div>
                    <div className="flex flex-row gap-4 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
@@ -287,7 +343,7 @@ function Verifikasi() {
                        </div>
                        <div className="flex flex-col">
                            <span className="text-white font-bold text-md" style={{ fontFamily: "Nunito Sans" }}>Verifikasi Ditolak</span>
-                           <span className="text-white font-extrabold text-4xl"  style={{ fontFamily: "Nunito Sans" }}>8</span>
+                           <span className="text-white font-extrabold text-4xl"  style={{ fontFamily: "Nunito Sans" }}>{countStatus.ditolak}</span>
                        </div>
                    </div>
                </div>
@@ -315,7 +371,7 @@ function Verifikasi() {
                             className={`cursor-pointer rounded-4xl border-2 px-4 py-1 border-[#033E61]  ${
                                 filterStatus === "ditolak" ? "bg-[#025F96] text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
                             }`}>
-                            Ditolak
+                            Ditoxlak
                         </div> 
                     </div>
                     
@@ -328,10 +384,15 @@ function Verifikasi() {
                     ) : (
                         <>
                         <Basetable data={filteredRows} columns={columns} />
-                        
                         </>
+                       
                     )}
                 </div>
+                {isModalOpen && (
+                    <Modal open={isModalOpen} onClose={closeModal}>
+                        {isModalOpen && renderModalContent(modalType, closeModal, selectedData)}
+                    </Modal>
+                )}
            </main>
        </div>
      )

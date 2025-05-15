@@ -2,11 +2,83 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-export default function renderModalContent(modalType, onClose,data) {
+
+
+
+
+export default function renderModalContent(modalType, onClose,data,selectedData) {
+  console.log("Render modal content with:", modalType, data);
   const setOpen = () => {
     onClose(false);
   };
   switch (modalType) {
+    case "detailprofilmasyarakat":
+      console.log("Data di modal:", data);
+      return (
+        <>
+          <div className="text-start ">
+            <button
+              onClick={() => setOpen(false)}
+              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold">
+              &times; 
+            </button>
+            <h1 className="text-2xl font-bold">Profil Masyarakat</h1>
+
+            <div className="flex flex-col justify-center items-center gap-4">
+              <div className="bg-red-500 rounded-full p-12">foto</div>
+              <div className="grid grid-cols-2 gap-4 w-full text-center">
+                <div>
+                  <div className="text-[#025F96]">Nama</div>
+                  <div>{data?.nama_masyarakat || " "}</div>
+                </div>
+                <div>
+                  <div className="text-[#025F96]">User</div>
+                  <div>{data.username_masyarakat || " " }</div>
+                </div>
+                <div>
+                  <div className="text-[#025F96]">Email</div>
+                  <div>{data.email_masyarakat|| " "}</div>
+                </div>
+                <div>
+                  <div className="text-[#025F96]">NIK</div>
+                  <div>{data.nik_masyarakat}</div>
+                </div>
+                <div>
+                  <div className="text-[#025F96]">Alamat</div>
+                  <div>{data.alamat_masyarakat}</div>
+                </div>
+                <div>
+                  <div className="text-[#025F96]">Nomor Telepon</div>
+                  <div>{data.notlp_masyarakat}</div>
+                </div>
+                <div>
+                  <div className="text-[#025F96]">Jenis Kelamin</div>
+                  <div>{data.jeniskelamin_masyarakat}</div>
+                </div>
+                <div>
+                  <div className="text-[#025F96]">Tanggal Lahir</div>
+                  <div>{data.tgl_lahir_masyarakat?.slice(0, 10)}</div>
+                </div>
+                <div>
+                  <div className="text-[#025F96]">Foto KTP</div>
+                  <div className=" bg-orange-200 h-50 rounded-xl">isinama</div>
+                </div>
+                <div>
+                  <div className="text-[#025F96]">Selfie dengan KTP</div>
+                  <div className="bg-orange-200 h-50 rounded-xl">isinama</div>
+                </div>
+              </div>
+            </div>
+            <div className=" text-center">
+              <button className="px-4 py-2 bg-[#1177B3] text-white rounded-xl cursor-pointer mt-5"
+               onClick={() => onClose(false)}
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </>
+      );
     case "tambahform":
       return (
         <>
@@ -317,20 +389,16 @@ export default function renderModalContent(modalType, onClose,data) {
               </div>
             </div>
 
-            <div className=" text-center">
-              <button className="px-4 py-2 bg-[#1177B3] text-white rounded-xl cursor-pointer mt-5
-               onClick={() => setShowModal(false)}
-              ">
-                Tutup
-              </button>
-            </div>
+            
           </div>
         </>
       );
 
-      case "detailprofilmasyarakat":
+    
+    case "formeditmasyarakat":
       return (
         <>
+         
           <div className="text-start ">
             <button
               onClick={() => setOpen(false)}
@@ -344,12 +412,7 @@ export default function renderModalContent(modalType, onClose,data) {
               <div className="grid grid-cols-2 gap-4 w-full text-center">
                 <div>
                   <div className="text-[#025F96]">Nama</div>
-                      <input
-                        type="text"
-                        value={data.nama_masyarakat}
-                        onChange={(e) =>
-                          setData({ ...data, nama_masyarakat: e.target.value })
-                        } className="border border-gray-300 rounded px-2 py-1 w-full"/>
+                  <div>{data.nama_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Username</div>
@@ -391,13 +454,17 @@ export default function renderModalContent(modalType, onClose,data) {
             </div>
 
             <div className=" text-center">
-              <button className="px-4 py-2 bg-red-200 rounded-xl cursor-pointer mt-5">
-                Save change
+              <button className="px-4 py-2 bg-[#1177B3] text-white rounded-xl cursor-pointer mt-5
+                onClick={() => setShowModal(false)}
+                ">
+                  Tutup
               </button>
             </div>
           </div>
         </>
       );
+
+      
 
     default:
       return null;

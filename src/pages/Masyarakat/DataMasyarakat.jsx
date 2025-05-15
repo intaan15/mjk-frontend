@@ -11,6 +11,10 @@ import { IoIosSearch } from "react-icons/io";
 import { FaUserAlt } from "react-icons/fa";
 import { HiOutlineUser } from "react-icons/hi2";
 import { BsExclamationCircle } from "react-icons/bs";
+import { IoLogOutOutline } from "react-icons/io5";
+import { HiOutlineUsers } from "react-icons/hi2";
+import { HiOutlineUserAdd } from "react-icons/hi";
+import { HiOutlineUserMinus } from "react-icons/hi2";
 import Basetable from "../../components/Table/Basetable";
 import renderModalContent  from "../../components/Modal/ModalContent";
 import Modal from "../../components/Modal/Modal";
@@ -29,15 +33,16 @@ function DataMasyarakat() {
     const [loading, setLoading] = useState(false);
 
 
-    const openModal = (type) => {
+    const openModal = (type,data) => {
       // OPEN MODAL SESUAI TYPE
       setModalType(type);
-      setEditData(item);
+      setSelectedData(data);
       setIsModalOpen(true);
     };
 
     const closeModal = () => {
       setIsModalOpen(false);
+      setSelectedData(null);
       setModalType("");
     };
   
@@ -119,9 +124,9 @@ function DataMasyarakat() {
       header: "Detail",
       enableSorting: false,
       cell: ({ row }) => (
-      <div className="flex gap-2 items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797]">
+      <div className="flex items-center justify-center p-2">
         <button onClick={() => handleEdit(row.original)} title="Edit">
-          <FaEdit className="text-gray-600 hover:text-[#004A76] text-lg" />
+          <FaEdit className="text-gray-600 hover:text-[#004A76] text-2xl" />
         </button>
       </div>),
     },]
@@ -146,7 +151,7 @@ function DataMasyarakat() {
 
   return (
     <div className='flex flex-row '>
-      <main className='flex flex-col pl-8 gap-1 w-full pr-3 '>
+      <main className='flex flex-col pl-8 gap-1 w-full pr-3 h-screen  '>
 
         {/* <footer> */}
           <div className='flex flex-row items-center justify-between  pt-2'>
