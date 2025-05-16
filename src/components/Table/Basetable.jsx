@@ -22,7 +22,7 @@ const Basetable = ({ data, columns }) => {
   });
 
   return (
-    <div className="border-1 border-gray-300 rounded-xl sm:max-h-[410px] lg:h-auto lg:max-h-[70vh] w-full overflow-x-hidden overflow-y-auto ">
+    <div className="border-1 border-gray-300 rounded-xl md:max-h-[410px] lg:h-auto lg:min-h-[70vh] w-full overflow-x-auto                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           overflow-y-auto ">
       <table className="w-full min-w-max table-auto text-left" style={{ fontFamily: '"Nunito Sans"' }}>
         <thead className="sticky z-30 top-0">
           {table.getHeaderGroups().map(headerGroup => (

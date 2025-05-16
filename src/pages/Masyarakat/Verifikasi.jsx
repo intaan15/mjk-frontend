@@ -371,7 +371,7 @@ function Verifikasi() {
                             className={`cursor-pointer rounded-4xl border-2 px-4 py-1 border-[#033E61]  ${
                                 filterStatus === "ditolak" ? "bg-[#025F96] text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
                             }`}>
-                            Ditoxlak
+                            Ditolak
                         </div> 
                     </div>
                     

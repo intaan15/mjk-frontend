@@ -1,70 +1,196 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import Basetable from "../../components/Table/Basetable";
 
-export default function JadwalHariIni({ id }) {
-  const [jadwalHariIni, setJadwalHariIni] = useState([]);
-  const [namaDokter, setNamaDokter] = useState("");
-  const [loading, setLoading] = useState(true);
+import { IoIosSearch } from "react-icons/io";
+import { FaUserCheck } from "react-icons/fa";
+import { FaUserMinus } from "react-icons/fa6";
+import { HiOutlineUser } from "react-icons/hi2";
+import { IoLogOutOutline } from "react-icons/io5";
+import { HiOutlineUsers } from "react-icons/hi2";
+import { HiOutlineUserPlus } from "react-icons/hi2";
+import { HiOutlineUserAdd } from "react-icons/hi";
+import { HiOutlineUserMinus } from "react-icons/hi2";
+import { TiUser } from 'react-icons/ti'
+import { SiOpenstreetmap } from 'react-icons/si';
 
-useEffect(() => {
-  if (!id) return;
 
-  axios.get(`https://mjk-backend-production.up.railway.app/api/dokter/getbyid/${id}`)
-    .then((res) => {
-      const dokter = res.data;
-      console.log("Data dokter:", dokter); // 👈 log data yang masuk
-      setNamaDokter(dokter.nama_dokter);
+const Jadwal = (dokterId ) => {
+  const toggleDropdown = () => {setIsOpen(!isOpen);};
+  const [loading, setLoading] = useState(false);
+  const [jadwal, setJadwal] = useState([]);
+  const [namaDokter, setNamaDokter] = useState('');
+  const [dataDokter, setDataDokter] = useState([]);
+  const [data,setData] = useState([])
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [tanggalHeader,setTanggalHeader] = useState([]);
+  
 
-      const today = new Date().toISOString().slice(0, 10);
-      const jadwalHariIni = dokter.jadwal.find(j => j.tanggal.slice(0, 10) === today);
-      console.log("Jadwal hari ini:", jadwalHariIni); // 👈 log hasil filter
+  
+  useEffect(() => {
+    const fetchDokter = async () => {
+      try {
+        const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/dokter/getall`);
+        const alldokter = res.data;
+        // setNamaDokter(dokter.nama_dokter);
+        const mapDokter = alldokter.map((dokter) => ({
+          id: dokter._id,
+          nama: dokter.nama_dokter,
+          jadwal: dokter.jadwal.map(j => {
+            const jadwalArray = Array.isArray(dokter.jadwal) ? dokter.jadwal : [];
+              const sortedJadwal = jadwalArray
+              console.log(sortedJadwal)
+              const outputjadwal= sortedJadwal.map(j => {
+                const sortedJam = [...j.jam].sort((a, b) => a.time.localeCompare(b.time));
+                const jam_awal = sortedJam[0]?.time || "-";
+                const jam_akhir = sortedJam[sortedJam.length - 1]?.time || "-";
+                const tanggalFormatted = new Date(j.tanggal).toLocaleDateString("id-ID", {
+                  weekday: "long",    
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric"
+                });
+              return {
+                 id: j._id, 
+                 tanggal: tanggalFormatted,
+                 jam_awal,
+                 jam_akhir,
+                 range: `${jam_awal} - ${jam_akhir}`
+              };
+              })
+              } 
+            )
+          }));
+          
+        console.log("inisorted",sortedJadwal)
+        
+       
+        const semuaTanggal = mapDokter.flatMap(d => d.jadwal.map(j => j.tanggal));
+        const tanggalUnik = [...new Set(semuaTanggal)];
+        setTanggalHeader(tanggalUnik);
+        
+        console.log("nihasilmap",mapDokter); // ✅ Lihat struktur data
+        const nama = mapDokter.map((dokter) => dokter.nama);
+        // console.log(nama)
+        setDataDokter(mapDokter);
+      } catch (error) {
+         console.error(error);}
+  }; fetchDokter();},[]);
 
-      if (jadwalHariIni) {
-        setJadwalHariIni(jadwalHariIni.jam);
-      } else {
-        setJadwalHariIni([]);
-      }
 
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.error("Gagal ambil data dokter:", err);
-      setLoading(false);
-    });
-}, [id]);
 
-  if (loading) return <p>Loading...</p>;
+  const staticColumns = [
+    {
+       header: "No",
+       enableSorting: false,
+       cell: ({ row }) => row.index + 1,
+    },
+    {
+      accessorKey: "nama",
+       header: "Nama",
+       enableSorting: false,
+    },
+    // {
+    //    accessorKey :"jadwal",
+    //    header: "Jadwal",
+    //    enableSorting: false,
+    //    cell: ({ row }) => (
+    //       <div>
+    //         {row.original.jadwal.map((j, idx) => (
+    //           <div key={idx}>
+    //             {j.tanggal}: {j.range}
+    //           </div>
+    //         ))}
+    //       </div>
+    //   )
+    // },
+  ]
+    const dynamicColumns = tanggalHeader.map(tgl => ({
+      header: tgl,
+        accessorFn: row => {
+          const jadwalTanggal = row.jadwal.find(j => j.tanggal === tgl);
+          
+          return jadwalTanggal ? jadwalTanggal.range : "-";
+        },
+        id: tgl,
+        enableSorting: false,
+    }));
+  const columns = [...staticColumns, ...dynamicColumns];
+
+
+  
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Jadwal Dokter Hari Ini</h2>
-      <p className="mb-2 text-gray-700">Nama Dokter: <strong>{namaDokter}</strong></p>
-      {jadwalHariIni.length === 0 ? (
-        <p className="text-red-500">Tidak ada jadwal hari ini.</p>
-      ) : (
-        <table className="w-full border border-gray-300">
-          <thead className="bg-blue-100">
-            <tr>
-              <th className="py-2 px-4 border">Jam</th>
-              <th className="py-2 px-4 border">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {jadwalHariIni.map((slot) => (
-              <tr key={slot._id}>
-                <td className="py-2 px-4 border text-center">{slot.time}</td>
-                <td className="py-2 px-4 border text-center">
-                  {slot.available ? (
-                    <span className="text-green-600 font-semibold">Tersedia</span>
-                  ) : (
-                    <span className="text-red-500 font-semibold">Tidak Tersedia</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <div className='flex flex-row'>
+      <main className='flex flex-col pl-8 gap-1 w-full pr-3 h-screen'>
+         <div className='flex flex-row items-center justify-between pt-1'>
+            <p className='text-3xl font-[Nunito Sans] font-bold text-[#004A76]'>Jadwal Praktek Dokter</p>
+            <div className="flex flex-row gap-4 relative">
+                <div className=" flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2 ">
+                    <IoIosSearch className="text-gray-400"/>
+                    <input
+                        type="text"
+                        placeholder="Pencarian"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="text-gray-700 text-sm outline-none bg-transparent"
+                    />
+                </div>
+
+                <div className="flex flex-row gap-4 relative">
+                    <button 
+                    onClick={toggleDropdown} 
+                    className="flex items-center focus:outline-none cursor-pointer">
+                    <TiUser className='w-11 h-11 text-[#292D32]'> </TiUser>
+                    </button>
+
+                    <div>
+                    {isOpen && (
+                        <>
+                        <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setIsOpen(false)}></div>
+                        <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
+                            <div className="py-1 justify-center">
+                            <a
+                                href=""
+                                className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
+                                <HiOutlineUser className='text-[30px]' />
+                                Administrator
+                            </a>
+                            
+                            <a
+                                href="#"
+                                onClick={handleLogout}
+                                className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
+                                <IoLogOutOutline className='text-[30px]' />
+                                {" "}
+                                Log Out
+                            </a>
+                            </div>
+                        </div>
+                        </>
+                    )}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <img src="/line style.svg" alt="" />
+
+
+        <div className="py-2">
+          {loading ? (
+              <p>Loading data...</p>
+          ) : (
+              <>
+              <Basetable data={dataDokter} columns={columns} />
+              </>
+              
+          )}
+        </div>
+      </main>
     </div>
-  );
+  )
 }
+
+export default Jadwal

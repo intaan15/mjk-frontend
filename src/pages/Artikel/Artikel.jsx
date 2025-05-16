@@ -257,7 +257,7 @@ export default function Artikel() {
           <div className="">
             <button
               className=" bg-[#033E61] rounded-xl px-4 py-2 cursor-pointer text-white"
-              onClick={() => openModal("tambahform")}
+              onClick={() => openModal("tambahformartikel")}
             >
               + Tambah Data Artikel
             </button>
