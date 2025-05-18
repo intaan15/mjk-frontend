@@ -2,8 +2,7 @@
 import React from 'react'
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-
-
+import "../../index.css";
 import Calendar from '../../components/Dashboard/Calendar';
 import Bar from '../../components/Bar/Bar';
 
@@ -33,114 +32,97 @@ const StatBox = ({ icon, title, value }) => (
 
 
 function Dashboard() {
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [jumlahKonsultasi, setJumlahKonsultasi] = useState(0);
-    const [isOpen, setIsOpen] = useState(false);
-    const toggleDropdown = () => setIsOpen(!isOpen);
-    const [stats, setStats] = useState({});
-    const [data, setData] = useState([]);''
-    const [usernameadmin, setUsernameadmin] = useState([]);
-    const today = new Date().toISOString().split('T')[0];  
-    const navigate = useNavigate();
-
-    const handleLogout = () => {
-      // Hapus token dari localStorage
-      localStorage.removeItem("token");
-
-      // Redirect ke halaman login
-      navigate("/login");
-    };
-
-    useEffect(() => {
-      console.log('Tanggal yang dipilih:', selectedDate);
-    }, [selectedDate]);
-
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleDropdown = () => setIsOpen(!isOpen);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const today = new Date().toISOString().split('T')[0];  
+  const [jumlahKonsultasi, setJumlahKonsultasi] = useState(0);
+  const [jumlahPengguna, setJumlahPengguna] = useState(0);
+  const [verifikasiakun,setVerifikasiAkun] = useState(0)
+  const [artikelLog, setArtikelLog] = useState(0);
+  const [jadwalbyTanggal,setJadwalbyTanggal] = useState();
+  const [akunBaru, setAkunBaru] =useState(0)
+  const [artikelPublish,setArtikelPublish]=useState(0);
+  const [stats, setStats] = useState({});
+  const [data, setData] = useState([]);''
+  const [usernameadmin, setUsernameadmin] = useState([]);
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Hapus token dari localStorage
+    navigate("/login");      // Redirect ke halaman login
+  };
 
     // endpoint untuk ambil data
     useEffect(() => {
-      
-      axios.get('https://mjk-backend-production.up.railway.app/api/masyarakat/getall')
-        .then(res => {
-          const jumlahPengguna = res.data.filter(item => item.verifikasi_akun_masyarakat === 'Terima');
-          setStats(prevStats => ({
-            ...prevStats,
-            jumlahPengguna: jumlahPengguna.length,  
+      const selected = selectedDate.toISOString().split('T')[0];
 
-          }));
-        })
-        .catch(err => console.error(err));
-      }, []);
-
-      // ambil data artikel
-      axios.get('https://mjk-backend-production.up.railway.app/api/artikel/getall')
-      .then(res => {
-        const jumlahArtikel = res.data.length;
-          if (selectedDate instanceof Date && !isNaN(selectedDate)) {
-            const selected = selectedDate.toISOString().split('T')[0];
-            const artikelToday = res.data.filter(item => {
-              const tgl_terbit_artikel = new Date(item.tgl_terbit_artikel).toISOString().split('T')[0];
-        return tgl_terbit_artikel === selected && jumlahArtikel;
-      });
-        setStats(prevStats => ({
-          ...prevStats,
-          artikelPublish: jumlahArtikel,
-          artikelHariIni: artikelToday.length,
-
-        }));
-       }})
-      .catch(err => console.error(err));
-
-      //ENDPOINT UNTUK DATA MASYARAKAT
-      axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
-      .then((res) => {
-        // jumlah pengguna
-        const jumlahPengguna = res.data.length;
-
-        // JUMLAH VERIFIKASI
-        const pendingCount = data.filter(item => item.verifikasi_akun_masyarakat === 'pending').length;
+      // API MASAYARAKAT
+      const fetchMasyarakat = async () => {
+        try {
+          const res = await axios.get('https://mjk-backend-production.up.railway.app/api/masyarakat/getall')
+          const jumlahPengguna = res.data.length; 
+          const pending = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending').length;
+          const akunBaru = res.data.filter(item =>{
+            const tglCreate = new Date(item.createdAt).toISOString().split('T')[0];
+            return tglCreate === selected;
+          })
+          
+          setAkunBaru(akunBaru);
+          setJumlahPengguna(jumlahPengguna);
+          setVerifikasiAkun(pending);
+        } catch (err) {
+          console.error('Gagal fetch masyarakat:', err);
+        }
+      };
 
 
-        // log data akun baru - filter berdasarkan tanggal
-        const filtered = res.data.filter(item => {
-          const createdAt = new Date(item.createdAt).toISOString().split('T')[0]; // Ambil tanggal dari createdAt
-          const selected = selectedDate.toISOString().split('T')[0]; // Ambil tanggal yang dipilih dari calendar
-          return createdAt === selected && item.verifikasi_akun_masyarakat === 'pending';
-        });
-        
-        setStats(prev => ({
-          ...prev,
-          jumlahPengguna: res.data.length,
-          filteredData: filtered.length
-        }));
-      })
-      .catch((err) => {
-        console.error('Error fetching data:', err);
-      });
+      // API ARTIKEL
+      const fetchArtikel = async() =>{ 
+        try {
+          const res = await axios.get('https://mjk-backend-production.up.railway.app/api/artikel/getall')
+          const artikelPublish = res.data.length;
+          const artikelLog = res.data.filter (item => {
+            const tgl = new Date(item.tgl_terbit_artikel).toISOString().split('T')[0];
+            return tgl === selected;
+          })
+          
+          setArtikelLog(artikelLog)
+          setArtikelPublish(artikelPublish)
+        }catch(err){
+          console.error('Gagal fetch artikel:', err);
+        }
+      };
+
+      // API JADWAL KONSULTASI
+      const fetchKonsultasi = async() => {
+        try {
+          const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/jadwal/getall`)
+          const jumlahKonsultasi = res.data.length;
+          const jadwalbyTanggal =  res.data.filter(item => {
+            const tgl = new Date(item.tgl_konsul).toISOString().split('T')[0];
+            const selected = selectedDate?.toISOString().split('T')[0];
+            return tgl === selected && item.verifikasi_akun_masyarakat === 'Pending';
+          })
+
+          setJadwalbyTanggal(jadwalbyTanggal)
+          setJumlahKonsultasi(jumlahKonsultasi)
+
+        } catch (err){
+          console.error('Gagal fetch jadwal:', err);
+        }
+      };
 
 
-      axios.get(`https://mjk-backend-production.up.railway.app/api/jadwal/getall`)
-      .then((res) => {
-          const filtered = res.data.filter(item => {
-          const tgl = new Date(item.tgl_konsul).toISOString().split('T')[0];
-          const selected = selectedDate?.toISOString().split('T')[0];
-          return tgl === selected && item.verifikasi_akun_masyarakat === 'Pending';
-        });
-        setJumlahKonsultasi(filtered.length)
-      })
-      .catch((err) => {
-        console.error('Error fetching data:', err);
-      },[selectedDate]);
+      fetchKonsultasi(),
+      fetchMasyarakat(),
+      fetchArtikel()
+    }, [selectedDate]);
 
 
-      axios.get(`https://mjk-backend-production.up.railway.app/api/admin/getall`)
-      .then((res) => {
-        const usernameadmin = res.data.map((admin) => admin.username_superadmin);
-        setUsernameadmin(usernameadmin)
 
-        })
-      .catch((err) => {
-        console.error('Error fetching data:', err);
-      },[]);
+
+
+
 
 
       const formatTanggal = (tanggal) => {
@@ -176,7 +158,7 @@ function Dashboard() {
                         href="#"
                         className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
                         <HiOutlineUser className='text-[30px]' />
-                        Administrator
+                        {usernameadmin}
                       </a>
                       
                       <a
@@ -229,7 +211,7 @@ function Dashboard() {
                       icon={
                       <BsFillBarChartFill className="w-[30px] h-[30px] text-white font-[Nunito Sans]"/>}
                       title="Jumlah Pengguna"
-                      value={stats.jumlahPengguna}
+                      value={jumlahPengguna}
                     />
                </div>
 
@@ -237,7 +219,7 @@ function Dashboard() {
                     <StatBox
                       icon={<GrArticle className="w-[30px] h-[30px] text-white" />}
                       title="Artikel Publish"
-                      value={stats.artikelPublish}
+                      value={artikelPublish}
                     />
                 </div>
 
@@ -245,7 +227,7 @@ function Dashboard() {
                   <StatBox
                     icon={<FaUserClock className="w-[30px] h-[30px] text-white" />}
                     title="Verifikasi Pengguna"
-                    value={stats.filteredData}
+                    value={verifikasiakun}
                   />
                </div>
           </div>

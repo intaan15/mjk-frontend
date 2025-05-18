@@ -13,6 +13,7 @@ import { FaEdit } from "react-icons/fa";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
 import { IoIosSearch } from "react-icons/io";
+import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import Swal from "sweetalert2";
 
 const handleDelete = () => {
@@ -44,10 +45,8 @@ export default function Artikel() {
 
   // LOAD DAATA
   const [loading, setLoading] = useState(false);
-
   // SET DATA TABEL
-  const [data, setData] = useState([]);''
-
+  const [data, setData] = useState([]);
   // SEARCHING
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -59,16 +58,14 @@ export default function Artikel() {
   const [selectedKategori, setSelectedKategori] = useState("kesehatan");
   const [artikel, setArtikel] = useState([]); 
 
-
-
-  const openModal = (type) => {
-    setModalType(type);
+  const openModal = (type,id) => {
+    setModalType({type,id});
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setModalType("");
+    setModalType(null);
   };
 
   const handleLogout = () => {
@@ -98,16 +95,17 @@ export default function Artikel() {
 
   // ENDPOINT GET DATA
   useEffect(() => {
-    axios.get(`https://mjk-backend-production.up.railway.app/api/artikel/getall`)
-        .then((res) => {
-          console.log(res.data);
-           setArtikel(res.data);
-        })
-        .catch((err) => {
-        console.error('Error fetching data:', err);
-        });
-    }, 
-  []);
+    const fetchArtikel = async() =>{ 
+        try {
+          const res = await axios.get('https://mjk-backend-production.up.railway.app/api/artikel/getall')
+          const artikel = res.data;
+          setArtikel(artikel)
+        }catch(err){
+          console.error('Gagal fetch artikel:', err);
+        }
+      };
+      fetchArtikel()
+    },[]);
   
   
   // PARAMATER HEADER,ISI,EDIT CELL TABLE
@@ -147,9 +145,9 @@ export default function Artikel() {
     header: "Detail",
     enableSorting: false,
     cell: ({ row }) => (
-    <div className="flex gap-2 items-center bg-[#FAFBFD]">
-      <button onClick={() => handleEdit(row.original)} title="Edit">
-        <FaEdit className="w-7  h-7 p-1 flex text-center justify-center bg-red-100 text-red-600 hover:bg-red-200 rounded-sm transition" />
+    <div className="flex gap-2 items-center ">
+      <button onClick={() =>openModal("detailartikel", row.original)} title="Detail">
+        <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg text-center" />
       </button>
     </div>),
   },
@@ -159,7 +157,7 @@ export default function Artikel() {
     enableSorting: false,
     cell: ({ row }) => (
     <div className="inline-flex overflow-hidden items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797]">
-      <button onClick={() => handleEdit(row.original)} title="Edit">
+      <button onClick={() => openModal("editdatartikel".original)} title="Edit">
         <FaEdit className="w-5 h-5 text-gray-600 hover:text-[#004A76] text-lg" />
       </button>
 

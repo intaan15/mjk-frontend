@@ -16,6 +16,7 @@ import Verifikasi from "./pages/Masyarakat/Verifikasi";
 import Modal from "./components/Modal/Modal";
 import PrivateRoute from "./components/Privateroutes";
 import Outtabel from "./components/Table/Outtabel";
+import Mal from "../src/pages/Dashboard/mal";
 
 
 function App() {
@@ -25,6 +26,8 @@ function App() {
         <Route path="/" element={<Splashscreen />} />
         <Route path="/login" element={<Loginakun />} />
         <Route path="/modal" element={<Modal />} />
+        <Route path="/mal" element={<Mal />} />
+        
 
         <Route
           path="/"

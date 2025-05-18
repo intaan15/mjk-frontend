@@ -256,3 +256,35 @@ function Dokter() {
 }
 
 export default Dokter;
+
+
+    // setNamaDokter(dokter.nama_dokter);
+        // const mapDokter = alldokter.map((dokter) => ({
+        //   id: dokter._id,
+        //   nama: dokter.nama_dokter,
+        //   jadwal: dokter.jadwal.flatMap(j => {
+        //     const jadwalArray = Array.isArray(dokter.jadwal) ? dokter.jadwal : [];
+        //       const sortedJadwal = jadwalArray
+        //       const outputjadwal= sortedJadwal.map(j => {
+        //         const sortedJam = [...j.jam].sort((a, b) => a.time.localeCompare(b.time));
+        //         const jam_awal = sortedJam[0]?.time || "-";
+        //         const jam_akhir = sortedJam[sortedJam.length - 1]?.time || "-";
+        //         const tanggalFormatted = new Date(j.tanggal).toLocaleDateString("id-ID", {
+        //           weekday: "long",    
+        //           year: "numeric",
+        //           month: "long",
+        //           day: "numeric"
+        //         });
+        //       return {
+        //          id: j._id, 
+        //          tanggal: tanggalFormatted,
+        //          jam_awal,
+        //          jam_akhir,
+        //          range: `${jam_awal} - ${jam_akhir}`
+        //         };
+        //       })
+        //       console.log("inisorted",outputjadwal)
+        //       } 
+        //     )
+        //   }));
+          

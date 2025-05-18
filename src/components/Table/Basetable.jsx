@@ -34,7 +34,7 @@ const Basetable = ({ data, columns }) => {
                 return (
                   <th
                     key={header.id}
-                    className="border-b border-[#004A76] items-center font-bold bg-[#C3E9FF]" 
+                    className="border-b border-[#004A76] items-center font-bold text-[#004A76]  bg-[#C3E9FF]" 
                     style={{ fontFamily: '"Nunito Sans"' }}
                     onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
                   >

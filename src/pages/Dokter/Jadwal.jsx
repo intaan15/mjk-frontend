@@ -2,21 +2,41 @@ import React from 'react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Basetable from "../../components/Table/Basetable";
+import dayjs from "dayjs";
+import _groupBy from "lodash/groupBy";
+import _orderBy from "lodash/orderBy";
+import uniq from "lodash/uniq";
+import "dayjs/locale/id";
+dayjs.locale("id");  
 
-import { IoIosSearch } from "react-icons/io";
-import { FaUserCheck } from "react-icons/fa";
-import { FaUserMinus } from "react-icons/fa6";
+
+
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
-import { HiOutlineUsers } from "react-icons/hi2";
-import { HiOutlineUserPlus } from "react-icons/hi2";
-import { HiOutlineUserAdd } from "react-icons/hi";
-import { HiOutlineUserMinus } from "react-icons/hi2";
 import { TiUser } from 'react-icons/ti'
 import { SiOpenstreetmap } from 'react-icons/si';
+import { LuSquareArrowLeft } from "react-icons/lu";
+import { LuSquareArrowRight } from "react-icons/lu";
 
 
-const Jadwal = (dokterId ) => {
+function findSlotDokterPadaTanggal(dokterRow, tgl) {
+  const jadwalObj = (dokterRow.jadwal ?? []).find(
+    (j) => dayjs(j.tanggal).format("YYYY-MM-DD") === tgl
+  );
+  if (!jadwalObj) return null;
+
+  const jamTersedia = (jadwalObj.jam ?? [])
+    .filter((s) => s.available)
+    .map((s) => s.time);
+
+  if (jamTersedia.length === 0) return null;
+
+  jamTersedia.sort((a, b) => a.localeCompare(b));   // ascending
+  return `${jamTersedia[0]} - ${jamTersedia[jamTersedia.length - 1]}`;
+}
+
+
+const Jadwal = () => {
   const toggleDropdown = () => {setIsOpen(!isOpen);};
   const [loading, setLoading] = useState(false);
   const [jadwal, setJadwal] = useState([]);
@@ -26,6 +46,12 @@ const Jadwal = (dokterId ) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [tanggalHeader,setTanggalHeader] = useState([]);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const itemsPerPage = 5;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = dataDokter.slice(indexOfFirstItem, indexOfLastItem);
+  console.log(dataDokter)
   
 
   
@@ -34,90 +60,98 @@ const Jadwal = (dokterId ) => {
       try {
         const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/dokter/getall`);
         const alldokter = res.data;
-        // setNamaDokter(dokter.nama_dokter);
-        const mapDokter = alldokter.map((dokter) => ({
-          id: dokter._id,
-          nama: dokter.nama_dokter,
-          jadwal: dokter.jadwal.map(j => {
-            const jadwalArray = Array.isArray(dokter.jadwal) ? dokter.jadwal : [];
-              const sortedJadwal = jadwalArray
-              console.log(sortedJadwal)
-              const outputjadwal= sortedJadwal.map(j => {
-                const sortedJam = [...j.jam].sort((a, b) => a.time.localeCompare(b.time));
-                const jam_awal = sortedJam[0]?.time || "-";
-                const jam_akhir = sortedJam[sortedJam.length - 1]?.time || "-";
-                const tanggalFormatted = new Date(j.tanggal).toLocaleDateString("id-ID", {
-                  weekday: "long",    
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric"
-                });
-              return {
-                 id: j._id, 
-                 tanggal: tanggalFormatted,
-                 jam_awal,
-                 jam_akhir,
-                 range: `${jam_awal} - ${jam_akhir}`
-              };
+        const allJadwal =alldokter.flatMap((d) =>
+          (Array.isArray(d.jadwal) ? d.jadwal : []).flatMap((j) =>
+            (Array.isArray(j.jam) ? j.jam : []).map((session) => ({
+              tanggal: dayjs(j.tanggal).format("YYYY-MM-DD"), 
+              time: session.time,
+              available: session.available,
+              dokterId: d._id,
+              dokterNama: d.nama_dokter,
+            }))
+          )
+        );
+        const getJamRange = (slots) => {
+          if (!slots || slots.length === 0) return "-";
+          const sortedJam = slots.slice().sort((a, b) => a.time.localeCompare(b.time));
+          return `${sortedJam[0].time} - ${sortedJam[sortedJam.length - 1].time}`;
+        };
+        
+        const byDate = _groupBy(allJadwal, "tanggal");
+        const sortDate = _orderBy(Object.keys(byDate), (t) => t, "asc");
+        const hasil = sortDate.map((tgl) => {
+          const byDoctor = _groupBy(byDate[tgl], "dokterId");
+          const dokterArr = Object.values(byDoctor).map((byJam) => {
+            const meta = byJam[0];
+            const jamSorted = _orderBy(byJam, (s) => s.time, "asc").map(
+              (s) => ({
+                time: s.time,
+                available: s.available
               })
-              } 
-            )
-          }));
+            );
+            return {
+                id: meta.dokterId,
+                nama: meta.dokterNama,
+                spesialis: meta.spesialis,
+                foto: meta.foto,
+                slot: getJamRange(jamSorted)
+              };
+            });
+            return {tanggal: tgl,dokter: dokterArr};
+            });
           
-        console.log("inisorted",sortedJadwal)
-        
-       
-        const semuaTanggal = mapDokter.flatMap(d => d.jadwal.map(j => j.tanggal));
-        const tanggalUnik = [...new Set(semuaTanggal)];
-        setTanggalHeader(tanggalUnik);
-        
-        console.log("nihasilmap",mapDokter); // ✅ Lihat struktur data
-        const nama = mapDokter.map((dokter) => dokter.nama);
-        // console.log(nama)
-        setDataDokter(mapDokter);
+        setDataDokter(alldokter);
+        setTanggalHeader(sortDate);
       } catch (error) {
          console.error(error);}
-  }; fetchDokter();},[]);
+        }; 
+        
+        fetchDokter()
+      },[]);
+      
 
+useEffect(() => {setCurrentPage(1);}, [dataDokter]);
 
+const staticColumns = [
+  { id: "no", header: "No", cell: ({ row }) => row.index + 1 },
+  { accessorKey: "nama_dokter", header: "Nama",enableSorting: false, },       
+  { accessorKey: "spesialis_dokter", header: "Spesialis", enableSorting: false, }
+];
+    const tanggalArray = React.useMemo(() => {
+      const all = dataDokter.flatMap((d) =>
+        (d.jadwal ?? []).map((j) => dayjs(j.tanggal).format("YYYY-MM-DD"))
+      );
+      return uniq(all).sort();
+    }, [dataDokter]);
 
-  const staticColumns = [
-    {
-       header: "No",
-       enableSorting: false,
-       cell: ({ row }) => row.index + 1,
-    },
-    {
-      accessorKey: "nama",
-       header: "Nama",
-       enableSorting: false,
-    },
-    // {
-    //    accessorKey :"jadwal",
-    //    header: "Jadwal",
-    //    enableSorting: false,
-    //    cell: ({ row }) => (
-    //       <div>
-    //         {row.original.jadwal.map((j, idx) => (
-    //           <div key={idx}>
-    //             {j.tanggal}: {j.range}
-    //           </div>
-    //         ))}
-    //       </div>
-    //   )
-    // },
-  ]
-    const dynamicColumns = tanggalHeader.map(tgl => ({
-      header: tgl,
-        accessorFn: row => {
-          const jadwalTanggal = row.jadwal.find(j => j.tanggal === tgl);
-          
-          return jadwalTanggal ? jadwalTanggal.range : "-";
-        },
-        id: tgl,
-        enableSorting: false,
-    }));
-  const columns = [...staticColumns, ...dynamicColumns];
+  const dynamicColumns = React.useMemo(
+    () =>
+      tanggalArray.map((tgl) => ({
+        id: `tgl-${tgl}`,
+        header: () => {
+            const d = dayjs(tgl).locale("id");
+            return (
+              <div className="flex flex-row items-center leading-tight">
+                <div className='flex flex-col items-center border-r-2 px-2 '>
+                    <span className="text-xs font-medium">{d.format("dddd")}</span>
+                    <span className="text-sm font-semibold">{d.format("DD‑MM‑YYYY")}</span>
+                </div>
+              </div>
+            );
+          },
+        cell: ({ row }) => (
+          <div className="flex justify-center items-center h-full">
+            {findSlotDokterPadaTanggal(row.original, tgl) || "-"}
+          </div>
+        )
+      })),
+    [tanggalArray]
+  );
+
+  const columns = React.useMemo(
+    () => [...staticColumns, ...dynamicColumns],
+    [dynamicColumns]
+  );
 
 
   
@@ -128,17 +162,6 @@ const Jadwal = (dokterId ) => {
          <div className='flex flex-row items-center justify-between pt-1'>
             <p className='text-3xl font-[Nunito Sans] font-bold text-[#004A76]'>Jadwal Praktek Dokter</p>
             <div className="flex flex-row gap-4 relative">
-                <div className=" flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2 ">
-                    <IoIosSearch className="text-gray-400"/>
-                    <input
-                        type="text"
-                        placeholder="Pencarian"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="text-gray-700 text-sm outline-none bg-transparent"
-                    />
-                </div>
-
                 <div className="flex flex-row gap-4 relative">
                     <button 
                     onClick={toggleDropdown} 
@@ -177,17 +200,41 @@ const Jadwal = (dokterId ) => {
         </div>
         <img src="/line style.svg" alt="" />
 
+        <div className='flex flex-row items-center justify-center text-center'>
+          <div className=''>
+            <button 
+              className='text-3xl text-[#004A76] items-center hover:bg-black'
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}>
+              <LuSquareArrowLeft />
+            </button>
+            
+            <button 
+              className='text-3xl text-[#004A76] items-center hover:bg-black'
+              onClick={() => setCurrentPage((prev) => (prev * itemsPerPage < dataDokter.length ? prev + 1 : prev))}
+              disabled={currentPage * itemsPerPage >= dataDokter.length}
+            >
+              <LuSquareArrowRight />
+            </button>
+
+             
+          </div>
+          <div>
+            <label htmlFor=""></label>
+          </div>
+        </div>
+
 
         <div className="py-2">
           {loading ? (
               <p>Loading data...</p>
           ) : (
               <>
-              <Basetable data={dataDokter} columns={columns} />
-              </>
-              
+              <Basetable data={currentItems} columns={columns} />
+              </>   
           )}
         </div>
+        
       </main>
     </div>
   )
