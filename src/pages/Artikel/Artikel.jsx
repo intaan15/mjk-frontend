@@ -1,14 +1,13 @@
 import axios from "axios";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Card, Typography } from "@material-tailwind/react";
 import Modal from "../../components/Modal/ModalTemplate";
-import renderModalContent from "../../components/Modal/ModalContent";
+import ModalContent from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
-
 
 import { FaUser } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
-import { TiUser } from 'react-icons/ti';
+import { TiUser } from "react-icons/ti";
 import { FaEdit } from "react-icons/fa";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
@@ -34,8 +33,6 @@ const handleDelete = () => {
   });
 };
 
-
-
 export default function Artikel() {
   // OPEN MODAL
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,20 +48,24 @@ export default function Artikel() {
   const [searchTerm, setSearchTerm] = useState("");
 
   // DROPDOWN ACCOUNT
-  const toggleDropdown = () => {setIsOpen(!isOpen);};
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
   const [isOpen, setIsOpen] = useState(false);
 
-  
   const [selectedKategori, setSelectedKategori] = useState("kesehatan");
-  const [artikel, setArtikel] = useState([]); 
+  const [artikel, setArtikel] = useState([]);
+  const [selectedId, setSelectedId] = useState(null);
 
-  const openModal = (type,id) => {
-    setModalType({type,id});
+  const openModal = (type, id) => {
+    setModalType(type);
+    setSelectedId(id);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setSelectedId(null);
     setModalType(null);
   };
 
@@ -77,13 +78,14 @@ export default function Artikel() {
   };
 
   // FILTER ARTIKEL
-  const filteredData = artikel?.filter((item) =>
-    item.kategori_artikel.toLowerCase() === selectedKategori.toLowerCase()
+  const filteredData = artikel?.filter(
+    (item) =>
+      item.kategori_artikel.toLowerCase() === selectedKategori.toLowerCase()
   );
 
   // FORMAT TANGGAL
   const formatTanggal = (isoDateString) => {
-  const date = new Date(isoDateString);
+    const date = new Date(isoDateString);
     return date.toLocaleDateString("id-ID", {
       day: "2-digit",
       month: "2-digit",
@@ -91,141 +93,151 @@ export default function Artikel() {
     });
   };
 
-
-
-  // ENDPOINT GET DATA
+  // API GET DATA
   useEffect(() => {
-    const fetchArtikel = async() =>{ 
-        try {
-          const res = await axios.get('https://mjk-backend-production.up.railway.app/api/artikel/getall')
-          const artikel = res.data;
-          setArtikel(artikel)
-        }catch(err){
-          console.error('Gagal fetch artikel:', err);
-        }
-      };
-      fetchArtikel()
-    },[]);
-  
-  
+    const fetchArtikel = async () => {
+      try {
+        const res = await axios.get(
+          "https://mjk-backend-production.up.railway.app/api/artikel/getall"
+        );
+        const artikel = res.data;
+        setArtikel(artikel);
+      } catch (err) {
+        console.error("Gagal fetch artikel:", err);
+      }
+    };
+    fetchArtikel();
+  }, []);
+
   // PARAMATER HEADER,ISI,EDIT CELL TABLE
   const columns = [
-  {
-    accessorKey: "gambar_artikel",
-    header: "Gambar",
-    enableSorting: false,
-    cell: ({ getValue }) => {
-      const imageUrl = getValue();
-      return (
-        <img 
-          src="foto"
-          alt="Foto Dokter" 
-          className="w-10 h-10 object-cover rounded-full" 
-        />
-      );} 
-  },
-  {
-    accessorKey: "nama_artikel",
-    header: "Judul Artikel",
-    enableSorting: false,
-  },
-  {
-    accessorKey: "tgl_terbit_artikel",
-    header: "Tgl.Terbit",
-    enableSorting: false,
-    cell: info => formatTanggal(info.getValue()),
-  },
-  {
-    accessorKey: "kategori_artikel",
-    header: "Kategori",
-    enableSorting: false,
-  },
-  {
-    accessorKey: "detail",
-    header: "Detail",
-    enableSorting: false,
-    cell: ({ row }) => (
-    <div className="flex gap-2 items-center ">
-      <button onClick={() =>openModal("detailartikel", row.original)} title="Detail">
-        <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg text-center" />
-      </button>
-    </div>),
-  },
-  {
-    accessorKey: "Action",
-    header: "Aksi",
-    enableSorting: false,
-    cell: ({ row }) => (
-    <div className="inline-flex overflow-hidden items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797]">
-      <button onClick={() => openModal("editdatartikel".original)} title="Edit">
-        <FaEdit className="w-5 h-5 text-gray-600 hover:text-[#004A76] text-lg" />
-      </button>
+    {
+      accessorKey: "gambar_artikel",
+      header: "Gambar",
+      enableSorting: false,
+      cell: ({ getValue }) => {
+        const imageUrl = getValue();
+        return (
+          <img
+            src="foto"
+            alt="Foto Dokter"
+            className="w-10 h-10 object-cover rounded-full"
+          />
+        );
+      },
+    },
+    {
+      accessorKey: "nama_artikel",
+      header: "Judul Artikel",
+      enableSorting: false,
+    },
+    {
+      accessorKey: "tgl_terbit_artikel",
+      header: "Tgl.Terbit",
+      enableSorting: false,
+      cell: (info) => formatTanggal(info.getValue()),
+    },
+    {
+      accessorKey: "kategori_artikel",
+      header: "Kategori",
+      enableSorting: false,
+    },
+    {
+      accessorKey: "detail",
+      header: "Detail",
+      enableSorting: false,
+      cell: ({ row }) => (
+        <div className="flex gap-2 items-center ">
+          <button
+            onClick={() => openModal("detailartikel", row.original._id)}
+            title="Detail"
+          >
+            <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg text-center" />
+          </button>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "Action",
+      header: "Aksi",
+      enableSorting: false,
+      cell: ({ row }) => (
+        <div className="inline-flex overflow-hidden items-center bg-[#FAFBFD] p-2 gap-3 rounded-xl border-1 border-[#979797]">
+          <button onClick={() => openModal("editdataartikel")} title="Edit">
+            <FaEdit className="w-5 h-5 text-gray-600 hover:text-[#004A76] text-lg" />
+          </button>
 
-      <button onClick={() =>deleteDokterById(_id)} title="Hapus">
-        <FaTrashAlt className="w-5 h-5 text-red-500 hover:text-red-700 text-lg" />
-      </button>
-    </div>),
-  },]
+          <button onClick={handleDelete} title="Hapus">
+            <FaTrashAlt className="w-5 h-5 text-red-500 hover:text-red-700 text-lg" />
+          </button>
+        </div>
+      ),
+    },
+  ];
 
-
-  // MAINCONTENT  
+  // MAINCONTENT
   return (
     <div className="flex flex-row h-screen ">
-      <main className='flex flex-col pl-8 gap-1 w-full pr-3'>
-    
+      <main className="flex flex-col pl-8 gap-1 w-full pr-3">
         {/* navbar */}
         <div className="flex flex-row items-center justify-between  pt-2">
-          <div className=" text-3xl font-[Nunito Sans] font-bold text-[#004A76]">Artikel</div>
+          <div className=" text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
+            Artikel
+          </div>
           <div className="flex flex-row gap-4 items-center relative">
             <div className=" flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2 ">
               <IoIosSearch className="text-gray-400" />
-               <input
-                      type="text"
-                      placeholder="Pencarian"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="text-gray-700 text-sm outline-none bg-transparent"
+              <input
+                type="text"
+                placeholder="Pencarian"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="text-gray-700 text-sm outline-none bg-transparent"
               />
             </div>
-             <div className="flex flex-row gap-4 relative">
-                <button 
-                  onClick={toggleDropdown} 
-                  className="flex items-center focus:outline-none cursor-pointer">
-                  <TiUser className='w-11 h-11 text-[#292D32]'> </TiUser>
-                </button>
+            <div className="flex flex-row gap-4 relative">
+              <button
+                onClick={toggleDropdown}
+                className="flex items-center focus:outline-none cursor-pointer"
+              >
+                <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
+              </button>
 
-                <div>
-                  {isOpen && (
-                    <>
-                      <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setIsOpen(false)}></div>
-                      <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
-                        <div className="py-1 justify-center">
-                          <a
-                            href=""
-                            className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
-                            <HiOutlineUser className='text-[30px]' />
-                            Administrator
-                          </a>
-                          
-                          <a
-                            href="#"
-                            onClick={handleLogout}
-                            className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
-                            <IoLogOutOutline className='text-[30px]' />
-                            {" "}
-                            Log Out
-                          </a>
-                        </div>
+              <div>
+                {isOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 bg-black/30 z-40"
+                      onClick={() => setIsOpen(false)}
+                    ></div>
+                    <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
+                      <div className="py-1 justify-center">
+                        <a
+                          href=""
+                          className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3"
+                        >
+                          <HiOutlineUser className="text-[30px]" />
+                          Administrator
+                        </a>
+
+                        <a
+                          href="#"
+                          onClick={handleLogout}
+                          className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3"
+                        >
+                          <IoLogOutOutline className="text-[30px]" /> Log Out
+                        </a>
                       </div>
-                    </>
-                  )}
-                </div>
+                    </div>
+                  </>
+                )}
               </div>
+            </div>
           </div>
         </div>
 
         <img src="line style.svg" alt="" />
-        
+
         {/* choose */}
         <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
           <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-4xl items-center">
@@ -236,26 +248,26 @@ export default function Artikel() {
                 selectedKategori === "kesehatan"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
-              }`}>
+              }`}
+            >
               Artikel Kesehatan
             </button>
 
-
             <button
-                onClick={() => setSelectedKategori("obat")}
-                className={` w-50 px-4 py-1 rounded-full border-2 transition-all duration-200 ${
-                  selectedKategori === "obat"
-                    ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
-                    : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
-                }`}
-              >
-                Artikel Obat
+              onClick={() => setSelectedKategori("obat")}
+              className={` w-50 px-4 py-1 rounded-full border-2 transition-all duration-200 ${
+                selectedKategori === "obat"
+                  ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
+                  : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
+              }`}
+            >
+              Artikel Obat
             </button>
           </div>
           <div className="">
             <button
               className=" bg-[#033E61] rounded-xl px-4 py-2 cursor-pointer text-white"
-              onClick={() => openModal("tambahformartikel")}
+              onClick={() => openModal("tambahartikel")}
             >
               + Tambah Data Artikel
             </button>
@@ -270,16 +282,17 @@ export default function Artikel() {
             <>
               <Basetable data={filteredData} columns={columns} />
             </>
-            
           )}
         </div>
-        
+
         <Modal open={isModalOpen} onClose={closeModal}>
-          {renderModalContent(modalType, closeModal)}
+          <ModalContent
+            modalType={modalType}
+            onClose={closeModal}
+            idArtikel={selectedId}
+          />
         </Modal>
-     
       </main>
-     
     </div>
   );
 }
