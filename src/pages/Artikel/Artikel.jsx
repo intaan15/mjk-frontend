@@ -1,13 +1,14 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState,useEffect,useCallback } from "react";
 import { Card, Typography } from "@material-tailwind/react";
 import Modal from "../../components/Modal/ModalTemplate";
 import ModalContent from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
 
+
 import { FaUser } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
-import { TiUser } from "react-icons/ti";
+import { TiUser } from 'react-icons/ti';
 import { FaEdit } from "react-icons/fa";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
@@ -33,6 +34,8 @@ const handleDelete = () => {
   });
 };
 
+
+
 export default function Artikel() {
   // OPEN MODAL
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,13 +51,12 @@ export default function Artikel() {
   const [searchTerm, setSearchTerm] = useState("");
 
   // DROPDOWN ACCOUNT
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleDropdown = () => {setIsOpen(!isOpen);};
   const [isOpen, setIsOpen] = useState(false);
 
+  
   const [selectedKategori, setSelectedKategori] = useState("kesehatan");
-  const [artikel, setArtikel] = useState([]);
+  const [artikel, setArtikel] = useState([]); 
   const [selectedId, setSelectedId] = useState(null);
 
   const openModal = (type, id) => {
@@ -68,6 +70,7 @@ export default function Artikel() {
     setSelectedId(null);
     setModalType(null);
   };
+  
 
   const handleLogout = () => {
     // Hapus token dari localStorage
@@ -78,14 +81,13 @@ export default function Artikel() {
   };
 
   // FILTER ARTIKEL
-  const filteredData = artikel?.filter(
-    (item) =>
-      item.kategori_artikel.toLowerCase() === selectedKategori.toLowerCase()
+  const filteredData = artikel?.filter((item) =>
+    item.kategori_artikel.toLowerCase() === selectedKategori.toLowerCase()
   );
 
   // FORMAT TANGGAL
   const formatTanggal = (isoDateString) => {
-    const date = new Date(isoDateString);
+  const date = new Date(isoDateString);
     return date.toLocaleDateString("id-ID", {
       day: "2-digit",
       month: "2-digit",
@@ -93,89 +95,88 @@ export default function Artikel() {
     });
   };
 
-  // API GET DATA
-  useEffect(() => {
-    const fetchArtikel = async () => {
-      try {
-        const res = await axios.get(
-          "https://mjk-backend-production.up.railway.app/api/artikel/getall"
-        );
-        const artikel = res.data;
-        setArtikel(artikel);
-      } catch (err) {
-        console.error("Gagal fetch artikel:", err);
-      }
-    };
-    fetchArtikel();
+
+
+  const fetchArtikel = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        "http://10.52.170.177:3330/api/artikel/getall"
+      );
+      setArtikel(res.data);
+    } catch (err) {
+      console.error("Gagal fetch artikel:", err);
+    }
   }, []);
 
+  useEffect(() => {
+    fetchArtikel();
+  }, [fetchArtikel]);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    fetchArtikel(); 
+  };
   // PARAMATER HEADER,ISI,EDIT CELL TABLE
   const columns = [
-    {
-      accessorKey: "gambar_artikel",
-      header: "Gambar",
-      enableSorting: false,
-      cell: ({ getValue }) => {
-        const imageUrl = getValue();
-        return (
-          <img
-            src="foto"
-            alt="Foto Dokter"
-            className="w-10 h-10 object-cover rounded-full"
-          />
-        );
-      },
-    },
-    {
-      accessorKey: "nama_artikel",
-      header: "Judul Artikel",
-      enableSorting: false,
-    },
-    {
-      accessorKey: "tgl_terbit_artikel",
-      header: "Tgl.Terbit",
-      enableSorting: false,
-      cell: (info) => formatTanggal(info.getValue()),
-    },
-    {
-      accessorKey: "kategori_artikel",
-      header: "Kategori",
-      enableSorting: false,
-    },
-    {
-      accessorKey: "detail",
-      header: "Detail",
-      enableSorting: false,
-      cell: ({ row }) => (
-        <div className="flex gap-2 items-center ">
-          <button
-            onClick={() => openModal("detailartikel", row.original._id)}
-            title="Detail"
-          >
-            <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg text-center" />
-          </button>
-        </div>
-      ),
-    },
-    {
-      accessorKey: "Action",
-      header: "Aksi",
-      enableSorting: false,
-      cell: ({ row }) => (
-        <div className="inline-flex overflow-hidden items-center bg-[#FAFBFD] p-2 gap-3 rounded-xl border-1 border-[#979797]">
-          <button onClick={() => openModal("editdataartikel")} title="Edit">
-            <FaEdit className="w-5 h-5 text-gray-600 hover:text-[#004A76] text-lg" />
-          </button>
+  {
+    accessorKey: "gambar_artikel",
+    header: "Gambar",
+    enableSorting: false,
+    cell: ({ getValue }) => {
+      const imageUrl = getValue();
+      return (
+        <img 
+          src="foto"
+          alt="Foto Dokter" 
+          className="w-10 h-10 object-cover rounded-full" 
+        />
+      );} 
+  },
+  {
+    accessorKey: "nama_artikel",
+    header: "Judul Artikel",
+    enableSorting: false,
+  },
+  {
+    accessorKey: "tgl_terbit_artikel",
+    header: "Tgl.Terbit",
+    enableSorting: false,
+    cell: info => formatTanggal(info.getValue()),
+  },
+  {
+    accessorKey: "kategori_artikel",
+    header: "Kategori",
+    enableSorting: false,
+  },
+  {
+    accessorKey: "detail",
+    header: "Detail",
+    enableSorting: false,
+    cell: ({ row }) => (
+    <div className="flex gap-2 items-center ">
+      <button onClick={() =>openModal("detailartikel", row.original._id)} title="Detail">
+        <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg text-center"/>
+      </button>
+    </div>),
+  },
+  {
+    accessorKey: "Action",
+    header: "Aksi",
+    enableSorting: false,
+    cell: ({ row }) => (
+    <div className="inline-flex overflow-hidden items-center bg-[#FAFBFD] p-2 gap-3 rounded-xl border-1 border-[#979797]">
+      <button onClick={() => openModal("editdataartikel")} title="Edit">
+        <FaEdit className="w-5 h-5 text-gray-600 hover:text-[#004A76] text-lg" />
+      </button>
 
-          <button onClick={handleDelete} title="Hapus">
-            <FaTrashAlt className="w-5 h-5 text-red-500 hover:text-red-700 text-lg" />
-          </button>
-        </div>
-      ),
-    },
-  ];
+      <button  onClick={handleDelete} title="Hapus">
+        <FaTrashAlt className="w-5 h-5 text-red-500 hover:text-red-700 text-lg" />
+      </button>
+    </div>),
+  },]
 
-  // MAINCONTENT
+
+  // MAINCONTENT  
   return (
     <div className="flex flex-row h-screen ">
       <main className="flex flex-col pl-8 gap-1 w-full pr-3">
@@ -288,8 +289,9 @@ export default function Artikel() {
         <Modal open={isModalOpen} onClose={closeModal}>
           <ModalContent
             modalType={modalType}
-            onClose={closeModal}
+            // onClose={closeModal}
             idArtikel={selectedId}
+            onClose={handleCloseModal}
           />
         </Modal>
       </main>
