@@ -16,29 +16,40 @@ import { IoIosSearch } from "react-icons/io";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import Swal from "sweetalert2";
 
-const handleDelete = () => {
-  Swal.fire({
-    title: "Yakin mau hapus?",
-    text: "Data yang dihapus tidak bisa dikembalikan!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Ya, hapus!",
-    cancelButtonText: "Batal",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Lanjutkan proses delete
-      Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
-    }
-  });
-};
+// const handleDelete = (id) => {
+//   Swal.fire({
+//     title: "Yakin mau hapus?",
+//     text: "Data yang dihapus tidak bisa dikembalikan!",
+//     icon: "warning",
+//     showCancelButton: true,
+//     confirmButtonColor: "#d33",
+//     cancelButtonColor: "#3085d6",
+//     confirmButtonText: "Ya, hapus!",
+//     cancelButtonText: "Batal",
+//   }).then(async (result) => {
+//     if (result.isConfirmed) {
+//       try {
+//         await axios.delete(
+//           `http://10.52.170.177:3330/api/artikel/delete/${id}`
+//         );
+
+//         Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
+//         // handleRefresh(); // Refresh data setelah hapus
+//       } catch (error) {
+//         console.error("Gagal menghapus artikel:", error);
+//         Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
+//       }
+//     }
+//   });
+// };
+
 
 
 
 export default function Artikel() {
   // OPEN MODAL
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   // PILIH TYPE MODAL
   const [modalType, setModalType] = useState("");
@@ -52,7 +63,6 @@ export default function Artikel() {
 
   // DROPDOWN ACCOUNT
   const toggleDropdown = () => {setIsOpen(!isOpen);};
-  const [isOpen, setIsOpen] = useState(false);
 
   
   const [selectedKategori, setSelectedKategori] = useState("kesehatan");
@@ -95,6 +105,37 @@ export default function Artikel() {
     });
   };
 
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Yakin mau hapus?",
+      text: "Data yang dihapus tidak bisa dikembalikan!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Ya, hapus!",
+      cancelButtonText: "Batal",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(
+            `http://10.52.170.177:3330/api/artikel/delete/${id}`
+          );
+
+          Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
+          fetchArtikel();
+          // handleRefresh(); // Refresh data setelah hapus
+        } catch (error) {
+          console.error("Gagal menghapus artikel:", error);
+          Swal.fire(
+            "Gagal!",
+            "Terjadi kesalahan saat menghapus data.",
+            "error"
+          );
+        }
+      }
+    });
+  };
 
 
   const fetchArtikel = useCallback(async () => {
@@ -118,62 +159,69 @@ export default function Artikel() {
   };
   // PARAMATER HEADER,ISI,EDIT CELL TABLE
   const columns = [
-  {
-    accessorKey: "gambar_artikel",
-    header: "Gambar",
-    enableSorting: false,
-    cell: ({ getValue }) => {
-      const imageUrl = getValue();
-      return (
-        <img 
-          src="foto"
-          alt="Foto Dokter" 
-          className="w-10 h-10 object-cover rounded-full" 
-        />
-      );} 
-  },
-  {
-    accessorKey: "nama_artikel",
-    header: "Judul Artikel",
-    enableSorting: false,
-  },
-  {
-    accessorKey: "tgl_terbit_artikel",
-    header: "Tgl.Terbit",
-    enableSorting: false,
-    cell: info => formatTanggal(info.getValue()),
-  },
-  {
-    accessorKey: "kategori_artikel",
-    header: "Kategori",
-    enableSorting: false,
-  },
-  {
-    accessorKey: "detail",
-    header: "Detail",
-    enableSorting: false,
-    cell: ({ row }) => (
-    <div className="flex gap-2 items-center ">
-      <button onClick={() =>openModal("detailartikel", row.original._id)} title="Detail">
-        <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg text-center"/>
-      </button>
-    </div>),
-  },
-  {
-    accessorKey: "Action",
-    header: "Aksi",
-    enableSorting: false,
-    cell: ({ row }) => (
-    <div className="inline-flex overflow-hidden items-center bg-[#FAFBFD] p-2 gap-3 rounded-xl border-1 border-[#979797]">
-      <button onClick={() => openModal("editdataartikel")} title="Edit">
-        <FaEdit className="w-5 h-5 text-gray-600 hover:text-[#004A76] text-lg" />
-      </button>
+    {
+      accessorKey: "gambar_artikel",
+      header: "Gambar",
+      enableSorting: false,
+      cell: ({ getValue }) => {
+        const imageUrl = getValue();
+        return (
+          <img
+            src="foto"
+            alt="Foto Dokter"
+            className="w-10 h-10 object-cover rounded-full"
+          />
+        );
+      },
+    },
+    {
+      accessorKey: "nama_artikel",
+      header: "Judul Artikel",
+      enableSorting: false,
+    },
+    {
+      accessorKey: "tgl_terbit_artikel",
+      header: "Tgl.Terbit",
+      enableSorting: false,
+      cell: (info) => formatTanggal(info.getValue()),
+    },
+    {
+      accessorKey: "kategori_artikel",
+      header: "Kategori",
+      enableSorting: false,
+    },
+    {
+      accessorKey: "detail",
+      header: "Detail",
+      enableSorting: false,
+      cell: ({ row }) => (
+        <div className="flex gap-2 items-center ">
+          <button
+            onClick={() => openModal("detailartikel", row.original._id)}
+            title="Detail"
+          >
+            <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg text-center" />
+          </button>
+        </div>
+      ),
+    },
+    {
+      accessorKey: "Action",
+      header: "Aksi",
+      enableSorting: false,
+      cell: ({ row }) => (
+        <div className="inline-flex overflow-hidden items-center bg-[#FAFBFD] p-2 gap-3 rounded-xl border-1 border-[#979797]">
+          <button onClick={() => openModal("editdataartikel")} title="Edit">
+            <FaEdit className="w-5 h-5 text-gray-600 hover:text-[#004A76] text-lg" />
+          </button>
 
-      <button  onClick={handleDelete} title="Hapus">
-        <FaTrashAlt className="w-5 h-5 text-red-500 hover:text-red-700 text-lg" />
-      </button>
-    </div>),
-  },]
+          <button onClick={() => handleDelete(row.original._id)} title="Hapus">
+            <FaTrashAlt className="w-5 h-5 text-red-500 hover:text-red-700 text-lg" />
+          </button>
+        </div>
+      ),
+    },
+  ];
 
 
   // MAINCONTENT  
