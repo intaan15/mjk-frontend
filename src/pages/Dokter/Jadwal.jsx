@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useMemo,useEffect, useState } from 'react';
 import Basetable from "../../components/Table/Basetable";
 import dayjs from "dayjs";
 import _groupBy from "lodash/groupBy";
@@ -17,6 +17,9 @@ import { TiUser } from 'react-icons/ti'
 import { SiOpenstreetmap } from 'react-icons/si';
 import { LuSquareArrowLeft } from "react-icons/lu";
 import { LuSquareArrowRight } from "react-icons/lu";
+import { FaCalendarDays } from "react-icons/fa6";
+
+
 
 
 function findSlotDokterPadaTanggal(dokterRow, tgl) {
@@ -46,17 +49,10 @@ const Jadwal = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [tanggalHeader,setTanggalHeader] = useState([]);
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const itemsPerPage = 5;
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = dataDokter.slice(indexOfFirstItem, indexOfLastItem);
-  console.log(dataDokter)
-  
 
-  
   useEffect(() => {
     const fetchDokter = async () => {
+      // ENPOINTE
       try {
         const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/dokter/getall`);
         const alldokter = res.data;
@@ -71,11 +67,13 @@ const Jadwal = () => {
             }))
           )
         );
+
         const getJamRange = (slots) => {
           if (!slots || slots.length === 0) return "-";
           const sortedJam = slots.slice().sort((a, b) => a.time.localeCompare(b.time));
           return `${sortedJam[0].time} - ${sortedJam[sortedJam.length - 1].time}`;
         };
+
         
         const byDate = _groupBy(allJadwal, "tanggal");
         const sortDate = _orderBy(Object.keys(byDate), (t) => t, "asc");
@@ -102,59 +100,88 @@ const Jadwal = () => {
           
         setDataDokter(alldokter);
         setTanggalHeader(sortDate);
+        console.log("Data Dokter",sortDate);
       } catch (error) {
-         console.error(error);}
-        }; 
-        
+        console.error(error);}
+      }; 
         fetchDokter()
       },[]);
-      
-
-useEffect(() => {setCurrentPage(1);}, [dataDokter]);
-
-const staticColumns = [
-  { id: "no", header: "No", cell: ({ row }) => row.index + 1 },
-  { accessorKey: "nama_dokter", header: "Nama",enableSorting: false, },       
-  { accessorKey: "spesialis_dokter", header: "Spesialis", enableSorting: false, }
-];
+   
+  // DATA TABLE   
+  const staticColumns = [
+          { id: "no", header: "No", cell: ({ row }) => row.index + 1 },
+      { accessorKey: "nama_dokter", header: "Nama",enableSorting: false, },       
+      { accessorKey: "spesialis_dokter", header: "Spesialis", enableSorting: false, }
+    ];
     const tanggalArray = React.useMemo(() => {
       const all = dataDokter.flatMap((d) =>
         (d.jadwal ?? []).map((j) => dayjs(j.tanggal).format("YYYY-MM-DD"))
-      );
-      return uniq(all).sort();
-    }, [dataDokter]);
+    );
+    return uniq(all).sort();
+  }, [dataDokter]);
 
-  const dynamicColumns = React.useMemo(
-    () =>
-      tanggalArray.map((tgl) => ({
-        id: `tgl-${tgl}`,
-        header: () => {
-            const d = dayjs(tgl).locale("id");
-            return (
-              <div className="flex flex-row items-center leading-tight">
-                <div className='flex flex-col items-center border-r-2 px-2 '>
-                    <span className="text-xs font-medium">{d.format("dddd")}</span>
-                    <span className="text-sm font-semibold">{d.format("DD‑MM‑YYYY")}</span>
-                </div>
-              </div>
-            );
-          },
-        cell: ({ row }) => (
-          <div className="flex justify-center items-center h-full">
-            {findSlotDokterPadaTanggal(row.original, tgl) || "-"}
-          </div>
-        )
-      })),
+
+  function getRentangMinggu(monday) {
+    const senin = dayjs(monday).startOf("day");
+    return Array.from({ length: 7 }, (_, i) =>
+      dayjs(monday).add(i , "day").format("YYYY-MM-DD")
+    );
+  }
+
+  const [mingguPage, setMingguPage] = useState(0);
+    const minDate = useMemo(
+    () => (tanggalArray.length ? dayjs(tanggalArray[0]) : dayjs()),
     [tanggalArray]
   );
-
-  const columns = React.useMemo(
-    () => [...staticColumns, ...dynamicColumns],
-    [dynamicColumns]
+  const monday0 = minDate.startOf("week").add(0, "day");
+  const mondayAktif =  useMemo(() => monday0.add(mingguPage, "week"),[monday0, mingguPage]);
+  const startDate = dayjs(minDate);  
+  const tanggalAktif = useMemo(
+    () => getRentangMinggu(mondayAktif),
+    [mondayAktif]
   );
 
+  const [tanggalPage, setTanggalPage] = useState(1);
+  const tanggalPerPage = 6;    
+  const firstIdx = (tanggalPage - 1) * tanggalPerPage;
+  const lastIdx  = firstIdx + tanggalPerPage;
+  // const tanggalAktif = tanggalArray.slice(firstIdx, lastIdx);
+  const dynamicColumns = React.useMemo(
+    () =>
+      tanggalAktif.map((tgl) => ({
+        id: `tgl-${tgl}`,
+        header: () => {
+          const d = dayjs(tgl).locale("id");
+          return (
+                <div className="flex flex-row items-center leading-tight">
+                  <div className='flex flex-col items-center border-r-2 px-2 '>
+                    
+                      <span className="text-xs font-medium">{d.format("dddd")}</span>
+                      <span className="text-sm font-semibold">{d.format("DD‑MM‑YYYY")}</span>
+                  </div>
+                </div>
+              );
+            },
+            cell: ({ row }) => (
+              <div className="flex justify-center items-center h-full">
+              {findSlotDokterPadaTanggal(row.original, tgl) || "-"}
+            </div>
+          )
+        })),
+      [tanggalAktif]
+    );
+
+    const labelRentang = `${mondayAktif.format("DD MMM")} – ${mondayAktif
+      .add(6, "day")
+      .format("DD MMM YYYY")}`;
+    const columns = useMemo(
+      () => [...staticColumns, ...dynamicColumns],
+      [dynamicColumns]
+    );
+  
 
   
+
 
   return (
     <div className='flex flex-row'>
@@ -200,27 +227,22 @@ const staticColumns = [
         </div>
         <img src="/line style.svg" alt="" />
 
-        <div className='flex flex-row items-center justify-center text-center'>
-          <div className=''>
-            <button 
-              className='text-3xl text-[#004A76] items-center hover:bg-black'
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}>
+        <div className='flex flex-row items-center justify-center text-center pt-3'>
+          <div className='flex flex-row gap-3'>
+            <button onClick={() => setMingguPage(mingguPage - 1)}
+              className='text-3xl text-[#004A76] items-center hover:bg-black'>
               <LuSquareArrowLeft />
             </button>
-            
+            <div className='flex flex-row items-center w-56 justify-center gap-3 border-2 border-[#004A76]/50 rounded-sm px-2' >
+              <FaCalendarDays className='text-[#B2E2FF]' />
+              <span className="font-semibold text-[#004A76] ">{labelRentang}</span>
+            </div>
             <button 
-              className='text-3xl text-[#004A76] items-center hover:bg-black'
-              onClick={() => setCurrentPage((prev) => (prev * itemsPerPage < dataDokter.length ? prev + 1 : prev))}
-              disabled={currentPage * itemsPerPage >= dataDokter.length}
+             className='text-3xl text-[#004A76] items-center hover:bg-black'
+             onClick={() => setMingguPage(mingguPage + 1)}
             >
               <LuSquareArrowRight />
             </button>
-
-             
-          </div>
-          <div>
-            <label htmlFor=""></label>
           </div>
         </div>
 
@@ -230,7 +252,7 @@ const staticColumns = [
               <p>Loading data...</p>
           ) : (
               <>
-              <Basetable data={currentItems} columns={columns} />
+              <Basetable data={dataDokter } columns={columns} />
               </>   
           )}
         </div>
