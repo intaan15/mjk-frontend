@@ -8,12 +8,12 @@ export default function Modal({ open, onClose, children }) {
     <div
       onClick={onClose}
       className={`fixed inset-0 flex justify-center items-center transition-colors z-50
-        ${open ? "visible bg-black/20" : "invisible"}
+        ${open ? "visible bg-black/40" : "invisible"}
       `}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative bg-white rounded-xl shadow transition-all w-2/5
+        className={`relative bg-white rounded-lg shadow transition-all w-3/5
           ${open ? "scale-100 opacity-100" : "scale-125 opacity-0"}
         `}
       >

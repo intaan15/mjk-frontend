@@ -2,6 +2,9 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { IoCalendarOutline } from "react-icons/io5";
 
 export default function ModalContent({ modalType, onClose, data, idArtikel,idMasyarakat }) {
   const [dataArtikel, setDataArtikel] = useState(null);
@@ -229,13 +232,13 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold mb-4">Tambah Artikel</h1>
+            <h1 className="text-xl font-[raleway] text-[#004A76] underline font-extrabold mb-6">Tambah Data Artikel</h1>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="judul"
-                  className="w-1/5 font-medium text-gray-900 dark:text-black"
+                  className="w-1/5 font-medium text-black font-[raleway] dark:text-black"
                 >
                   Judul
                 </label>
@@ -243,8 +246,8 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   id="judul"
                   name="judul"
                   rows={1}
-                  className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Judul artikel"
+                  className="block p-2.5 w-4/5 text-sm  italic text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Masukkan Judul Artikel"
                   value={formData.judul}
                   onChange={handleChange}
                   required
@@ -254,28 +257,28 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="tanggalTerbit"
-                  className="w-1/5 font-medium text-gray-900 dark:text-black"
+                  className="w-1/5 font-medium font-[raleway] text-gray-900 dark:text-black"
                 >
-                  Tanggal Terbit
+                  Tanggal Penerbitan
                 </label>
-                <textarea
-                  id="tanggalTerbit"
-                  name="tanggalTerbit"
-                  rows={1}
-                  className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Tanggal terbit (YYYY-MM-DD)"
+                <DatePicker
+                  selected={formData.tanggalTerbit ? new Date(formData.tanggalTerbit) : null}
+                  onChange={(date) =>handleChange({ target: { name: "tanggalTerbit", value: date.toISOString().split("T")[0] } })}        
+                  dateFormat="yyyy-MM-dd"
+                  className="block p-2.5 w-5/5 text-sm text-gray-900 bg-gray-50 italic rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  placeholderText="Tanggal penerbitan artikel"
                   value={formData.tanggalTerbit}
-                  onChange={handleChange}
                   required
                 />
+                <IoCalendarOutline className="text-2xl text-["/>
               </div>
 
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="foto"
-                  className="w-1/5 font-medium text-gray-900 dark:text-black"
+                  className="w-1/5 font-medium text-gray-900 dark:text-black  style={{ font-family: 'Nunito Sans' }}"
                 >
-                  Foto Artikel
+                  Sampul Artikel
                 </label>
                 <div className="w-4/5">
                   <label
