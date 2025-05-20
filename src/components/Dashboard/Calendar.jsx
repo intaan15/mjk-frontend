@@ -3,11 +3,10 @@ import { FaRegCalendarAlt } from 'react-icons/fa';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-function CustomDatePicker() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+function Calendar({ selectedDate, setSelectedDate }) {
 
-  // Format tanggal: Kamis, 17 April 2025
   const formatTanggal = (tanggal) => {
+    if (!tanggal) return '-'; 
     return tanggal.toLocaleDateString('id-ID', {
       weekday: 'long',
       year: 'numeric',
@@ -32,4 +31,4 @@ function CustomDatePicker() {
   );
 }
 
-export default CustomDatePicker;
+export default Calendar;

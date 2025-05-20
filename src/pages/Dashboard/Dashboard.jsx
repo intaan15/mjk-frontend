@@ -2,9 +2,13 @@
 import React from 'react'
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+
+
+
 import "../../index.css";
 import Calendar from '../../components/Dashboard/Calendar';
 import Bar from '../../components/Bar/Bar';
+import { useAuth } from "../../components/Auth";
 
 
 // icon
@@ -44,9 +48,10 @@ function Dashboard() {
   const [jadwalbyTanggal,setJadwalbyTanggal] = useState();
   const [akunBaru, setAkunBaru] =useState(0)
   const [artikelPublish,setArtikelPublish]=useState(0);
+  const [allDokter, setAllDokter] = useState(0);
   const [stats, setStats] = useState({});
   const [data, setData] = useState([]);''
-  const [usernameadmin, setUsernameadmin] = useState([]);
+  const { user } = useAuth();
   const handleLogout = () => {
     localStorage.removeItem("token"); // Hapus token dari localStorage
     navigate("/login");      // Redirect ke halaman login
@@ -54,18 +59,18 @@ function Dashboard() {
 
     // endpoint untuk ambil data
     useEffect(() => {
-      const selected = selectedDate.toISOString().split('T')[0];
 
       // API MASAYARAKAT
       const fetchMasyarakat = async () => {
         try {
           const res = await axios.get('https://mjk-backend-production.up.railway.app/api/masyarakat/getall')
           const jumlahPengguna = res.data.length; 
+          const selected = selectedDate.toISOString().split('T')[0];  
           const pending = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending').length;
           const akunBaru = res.data.filter(item =>{
             const tglCreate = new Date(item.createdAt).toISOString().split('T')[0];
             return tglCreate === selected;
-          })
+          }).length;
           
           setAkunBaru(akunBaru);
           setJumlahPengguna(jumlahPengguna);
@@ -80,11 +85,12 @@ function Dashboard() {
       const fetchArtikel = async() =>{ 
         try {
           const res = await axios.get('https://mjk-backend-production.up.railway.app/api/artikel/getall')
-          const artikelPublish = res.data.length;
+            const artikelPublish = res.data.length;
+          const selected = selectedDate?.toISOString().split('T')[0];
           const artikelLog = res.data.filter (item => {
             const tgl = new Date(item.tgl_terbit_artikel).toISOString().split('T')[0];
             return tgl === selected;
-          })
+          }).length;
           
           setArtikelLog(artikelLog)
           setArtikelPublish(artikelPublish)
@@ -97,41 +103,74 @@ function Dashboard() {
       const fetchKonsultasi = async() => {
         try {
           const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/jadwal/getall`)
-          const jumlahKonsultasi = res.data.length;
+          // const jumlahKonsultasi = res.data.length;
+          const selected = selectedDate?.toISOString().split('T')[0];
           const jadwalbyTanggal =  res.data.filter(item => {
             const tgl = new Date(item.tgl_konsul).toISOString().split('T')[0];
-            const selected = selectedDate?.toISOString().split('T')[0];
-            return tgl === selected && item.verifikasi_akun_masyarakat === 'Pending';
-          })
+            return tgl === selected && (
+              item.status_konsul === 'diterima' || 
+              item.status_konsul === 'selesai' || 
+              item.status_konsul === 'menunggu' ||
+              item.status_konsul === 'ditolak')
+          }).length;
 
           setJadwalbyTanggal(jadwalbyTanggal)
-          setJumlahKonsultasi(jumlahKonsultasi)
-
         } catch (err){
           console.error('Gagal fetch jadwal:', err);
         }
       };
 
-
-      fetchKonsultasi(),
-      fetchMasyarakat(),
-      fetchArtikel()
-    }, [selectedDate]);
-
-
-
-
-
-
-
-
-      const formatTanggal = (tanggal) => {
-        const dateObj = new Date(tanggal);
-        const day = String(dateObj.getDate()).padStart(2, '0');
-        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const year = dateObj.getFullYear();
-        return `${day}-${month}-${year}`;
+      const fetchDokter = async() =>{ 
+        try {
+          const res = await axios.get('https://mjk-backend-production.up.railway.app/api/dokter/getall')
+          const selected = selectedDate?.toISOString().split('T')[0];
+          const allDokter = res.data.filter(item => {
+             const tgl = new Date(item.createdAt).toISOString().split('T')[0];
+             return tgl === selected
+          }).length
+          
+          setAllDokter(allDokter)
+        }catch(err){
+          console.error('Gagal fetch artikel:', err);
+        }
       };
+
+      fetchDokter();
+      fetchKonsultasi();
+      fetchMasyarakat();
+      fetchArtikel();
+    },  [selectedDate]);
+
+
+
+
+
+  const formatTanggal = (tanggal) => {
+    const dateObj = new Date(tanggal);
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const year = dateObj.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
+  const dataBar = [
+  {
+    name: "Konsultasi",
+    value: {jumlahKonsultasi},  
+  },
+  {
+    name: "Akun Baru",
+    value: {akunBaru},           // ➜ 12
+  },
+  {
+    name: "Dokter",
+    value: {allDokter},          // ➜ 45
+  },
+  {
+    name: "Artikel",
+    value: {artikelLog},         // ➜ 6
+  },
+];
 
 
   return (
@@ -158,7 +197,7 @@ function Dashboard() {
                         href="#"
                         className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
                         <HiOutlineUser className='text-[30px]' />
-                        {usernameadmin}
+                        {user?.username}
                       </a>
                       
                       <a
@@ -166,7 +205,6 @@ function Dashboard() {
                         onClick={handleLogout}
                         className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
                         <IoLogOutOutline className='text-[30px]' />
-                        {" "}
                         Log Out
                       </a>
                     </div>
@@ -187,11 +225,7 @@ function Dashboard() {
           <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-5 ">
             {/* Kalender */}
             <div className="rounded p-2">
-              <Calendar
-                className="w-5 h-5"
-                onChange={(date) => setSelectedDate(date)}
-                value={selectedDate}
-              />
+              < Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
             </div>
             {/* Heading */}
             <div className="text-white ml-2">
@@ -237,7 +271,7 @@ function Dashboard() {
         <div className='flex flex-col gap-3'>
           <div>
             <p className="font-[Nunito Sans] text-2xl font-bold pt-2  text-[#025f96] justify-between ">
-              Log Aktivitas Pengguna
+              Log Statistik Data
             </p>
           </div>
 
@@ -245,28 +279,28 @@ function Dashboard() {
             <div className="grid grid-cols-2 gap-6 w-3/6 ">
               {/* Kartu 1 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <p className="text-5xl font-bold text-[#004A76]">{jumlahKonsultasi}</p>
+                <p className="text-5xl font-bold text-[#004A76]">{jadwalbyTanggal}</p>
                 <p className="text-lg text-[#004A76] font-semibold">Konsultasi</p>
                 <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
 
               {/* Kartu 2 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <p className="text-5xl font-bold text-[#004A76]">{stats.filteredData}</p>
+                <p className="text-5xl font-bold text-[#004A76]">{akunBaru}</p>
                 <p className="text-lg text-[#004A76] font-semibold">Akun Baru</p>
                 <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
 
               {/* Kartu 3 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <p className="text-5xl font-bold text-[#004A76]">5</p>
-                <p className="text-lg text-[#004A76] font-semibold">Dokter Aktif</p>
+                <p className="text-5xl font-bold text-[#004A76]">{allDokter}</p>
+                <p className="text-lg text-[#004A76] font-semibold">Dokter Terdaftar</p>
                 <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
 
               {/* Kartu 4 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <p className="text-5xl font-bold text-[#004A76]">{stats.artikelHariIni}</p>
+                <p className="text-5xl font-bold text-[#004A76]">{artikelLog}</p>
                 <p className="text-lg text-[#004A76] font-semibold">Artikel Publish</p>
                 <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
@@ -275,7 +309,7 @@ function Dashboard() {
             {/* Chart Donut */}
             <div className=' flex justify-center w-3/6'>
               <div className="flex justify-center w-5/6 bg-white rounded-xl shadow-md">
-                <Bar />
+                <Bar values={dataBar}/>
               </div>
             </div>
           </div>

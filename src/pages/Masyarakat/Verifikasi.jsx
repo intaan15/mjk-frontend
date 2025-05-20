@@ -6,6 +6,7 @@ import { Typography } from "@material-tailwind/react";
 import renderModalContent  from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
 import Modal from "../../components/Modal/Modal";
+import { useAuth } from "../../components/Auth";
 
 
 import { TiUser } from 'react-icons/ti'
@@ -296,7 +297,7 @@ function Verifikasi() {
                                         href=""
                                         className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
                                         <HiOutlineUser className='text-[30px]' />
-                                        Administrator
+                                        {user?.username}
                                     </a>
                                     
                                     <a

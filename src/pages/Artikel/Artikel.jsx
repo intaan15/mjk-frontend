@@ -4,6 +4,7 @@ import { Card, Typography } from "@material-tailwind/react";
 import Modal from "../../components/Modal/ModalTemplate";
 import ModalContent from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
+import { useAuth } from "../../components/Auth";
 
 
 import { FaUser } from "react-icons/fa";
@@ -263,10 +264,9 @@ export default function Artikel() {
                       <div className="py-1 justify-center">
                         <a
                           href=""
-                          className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3"
-                        >
+                          className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
                           <HiOutlineUser className="text-[30px]" />
-                          Administrator
+                          {user?.username}
                         </a>
 
                         <a

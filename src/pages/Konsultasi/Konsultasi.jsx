@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import Basetable from "../../components/Table/Basetable";
+import { useAuth } from "../../components/Auth";
 
 import { useState } from "react";
 import { useEffect } from "react";
@@ -33,6 +34,7 @@ function Konsultasi() {
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => setIsOpen(!isOpen);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
 
   // filterstatus
   const filteredRows = data.filter((row) => {
@@ -224,7 +226,7 @@ function Konsultasi() {
                           href=""
                           className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
                           <HiOutlineUser className='text-[30px]' />
-                          Administrator
+                          {user?.username}
                         </a>
                         
                         <a
