@@ -16,7 +16,7 @@ import { HiOutlineUsers } from "react-icons/hi2";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { HiOutlineUserMinus } from "react-icons/hi2";
 import Basetable from "../../components/Table/Basetable";
-import renderModalContent  from "../../components/Modal/ModalContent";
+import ModalContent  from "../../components/Modal/ModalContent";
 import Modal from "../../components/Modal/Modal";
 
 
@@ -25,11 +25,11 @@ function DataMasyarakat() {
     const [searchTerm, setSearchTerm] = useState("");
     const [isOpen, setIsOpen] = useState(false);
     const [selectedData, setSelectedData] = useState(null);
-    const [modalType, setModalType] = useState("detailprofilmasyarakat");
+    const [modalType, setModalType] = useState("");
     const [isModalVisible, setModalVisible] = useState(true);
     const [user, setUser] = useState(null);
-    const [data, setData] = useState([]);''
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [data, setData] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(true);
     const [loading, setLoading] = useState(false);
 
 
@@ -69,7 +69,7 @@ function DataMasyarakat() {
       axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
           .then((res) => {
             const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'diterima');
-            console.log(res.data);
+            // console.log(res.data);
             setData(filteredData);
           })
           .catch((err) => {
@@ -125,7 +125,7 @@ function DataMasyarakat() {
       enableSorting: false,
       cell: ({ row }) => (
       <div className="flex items-center justify-center p-2">
-        <button onClick={() => handleEdit(row.original)} title="Edit">
+        <button onClick={() => openModal("detailprofilmasyarakat",row.original)} title="Edit">
           <FaEdit className="text-gray-600 hover:text-[#004A76] text-2xl" />
         </button>
       </div>),
@@ -143,7 +143,7 @@ function DataMasyarakat() {
   });
 
   useEffect(() => {
-    console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
+    // console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
   }, [filteredRows]);
         
       
@@ -225,12 +225,17 @@ function DataMasyarakat() {
                 <p>Loading data...</p>
               ) : (
                 <>
-                  <Basetable data={data} columns={columns} />
-                   {isModalOpen && (
-                      <Modal open={isModalOpen} onClose={closeModal}>
-                      {renderModalContent(modalType, closeModal, selectedData)}
+                {isModalOpen && modalType && (
+                    <Modal onClose={closeModal}>
+                      <ModalContent
+                        type={modalType}
+                        data={selectedData}
+                        onClose={closeModal}
+                      />
                     </Modal>
                   )}
+                
+                  <Basetable data={data} columns={columns} />
                 </>
                 
               )}

@@ -120,7 +120,7 @@ export default function Artikel() {
       if (result.isConfirmed) {
         try {
           await axios.delete(
-            `http://10.52.170.177:3330/api/artikel/delete/${id}`
+            `https://mjk-backend-production.up.railway.app/api/artikel/delete/${id}`
           );
 
           Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
@@ -142,7 +142,7 @@ export default function Artikel() {
   const fetchArtikel = useCallback(async () => {
     try {
       const res = await axios.get(
-        "http://10.52.170.177:3330/api/artikel/getall"
+        "https://mjk-backend-production.up.railway.app/api/artikel/getall"
       );
       setArtikel(res.data);
     } catch (err) {

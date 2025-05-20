@@ -2,8 +2,10 @@ import React from "react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-export default function ModalContent({ modalType, onClose, data, idArtikel }) {
+
+export default function ModalContent({ modalType, onClose, data, idArtikel,idMasyarakat }) {
   const [dataArtikel, setDataArtikel] = useState(null);
+  const [dataMasyarakat, setDataMasyarakat] = useState(null);
   const [refresh, setRefresh] = useState(false);
 
   const handleRefresh = () => {
@@ -17,7 +19,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel }) {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://10.52.170.177:3330/api/artikel/getbyid/${idArtikel}`
+          `https://mjk-backend-production.up.railway.app/api/artikel/getbyid/${idArtikel}`
         );
         setDataArtikel(response.data);
         console.log("Data artikel:", response.data);
@@ -29,9 +31,6 @@ export default function ModalContent({ modalType, onClose, data, idArtikel }) {
     fetchData();
   }, [idArtikel]);
 
-  const setOpen = () => {
-    onClose(false);
-  };
 
   // TAMBAH DATAAAA
   const [formData, setFormData] = useState({
@@ -71,7 +70,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel }) {
 
       // Langkah 1: Upload gambar
       const uploadRes = await axios.post(
-        "http://10.52.170.177:3330/api/artikel/upload",
+        "https://mjk-backend-production.up.railway.app/api/artikel/upload",
         data,
         {
           headers: {
@@ -92,7 +91,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel }) {
       };
 
       const res = await axios.post(
-        "http://10.52.170.177:3330/api/artikel/create",
+        "https://mjk-backend-production.up.railway.app/api/artikel/create",
         artikelData
       );
 
@@ -107,6 +106,26 @@ export default function ModalContent({ modalType, onClose, data, idArtikel }) {
       alert("Gagal membuat artikel.");
     }
   };
+
+  // GET DATA MASYARAKAT
+  useEffect(() => {
+    if (!idMasyarakat) return;
+
+    const fetchDataMasyarakat = async () => {
+      try {
+        const response = await axios.get(
+          `https://mjk-backend-production.up.railway.app/api/masyarakat/getbyid/${idMasyarakat}`
+        );
+        const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'diterima');
+        setDataMasyarakat(filteredData);
+        console.log("Data masyarakat:", response.data);
+      } catch (err) {
+        console.error("Error fetching masyarakat:", err);
+      }
+    };
+
+    fetchDataMasyarakat();
+  },[idMasyarakat]);
   
   
   
@@ -498,10 +517,10 @@ export default function ModalContent({ modalType, onClose, data, idArtikel }) {
 
     // MODAL MASAYARAKAT
     case "detailprofilmasyarakat":
-      console.log("Data di modal:", data);
+      console.log("Data di modal:", dataMasyarakat);
       return (
         <>
-          <div className="text-start ">
+          <div className="text-start fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center ">
             <button
               onClick={() => setOpen(false)}
               className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
@@ -515,35 +534,35 @@ export default function ModalContent({ modalType, onClose, data, idArtikel }) {
               <div className="grid grid-cols-2 gap-4 w-full text-center">
                 <div>
                   <div className="text-[#025F96]">Nama</div>
-                  <div>{data?.nama_masyarakat || " "}</div>
+                  <div>{dataMasyarakat.nama_masyarakat || " "}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">User</div>
-                  <div>{data.username_masyarakat || " "}</div>
+                  <div>{dataMasyarakat.username_masyarakat || " "}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Email</div>
-                  <div>{data.email_masyarakat || " "}</div>
+                  <div>{dataMasyarakat.email_masyarakat || " "}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">NIK</div>
-                  <div>{data.nik_masyarakat}</div>
+                  <div>{dataMasyarakat.nik_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Alamat</div>
-                  <div>{data.alamat_masyarakat}</div>
+                  <div>{dataMasyarakat.alamat_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Nomor Telepon</div>
-                  <div>{data.notlp_masyarakat}</div>
+                  <div>{dataMasyarakat.notlp_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Jenis Kelamin</div>
-                  <div>{data.jeniskelamin_masyarakat}</div>
+                  <div>{dataMasyarakat.jeniskelamin_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Tanggal Lahir</div>
-                  <div>{data.tgl_lahir_masyarakat?.slice(0, 10)}</div>
+                  <div>{dataMasyarakat.tgl_lahir_masyarakat?.slice(0, 10)}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Foto KTP</div>
