@@ -54,7 +54,11 @@ const Jadwal = () => {
     const fetchDokter = async () => {
       // ENPOINTE
       try {
-        const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/dokter/getall`);
+        const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/dokter/getall`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          });
         const alldokter = res.data;
         const allJadwal =alldokter.flatMap((d) =>
           (Array.isArray(d.jadwal) ? d.jadwal : []).flatMap((j) =>
