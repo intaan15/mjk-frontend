@@ -63,6 +63,7 @@ export default function Artikel() {
   const [data, setData] = useState([]);
   // SEARCHING
   const [searchTerm, setSearchTerm] = useState("");
+  
 
   // DROPDOWN ACCOUNT
   const toggleDropdown = () => {setIsOpen(!isOpen);};
@@ -71,6 +72,17 @@ export default function Artikel() {
   const [selectedKategori, setSelectedKategori] = useState("kesehatan");
   const [artikel, setArtikel] = useState([]); 
   const [selectedId, setSelectedId] = useState(null);
+
+  const openModalWithId = (id, type) => {
+    console.log("Membuka modal dengan ID:", id); // Debug
+    if (!id) {
+      alert("ID artikel tidak valid!");
+      return;
+    }
+    setSelectedId(id);
+    setModalType(type);
+    setIsModalOpen(true);
+  };
 
   const openModal = (type, id) => {
     setModalType(type);
@@ -222,7 +234,7 @@ export default function Artikel() {
       enableSorting: false,
       cell: ({ row }) => (
         <div className="inline-flex overflow-hidden items-center bg-[#FAFBFD] p-2 gap-3 rounded-xl border-1 border-[#979797]">
-          <button onClick={() => openModal("editdataartikel")} title="Edit">
+          <button onClick={() => openModal("editdataartikel", row.original._id)} title="Edit">
             <FaEdit className="w-5 h-5 text-gray-600 hover:text-[#004A76] text-lg" />
           </button>
 

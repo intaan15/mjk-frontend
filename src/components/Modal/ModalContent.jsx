@@ -17,29 +17,62 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
     setRefresh((prev) => !prev); // toggle supaya efek rerender atau refetch data jalan
   };
 
-
+  // GET DATA MASYARAKAT
   useEffect(() => {
-    if (!idArtikel) return;
+    if (!idMasyarakat) return;
+
+    const fetchDataMasyarakat = async () => {
+      try {
+        const response = await axios.get(
+          `https://mjk-backend-production.up.railway.app/api/masyarakat/getbyid/${idMasyarakat}`
+        );
+        const filteredData = res.data.filter(
+          (item) => item.verifikasi_akun_masyarakat === "diterima"
+        );
+        setDataMasyarakat(filteredData);
+        console.log("Data masyarakat:", response.data);
+      } catch (err) {
+        console.error("Error fetching masyarakat:", err);
+      }
+    };
+
+    fetchDataMasyarakat();
+  }, [idMasyarakat]);
+
+  // GET DATA ARTIKEL
+  useEffect(() => {
+    // Debug: pastikan props valid
+    console.log("Fetching artikel...", { idArtikel, token });
+
+    if (!idArtikel || !token) {
+      console.error("Tidak bisa fetch: idArtikel/token tidak ada");
+      return;
+    }
 
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://mjk-backend-production.up.railway.app/api/artikel/getbyid/${idArtikel}`, {
+          `https://mjk-backend-production.up.railway.app/api/artikel/getbyid/${idArtikel}`,
+          {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           }
         );
+
+        console.log("Data diterima:", response.data);
         setDataArtikel(response.data);
-        console.log("Data artikel:", response.data);
-      } catch (err) {
-        console.error("Error fetching artikel:", err);
+      } catch (error) {
+        console.error("Gagal fetch artikel:", {
+          status: error.response?.status,
+          message: error.message,
+          data: error.response?.data,
+        });
       }
     };
 
     fetchData();
-  }, [idArtikel]);
-
+  }, [idArtikel, token]); // Pastikan dependency lengkap
 
   // TAMBAH DATAAAA
   const [formData, setFormData] = useState({
@@ -66,8 +99,6 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
       foto: e.target.files[0], // simpan file object
     }));
   };
-
-  
 
   // SUBMIT FORM
   const handleSubmit = async (e) => {
@@ -102,7 +133,8 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
 
       const res = await axios.post(
         "https://mjk-backend-production.up.railway.app/api/artikel/create",
-        artikelData, {
+        artikelData,
+        {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -111,7 +143,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
       );
 
       alert("Artikel berhasil dibuat!");
-      // onRefresh();  
+      // onRefresh();
       onClose(false);
     } catch (error) {
       console.error(
@@ -122,37 +154,261 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
     }
   };
 
-  // GET DATA MASYARAKAT
+  // UPDATE DATAAA ARTIKEL
   useEffect(() => {
-    if (!idMasyarakat) return;
+    if (!dataArtikel) return;
 
-    const fetchDataMasyarakat = async () => {
-      try {
-        const response = await axios.get(
-          `https://mjk-backend-production.up.railway.app/api/masyarakat/getbyid/${idMasyarakat}`
+    console.log("Data artikel diterima:", dataArtikel); // Debug
+
+    setFormData({
+      judul: dataArtikel.nama_artikel || "",
+      tanggalTerbit: dataArtikel.tgl_terbit_artikel
+        ? new Date(dataArtikel.tgl_terbit_artikel).toISOString().split("T")[0]
+        : "",
+      foto: null,
+      kategori: dataArtikel.kategori_artikel || "",
+      deskripsi: dataArtikel.detail_artikel || "",
+    });
+  }, [dataArtikel]);
+  console.log("Form data:", formData);
+
+  console.log("Artikel yang diterima:", dataArtikel);
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      let imagePath = dataArtikel?.gambar_artikel || null; // <-- pakai optional chaining
+
+      if (formData.foto) {
+        const data = new FormData();
+        data.append("foto", formData.foto);
+
+        const uploadRes = await axios.post(
+          "https://mjk-backend-production.up.railway.app/api/artikel/upload",
+          data,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
-        const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'diterima');
-        setDataMasyarakat(filteredData);
-        console.log("Data masyarakat:", response.data);
-      } catch (err) {
-        console.error("Error fetching masyarakat:", err);
+        imagePath = uploadRes.data.path;
       }
-    };
 
-    fetchDataMasyarakat();
-  },[idMasyarakat]);
-  
-  
-  
+      const artikelData = {
+        nama_artikel: formData.judul,
+        tgl_terbit_artikel: formData.tanggalTerbit,
+        kategori_artikel: formData.kategori,
+        detail_artikel: formData.deskripsi,
+        gambar_artikel: imagePath,
+      };
+
+      await axios.patch(
+        `https://mjk-backend-production.up.railway.app/api/artikel/update/${idArtikel}`,
+        artikelData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Artikel berhasil diubah!");
+      onClose(false);
+    } catch (error) {
+      console.error(
+        "Gagal update artikel:",
+        error.response?.data || error.message
+      );
+      alert("Gagal mengubah artikel.");
+    }
+  };
 
   switch (modalType) {
     // ARTIKEL
+    case "editdataartikel":
+      return (
+        <>
+          <div className="text-start w-full">
+            <button
+              onClick={onClose}
+              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
+            >
+              &times;
+            </button>
+            <h1 className="text-2xl font-bold">Edit Artikel</h1>
+
+            <form
+              onSubmit={handleEditSubmit}
+              className="flex flex-col gap-6 mt-4"
+            >
+              {/* Judul */}
+              <div className="flex items-center gap-4">
+                <label
+                  htmlFor="judul"
+                  className="block w-1/5 text-sm font-medium text-gray-900 dark:text-black"
+                >
+                  Judul
+                </label>
+                <textarea
+                  id="judul"
+                  name="judul"
+                  rows="1"
+                  className="w-4/5 p-2 border rounded"
+                  placeholder="judul artikel"
+                  value={formData.judul}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              {/* Tanggal Terbit */}
+              <div className="flex items-center gap-4">
+                <label
+                  htmlFor="tanggalTerbit"
+                  className="block w-1/5 text-sm font-medium text-gray-900 dark:text-black"
+                >
+                  Tanggal Terbit
+                </label>
+                <input
+                  type="date"
+                  id="tanggalTerbit"
+                  name="tanggalTerbit"
+                  value={formData.tanggalTerbit}
+                  onChange={handleChange}
+                  className="w-4/5 p-2 border rounded"
+                  required
+                />
+              </div>
+
+              {/* Foto Artikel */}
+              <div className="flex items-start gap-4">
+                <label
+                  htmlFor="dropzone-file"
+                  className="block w-1/5 text-sm font-medium text-gray-900 dark:text-black"
+                >
+                  Foto Artikel
+                </label>
+                <div className="flex flex-col w-4/5 gap-2">
+                  <label
+                    htmlFor="dropzone-file"
+                    className="flex flex-col items-center justify-center h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-white dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                  >
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      <svg
+                        className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 16"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                        />
+                      </svg>
+                      <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                        <span className="font-semibold">Click to upload</span>{" "}
+                        or drag and drop
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        SVG, PNG, JPG or GIF (MAX. 800x400px)
+                      </p>
+                    </div>
+                    <input
+                      id="dropzone-file"
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileChange}
+                      accept="image/*"
+                    />
+                  </label>
+
+                  {/* Preview gambar yang dipilih */}
+                  {formData.foto ? (
+                    <img
+                      src={URL.createObjectURL(formData.foto)}
+                      alt="preview"
+                      className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                    />
+                  ) : dataArtikel?.gambar_artikel ? ( // <-- tambahkan tanda tanya (optional chaining)
+                    <img
+                      src={dataArtikel.gambar_artikel}
+                      alt="foto artikel lama"
+                      className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                    />
+                  ) : null}
+                </div>
+              </div>
+
+              {/* Kategori */}
+              <div className="flex items-center gap-4">
+                <label
+                  htmlFor="kategori"
+                  className="block w-1/5 text-sm font-medium text-gray-900 dark:text-black"
+                >
+                  Kategori
+                </label>
+                <select
+                  id="kategori"
+                  name="kategori"
+                  value={formData.kategori}
+                  onChange={handleChange}
+                  className="w-4/5 p-2 border rounded"
+                  required
+                >
+                  <option value="">Pilih Kategori</option>
+                  <option value="kesehatan">Kesehatan</option>
+                  <option value="obat">Obat</option>
+                </select>
+              </div>
+
+              {/* Deskripsi */}
+              <div className="flex items-start gap-4">
+                <label
+                  htmlFor="deskripsi"
+                  className="block w-1/5 text-sm font-medium text-gray-900 dark:text-black"
+                >
+                  Deskripsi
+                </label>
+                <textarea
+                  id="deskripsi"
+                  name="deskripsi"
+                  rows="4"
+                  className="w-4/5 p-2 border rounded"
+                  placeholder="Deskripsi artikel"
+                  value={formData.deskripsi}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              {/* Tombol Submit */}
+              <div className="text-center mt-5">
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-red-200 rounded-xl cursor-pointer"
+                >
+                  Save change
+                </button>
+              </div>
+            </form>
+          </div>
+        </>
+      );
+
     case "detailartikel":
       return (
         <>
           <div className="text-start w-full ">
             <button
-              onClick={() => setOpen(false)}
+              onClick={onClose}
               className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
             >
               &times;
@@ -244,7 +500,9 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
             >
               &times;
             </button>
-            <h1 className="text-xl font-[raleway] text-[#004A76] underline font-extrabold mb-6">Tambah Data Artikel</h1>
+            <h1 className="text-xl font-[raleway] text-[#004A76] underline font-extrabold mb-6">
+              Tambah Data Artikel
+            </h1>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="flex items-center gap-4">
@@ -274,15 +532,26 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   Tanggal Penerbitan
                 </label>
                 <DatePicker
-                  selected={formData.tanggalTerbit ? new Date(formData.tanggalTerbit) : null}
-                  onChange={(date) =>handleChange({ target: { name: "tanggalTerbit", value: date.toISOString().split("T")[0] } })}        
+                  selected={
+                    formData.tanggalTerbit
+                      ? new Date(formData.tanggalTerbit)
+                      : null
+                  }
+                  onChange={(date) =>
+                    handleChange({
+                      target: {
+                        name: "tanggalTerbit",
+                        value: date.toISOString().split("T")[0],
+                      },
+                    })
+                  }
                   dateFormat="yyyy-MM-dd"
                   className="block p-2.5 w-5/5 text-sm text-gray-900 bg-gray-50 italic rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                   placeholderText="Tanggal penerbitan artikel"
                   value={formData.tanggalTerbit}
                   required
                 />
-                <IoCalendarOutline className="text-2xl text-["/>
+                <IoCalendarOutline className="text-2xl text-[" />
               </div>
 
               <div className="flex items-center gap-4">
@@ -329,11 +598,11 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                       onChange={handleFileChange}
                     />
                   </label>
-                    <div className="font-light text-[14px] self-start text-lime-500">
-                      {formData.foto
-                        ? formData.foto.name
-                        : "Belum ada file yang dipilih"}
-                    </div>
+                  <div className="font-light text-[14px] self-start text-lime-500">
+                    {formData.foto
+                      ? formData.foto.name
+                      : "Belum ada file yang dipilih"}
+                  </div>
                 </div>
               </div>
 
@@ -390,146 +659,6 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
         </>
       );
 
-    case "editdataartikel":
-      return (
-        <>
-          <div className="text-start w-full ">
-            <button
-              onClick={() => setOpen(false)}
-              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
-            >
-              &times;
-            </button>
-            <h1 className="text-2xl font-bold">Edit Artikel</h1>
-            <div className=" flex-1 flex-row">
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-4">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Judul
-                </label>
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full h-12 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="judul artikel"
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-4">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Tanggal Terbit
-                </label>
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full h-12 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="tanggal terbit"
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column w-full justify-center items-start gap-10 mt-4">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Foto Artikel
-                </label>
-                <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-2">
-                  <div class="flex items-center justify-center w-full">
-                    <label
-                      for="dropzone-file"
-                      class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
-                    >
-                      <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                        <svg
-                          class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 16"
-                        >
-                          <path
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                          />
-                        </svg>
-                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                          <span class="font-semibold">Click to upload</span> or
-                          drag and drop
-                        </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
-                          SVG, PNG, JPG or GIF (MAX. 800x400px)
-                        </p>
-                      </div>
-                      <input id="dropzone-file" type="file" class="hidden" />
-                    </label>
-                  </div>
-
-                  <button className=" px-4 py-2 bg-red-200 rounded-xl cursor-pointer">
-                    change
-                  </button>
-                </div>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Kategori
-                </label>
-
-                <form class="w-4/5">
-                  <label
-                    for="kategori"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                  ></label>
-                  <select
-                    id="kategori"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  >
-                    <option selected>Pilih Katergori</option>
-                    <option value="kesehatan">Kesehatan</option>
-                    <option value="obat">Obat</option>
-                  </select>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-4">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Deskripsi
-                </label>
-
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
-              </div>
-            </div>
-            <div className=" text-center">
-              <button className="px-4 py-2 bg-red-200 rounded-xl cursor-pointer mt-5">
-                Save change
-              </button>
-            </div>
-          </div>
-        </>
-      );
-
     // MODAL MASAYARAKAT
     case "detailprofilmasyarakat":
       console.log("Data di modal:", dataMasyarakat);
@@ -537,7 +666,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
         <>
           <div className="text-start fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center ">
             <button
-              onClick={() => setOpen(false)}
+              onClick={onClose}
               className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
             >
               &times;
@@ -606,7 +735,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
         <>
           <div className="text-start ">
             <button
-              onClick={() => setOpen(false)}
+              onClick={onClose}
               className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
             >
               &times;
@@ -678,7 +807,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
         <>
           <div className="text-start w-full ">
             <button
-              onClick={() => setOpen(false)}
+              onClick={onClose}
               className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
             >
               &times;
@@ -876,7 +1005,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
           <detailprofildokter data={data} onClose={onClose} />
           <div className="">
             <button
-              onClick={() => setOpen(false)}
+              onClick={onClose}
               className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
             >
               &times;
