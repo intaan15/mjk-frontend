@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { Typography } from "@material-tailwind/react";
 import renderModalContent  from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
-import Modal from "../../components/Modal/Modal";
+import Modal from "../../components/Modal/ModalTemplate";
+import ModalContent from "../../components/Modal/ModalContent";
+
 import { useAuth } from "../../components/Auth";
 
 
@@ -59,6 +61,11 @@ function Verifikasi() {
 
         // Redirect ke halaman login
         navigate("/login");
+    };
+
+    const handleCloseModal = () => {
+      setIsModalOpen(false);
+      fetchArtikel();
     };
     
 
@@ -257,11 +264,6 @@ function Verifikasi() {
     ];
     
 
-
-
-      
-
-   
  
     return (
        <div className='flex flex-row'>
@@ -378,22 +380,24 @@ function Verifikasi() {
                     
                 </div>
    
-               {/* main  */}
-                <div className="py-2">
-                    {loading ? (
-                        <p>Loading data...</p>
-                    ) : (
-                        <>
-                        <Basetable data={filteredRows} columns={columns} />
-                        </>
-                       
-                    )}
-                </div>
-                {isModalOpen && (
-                    <Modal open={isModalOpen} onClose={closeModal}>
-                        {isModalOpen && renderModalContent(modalType, closeModal, selectedData)}
-                    </Modal>
-                )}
+               <div className="py-2">
+                         {loading ? (
+                           <p>Loading data...</p>
+                         ) : (
+                           <>
+                             <Basetable data={filteredRows} columns={columns} />
+                           </>
+                         )}
+                       </div>
+               
+                       <Modal open={isModalOpen} onClose={closeModal}>
+                         <ModalContent
+                           modalType={modalType}
+                           // onClose={closeModal}
+                        //    idArtikel={selectedId}
+                           onClose={handleCloseModal}
+                         />
+                       </Modal>
            </main>
        </div>
      )
