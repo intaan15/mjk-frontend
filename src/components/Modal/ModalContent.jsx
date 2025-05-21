@@ -6,7 +6,9 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { IoCalendarOutline } from "react-icons/io5";
 
+
 export default function ModalContent({ modalType, onClose, data, idArtikel,idMasyarakat }) {
+  const token = localStorage.getItem("token");
   const [dataArtikel, setDataArtikel] = useState(null);
   const [dataMasyarakat, setDataMasyarakat] = useState(null);
   const [refresh, setRefresh] = useState(false);
@@ -22,7 +24,11 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://mjk-backend-production.up.railway.app/api/artikel/getbyid/${idArtikel}`
+          `https://mjk-backend-production.up.railway.app/api/artikel/getbyid/${idArtikel}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setDataArtikel(response.data);
         console.log("Data artikel:", response.data);
@@ -78,6 +84,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -95,7 +102,12 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
 
       const res = await axios.post(
         "https://mjk-backend-production.up.railway.app/api/artikel/create",
-        artikelData
+        artikelData, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
 
       alert("Artikel berhasil dibuat!");

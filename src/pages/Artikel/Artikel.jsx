@@ -48,6 +48,8 @@ import Swal from "sweetalert2";
 
 
 export default function Artikel() {
+  const token = localStorage.getItem("token");
+
   // OPEN MODAL
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -120,7 +122,11 @@ export default function Artikel() {
       if (result.isConfirmed) {
         try {
           await axios.delete(
-            `https://mjk-backend-production.up.railway.app/api/artikel/delete/${id}`
+            `https://mjk-backend-production.up.railway.app/api/artikel/delete/${id}` , {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              }
+            }
           );
 
           Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
@@ -142,7 +148,11 @@ export default function Artikel() {
   const fetchArtikel = useCallback(async () => {
     try {
       const res = await axios.get(
-        "https://mjk-backend-production.up.railway.app/api/artikel/getall"
+        "https://mjk-backend-production.up.railway.app/api/artikel/getall", 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }}
       );
       setArtikel(res.data);
     } catch (err) {

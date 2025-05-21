@@ -6,6 +6,7 @@ import { TbLockPassword } from "react-icons/tb";
 import axios from "axios";
 import "../../index.css";
 
+
 function Loginakun() {
   const [showPassword, setShowPassword] = useState(false);
   const [captcha, setCaptcha] = useState("");
@@ -35,7 +36,7 @@ function Loginakun() {
 
   useEffect(() => {
     fetchCaptcha();
-    const interval = setInterval(fetchCaptcha, 15000);
+    const interval = setInterval(fetchCaptcha, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -51,6 +52,7 @@ function Loginakun() {
           userInput: text,
         }
       );
+      // console.log("CAPTCHA Response:", captchaRes.data);
 
       if (!captchaRes.data.success) {
         setValid(true);

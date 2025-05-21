@@ -63,7 +63,11 @@ function Dashboard() {
       // API MASAYARAKAT
       const fetchMasyarakat = async () => {
         try {
-          const res = await axios.get('https://mjk-backend-production.up.railway.app/api/masyarakat/getall')
+          const res = await axios.get('https://mjk-backend-production.up.railway.app/api/masyarakat/getall' ,{
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          })
           const jumlahPengguna = res.data.length; 
           const selected = selectedDate.toISOString().split('T')[0];  
           const pending = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending').length;
@@ -84,7 +88,14 @@ function Dashboard() {
       // API ARTIKEL
       const fetchArtikel = async() =>{ 
         try {
-          const res = await axios.get('https://mjk-backend-production.up.railway.app/api/artikel/getall')
+          const res = await axios.get(
+            "https://mjk-backend-production.up.railway.app/api/artikel/getall",
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
             const artikelPublish = res.data.length;
           const selected = selectedDate?.toISOString().split('T')[0];
           const artikelLog = res.data.filter (item => {
@@ -102,7 +113,14 @@ function Dashboard() {
       // API JADWAL KONSULTASI
       const fetchKonsultasi = async() => {
         try {
-          const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/jadwal/getall`)
+          const res = await axios.get(
+            `https://mjk-backend-production.up.railway.app/api/jadwal/getall`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
           // const jumlahKonsultasi = res.data.length;
           const selected = selectedDate?.toISOString().split('T')[0];
           const jadwalbyTanggal =  res.data.filter(item => {
@@ -122,7 +140,14 @@ function Dashboard() {
 
       const fetchDokter = async() =>{ 
         try {
-          const res = await axios.get('https://mjk-backend-production.up.railway.app/api/dokter/getall')
+          const res = await axios.get(
+            "https://mjk-backend-production.up.railway.app/api/dokter/getall",
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
           const selected = selectedDate?.toISOString().split('T')[0];
           const allDokter = res.data.filter(item => {
              const tgl = new Date(item.createdAt).toISOString().split('T')[0];
