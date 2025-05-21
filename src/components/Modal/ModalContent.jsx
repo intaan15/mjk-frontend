@@ -661,10 +661,10 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
 
     // MODAL MASAYARAKAT
     case "detailprofilmasyarakat":
-      console.log("Data di modal:", dataMasyarakat);
+      // console.log("Data di modal:", dataMasyarakat);
       return (
         <>
-          <div className="text-start fixed inset-0 bg-black bg-opacity-40 z-50 flex justify-center items-center ">
+          <div className="text-start flex flex-col justify-center items-center ">
             <button
               onClick={onClose}
               className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
@@ -678,35 +678,35 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
               <div className="grid grid-cols-2 gap-4 w-full text-center">
                 <div>
                   <div className="text-[#025F96]">Nama</div>
-                  <div>{dataMasyarakat.nama_masyarakat || " "}</div>
+                  {/* <div>{dataMasyarakat.nama_masyarakat || " "}</div> */}
                 </div>
                 <div>
                   <div className="text-[#025F96]">User</div>
-                  <div>{dataMasyarakat.username_masyarakat || " "}</div>
+                  {/* <div>{dataMasyarakat.username_masyarakat || " "}</div> */}
                 </div>
                 <div>
                   <div className="text-[#025F96]">Email</div>
-                  <div>{dataMasyarakat.email_masyarakat || " "}</div>
+                  {/* <div>{dataMasyarakat.email_masyarakat || " "}</div> */}
                 </div>
                 <div>
                   <div className="text-[#025F96]">NIK</div>
-                  <div>{dataMasyarakat.nik_masyarakat}</div>
+                  {/* <div>{dataMasyarakat.nik_masyarakat}</div> */}
                 </div>
                 <div>
                   <div className="text-[#025F96]">Alamat</div>
-                  <div>{dataMasyarakat.alamat_masyarakat}</div>
+                  {/* <div>{dataMasyarakat.alamat_masyarakat}</div> */}
                 </div>
                 <div>
                   <div className="text-[#025F96]">Nomor Telepon</div>
-                  <div>{dataMasyarakat.notlp_masyarakat}</div>
+                  {/* <div>{dataMasyarakat.notlp_masyarakat}</div> */}
                 </div>
                 <div>
                   <div className="text-[#025F96]">Jenis Kelamin</div>
-                  <div>{dataMasyarakat.jeniskelamin_masyarakat}</div>
+                  {/* <div>{dataMasyarakat.jeniskelamin_masyarakat}</div> */}
                 </div>
                 <div>
                   <div className="text-[#025F96]">Tanggal Lahir</div>
-                  <div>{dataMasyarakat.tgl_lahir_masyarakat?.slice(0, 10)}</div>
+                  {/* <div>{dataMasyarakat.tgl_lahir_masyarakat?.slice(0, 10)}</div> */}
                 </div>
                 <div>
                   <div className="text-[#025F96]">Foto KTP</div>

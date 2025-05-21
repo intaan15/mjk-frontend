@@ -17,7 +17,7 @@ import { HiOutlineUserAdd } from "react-icons/hi";
 import { HiOutlineUserMinus } from "react-icons/hi2";
 import Basetable from "../../components/Table/Basetable";
 import ModalContent  from "../../components/Modal/ModalContent";
-import Modal from "../../components/Modal/Modal";
+import Modal from "../../components/Modal/ModalTemplate";
 
 
 
@@ -29,7 +29,7 @@ function DataMasyarakat() {
     const [isModalVisible, setModalVisible] = useState(true);
     const [user, setUser] = useState(null);
     const [data, setData] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
 
 
@@ -44,6 +44,11 @@ function DataMasyarakat() {
       setIsModalOpen(false);
       setSelectedData(null);
       setModalType("");
+    };
+
+    const handleCloseModal = () => {
+      setIsModalOpen(false);
+      fetchArtikel();
     };
   
      const handleLogout = () => {
@@ -150,103 +155,107 @@ function DataMasyarakat() {
     
 
   return (
-    <div className='flex flex-row '>
-      <main className='flex flex-col pl-8 gap-1 w-full pr-3 h-screen  '>
-
+    <div className="flex flex-row ">
+      <main className="flex flex-col pl-8 gap-1 w-full pr-3 h-screen  ">
         {/* <footer> */}
-          <div className='flex flex-row items-center justify-between  pt-2'>
-            <p className='text-3xl font-[Nunito Sans] font-bold text-[#004A76]'>Data Masyarakat</p>
-            <div className="flex flex-row gap-4">
-              <div className="flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
-                  <IoIosSearch className="text-gray-400"/>
-                  <input
-                      type="text"
-                      placeholder="Search"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="text-gray-700 text-sm outline-none bg-transparent"
-                  />
+        <div className="flex flex-row items-center justify-between  pt-2">
+          <p className="text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
+            Data Masyarakat
+          </p>
+          <div className="flex flex-row gap-4">
+            <div className="flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
+              <IoIosSearch className="text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="text-gray-700 text-sm outline-none bg-transparent"
+              />
+            </div>
+            <div className="flex flex-row gap-4 relative">
+              <button
+                onClick={toggleDropdown}
+                className="flex items-center space-x-2 focus:outline-none cursor-pointer"
+              >
+                <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
+              </button>
+
+              <div>
+                {isOpen && (
+                  <>
+                    <div
+                      className="fixed inset-0 bg-black/30 z-40"
+                      onClick={() => setIsOpen(false)}
+                    ></div>
+                    <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
+                      <div className="py-1 justify-center">
+                        <a
+                          href=""
+                          className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3"
+                        >
+                          <HiOutlineUser className="text-[30px]" />
+                          Administrator
+                        </a>
+
+                        <a
+                          href="#"
+                          onClick={handleLogout}
+                          className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3"
+                        >
+                          <IoLogOutOutline className="text-[30px]" /> Log Out
+                        </a>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
-              <div className="flex flex-row gap-4 relative">
-                  <button
-                    onClick= {toggleDropdown}
-                    className="flex items-center space-x-2 focus:outline-none cursor-pointer">
-                    <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
-                  </button>
-    
-                  <div>
-                    {isOpen && (
-                      <>
-                        <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setIsOpen(false)}></div>
-                        <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
-                          <div className="py-1 justify-center">
-                            <a
-                              href=""
-                              className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
-                              <HiOutlineUser className='text-[30px]' />
-                              Administrator
-                            </a>
-                            
-                            <a
-                              href="#"
-                              onClick={handleLogout}
-                              className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
-                              <IoLogOutOutline className='text-[30px]' />
-                              {" "}
-                              Log Out
-                            </a>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-              </div>  
-            </div> 
+            </div>
           </div>
-          <img src="/line style.svg" alt="" />
+        </div>
+        <img src="/line style.svg" alt="" />
 
-          {/* jumlahPengguna */}
-          <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
-              <div className="flex flex-row gap-8 bg-[#033E61] h-[80px] p-2 rounded-xl items-center px-6">
-                  <div className="bg-white p-3 rounded-full flex items-center justify-center">
-                      <FaUserAlt className="text-[30px] item-center text-[#979797] " />
-                  </div>
-                  <div className="flex flex-col">
-                      <div className="font-[raleway] text-white font-bold text-[15px]">Jumlah Pengguna</div>
-                      <div className="font-[Nunito] text-white font-medium text-[15px]">{data.length}</div>
-                  </div>
+        {/* jumlahPengguna */}
+        <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
+          <div className="flex flex-row gap-8 bg-[#033E61] h-[80px] p-2 rounded-xl items-center px-6">
+            <div className="bg-white p-3 rounded-full flex items-center justify-center">
+              <FaUserAlt className="text-[30px] item-center text-[#979797] " />
+            </div>
+            <div className="flex flex-col">
+              <div className="font-[raleway] text-white font-bold text-[15px]">
+                Jumlah Pengguna
               </div>
+              <div className="font-[Nunito] text-white font-medium text-[15px]">
+                {data.length}
+              </div>
+            </div>
           </div>
+        </div>
 
+        {/* main tabel  */}
+        {/* main  */}
+        <div className="py-2">
+          {loading ? (
+            <p>Loading data...</p>
+          ) : (
+            <>
+              <Basetable data={data} columns={columns} />
+            </>
+          )}
+        </div>
 
-          {/* main tabel  */}
-          <div className="py-2">
-              {loading ? (
-                <p>Loading data...</p>
-              ) : (
-                <>
-                {isModalOpen && modalType && (
-                    <Modal onClose={closeModal}>
-                      <ModalContent
-                        type={modalType}
-                        data={selectedData}
-                        onClose={closeModal}
-                      />
-                    </Modal>
-                  )}
-                
-                  <Basetable data={data} columns={columns} />
-                </>
-                
-              )}
-          </div>
-          
-
-        
+        <Modal open={isModalOpen} onClose={closeModal}>
+          <ModalContent
+            modalType={modalType}
+            // onClose={closeModal}
+            // idArtikel={selectedId}
+            onClose={handleCloseModal}
+          />
+        </Modal>
 
       </main>
     </div>
-  )
+  );
 }
 
 export default DataMasyarakat
