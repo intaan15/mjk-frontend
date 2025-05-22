@@ -49,6 +49,7 @@ function Dashboard() {
   const [akunBaru, setAkunBaru] =useState(0)
   const [artikelPublish,setArtikelPublish]=useState(0);
   const [allDokter, setAllDokter] = useState(0);
+  const [jumlahDokter, setDokter] = useState(0);
   const [stats, setStats] = useState({});
   const [data, setData] = useState([]);''
   const { user } = useAuth();
@@ -96,7 +97,7 @@ function Dashboard() {
               },
             }
           );
-            const artikelPublish = res.data.length;
+          const artikelPublish = res.data.length;
           const selected = selectedDate?.toISOString().split('T')[0];
           const artikelLog = res.data.filter (item => {
             const tgl = new Date(item.tgl_terbit_artikel).toISOString().split('T')[0];
@@ -121,7 +122,7 @@ function Dashboard() {
               },
             }
           );
-          // const jumlahKonsultasi = res.data.length;
+          const jumlahKonsultasi = res.data.length;
           const selected = selectedDate?.toISOString().split('T')[0];
           const jadwalbyTanggal =  res.data.filter(item => {
             const tgl = new Date(item.tgl_konsul).toISOString().split('T')[0];
@@ -132,6 +133,7 @@ function Dashboard() {
               item.status_konsul === 'ditolak')
           }).length;
 
+          setJumlahKonsultasi(jumlahKonsultasi)
           setJadwalbyTanggal(jadwalbyTanggal)
         } catch (err){
           console.error('Gagal fetch jadwal:', err);
@@ -148,12 +150,14 @@ function Dashboard() {
               },
             }
           );
+          const dokter = res.data.length;
           const selected = selectedDate?.toISOString().split('T')[0];
           const allDokter = res.data.filter(item => {
              const tgl = new Date(item.createdAt).toISOString().split('T')[0];
              return tgl === selected
           }).length
-          
+
+          setDokter(dokter)
           setAllDokter(allDokter)
         }catch(err){
           console.error('Gagal fetch artikel:', err);
@@ -166,10 +170,7 @@ function Dashboard() {
       fetchArtikel();
     },  [selectedDate]);
 
-
-
-
-
+  // Format tanggal ke dalam format dd-mm-yyyy
   const formatTanggal = (tanggal) => {
     const dateObj = new Date(tanggal);
     const day = String(dateObj.getDate()).padStart(2, '0');
@@ -178,24 +179,13 @@ function Dashboard() {
     return `${day}-${month}-${year}`;
   };
 
-  const dataBar = [
-  {
-    name: "Konsultasi",
-    value: {jumlahKonsultasi},  
-  },
-  {
-    name: "Akun Baru",
-    value: {akunBaru},           // ➜ 12
-  },
-  {
-    name: "Dokter",
-    value: {allDokter},          // ➜ 45
-  },
-  {
-    name: "Artikel",
-    value: {artikelLog},         // ➜ 6
-  },
-];
+// Data untuk chart
+ const dataBar = {
+  konsultasi: jumlahKonsultasi,
+  masyarakat: jumlahPengguna, 
+  dokter: jumlahDokter,
+  artikel: artikelPublish,
+  };
 
 
   return (
@@ -334,7 +324,8 @@ function Dashboard() {
             {/* Chart Donut */}
             <div className=' flex justify-center w-3/6'>
               <div className="flex justify-center w-5/6 bg-white rounded-xl shadow-md">
-                <Bar values={dataBar}/>
+                <Bar  values={dataBar} />
+                {/* <Bar data={dummyData} /> */}
               </div>
             </div>
           </div>
