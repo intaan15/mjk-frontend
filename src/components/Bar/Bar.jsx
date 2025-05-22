@@ -4,7 +4,6 @@ import { Chart as ChartJS } from "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 
 function Bar({ values }) {
-  /* values = { masyarakat: 120, artikel: 6, dokter: 42, konsultasi: 18 } */
 
   const data = {
     labels: ["Masyarakat", "Artikel", "Dokter", "Konsultasi"],
@@ -16,7 +15,7 @@ function Bar({ values }) {
           values?.artikel ?? 0,
           values?.dokter ?? 0,
           values?.konsultasi ?? 0,
-        ],                       // ←  isi dinamis
+        ],                       
         backgroundColor: [
           "rgba(255, 99, 132, 0.5)",
           "rgba(54, 162, 235, 0.5)",

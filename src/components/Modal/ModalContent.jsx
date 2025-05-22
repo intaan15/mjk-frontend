@@ -1,231 +1,27 @@
 import React from "react";
 import axios from "axios";
+import useArtikel from "../_hooks/useArtikel";
+
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import "react-datepicker/dist/react-datepicker.css";  
 import { IoCalendarOutline } from "react-icons/io5";
 
 
-export default function ModalContent({ modalType, onClose, data, idArtikel,idMasyarakat }) {
-  const token = localStorage.getItem("token");
-  const [dataArtikel, setDataArtikel] = useState(null);
-  const [dataMasyarakat, setDataMasyarakat] = useState(null);
-  const [refresh, setRefresh] = useState(false);
+export default function ModalContent({ modalType, onClose, dataArtikel,token,idArtikel }) 
+  {
+   const data = dataArtikel; 
+   console.log("Data di ModalContent:", data);
+   const {
+      formData: formArtikel,
+      handleChange: handleChangeArtikel,
+      handleEditSubmit: handleEditSubmitArtikel,
+      handleFileChange: handleFileChangeArtikel,
+      handleSubmit:handleSubmitArtikel,
+   } = useArtikel({idArtikel, token,dataArtikel, onClose});
 
-  const handleRefresh = () => {
-    setRefresh((prev) => !prev); // toggle supaya efek rerender atau refetch data jalan
-  };
-
-  // GET DATA MASYARAKAT
-  useEffect(() => {
-    if (!idMasyarakat) return;
-
-    const fetchDataMasyarakat = async () => {
-      try {
-        const response = await axios.get(
-          `https://mjk-backend-production.up.railway.app/api/masyarakat/getbyid/${idMasyarakat}`
-        );
-        const filteredData = res.data.filter(
-          (item) => item.verifikasi_akun_masyarakat === "diterima"
-        );
-        setDataMasyarakat(filteredData);
-        console.log("Data masyarakat:", response.data);
-      } catch (err) {
-        console.error("Error fetching masyarakat:", err);
-      }
-    };
-
-    fetchDataMasyarakat();
-  }, [idMasyarakat]);
-
-  // GET DATA ARTIKEL
-  useEffect(() => {
-    // Debug: pastikan props valid
-    console.log("Fetching artikel...", { idArtikel, token });
-
-    if (!idArtikel || !token) {
-      console.error("Tidak bisa fetch: idArtikel/token tidak ada");
-      return;
-    }
-
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `https://mjk-backend-production.up.railway.app/api/artikel/getbyid/${idArtikel}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        console.log("Data diterima:", response.data);
-        setDataArtikel(response.data);
-      } catch (error) {
-        console.error("Gagal fetch artikel:", {
-          status: error.response?.status,
-          message: error.message,
-          data: error.response?.data,
-        });
-      }
-    };
-
-    fetchData();
-  }, [idArtikel, token]); // Pastikan dependency lengkap
-
-  // TAMBAH DATAAAA
-  const [formData, setFormData] = useState({
-    judul: "",
-    tanggalTerbit: "",
-    foto: null,
-    kategori: "",
-    deskripsi: "",
-  });
-
-  // Handle input teks dan select
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // Handle file upload
-  const handleFileChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      foto: e.target.files[0], // simpan file object
-    }));
-  };
-
-  // SUBMIT FORM
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const data = new FormData();
-      data.append("foto", formData.foto); // file asli
-
-      // Langkah 1: Upload gambar
-      const uploadRes = await axios.post(
-        "https://mjk-backend-production.up.railway.app/api/artikel/upload",
-        data,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const imagePath = uploadRes.data.path;
-
-      // Langkah 2: Kirim data artikel sesuai struktur backend
-      const artikelData = {
-        nama_artikel: formData.judul,
-        tgl_terbit_artikel: formData.tanggalTerbit,
-        kategori_artikel: formData.kategori,
-        detail_artikel: formData.deskripsi,
-        gambar_artikel: imagePath,
-      };
-
-      const res = await axios.post(
-        "https://mjk-backend-production.up.railway.app/api/artikel/create",
-        artikelData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      alert("Artikel berhasil dibuat!");
-      // onRefresh();
-      onClose(false);
-    } catch (error) {
-      console.error(
-        "Gagal buat artikel:",
-        error.response?.data || error.message
-      );
-      alert("Gagal membuat artikel.");
-    }
-  };
-
-  // UPDATE DATAAA ARTIKEL
-  useEffect(() => {
-    if (!dataArtikel) return;
-
-    console.log("Data artikel diterima:", dataArtikel); // Debug
-
-    setFormData({
-      judul: dataArtikel.nama_artikel || "",
-      tanggalTerbit: dataArtikel.tgl_terbit_artikel
-        ? new Date(dataArtikel.tgl_terbit_artikel).toISOString().split("T")[0]
-        : "",
-      foto: null,
-      kategori: dataArtikel.kategori_artikel || "",
-      deskripsi: dataArtikel.detail_artikel || "",
-    });
-  }, [dataArtikel]);
-  console.log("Form data:", formData);
-
-  console.log("Artikel yang diterima:", dataArtikel);
-
-  const handleEditSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      let imagePath = dataArtikel?.gambar_artikel || null; // <-- pakai optional chaining
-
-      if (formData.foto) {
-        const data = new FormData();
-        data.append("foto", formData.foto);
-
-        const uploadRes = await axios.post(
-          "https://mjk-backend-production.up.railway.app/api/artikel/upload",
-          data,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        imagePath = uploadRes.data.path;
-      }
-
-      const artikelData = {
-        nama_artikel: formData.judul,
-        tgl_terbit_artikel: formData.tanggalTerbit,
-        kategori_artikel: formData.kategori,
-        detail_artikel: formData.deskripsi,
-        gambar_artikel: imagePath,
-      };
-
-      await axios.patch(
-        `https://mjk-backend-production.up.railway.app/api/artikel/update/${idArtikel}`,
-        artikelData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      alert("Artikel berhasil diubah!");
-      onClose(false);
-    } catch (error) {
-      console.error(
-        "Gagal update artikel:",
-        error.response?.data || error.message
-      );
-      alert("Gagal mengubah artikel.");
-    }
-  };
+   
 
   switch (modalType) {
     // ARTIKEL
@@ -239,10 +35,10 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold">Edit Artikel</h1>
+            <h1 className="text-2xl font-bold text-[#004A76] underline">Edit Artikel</h1>
 
             <form
-              onSubmit={handleEditSubmit}
+              onSubmit={handleEditSubmitArtikel}
               className="flex flex-col gap-6 mt-4"
             >
               {/* Judul */}
@@ -259,8 +55,8 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   rows="1"
                   className="w-4/5 p-2 border rounded"
                   placeholder="judul artikel"
-                  value={formData.judul}
-                  onChange={handleChange}
+                  value={formArtikel.judul}
+                  onChange={handleChangeArtikel}
                   required
                 />
               </div>
@@ -277,8 +73,8 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   type="date"
                   id="tanggalTerbit"
                   name="tanggalTerbit"
-                  value={formData.tanggalTerbit}
-                  onChange={handleChange}
+                  value={formArtikel.tanggalTerbit}
+                  onChange={handleChangeArtikel}
                   className="w-4/5 p-2 border rounded"
                   required
                 />
@@ -295,7 +91,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                 <div className="flex flex-col w-4/5 gap-2">
                   <label
                     htmlFor="dropzone-file"
-                    className="flex flex-col items-center justify-center h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 dark:bg-white dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                    className="flex flex-col items-center justify-center h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-30 hover:bg-gray-100 dark:bg-white dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
                   >
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <svg
@@ -325,15 +121,15 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                       id="dropzone-file"
                       type="file"
                       className="hidden"
-                      onChange={handleFileChange}
+                      onChange={handleFileChangeArtikel}
                       accept="image/*"
                     />
                   </label>
 
                   {/* Preview gambar yang dipilih */}
-                  {formData.foto ? (
+                  {formArtikel.foto ? (
                     <img
-                      src={URL.createObjectURL(formData.foto)}
+                      src={URL.createObjectURL(formArtikel.foto)}
                       alt="preview"
                       className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
                     />
@@ -358,8 +154,8 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                 <select
                   id="kategori"
                   name="kategori"
-                  value={formData.kategori}
-                  onChange={handleChange}
+                  value={formArtikel.kategori}
+                  onChange={handleChangeArtikel}
                   className="w-4/5 p-2 border rounded"
                   required
                 >
@@ -383,8 +179,8 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   rows="4"
                   className="w-4/5 p-2 border rounded"
                   placeholder="Deskripsi artikel"
-                  value={formData.deskripsi}
-                  onChange={handleChange}
+                  value={formArtikel.deskripsi}
+                  onChange={handleChangeArtikel}
                   required
                 />
               </div>
@@ -395,7 +191,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   type="submit"
                   className="px-4 py-2 bg-red-200 rounded-xl cursor-pointer"
                 >
-                  Save change
+                  Simpan Perubahan
                 </button>
               </div>
             </form>
@@ -413,14 +209,14 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold">Detail Artikel</h1>
+            <h1 className="text-2xl font-extrabold font-[raleway] underline text-[#004A76]">Detail  Artikel</h1>
             <div className="flex-1 flex-row">
               <div className="flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5">
+                <label className="block mb-2 font-extrabold font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}>
                   Judul
                 </label>
                 <div className="w-4/5">
-                  <div className="flex items-center w-full">
+                  <div className="flex items-center w-full" style={{fontFamily: 'Nunito Sans'}}>
                     : {dataArtikel?.nama_artikel || "-"}
                   </div>
                 </div>
@@ -500,15 +296,15 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
             >
               &times;
             </button>
-            <h1 className="text-xl font-[raleway] text-[#004A76] underline font-extrabold mb-6">
+            <h1 className="text-xl font-[raleway] text-[#004A76] underline font-extrabold mb-6" >
               Tambah Data Artikel
             </h1>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmitArtikel} className="space-y-6">
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="judul"
-                  className="w-1/5 font-medium text-black font-[raleway] dark:text-black"
+                  className="w-1/5 font-medium text-black dark:text-black" style={{fontFamily: 'Nunito Sans'}}
                 >
                   Judul
                 </label>
@@ -516,42 +312,12 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   id="judul"
                   name="judul"
                   rows={1}
-                  className="block p-2.5 w-4/5 text-sm  italic text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  className="block p-2.5 w-4/5 text-sm  italic text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-[#004A76]"
                   placeholder="Masukkan Judul Artikel"
-                  value={formData.judul}
-                  onChange={handleChange}
+                  value={formArtikel.judul}
+                  onChange={handleChangeArtikel}
                   required
                 />
-              </div>
-
-              <div className="flex items-center gap-4">
-                <label
-                  htmlFor="tanggalTerbit"
-                  className="w-1/5 font-medium font-[raleway] text-gray-900 dark:text-black"
-                >
-                  Tanggal Penerbitan
-                </label>
-                <DatePicker
-                  selected={
-                    formData.tanggalTerbit
-                      ? new Date(formData.tanggalTerbit)
-                      : null
-                  }
-                  onChange={(date) =>
-                    handleChange({
-                      target: {
-                        name: "tanggalTerbit",
-                        value: date.toISOString().split("T")[0],
-                      },
-                    })
-                  }
-                  dateFormat="yyyy-MM-dd"
-                  className="block p-2.5 w-5/5 text-sm text-gray-900 bg-gray-50 italic rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  placeholderText="Tanggal penerbitan artikel"
-                  value={formData.tanggalTerbit}
-                  required
-                />
-                <IoCalendarOutline className="text-2xl text-[" />
               </div>
 
               <div className="flex items-center gap-4">
@@ -564,7 +330,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                 <div className="w-4/5">
                   <label
                     htmlFor="foto"
-                    className="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                    className="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-30 hover:bg-gray-100"
                   >
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <svg
@@ -595,12 +361,12 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                       name="foto"
                       type="file"
                       className="hidden"
-                      onChange={handleFileChange}
+                      onChange={handleFileChangeArtikel}
                     />
                   </label>
                   <div className="font-light text-[14px] self-start text-lime-500">
-                    {formData.foto
-                      ? formData.foto.name
+                    {formArtikel.foto
+                      ? formArtikel.foto.name
                       : "Belum ada file yang dipilih"}
                   </div>
                 </div>
@@ -616,9 +382,9 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                 <select
                   id="kategori"
                   name="kategori"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-4/5 p-2.5"
-                  value={formData.kategori}
-                  onChange={handleChange}
+                  className="bg-gray-30 border border-gray-300 text-gray-900 text-sm rounded-lg block w-4/5 p-2.5"
+                  value={formArtikel.kategori}
+                  onChange={handleChangeArtikel}
                   required
                 >
                   <option value="">Pilih Kategori</option>
@@ -638,10 +404,10 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   id="deskripsi"
                   name="deskripsi"
                   rows={4}
-                  className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
+                  className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Deskripsi artikel"
-                  value={formData.deskripsi}
-                  onChange={handleChange}
+                  value={formArtikel.deskripsi}
+                  onChange={handleChangeArtikel}
                   required
                 />
               </div>
@@ -649,9 +415,9 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
               <div className="text-center">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-red-200 rounded-xl cursor-pointer mt-5"
+                  className="px-4 py-2 rounded-xl cursor-pointer mt-5 bg-[#004A76] hover:bg-[#039FFC]/70 text-white justify-between"
                 >
-                  Save change
+                  Simpan Data
                 </button>
               </div>
             </form>
@@ -825,7 +591,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full h-12 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full h-12 text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -842,7 +608,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <div class="flex items-center justify-center w-full">
                     <label
                       for="dropzone-file"
-                      class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                      class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-30  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
                     >
                       <div class="flex flex-col items-center justify-center pt-5 pb-6">
                         <svg
@@ -892,7 +658,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   ></label>
                   <select
                     id="Spesialis"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="bg-gray-30 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   >
                     <option selected>Buka Spesialis</option>
                     <option>Jantung</option>
@@ -916,7 +682,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -933,7 +699,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -950,7 +716,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -967,7 +733,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -984,7 +750,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -1022,7 +788,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full h-12 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full h-12 text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -1039,7 +805,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <div class="flex items-center justify-center w-full">
                     <label
                       for="dropzone-file"
-                      class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                      class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-30  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
                     >
                       <div class="flex flex-col items-center justify-center pt-5 pb-6">
                         <svg
@@ -1089,7 +855,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   ></label>
                   <select
                     id="Spesialis"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="bg-gray-30 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   >
                     <option selected>Buka Spesialis</option>
                     <option>Jantung</option>
@@ -1113,7 +879,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -1130,7 +896,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -1147,7 +913,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -1164,7 +930,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -1181,7 +947,7 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
                   <textarea
                     id="message"
                     rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Leave a comment..."
                   ></textarea>
                 </form>
@@ -1262,5 +1028,4 @@ export default function ModalContent({ modalType, onClose, data, idArtikel,idMas
 
     default:
       return null;
-  }
-}
+  }};

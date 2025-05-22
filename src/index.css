@@ -17,6 +17,26 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;     /* Firefox */
 }
+.scrollbar-rounded::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.scrollbar-rounded::-webkit-scrollbar-thumb {
+  background-color: #004A76; /* gray-300 */
+  border-radius: 9999px;     /* biar rounded banget */
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.scrollbar-rounded::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-rounded::-webkit-scrollbar-thumb:hover {
+  background-color: #a0aec0; /* gray-400 */
+}
+
 body {
   font-family: 'Nunito Sans', 'Nunito', 'Poppins', 'Raleway', sans-serif;
 }

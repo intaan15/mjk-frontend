@@ -9,6 +9,7 @@ import { HiSortAscending, HiSortDescending } from "react-icons/hi";
 import { FaSort } from "react-icons/fa";
 
 
+
 const Basetable = ({ data, columns }) => {
    const [sorting, setSorting] = useState([]);
 
@@ -22,9 +23,9 @@ const Basetable = ({ data, columns }) => {
   });
 
   return (
-    <div className="border-1 border-gray-300 rounded-xl md:max-h-[410px] lg:h-auto lg:min-h-[70vh] w-full overflow-x-auto                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           overflow-y-auto ">
-      <table className="w-full min-w-max table-auto text-left" style={{ fontFamily: '"Nunito Sans"' }}>
-        <thead className="sticky z-30 top-0">
+      <div className="border-1 border-gray-300 rounded-xl md:max-h-[350px] lg:max-h-auto lg:min-h-[70vh] w-full overscroll-contain  overflow-x-auto scrollbar-rounded  ">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+        <table className="w-full min-w-max table-auto text-left overflow-y-auto" style={{ fontFamily: '"Nunito Sans"' }}>
+        <thead className="sticky z-30 top-0 ">
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
@@ -34,7 +35,7 @@ const Basetable = ({ data, columns }) => {
                 return (
                   <th
                     key={header.id}
-                    className="border-b border-[#004A76] items-center font-bold text-[#004A76]  bg-[#C3E9FF]" 
+                    className="border-b border-[#004A76] font-bold text-[#004A76]  bg-[#C3E9FF]" 
                     style={{ fontFamily: '"Nunito Sans"' }}
                     onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
                   >

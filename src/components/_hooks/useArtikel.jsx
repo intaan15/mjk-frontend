@@ -1,0 +1,216 @@
+import axios from 'axios'
+import { useState, useEffect } from 'react'
+import { ToastContainer } from 'react-toastify';
+import { showSuccessToast, showErrorToast } from '../Modal/ToastModal'
+
+export default function useArtikel({idArtikel,token,onClose}) {
+    const [dataArtikel, setDataArtikel] = useState(null);
+
+    
+
+     // TAMBAH DATAAAA
+    const [formData, setFormData] = useState({
+        judul: "",
+        tanggalTerbit: "",
+        foto: null,
+        kategori: "",
+        deskripsi: "",
+    });
+
+
+    useEffect(() => {
+        // Debug: pastikan props valid
+        if (!idArtikel || !token) {
+            console.error("Tidak bisa fetch: idArtikel/token tidak ada");
+        return;
+        }
+
+        console.log("Fetching artikel...", { idArtikel, token });
+
+
+        const fetchData = async () => {
+        try {
+            const response = await axios.get(
+            `https://mjk-backend-production.up.railway.app/api/artikel/getbyid/${idArtikel}`,
+            {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                },
+            }
+            );
+
+            console.log("Data diterima:", response.data);
+            setDataArtikel(response.data);
+        } catch (error) {
+            console.error("Gagal fetch artikel:", {
+            status: error.response?.status,
+            message: error.message,
+            data: error.response?.data,
+            });
+        }
+        };
+
+        fetchData();
+    }, [idArtikel, token]);
+
+    useEffect(() => {
+        if (!dataArtikel) return;
+
+        console.log("Data artikel diterima:", dataArtikel); // Debug
+
+        setFormData({
+        judul: dataArtikel.nama_artikel || "",
+        tanggalTerbit: dataArtikel.tgl_terbit_artikel
+            ? new Date(dataArtikel.tgl_terbit_artikel).toISOString().split("T")[0]
+            : "",
+        foto: null,
+        kategori: dataArtikel.kategori_artikel || "",
+        deskripsi: dataArtikel.detail_artikel || "",
+        });
+    }, [dataArtikel]);
+    
+  // Handle input teks dan select
+        const handleChange = (e) => {
+            const { name, value } = e.target;
+            setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+            }));
+        };
+
+  // Handle file upload
+        const handleFileChange = (e) => {
+            setFormData((prev) => ({
+            ...prev,
+            foto: e.target.files[0], // simpan file object
+            }));
+        };
+
+  // SUBMIT FORM
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+
+            try {
+            const data = new FormData();
+            data.append("foto", formData.foto); // file asli
+
+            // Langkah 1: Upload gambar
+            const uploadRes = await axios.post(
+                "https://mjk-backend-production.up.railway.app/api/artikel/upload",
+                data,
+                {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${token}`,
+                },
+                }
+            );
+
+            const imagePath = uploadRes.data.path;
+
+            // Langkah 2: Kirim data artikel sesuai struktur backend
+            const artikelData = {
+                nama_artikel: formData.judul,
+                tgl_terbit_artikel: formData.tanggalTerbit,
+                kategori_artikel: formData.kategori,
+                detail_artikel: formData.deskripsi,
+                gambar_artikel: imagePath,
+            };
+
+            const res = await axios.post(
+                "https://mjk-backend-production.up.railway.app/api/artikel/create",
+                artikelData,
+                {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                }
+            );
+
+            showSuccessToast("Artikel berhasil dibuat!");
+            console.log("Artikel berhasil dibuat:", res.data);
+            // alert("Artikel berhasil dibuat!");
+            // onRefresh();
+            onClose(false);
+            } catch (error) {
+            console.error(
+                "Gagal buat artikel:",
+                error.response?.data || error.message
+            );
+            showErrorToast("Gagal membuat artikel.");
+            console.error("Gagal buat artikel:", error);
+            // alert("Gagal membuat artikel.");
+            }
+        };
+
+        // UPDATE DATAAA ARTIKEL
+       
+        // console.log("Form data:", formData);
+
+        console.log("Artikel yang diterima:", dataArtikel);
+
+        const handleEditSubmit = async (e) => {
+            e.preventDefault();
+
+            try {
+            let imagePath = dataArtikel?.gambar_artikel || null; // <-- pakai optional chaining
+
+            if (formData.foto) {
+                const data = new FormData();
+                data.append("foto", formData.foto);
+
+                const uploadRes = await axios.post(
+                "https://mjk-backend-production.up.railway.app/api/artikel/upload",
+                data,
+                {
+                    headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${token}`,
+                    },
+                }
+                );
+                imagePath = uploadRes.data.path;
+            }
+
+            const artikelData = {
+                nama_artikel: formData.judul,
+                tgl_terbit_artikel: formData.tanggalTerbit,
+                kategori_artikel: formData.kategori,
+                detail_artikel: formData.deskripsi,
+                gambar_artikel: imagePath,
+            };
+
+            await axios.patch(
+                `https://mjk-backend-production.up.railway.app/api/artikel/update/${idArtikel}`,
+                artikelData,
+                {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                }
+            );
+
+            alert("Artikel berhasil diubah!");
+            onClose(false);
+            } catch (error) {
+            console.error(
+                "Gagal update artikel:",
+                error.response?.data || error.message
+            );
+            alert("Gagal mengubah artikel.");
+            }
+        };
+
+
+return ({
+
+    formData,
+    handleChange,
+    handleFileChange,
+    handleSubmit,
+    handleEditSubmit,
+    dataArtikel,
+  }
+)}

@@ -5,6 +5,7 @@ import Modal from "../../components/Modal/ModalTemplate";
 import ModalContent from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
 import { useAuth } from "../../components/Auth";
+import { showSuccessToast, showErrorToast } from '../../components/Modal/ToastModal'
 
 
 import { FaUser } from "react-icons/fa";
@@ -17,62 +18,22 @@ import { IoIosSearch } from "react-icons/io";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import Swal from "sweetalert2";
 
-// const handleDelete = (id) => {
-//   Swal.fire({
-//     title: "Yakin mau hapus?",
-//     text: "Data yang dihapus tidak bisa dikembalikan!",
-//     icon: "warning",
-//     showCancelButton: true,
-//     confirmButtonColor: "#d33",
-//     cancelButtonColor: "#3085d6",
-//     confirmButtonText: "Ya, hapus!",
-//     cancelButtonText: "Batal",
-//   }).then(async (result) => {
-//     if (result.isConfirmed) {
-//       try {
-//         await axios.delete(
-//           `http://10.52.170.177:3330/api/artikel/delete/${id}`
-//         );
-
-//         Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
-//         // handleRefresh(); // Refresh data setelah hapus
-//       } catch (error) {
-//         console.error("Gagal menghapus artikel:", error);
-//         Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
-//       }
-//     }
-//   });
-// };
-
-
 
 
 export default function Artikel() {
-  const token = localStorage.getItem("token");
 
-  // OPEN MODAL
+  const token = localStorage.getItem("token");
+  const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  // PILIH TYPE MODAL
   const [modalType, setModalType] = useState("");
-
-  // LOAD DAATA
   const [loading, setLoading] = useState(false);
-  // SET DATA TABEL
-  const [data, setData] = useState([]);
-  // SEARCHING
   const [searchTerm, setSearchTerm] = useState("");
-  
-
-  // DROPDOWN ACCOUNT
   const toggleDropdown = () => {setIsOpen(!isOpen);};
-
-  
   const [selectedKategori, setSelectedKategori] = useState("kesehatan");
   const [artikel, setArtikel] = useState([]); 
   const [selectedId, setSelectedId] = useState(null);
-
+  const [dataArtikel, setDataArtikel] = useState(null);
   const openModalWithId = (id, type) => {
     console.log("Membuka modal dengan ID:", id); // Debug
     if (!id) {
@@ -100,8 +61,6 @@ export default function Artikel() {
   const handleLogout = () => {
     // Hapus token dari localStorage
     localStorage.removeItem("token");
-
-    // Redirect ke halaman login
     navigate("/login");
   };
 
@@ -110,7 +69,6 @@ export default function Artikel() {
     item.kategori_artikel.toLowerCase() === selectedKategori.toLowerCase()
   );
 
-  // FORMAT TANGGAL
   const formatTanggal = (isoDateString) => {
   const date = new Date(isoDateString);
     return date.toLocaleDateString("id-ID", {
@@ -171,6 +129,30 @@ export default function Artikel() {
       console.error("Gagal fetch artikel:", err);
     }
   }, []);
+
+  useEffect(() => {
+    if (!selectedId) return; 
+     const fetchData = async () => {
+      try {
+          const response = await axios.get(
+            `https://mjk-backend-production.up.railway.app/api/artikel/getbyid/${selectedId}`,
+            {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                }}
+            );
+            console.log("Data diterima:", response.data);
+            setDataArtikel(response.data);
+          } catch (error) {
+              console.error("Gagal fetch artikel:", {
+              status: error.response?.status,
+              message: error.message,
+              data: error.response?.data,
+              });
+          }
+          };
+        fetchData()
+    },[selectedId, token]);
 
   useEffect(() => {
     fetchArtikel();
@@ -292,7 +274,7 @@ export default function Artikel() {
                         </a>
 
                         <a
-                          href="#"
+                          href=""
                           onClick={handleLogout}
                           className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3"
                         >
@@ -310,12 +292,12 @@ export default function Artikel() {
         <img src="line style.svg" alt="" />
 
         {/* choose */}
-        <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
+        <div className="flex flex-row justify-between w-full  items-center px-2 py-2">
           <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-4xl items-center">
-            <span className="font-bold text-gray-700">Kategori :</span>
+            <span className="font-bold text-gray-700 font-[raleway]">Kategori :</span>
             <button
               onClick={() => setSelectedKategori("kesehatan")}
-              className={` w-50 px-4 py-1 rounded-full border-2 transition-all duration-200 ${
+              className={` w-50 px-4 py-1 rounded-full border-2  font-[raleway] transition-all duration-200 ${
                 selectedKategori === "kesehatan"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
@@ -326,7 +308,7 @@ export default function Artikel() {
 
             <button
               onClick={() => setSelectedKategori("obat")}
-              className={` w-50 px-4 py-1 rounded-full border-2 transition-all duration-200 ${
+              className={` w-50 px-4 py-1 rounded-full font-[raleway] border-2 transition-all duration-200 ${
                 selectedKategori === "obat"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
@@ -337,7 +319,7 @@ export default function Artikel() {
           </div>
           <div className="">
             <button
-              className=" bg-[#033E61] rounded-xl px-4 py-2 cursor-pointer text-white"
+              className=" bg-[#004A76] rounded-full shadow-xl px-4 py-2 cursor-pointer text-white font-[raleway] hover:bg-white hover:text-[#004A76] hover:border-2  "
               onClick={() => openModal("tambahartikel")}
             >
               + Tambah Data Artikel
@@ -361,6 +343,8 @@ export default function Artikel() {
             modalType={modalType}
             // onClose={closeModal}
             idArtikel={selectedId}
+            dataArtikel={dataArtikel}
+            token={token}
             onClose={handleCloseModal}
           />
         </Modal>

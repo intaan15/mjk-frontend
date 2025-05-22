@@ -17,10 +17,13 @@ import Modal from "./components/Modal/Modal";
 import PrivateRoute from "./components/Privateroutes";
 import Outtabel from "./components/Table/Outtabel";
 import Mal from "../src/pages/Dashboard/mal";
+import { ToastContainer } from "react-toastify"
 
 
 function App() {
   return (
+    <>
+    <ToastContainer />
     <Router>
       <Routes>
         <Route path="/" element={<Splashscreen />} />
@@ -48,6 +51,7 @@ function App() {
         </Route>
       </Routes>
     </Router>
+  </>
   );
 }
 
