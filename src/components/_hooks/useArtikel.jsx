@@ -21,11 +21,11 @@ export default function useArtikel({idArtikel,token,onClose}) {
     useEffect(() => {
         // Debug: pastikan props valid
         if (!idArtikel || !token) {
-            console.error("Tidak bisa fetch: idArtikel/token tidak ada");
+            // console.error("Tidak bisa fetch: idArtikel/token tidak ada");
         return;
         }
 
-        console.log("Fetching artikel...", { idArtikel, token });
+        // console.log("Fetching artikel...", { idArtikel, token });
 
 
         const fetchData = async () => {
@@ -39,7 +39,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
             }
             );
 
-            console.log("Data diterima:", response.data);
+            // console.log("Data diterima:", response.data);
             setDataArtikel(response.data);
         } catch (error) {
             console.error("Gagal fetch artikel:", {
@@ -56,7 +56,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
     useEffect(() => {
         if (!dataArtikel) return;
 
-        console.log("Data artikel diterima:", dataArtikel); // Debug
+        // console.log("Data artikel diterima:", dataArtikel); // Debug
 
         setFormData({
         judul: dataArtikel.nama_artikel || "",
@@ -129,7 +129,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
             );
 
             showSuccessToast("Artikel berhasil dibuat!");
-            console.log("Artikel berhasil dibuat:", res.data);
+            // console.log("Artikel berhasil dibuat:", res.data);
             // alert("Artikel berhasil dibuat!");
             // onRefresh();
             onClose(false);
@@ -148,7 +148,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
        
         // console.log("Form data:", formData);
 
-        console.log("Artikel yang diterima:", dataArtikel);
+        // console.log("Artikel yang diterima:", dataArtikel);
 
         const handleEditSubmit = async (e) => {
             e.preventDefault();

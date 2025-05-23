@@ -7,7 +7,6 @@ import renderModalContent  from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
 import Modal from "../../components/Modal/ModalTemplate";
 import ModalContent from "../../components/Modal/ModalContent";
-
 import { useAuth } from "../../components/Auth";
 
 
@@ -25,24 +24,40 @@ import { HiOutlineUserAdd } from "react-icons/hi";
 import { HiOutlineUserMinus } from "react-icons/hi2";
 
 function Verifikasi() {
+
+    const token = localStorage.getItem("token");
+    const { user } = useAuth();
     const [searchTerm, setSearchTerm] = useState("");
     const [filterStatus, setFilterStatus] = useState("semua");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState(null);
     const [allRows, setAllRows] = useState([]);
-    const [data, setData] = useState([]);''
+    const [data, setData] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
+    const [dataMasyarakatbyId, setDataMasyarakatbyId] = useState(null);
+    const [selectedId, setSelectedId] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate(); 
     const [selectedData, setSelectedData] = useState(null);
     const toggleDropdown = () => {setIsOpen(!isOpen);};
 
-    const openModal = (type,data) => {
-        setModalType(type);
-        setSelectedData(data);
-        setIsModalOpen(true);
-        console.log("Modal type", type, data);
+    
+    const openModalWithId = (type,id) => {
+        if (!id) {
+            alert("ID artikel tidak valid!");
+        return;
+        }
+            setSelectedId(id);
+            setModalType(type);
+            setIsModalOpen(true);
     };
+
+    const openModal = (type, id) => {
+        setModalType(type);
+        setSelectedId(id);
+        setIsModalOpen(true);
+    };
+    
     const closeModal = () => {
         console.log("closeModal");
         setIsModalOpen(false);
@@ -123,6 +138,7 @@ function Verifikasi() {
     const handleVerifikasi = (status, _id) => {
         axios.patch(`https://mjk-backend-production.up.railway.app/api/masyarakat/update/${_id}`, {
             verifikasi_akun_masyarakat: status,
+            
           })
           .then(() => {
             console.log("Status verifikasi berhasil diperbarui (PATCH)");
@@ -134,12 +150,9 @@ function Verifikasi() {
             );
             setFilterStatus(status);
             setData((prevData) => prevData.filter((item) => item._id !== _id));
-            if (status === "diterima") {
-                navigate("/masyarakat/verifikasi");}
-
-            setData((prevData) => prevData.filter((item) => item._id !== _id));
-            if (status === "ditolak") {
-                navigate("/masyarakat/verifikasi");}
+            if (status === "diterima" || status === "ditolak") {
+                navigate("/masyarakat/verifikasi");
+            }
           })
           .catch((err) => {
             console.error("Gagal update status", err);
@@ -149,22 +162,41 @@ function Verifikasi() {
     // ENDPOINT MENDAPATKAN DATA
     useEffect(() => {
         const fetchData = async () => {
-        try {
-            const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`);
-            // const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending');
-            const filteredData = res.data;
-            setAllRows(filteredData);
-            console.log(filteredData);
-            setData(filteredData);
+            try {
+                const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`);
+                // const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending');
+                const filteredData = res.data;
+                setAllRows(filteredData);
+                console.log(filteredData);
+                setData(filteredData);
             } catch (err) {
-            console.error('Error fetching data:', err);
+                console.error('Error fetching data:', err);
             } finally {
-            setLoading(false);
-            }
+                setLoading(false);}
         };
 
         fetchData();
     }, []);
+
+    useEffect(() => {
+        if (!selectedId) return; 
+        const fetchData = async () => {
+        try {
+            const response = await axios.get(
+            `https://mjk-backend-production.up.railway.app/api/masyarakat/getbyid/${selectedId}`,
+            {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                },
+            });
+            setDataMasyarakatbyId(response.data);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }};
+
+        fetchData();
+  },[selectedId, token]);
+
 
     
 
@@ -222,7 +254,7 @@ function Verifikasi() {
             enableSorting: false,
             cell: ({ row }) => (
             <div className="flex gap-2 items-center ">
-            <button onClick={() =>openModal("detailprofilmasyarakat", row.original)} title="Detail">
+            <button onClick={() =>openModal("detailprofilmasyarakat", row.original._id)} title="Detail">
                 <FaEdit className="w-7  h-7 p-1 flex text-center justify-center  text-[#033E61] rounded-sm transition" />
             </button>
             </div>),
@@ -381,23 +413,24 @@ function Verifikasi() {
                 </div>
    
                <div className="py-2">
-                         {loading ? (
-                           <p>Loading data...</p>
-                         ) : (
-                           <>
-                             <Basetable data={filteredRows} columns={columns} />
-                           </>
-                         )}
-                       </div>
-               
-                       <Modal open={isModalOpen} onClose={closeModal}>
-                         <ModalContent
-                           modalType={modalType}
-                           // onClose={closeModal}
-                        //    idArtikel={selectedId}
-                           onClose={handleCloseModal}
-                         />
-                       </Modal>
+                    {loading ? (
+                    <p>Loading data...</p>
+                    ) : (
+                    <>
+                        <Basetable data={filteredRows} columns={columns} />
+                    </>
+                    )}
+                </div>
+        
+                <Modal open={isModalOpen} onClose={closeModal}>
+                    <ModalContent
+                    modalType={modalType}
+                    idMasyarakat={selectedId}
+                    token={token}
+                    dataMasyarakatbyId={dataMasyarakatbyId}
+                    onClose={handleCloseModal}
+                    />
+                </Modal>
            </main>
        </div>
      )

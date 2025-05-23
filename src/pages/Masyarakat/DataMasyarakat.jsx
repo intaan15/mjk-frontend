@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { use } from 'react'
 import axios from 'axios' //library untuk melakukan request HTTP
-import { useState, useEffect, } from 'react' //hook untuk state dan efek samping
+import { useState, useEffect,useCallback } from 'react' //hook untuk state dan efek samping
 import { useNavigate } from 'react-router-dom';
 import { Typography } from "@material-tailwind/react";
+import { useAuth } from "../../components/Auth";
 
 
 import { TiUser } from 'react-icons/ti'
@@ -22,69 +23,121 @@ import Modal from "../../components/Modal/ModalTemplate";
 
 
 function DataMasyarakat() {
-    const [searchTerm, setSearchTerm] = useState("");
-    const [isOpen, setIsOpen] = useState(false);
-    const [selectedData, setSelectedData] = useState(null);
-    const [modalType, setModalType] = useState("");
-    const [isModalVisible, setModalVisible] = useState(true);
-    const [user, setUser] = useState(null);
-    const [data, setData] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
-
-
-    const openModal = (type,data) => {
-      // OPEN MODAL SESUAI TYPE
-      setModalType(type);
-      setSelectedData(data);
-      setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-      setIsModalOpen(false);
-      setSelectedData(null);
-      setModalType("");
-    };
-
-    const handleCloseModal = () => {
-      setIsModalOpen(false);
-      fetchArtikel();
-    };
   
-     const handleLogout = () => {
-    // Hapus token dari localStorage
-      localStorage.removeItem("token");
+  const token = localStorage.getItem("token");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedData, setSelectedData] = useState(null);
+  const [modalType, setModalType] = useState("");
+  const [isModalVisible, setModalVisible] = useState(true);
+  const [DataMasyarakat, setDataMasyarakat] = useState([]);
+  const [dataMasyarakatbyId, setDataMasyarakatbyId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const {user} = useAuth();
 
-      // Redirect ke halaman login
-      navigate("/login");
+
+  const openModalWithId = (type,id) => {
+    if (!id) {
+    alert("ID artikel tidak valid!");
+    return;
+    }
+    setSelectedId(id);
+    setModalType(type);
+    setIsModalOpen(true);
+  };
+
+  const openModal = (type, id) => {
+    setModalType(type);
+    setSelectedId(id);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedData(null);
+    setModalType("");
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    fetchDataMasyarakat();
+  };
+
+    const handleLogout = () => {
+  // Hapus token dari localStorage
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  const handleEdit = (data) => {
+    setSelectedData(data);
+    setIsModalOpen(true);
+    navigate(`/detail/${data._id}`);
+  };
+
+  const toggleDropdown = () => {
+      setIsOpen(!isOpen);
+  };
+
+  const fetchDataMasyarakat = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        "https://mjk-backend-production.up.railway.app/api/masyarakat/getall", 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }}
+      );
+      setDataMasyarakat(res.data);
+    } catch (err) {
+      console.error("Gagal fetch DataMasyarakat:", err);
+    }
+  }, []);
+
+  // ENDPOINT GET DATA MASYARAKAT
+  useEffect(() => {
+    axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`,
+         {
+          headers: {
+          Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'diterima');
+          // console.log(res.data);
+          setDataMasyarakat(filteredData);
+        })
+        .catch((err) => {
+        console.error('Error fetching data:', err);
+        });
+    }, 
+  []);
+
+  useEffect(() => {
+     if (!selectedId) return; 
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://mjk-backend-production.up.railway.app/api/masyarakat/getbyid/${selectedId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setDataMasyarakatbyId(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
-    const handleEdit = (data) => {
-      setSelectedData(data);
-      setIsModalOpen(true);
-      navigate(`/detail/${data._id}`);
-    };
+    fetchData();
+  },[selectedId, token]);
 
-    const toggleDropdown = () => {
-        setIsOpen(!isOpen);
-    };
-
-    // ENDPOINT GET DATA MASYARAKAT
-    useEffect(() => {
-      axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`)
-          .then((res) => {
-            const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'diterima');
-            // console.log(res.data);
-            setData(filteredData);
-          })
-          .catch((err) => {
-          console.error('Error fetching data:', err);
-          });
-      }, 
-    []);
-
-    // paramater tabel
-    const columns = [
+  // paramater tabel
+  const columns = [
     {
       header: "No",
       enableSorting: false,
@@ -130,14 +183,15 @@ function DataMasyarakat() {
       enableSorting: false,
       cell: ({ row }) => (
       <div className="flex items-center justify-center p-2">
-        <button onClick={() => openModal("detailprofilmasyarakat",row.original)} title="Edit">
+        <button onClick={() => openModal("formeditmasyarakat",row.original._id)} title="Edit">
           <FaEdit className="text-gray-600 hover:text-[#004A76] text-2xl" />
         </button>
       </div>),
-    },]
- 
-      
-  const filteredRows = data.filter((item) => {
+    },
+  ]
+
+    
+  const filteredRows = DataMasyarakat.filter((item) => {
     const search = searchTerm.toLowerCase();
     return (
       item.nama_masyarakat?.toLowerCase().includes(search) ||
@@ -195,11 +249,11 @@ function DataMasyarakat() {
                           className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3"
                         >
                           <HiOutlineUser className="text-[30px]" />
-                          Administrator
+                          {user?.username}
                         </a>
 
                         <a
-                          href="#"
+                          href=""
                           onClick={handleLogout}
                           className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3"
                         >
@@ -217,7 +271,7 @@ function DataMasyarakat() {
 
         {/* jumlahPengguna */}
         <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
-          <div className="flex flex-row gap-8 bg-[#033E61] h-[80px] p-2 rounded-xl items-center px-6">
+          <div className="flex flex-row gap-8 bg-[#033E61] h-[70px] p-2 rounded-xl items-center px-6">
             <div className="bg-white p-3 rounded-full flex items-center justify-center">
               <FaUserAlt className="text-[30px] item-center text-[#979797] " />
             </div>
@@ -226,7 +280,7 @@ function DataMasyarakat() {
                 Jumlah Pengguna
               </div>
               <div className="font-[Nunito] text-white font-medium text-[15px]">
-                {data.length}
+                {DataMasyarakat.length}
               </div>
             </div>
           </div>
@@ -234,12 +288,12 @@ function DataMasyarakat() {
 
         {/* main tabel  */}
         {/* main  */}
-        <div className="py-2">
+        <div>
           {loading ? (
             <p>Loading data...</p>
           ) : (
             <>
-              <Basetable data={data} columns={columns} />
+              <Basetable data={DataMasyarakat} columns={columns} />
             </>
           )}
         </div>
@@ -248,7 +302,9 @@ function DataMasyarakat() {
           <ModalContent
             modalType={modalType}
             // onClose={closeModal}
-            // idArtikel={selectedId}
+            idMasyarakat={selectedId}
+            token={token}
+            dataMasyarakatbyId={dataMasyarakatbyId}
             onClose={handleCloseModal}
           />
         </Modal>

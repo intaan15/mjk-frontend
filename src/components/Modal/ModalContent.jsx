@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import useArtikel from "../_hooks/useArtikel";
+import useMasyarakat from "../_hooks/useMasyarakat";
+import useDokter from "../_hooks/useDokter";
 
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
@@ -9,10 +11,23 @@ import "react-datepicker/dist/react-datepicker.css";
 import { IoCalendarOutline } from "react-icons/io5";
 
 
-export default function ModalContent({ modalType, onClose, dataArtikel,token,idArtikel }) 
-  {
-   const data = dataArtikel; 
-   console.log("Data di ModalContent:", data);
+export default function ModalContent({ 
+  modalType, 
+  onClose, 
+  dataArtikel,
+  token,
+  idArtikel,
+  dataMasyarakatbyId,
+  idMasyarakat,
+  dataDokterbyId,
+  idDokter,}) 
+
+
+
+  {   
+    // DEBUG
+  //  const data = dataArtikel; 
+  //  console.log("Data di ModalContent:", data);
    const {
       formData: formArtikel,
       handleChange: handleChangeArtikel,
@@ -20,6 +35,28 @@ export default function ModalContent({ modalType, onClose, dataArtikel,token,idA
       handleFileChange: handleFileChangeArtikel,
       handleSubmit:handleSubmitArtikel,
    } = useArtikel({idArtikel, token,dataArtikel, onClose});
+
+   const data = dataMasyarakatbyId;
+   console.log("Data di masyarakat:", data);
+
+   const {
+    formData: formMasyarakat,
+    handleChange: handleChangeMasyarakat,
+    handleEditSubmit: handleEditSubmitMasyarakat,
+    handleFotoKTPChange: handleFotoKTPChange,
+    previewFotoKTP: previewFotoKTP,
+   }= useMasyarakat({idMasyarakat, token, onClose,dataMasyarakatbyId});
+
+  // const data = dataDokterbyId;
+  // console.log("Data di dokter:", data);
+  
+  const {
+    formData: formDokter,
+    handleChange: handleChangeDokter,
+    handleEditSubmit: handleEditSubmitDokter,
+    handleFileChange: handleFileChangeDokter,
+    handleSubmit:handleSubmitDokter,
+  } = useDokter({idDokter, token,dataDokterbyId, onClose});
 
    
 
@@ -35,7 +72,7 @@ export default function ModalContent({ modalType, onClose, dataArtikel,token,idA
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold text-[#004A76] underline">Edit Artikel</h1>
+            <h1 className="text-2xl font-bold text-[#004A76] underline">Edit Data Artikel</h1>
 
             <form
               onSubmit={handleEditSubmitArtikel}
@@ -444,43 +481,55 @@ export default function ModalContent({ modalType, onClose, dataArtikel,token,idA
               <div className="grid grid-cols-2 gap-4 w-full text-center">
                 <div>
                   <div className="text-[#025F96]">Nama</div>
-                  {/* <div>{dataMasyarakat.nama_masyarakat || " "}</div> */}
+                  <div>{dataMasyarakatbyId?.nama_masyarakat || " "}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">User</div>
-                  {/* <div>{dataMasyarakat.username_masyarakat || " "}</div> */}
+                  <div>{dataMasyarakatbyId?.username_masyarakat || " "}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Email</div>
-                  {/* <div>{dataMasyarakat.email_masyarakat || " "}</div> */}
+                  <div>{dataMasyarakatbyId?.email_masyarakat || " "}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">NIK</div>
-                  {/* <div>{dataMasyarakat.nik_masyarakat}</div> */}
+                  <div>{dataMasyarakatbyId?.nik_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Alamat</div>
-                  {/* <div>{dataMasyarakat.alamat_masyarakat}</div> */}
+                  <div>{dataMasyarakatbyId?.alamat_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Nomor Telepon</div>
-                  {/* <div>{dataMasyarakat.notlp_masyarakat}</div> */}
+                  <div>{dataMasyarakatbyId?.notlp_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Jenis Kelamin</div>
-                  {/* <div>{dataMasyarakat.jeniskelamin_masyarakat}</div> */}
+                  <div>{dataMasyarakatbyId?.jeniskelamin_masyarakat}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Tanggal Lahir</div>
-                  {/* <div>{dataMasyarakat.tgl_lahir_masyarakat?.slice(0, 10)}</div> */}
+                  <div>{dataMasyarakatbyId?.tgl_lahir_masyarakat?.slice(0, 10)}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Foto KTP</div>
-                  <div className=" bg-orange-200 h-50 rounded-xl">isinama</div>
+                  <div className=" bg-orange-200 h-50 rounded-xl">
+                      <img
+                        src={dataMasyarakatbyId?.foto_ktp_masyarakat}
+                        alt="Foto KTP"
+                        className="object-cover w-40 h-40 mx-auto"
+                      />
+                  </div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Selfie dengan KTP</div>
-                  <div className="bg-orange-200 h-50 rounded-xl">isinama</div>
+                  <div className="bg-orange-200 h-50 rounded-xl">
+                     <img
+                        src={dataMasyarakatbyId?.selfie_ktp_masyarakat}
+                        alt="Selfie KTP"
+                        className="object-cover w-40 h-40 mx-auto"
+                      />
+                  </div>
                 </div>
               </div>
             </div>
@@ -506,63 +555,181 @@ export default function ModalContent({ modalType, onClose, dataArtikel,token,idA
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold">Profil Masyarakat</h1>
+            <h1 className="text-2xl font-bold text-[#004A76] underline">Edit Profil Masyarakat </h1>
 
-            <div className="flex flex-col justify-center items-center gap-4">
-              <div className="bg-red-200 rounded-full p-12">foto</div>
-              <div className="grid grid-cols-2 gap-4 w-full text-center">
-                <div>
-                  <div className="text-[#025F96]">Nama</div>
-                  <div>{data.nama_masyarakat}</div>
+            <form onSubmit={handleEditSubmitMasyarakat} className="space-y-6">
+              <div className="flex flex-col justify-center items-center gap-4">
+                <div className="bg-red-200 rounded-full p-12">foto</div>
+                <div className="grid grid-cols-2 gap-4 w-full text-center">
+                  <div className="flex flex-col items-center">
+                    <label className="text-[#025F96] font-bold">Nama</label>
+                    <input
+                      type="text"
+                      name="nama"
+                      defaultValue={formMasyarakat.nama}
+                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      onChange={handleChangeMasyarakat}
+                      maxLength={50}
+                      required
+                    />
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <label className="text-[#025F96] font-bold">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        defaultValue={formMasyarakat.username}
+                        onChange={handleChangeMasyarakat}
+                        className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        maxLength={50}
+                        required
+                      />
+                  </div>
+    
+                  <div className="flex flex-col items-center">
+                    <label className="text-[#025F96] font-bold">Email</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        defaultValue={formMasyarakat.email}
+                        onChange={handleChangeMasyarakat}
+                        className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        maxLength={50}
+                        required
+                      />
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <label className="text-[#025F96] font-bold">NIK</label>
+                     <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        defaultValue={formMasyarakat.NIK}
+                        onChange={handleChangeMasyarakat}
+                        className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        maxLength={50}
+                        required
+                      />
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <label className="text-[#025F96] font-bold">Alamat</label>
+                    <input
+                      type="text"
+                      name="alamat"
+                      defaultValue={formMasyarakat.alamat}
+                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      onChange={handleChangeMasyarakat}
+                      maxLength={50}
+                      required
+                    />
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <label className="text-[#025F96] font-bold">Nomor Telepon</label>
+                    <input
+                      type="text"
+                      name="nomorTelepon"
+                      defaultValue={formMasyarakat.notlp}
+                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      onChange={handleChangeMasyarakat}
+                      maxLength={50}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="flex flex-col items-center">
+                    <label className="text-[#025F96] font-bold">Jenis Kelamin</label>
+                    <select
+                      name="jenisKelamin"
+                      defaultValue={formMasyarakat.jeniskelamin}
+                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      onChange={handleChangeMasyarakat}
+                      required
+                    >
+                      <option value="">Pilih Jenis Kelamin</option>
+                      <option value="Laki-laki">Laki-laki</option>
+                      <option value="Perempuan">Perempuan</option>
+                    </select>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <label className="text-[#025F96] font-bold">Tanggal Lahir</label>
+                    <input
+                      type="date"
+                      name="tanggalLahir"
+                      defaultValue={formMasyarakat.tanggalLahir.slice(0, 10)}
+                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      onChange={handleChangeMasyarakat}
+                      maxLength={50}
+                      required
+                    />
+                  </div>
+                 
+                  <div className="flex flex-col items-center gap-2">
+                    <label className="text-[#025F96] font-bold">Foto KTP</label>
+                      <div className="bg-orange-200 rounded-xl p-2 w-44 h-44 flex items-center justify-center">
+                        {previewFotoKTP ? (
+                          <img
+                            src={previewFotoKTP}
+                            alt="Preview Foto KTP"
+                            className="object-cover w-full h-full rounded-xl"
+                          />
+                        ) : (
+                          <span className="text-gray-600 text-center">Belum ada gambar</span>
+                        )}
+                      </div>
+                      <input
+                      type="file"
+                      name="fotoKTP"
+                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      onChange={handleChangeMasyarakat}
+                      maxLength={50}
+                      required
+                    />
+                  </div>
+                  <div className="flex flex-col items-center gap-2" >
+                    <label className="text-[#025F96] font-bold">Selfie dengan KTP</label>
+                    <div className="bg-orange-200 rounded-xl p-2 w-44 h-44 flex items-center justify-center gap-2">
+                      {previewFotoKTP ? (
+                        <img
+                          src={previewFotoKTP}
+                          alt="Preview Foto KTP"
+                          className="object-cover w-full h-full rounded-xl"
+                        />
+                      ) : (
+                        <span className="text-gray-600 text-center">Belum ada gambar</span>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      name="fotoKTP"
+                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      onChange={handleChangeMasyarakat}
+                      maxLength={50}
+                      required
+                    />
+                  </div>
                 </div>
-                <div>
-                  <div className="text-[#025F96]">Username</div>
-                  <div>{data.username_masyarakat}</div>
-                </div>
-                <div>
-                  <div className="text-[#025F96]">Email</div>
-                  <div>{data.email_masyarakat}</div>
-                </div>
-                <div>
-                  <div className="text-[#025F96]">NIK</div>
-                  <div>{data.nik_masyarakat}</div>
-                </div>
-                <div>
-                  <div className="text-[#025F96]">Alamat</div>
-                  <div>{data.alamat_masyarakat}</div>
-                </div>
-                <div>
-                  <div className="text-[#025F96]">Nomor Telepon</div>
-                  <div>{data.notlp_masyarakat}</div>
-                </div>
-                <div>
-                  <div className="text-[#025F96]">Jenis Kelamin</div>
-                  <div>{data.jeniskelamin_masyarakat}</div>
-                </div>
-                <div>
-                  <div className="text-[#025F96]">Tanggal Lahir</div>
-                  <div>{data.tgl_lahir_masyarakat?.slice(0, 10)}</div>
-                </div>
-                <div>
-                  <div className="text-[#025F96]">Foto KTP</div>
-                  <div className=" bg-orange-200 h-50 rounded-xl">isinama</div>
-                </div>
-                <div>
-                  <div className="text-[#025F96]">Selfie dengan KTP</div>
-                  <div className="bg-orange-200 h-50 rounded-xl">isinama</div>
+                <div className=" text-center flex flex-row gap-4 mt-5 items-center">
+                  <button
+                     className="px-4 py-2 bg-gray-400 text-white rounded-xl w-50 hover:bg-gray-500 transition duration-200 ease-in-out"
+                    onClick={() => setShowModal(false)}
+                    
+                  >
+                    Batalkan
+                  </button>
+                  <button
+                     className="px-4 py-2 bg-[#1177B3] text-white rounded-xl hover:bg-[#0d5e90] w-50 transition duration-200 ease-in-out"
+                    onClick={handleEditSubmitMasyarakat}
+                    
+                  >
+                    Simpan Perubahan
+                  </button>
                 </div>
               </div>
-            </div>
+            </form>
 
-            <div className=" text-center">
-              <button
-                className="px-4 py-2 bg-[#1177B3] text-white rounded-xl cursor-pointer mt-5
-                onClick={() => setShowModal(false)}
-                "
-              >
-                Tutup
-              </button>
-            </div>
+
           </div>
         </>
       );
@@ -965,7 +1132,6 @@ export default function ModalContent({ modalType, onClose, dataArtikel,token,idA
     case "detailprofildokter":
       return (
         <>
-          <detailprofildokter data={data} onClose={onClose} />
           <div className="">
             <button
               onClick={onClose}
@@ -982,45 +1148,44 @@ export default function ModalContent({ modalType, onClose, dataArtikel,token,idA
               <div className="grid grid-cols-2 gap-4 w-full text-center">
                 <div>
                   <div className="text-[#025F96]">Nama</div>
-                  {/* <div>{data.nama_dokter}</div> */}
+                  <div>{dataDokterbyId?.nama_dokter}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Username</div>
-                  {/* <div>{data.username_dokter}</div> */}
+                  <div>{dataDokterbyId?.username_dokter}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Email</div>
-                  <div>isinama</div>
+                  <div>{dataDokterbyId?.email_dokter}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">NIK</div>
-                  <div>isinama</div>
+                  <div>{dataDokterbyId?.nik_dokter}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Bidang Dokter</div>
-                  {/* <div>{data.spesialis_dokter}</div> */}
+                  <div>{dataDokterbyId?.spesialis_dokter}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Nomor Telepon</div>
-                  <div>09876543234567</div>
-                </div>
-                <div>
-                  <div className="text-[#025F96]">Jenis Kelamin</div>
-                  <div>Perempuan</div>
+                  <div>{dataDokterbyId?.notlp_dokter}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Tanggal Lahir</div>
-                  <div>isinama</div>
+                  <div>{dataDokterbyId?.username_dokter}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]">Nomor.STR Kedokteran</div>
-                  <div>isinama</div>
+                  <div>{dataDokterbyId?.str_dokter}</div>
                 </div>
-                <div>
-                  <div className="text-[#025F96]">Alamat</div>
-                  <div>isinama</div>
-                </div>
+                
               </div>
+              <div className=" text-center">
+                <button className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5"
+                 onClick={() => onClose(false)}>
+                 Tutup
+                </button>
+            </div>
             </div>
           </div>
         </>

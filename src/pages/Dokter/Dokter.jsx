@@ -1,6 +1,6 @@
 import { useState,useEffect } from "react";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -38,6 +38,7 @@ const handleDelete = () => {
 };
 
 function Dokter() {
+  const token = localStorage.getItem("token");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("null");
   const [searchTerm, setSearchTerm] = useState("");
@@ -46,20 +47,34 @@ function Dokter() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedData, setSelectedData] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+  const [dataDokterbyId, setdataDokterbyId] = useState(null);
   const [dokter, setDokter] = useState([]); 
 
-  const openModal = (type,data) => {
+ const openModalWithId = (type,id) => {
+    if (!id) {
+    alert("ID artikel tidak valid!");
+    return;
+    }
+    setSelectedId(id);
     setModalType(type);
-    setSelectedData(data);
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalType(null);
-    setSelectedData(null);
+  const openModal = (type, id) => {
+    setModalType(type);
+    setSelectedId(id);
+    setIsModalOpen(true);
   };
 
+  
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedData(null);
+    setModalType("");
+  };
+
+  
   const formatTanggal = (isoDateString) => {
   const date = new Date(isoDateString);
     return date.toLocaleDateString("id-ID", {
@@ -67,6 +82,12 @@ function Dokter() {
       month: "2-digit",
       year: "numeric",
     });
+  };
+
+  const handleEdit = (data) => {
+    setSelectedData(data);
+    setIsModalOpen(true);
+    navigate(`/detail/${data._id}`);
   };
 
   const handleLogout = () => {
@@ -94,6 +115,27 @@ function Dokter() {
         setLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (!selectedId) return; 
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          `https://mjk-backend-production.up.railway.app/api/dokter/getbyid/${selectedId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setdataDokterbyId(response.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  },[selectedId, token]);
   
   const deleteDokterById = async (_id) => {
      const result = await Swal.fire({
@@ -173,11 +215,6 @@ const handleCloseModal = () => {
         enableSorting: false,
       },
       {
-        accessorKey: "email_dokter",
-        header: "Email",
-        enableSorting: false,
-      },
-      {
         accessorKey: "spesialis_dokter",
         header: "Spesialisasi",
         enableSorting: false,
@@ -204,15 +241,15 @@ const handleCloseModal = () => {
         enableSorting: false,
         cell: ({ row }) => (
          <div className="flex gap-2 items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797]">
-            <button onClick={() =>openModal("detailprofildokter", )} title="Detail">
+            <button onClick={() =>openModal("detailprofildokter",row.original._id )} title="Detail">
               <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg" />
             </button>
 
-            <button onClick={() => openModal("editdatadokter")} title="Edit">
+            <button onClick={() => openModal("editdatadokter",row.original._id)} title="Edit">
               <FaEdit className="text-gray-600 hover:text-[#004A76] text-lg" />
             </button>
 
-            <button onClick={() =>handleDelete()} title="Hapus">
+            <button onClick={() =>handleDelete(row.original._id)} title="Hapus">
               <FaTrashAlt className="text-red-500 hover:text-red-700 text-lg" />
             </button>
           </div>),
@@ -327,9 +364,10 @@ const handleCloseModal = () => {
         <Modal open={isModalOpen} onClose={closeModal}>
           <ModalContent
             modalType={modalType}
-            // onClose={closeModal}
-            // idArtikel={selectedId}
+            idDokter={selectedId}
+            dataDokterbyId={dataDokterbyId}
             onClose={handleCloseModal}
+            token={token}
           />
         </Modal>
       </main>

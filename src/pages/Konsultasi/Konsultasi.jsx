@@ -25,7 +25,7 @@ function Konsultasi() {
 
 
 
-  // filterstatus button diproses
+  const token = localStorage.getItem("token");
   const [filterStatus, setFilterStatus] = useState("Diproses");
   const [username, setUsername] = useState('');
   const [allRows, setAllRows] = useState([]);
@@ -72,7 +72,13 @@ function Konsultasi() {
 
   // ENDPOINT GET DATA jadwal
   useEffect(() => {
-    axios.get(`https://mjk-backend-production.up.railway.app/api/jadwal/getall`)
+    axios.get(`https://mjk-backend-production.up.railway.app/api/jadwal/getall`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    )
         .then((res) => {
             const data = res.data;
             setAllRows(data);
