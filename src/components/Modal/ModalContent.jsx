@@ -555,7 +555,7 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold text-[#004A76] underline">Edit Profil Masyarakat </h1>
+            <h1 className="text-xl font-bold text-[#004A76] underline">Edit Profil Masyarakat </h1>
 
             <form onSubmit={handleEditSubmitMasyarakat} className="space-y-6">
               <div className="flex flex-col justify-center items-center gap-4">

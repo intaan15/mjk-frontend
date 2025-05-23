@@ -137,9 +137,12 @@ function Verifikasi() {
     // ENDPOINT UPDATE STATUS VERIFIKASI
     const handleVerifikasi = (status, _id) => {
         axios.patch(`https://mjk-backend-production.up.railway.app/api/masyarakat/update/${_id}`, {
-            verifikasi_akun_masyarakat: status,
-            
-          })
+            verifikasi_akun_masyarakat: status,}
+            , {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+            },
+        })
           .then(() => {
             console.log("Status verifikasi berhasil diperbarui (PATCH)");
             console.log("ID yang dikirim:", _id);
@@ -163,7 +166,13 @@ function Verifikasi() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`);
+                const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+                );
                 // const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending');
                 const filteredData = res.data;
                 setAllRows(filteredData);
