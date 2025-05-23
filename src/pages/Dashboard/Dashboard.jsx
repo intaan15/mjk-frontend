@@ -295,7 +295,7 @@ function Dashboard() {
               {/* Kartu 1 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
                 <p className="text-5xl font-bold text-[#004A76]">{jadwalbyTanggal}</p>
-                <p className="text-lg text-[#004A76] font-semibold">Konsultasi</p>
+                <p className="text-lg text-[#004A76] font-semibold underline">Konsultasi</p>
                 <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
 

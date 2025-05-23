@@ -474,13 +474,13 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold">Profil Masyarakat</h1>
+            <h1 className="text-2xl font-bold">Detail Profil Masyarakat</h1>
 
-            <div className="flex flex-col justify-center items-center gap-4">
+            <div className="flex flex-col justify-center items-center gap-4 w-full">
               <div className="bg-red-500 rounded-full p-12">foto</div>
               <div className="grid grid-cols-2 gap-4 w-full text-center">
                 <div>
-                  <div className="text-[#025F96]">Nama</div>
+                  <div className="text-[#025F96] font-bold underline">Nama</div>
                   <div>{dataMasyarakatbyId?.nama_masyarakat || " "}</div>
                 </div>
                 <div>
@@ -942,7 +942,7 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold">Tambah Data Dokter</h1>
+            <h1 className="text-2xl font-bold font-[raleway] underline text-[#004A76]">Edit Data Dokter</h1>
             <div className=" flex-1 flex-row">
               <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
                 <label

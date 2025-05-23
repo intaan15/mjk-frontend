@@ -240,12 +240,7 @@ function Verifikasi() {
             accessorKey: "email_masyarakat",
             header: "Email",
             enableSorting: false,
-        },
-        {
-            accessorKey: "notlp_masyarakat",
-            header: "Kontak",
-            enableSorting: false,
-        },
+        },       
         {
             accessorKey: "nik_masyarakat",
             header: "NIK",
