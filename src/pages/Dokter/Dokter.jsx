@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -18,24 +18,25 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import ModalContent from "../../components/Modal/ModalContent";
 import Swal from "sweetalert2";
+import.meta.env.VITE_BASE_URL
 
-const handleDelete = () => {
-  Swal.fire({
-    title: "Yakin mau hapus?",
-    text: "Data yang dihapus tidak bisa dikembalikan!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-    confirmButtonText: "Ya, hapus!",
-    cancelButtonText: "Batal",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Lanjutkan proses delete
-      Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
-    }
-  });
-};
+// const handleDelete = () => {
+//   Swal.fire({
+//     title: "Yakin mau hapus?",
+//     text: "Data yang dihapus tidak bisa dikembalikan!",
+//     icon: "warning",
+//     showCancelButton: true,
+//     confirmButtonColor: "#d33",
+//     cancelButtonColor: "#3085d6",
+//     confirmButtonText: "Ya, hapus!",
+//     cancelButtonText: "Batal",
+//   }).then((result) => {
+//     if (result.isConfirmed) {
+//       // Lanjutkan proses delete
+//       Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
+//     }
+//   });
+// };
 
 function Dokter() {
   const token = localStorage.getItem("token");
@@ -53,7 +54,7 @@ function Dokter() {
 
  const openModalWithId = (type,id) => {
     if (!id) {
-    alert("ID artikel tidak valid!");
+    alert("ID dokter tidak valid!");
     return;
     }
     setSelectedId(id);
@@ -101,7 +102,7 @@ function Dokter() {
   // ENDPOINT GET DATA DOKTER
   useEffect(() => {
     axios
-      .get("https://mjk-backend-production.up.railway.app/api/dokter/getall", {
+      .get(`${import.meta.env.VITE_BASE_URL}/api/dokter/getall`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -121,7 +122,7 @@ function Dokter() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://mjk-backend-production.up.railway.app/api/dokter/getbyid/${selectedId}`,
+          `${import.meta.env.VITE_BASE_URL}/api/dokter/getbyid/${selectedId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -137,7 +138,7 @@ function Dokter() {
     fetchData();
   },[selectedId, token]);
   
-  const deleteDokterById = async (_id) => {
+  const handleDelete = async (_id) => {
      const result = await Swal.fire({
         title: "Apakah Anda yakin?",
         text: "Data ini akan dihapus!",
@@ -151,30 +152,44 @@ function Dokter() {
       if (result.isConfirmed) {
         try {
           const res = await axios.delete(
-            `https://mjk-backend-production.up.railway.app/api/dokter/${_id}`,
+            `${import.meta.env.VITE_BASE_URL}/api/dokter/delete/${_id}`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
             }
           );
+          console.log(res.data)
           console.log("Berhasil hapus:", res.data);
-          getDokter();
-
-          toast.success("Data dokter berhasil dihapus!", {
-            position: toast.POSITION.BOTTOM_RIGHT,
-            autoClose: 5000, // Timer mundur 5 detik
-      });
-       } catch (err) {
+         fetchDokter();
+         Swal.fire("Berhasil!", "Data dokter berhasil dihapus.", "success");
+      } catch (err) {
       console.error("Gagal hapus:", err);
       Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
     }
   }
 };
 
+
+
+const fetchDokter = useCallback(async ()=> {
+  try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/dokter/getall`, 
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }}
+        );
+        setDokter(res.data);
+      } catch (err) {
+        console.error("Gagal fetch dokter:", err);
+      }
+},[])
+
 const handleCloseModal = () => {
   setIsModalOpen(false);
-  fetchArtikel();
+  fetchdokter();
 };
 
 
@@ -192,7 +207,7 @@ const handleCloseModal = () => {
           return (
             <img
               src={
-                (`https://mjk-backend-production.up.railway.ap/api/dokter/${imageUrl}`,
+                (`${import.meta.env.VITE_BASE_URL}/api/dokter/${imageUrl}`,
                 {
                   headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -222,11 +237,6 @@ const handleCloseModal = () => {
       {
         accessorKey: "str_dokter",
         header: "Nomor STR",
-        enableSorting: false,
-      },
-      {
-        accessorKey: "notlp_dokter",
-        header: "Nomor Telepone",
         enableSorting: false,
       },
       {

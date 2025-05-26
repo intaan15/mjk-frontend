@@ -161,6 +161,11 @@ function DataMasyarakat() {
       accessorKey: "nama_masyarakat",
       header: "Nama Pengguna",
       enableSorting: false,
+      cell: ({ getValue }) => (
+        <div className="w-32 truncate" title={getValue()}>
+          {getValue()}
+        </div>
+      ),
     },
     {
       accessorKey: "email_masyarakat",

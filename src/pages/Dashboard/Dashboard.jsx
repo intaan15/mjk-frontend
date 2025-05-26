@@ -1,6 +1,7 @@
 // komponen  react
 import React from 'react'
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 
@@ -18,7 +19,7 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { BsFillBarChartFill } from "react-icons/bs";
 import { GrArticle } from "react-icons/gr";
 import { FaUserClock } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { IoStatsChart } from "react-icons/io5";
 
 
 // kenapa diluar func? agar tidak boros memori,dan efisien apabila terdapat elemen dashboard yg dirender ulang
@@ -58,7 +59,7 @@ function Dashboard() {
     navigate("/login");      // Redirect ke halaman login
   };
 
-    // endpoint untuk ambil data
+    // endpoint untuk ambil datat
     useEffect(() => {
 
       // API MASAYARAKAT
@@ -216,7 +217,7 @@ function Dashboard() {
                       </a>
                       
                       <a
-                        href="#"
+                        href=""
                         onClick={handleLogout}
                         className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
                         <IoLogOutOutline className='text-[30px]' />
@@ -284,44 +285,60 @@ function Dashboard() {
 
         {/* LogPengguna */}
         <div className='flex flex-col gap-3'>
-          <div>
-            <p className="font-[Nunito Sans] text-2xl font-bold pt-2  text-[#025f96] justify-between ">
-              Log Statistik Data
+          <div className='flex grid-rows-2 items-start  justify-between p-3 rounded-lg'>
+            <p className="text-2xl font-bold pt-2  text-[#025f96] justify-start">
+              Log Pengguna Harian
             </p>
+            {/* <p className="text-2xl font-bold pt-2  text-[#025f96]   ">
+              Log Statistik Data
+            </p> */}
           </div>
 
           <div className='flex'>
             <div className="grid grid-cols-2 gap-6 w-3/6 ">
               {/* Kartu 1 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <p className="text-5xl font-bold text-[#004A76]">{jadwalbyTanggal}</p>
+                <div className='flex grid-rows-2  gap-3 justify-between items-center w-full'>
+                   <p className="text-6xl font-bold text-[#004A76] ">{jadwalbyTanggal}</p>
+                   <IoStatsChart className='w-20 h-20 text-[#FF8FA7]/70'/>
+                </div>
                 <p className="text-lg text-[#004A76] font-semibold underline">Konsultasi</p>
                 <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
 
               {/* Kartu 2 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <p className="text-5xl font-bold text-[#004A76]">{akunBaru}</p>
-                <p className="text-lg text-[#004A76] font-semibold">Akun Baru</p>
+                <div className='flex grid-rows-2 justify-between items-center w-full mb-2'>
+                   <p className="text-6xl font-bold text-[#004A76] ">{akunBaru}</p>
+                   <IoStatsChart className='w-20 h-20 text-[#4ED9D9]/70'/>
+                </div>
+                <p className="text-lg text-[#004A76] underline font-semibold">Akun Baru</p>
                 <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
 
               {/* Kartu 3 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <p className="text-5xl font-bold text-[#004A76]">{allDokter}</p>
-                <p className="text-lg text-[#004A76] font-semibold">Dokter Terdaftar</p>
+                <div className='flex grid-rows-2  gap-3 justify-between items-center w-full'>
+                    <p className="text-5xl font-bold text-[#004A76]">{allDokter}</p>
+                   <IoStatsChart className='w-20 h-20 text-[#5EB5EF]/70'/>
+                </div>
+                <p className="text-lg text-[#004A76] font-semibold underline">Dokter Terdaftar</p>
                 <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
 
               {/* Kartu 4 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <p className="text-5xl font-bold text-[#004A76]">{artikelLog}</p>
-                <p className="text-lg text-[#004A76] font-semibold">Artikel Publish</p>
+                <div className='flex grid-rows-2  gap-3 justify-between items-center w-full'>
+                     <p className="text-5xl font-bold text-[#004A76]">{artikelLog}</p>
+                   <IoStatsChart className='w-20 h-20 text-[#FFD778]/70'/>
+                </div>
+                <p className="text-lg text-[#004A76] font-semibold underline">Artikel Publish</p>
                 <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
             </div>
 
             {/* Chart Donut */}
+            
             <div className=' flex justify-center w-3/6'>
               <div className="flex justify-center w-5/6 bg-white rounded-xl shadow-md">
                 <Bar  values={dataBar} />

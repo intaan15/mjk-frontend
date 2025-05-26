@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { VscAccount } from "react-icons/vsc";
 import { HiEye, HiEyeOff, HiOutlineRefresh } from "react-icons/hi";
 import { TbLockPassword } from "react-icons/tb";
+import { FaSpinner } from 'react-icons/fa';
+import { motion } from "framer-motion";
 import axios from "axios";
+import.meta.env.VITE_BASE_URL
 import "../../index.css";
 
 
@@ -17,12 +20,15 @@ function Loginakun() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [loading, setLoading] = useState(false);
+  
   const navigate = useNavigate();
   const togglePassword = () => setShowPassword((prev) => !prev);
 
   const fetchCaptcha = async () => {
     try {
-      const res = await axios.get("https://mjk-backend-production.up.railway.app/api/captcha/captcha");
+      // console.log("API URL:",import.meta.env.VITE_BASE_URL);
+      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/captcha/captcha`);
       setCaptcha(res.data.captcha);
       setCaptchaId(res.data.captchaId);
       setText("");
@@ -40,13 +46,24 @@ function Loginakun() {
     return () => clearInterval(interval);
   }, []);
 
+  
+const MotionButton = ({ isLoading }) => (
+  <motion.button
+    whileTap={{ scale: 0.95 }}
+    className="bg-indigo-600 text-white px-4 py-2 rounded"
+    disabled={isLoading}
+  >
+    {isLoading ? 'Loading...' : 'Click Me'}
+  </motion.button>
+);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       // Validasi CAPTCHA
       const captchaRes = await axios.post(
-        "https://mjk-backend-production.up.railway.app/api/captcha/validate",
+        `${import.meta.env.VITE_BASE_URL}/api/captcha/validate`,
         {
           captchaId,
           userInput: text,
@@ -61,11 +78,11 @@ function Loginakun() {
       }
 
       setValid(false);
-      setSuccess(true);
+      setLoading(true);
 
       // Login
       const loginRes = await axios.post(
-        "https://mjk-backend-production.up.railway.app/api/auth/login_superadmin",
+        `${import.meta.env.VITE_BASE_URL}/api/auth/login_superadmin`,
         {
           username_superadmin: username,
           password_superadmin: password,
@@ -83,13 +100,13 @@ function Loginakun() {
       );
       console.error("Login error:", error.response);
 
-      setSuccess(false);
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex flex-col justify-center items-center h-screen w-screen">
-      <div className="bg-[#025F96]/10 px-10 py-6 rounded-[10px] w-[380px]">
+      <div className="bg-[#025F96]/10 px-10 py-6 rounded-[10px] w-2/6">
         {/* Logo */}
         <div className="flex flex-col items-center mb-5">
           <img
@@ -115,7 +132,7 @@ function Loginakun() {
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="pl-10 pr-3 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-100 font-[Nunito-Sans]"
+              className="pl-10 pr-3 h-[40px] w-full border rounded-md text-gray-700 shadow-sm text-sm focus:ring-2 focus:ring-blue-100" style={{ fontFamily: "Nunito Sans" }}
             />
           </div>
 
@@ -127,7 +144,7 @@ function Loginakun() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pl-10 pr-10 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-100 font-[Nunito-Sans]"
+              className="pl-10 pr-10 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-100 text-sm" style={{ fontFamily: "Nunito Sans" }}
             />
             <button
               type="button"
@@ -144,7 +161,7 @@ function Loginakun() {
 
           {/* Captcha */}
           <div className="flex flex-row items-center gap-2">
-            <div className="bg-white px-4 py-2 rounded text-xl font-[Nunito] font-bold tracking-widest w-[140px] h-auto overflow-hidden">
+            <div className="bg-white px-4 py-2 rounded text-xl font-[Nunito] font-bold tracking-widest w-60 h-auto overflow-hidden">
               {captcha}
             </div>
             <button
@@ -160,7 +177,7 @@ function Loginakun() {
               value={text}
               onChange={(e) => setText(e.target.value)}
               onFocus={() => setValid(false)}
-              className={`p-2 border rounded w-[140px] text-sm ${valid ? "border-red-500" : ""}`}
+              className={`pl-3 pr-3 h-[40px] w-full border rounded-md text-gray-700 shadow-sm text-sm focus:ring-2 focus:ring-blue-100 ${valid ? "border-red-500" : ""}`} style={{ fontFamily: "Nunito Sans" }} 
             />
           </div>
 
@@ -171,12 +188,23 @@ function Loginakun() {
           {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
 
           {/* Submit */}
-          <button
+          <motion.button
             type="submit"
-            className="bg-[#004A76] text-white w-full h-[48px] rounded hover:bg-[#003252] transition-all font-raleway font-semibold"
+            whileTap={{ scale: 0.95 }}
+            disabled={loading}
+            className={`flex items-center justify-center gap-2 bg-[#004A76] text-white w-full h-[48px] rounded font-raleway font-semibold transition-all ${
+              loading ? "opacity-70 cursor-not-allowed" : "hover:bg-[#003252]"
+            }`}
           >
-            Masuk
-          </button>
+            {loading ? (
+              <>
+                <FaSpinner className="animate-spin" />
+                Loading...
+              </>
+            ) : (
+              "Masuk"
+            )}
+          </motion.button>
         </form>
       </div>
     </div>

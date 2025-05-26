@@ -137,7 +137,7 @@ const Jadwal = () => {
     () => (tanggalArray.length ? dayjs(tanggalArray[0]) : dayjs()),
     [tanggalArray]
   );
-  const monday0 = minDate.startOf("week").add(0, "day");
+  const monday0 = minDate.startOf("week");
   const mondayAktif =  useMemo(() => monday0.add(mingguPage, "week"),[monday0, mingguPage]);
   const startDate = dayjs(minDate);  
   const tanggalAktif = useMemo(

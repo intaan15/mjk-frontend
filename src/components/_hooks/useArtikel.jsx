@@ -192,14 +192,17 @@ export default function useArtikel({idArtikel,token,onClose}) {
                 }
             );
 
-            alert("Artikel berhasil diubah!");
+            // alert("Artikel berhasil diubah!");
+            showSuccessToast("Artikel berhasil diubah!")
             onClose(false);
             } catch (error) {
-            console.error(
-                "Gagal update artikel:",
-                error.response?.data || error.message
-            );
-            alert("Gagal mengubah artikel.");
+               const message =
+                    error.response?.data?.message || error.message || "Terjadi kesalahan saat mengubah artikel.";
+
+                console.error("Gagal update artikel:", message);
+
+                showErrorToast(message);
+            // alert("Gagal mengubah artikel.");
             }
         };
 

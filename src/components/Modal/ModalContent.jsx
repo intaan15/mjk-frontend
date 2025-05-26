@@ -4,6 +4,9 @@ import useArtikel from "../_hooks/useArtikel";
 import useMasyarakat from "../_hooks/useMasyarakat";
 import useDokter from "../_hooks/useDokter";
 
+import Select from "react-select";
+import { FaEye, FaHeartbeat } from "react-icons/fa";
+import { FaEyeSlash } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import DatePicker from "react-datepicker";
@@ -36,8 +39,8 @@ export default function ModalContent({
       handleSubmit:handleSubmitArtikel,
    } = useArtikel({idArtikel, token,dataArtikel, onClose});
 
-   const data = dataMasyarakatbyId;
-   console.log("Data di masyarakat:", data);
+  //  const data = dataMasyarakatbyId;
+  //  console.log("Data di masyarakat:", data);
 
    const {
     formData: formMasyarakat,
@@ -55,10 +58,30 @@ export default function ModalContent({
     handleChange: handleChangeDokter,
     handleEditSubmit: handleEditSubmitDokter,
     handleFileChange: handleFileChangeDokter,
+    handleChangeSelect: handleChangeSelectDokter,
     handleSubmit:handleSubmitDokter,
   } = useDokter({idDokter, token,dataDokterbyId, onClose});
+  
+   const options = [
+    
+      { value: "Umum", label: <><img src="../icon_poli/poli_umum.svg" className="inline mr-2 w-5 h-5"/> Spesialis Umum</> },
+      { value: "Mata", label: <><img src="../icon_poli/poli_mata.svg" className="inline mr-2 w-5 h-5"/> Spesialis Mata</> },
+      { value: "Anak", label: <><img src="../icon_poli/poli_anak.svg" className="inline mr-2 w-5 h-5"/> Spesialis Anak</> },
+      { value: "Gigi", label: <><img src="../icon_poli/poli_gigi.svg" className="inline mr-2 w-5 h-5"/> Spesialis Gigi</> },
+      { value: "THT", label: <><img src="../icon_poli/poli_tht.svg" className="inline mr-2 w-5 h-5"/> Spesialis THT</> },
+      { value: "Jantung", label: <><img src="../icon_poli/poli_jantung.svg" className="inline mr-2 w-5 h-5"/>Spesialis Jantung </> },
+      { value: "Kandungan", label: <><img src="../icon_poli/poli_kandungan.svg" className="inline mr-2 w-5 h-5"/> Spesialis Kandungan</> },
+      { value: "Bedah", label: <><img src="../icon_poli/poli_bedah.svg" className="inline mr-2 w-5 h-5"/> Spesialis Bedah</> },
+      { value: "Syaraf", label: <><img src="../icon_poli/poli_syaraf.svg" className="inline mr-2 w-5 h-5"/> Spesialis syaraf</> },
+      { value: "Paru", label: <><img src="../icon_poli/poli_paru.svg" className="inline mr-2 w-5 h-5"/> Spesialis Paru</> },
+      { value: "Kulit", label: <><img src="../icon_poli/kulit.png" className="inline mr-2 w-6 h-6"/> Spesialis Kulit</> },
+      { value: "Darah", label: <><img src="../icon_poli/darah.svg" className="inline mr-2 w-5 h-5"/> Darah</> },
+      { value: "Fisioterapi", label: <><img src="../icon_poli/fisioterapi.svg" className="inline mr-2 w-5 h-5"/> Fisioterapi</> },
+      { value: "Lambung", label: <><img src="../icon_poli/lambung.png" className="inline mr-2 w-5 h-5"/> Lambung</> },
+      { value: "Hati", label: <><img src="../icon_poli/hati.svg" className="inline mr-2 w-5 h-5"/> Hati</> },
 
-   
+    ];
+    const [showPassword, setShowPassword] = useState(false);
 
   switch (modalType) {
     // ARTIKEL
@@ -226,7 +249,7 @@ export default function ModalContent({
               <div className="text-center mt-5">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-red-200 rounded-xl cursor-pointer"
+                  className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer"
                 >
                   Simpan Perubahan
                 </button>
@@ -315,8 +338,10 @@ export default function ModalContent({
             </div>
 
             <div className="text-center">
-              <button className="px-4 py-2 bg-red-200 rounded-xl cursor-pointer mt-5">
-                Save change
+              <button className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5"
+               onClick={() => onClose(false)}             
+              >
+                Tutup
               </button>
             </div>
           </div>
@@ -356,6 +381,21 @@ export default function ModalContent({
                   required
                 />
               </div>
+              
+            <div  className="flex items-center gap-4">
+              <label>
+                Tanggal Terbit
+              </label>
+              <div className="w-4/5">
+                <input
+                  type="date"
+                  name="tgl_terbit_artikel"
+                  value={formArtikel.tgl_terbit_artikel || ""}
+                  onChange={handleChangeArtikel}
+                  className="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
+                />
+              </div>
+            </div>
 
               <div className="flex items-center gap-4">
                 <label
@@ -386,8 +426,7 @@ export default function ModalContent({
                         />
                       </svg>
                       <p className="mb-2 text-sm text-gray-500">
-                        <span className="font-semibold">Click to upload</span>{" "}
-                        or drag and drop
+                        <span className="font-semibold">Klik untuk mengunggah</span>{" "}
                       </p>
                       <p className="text-xs text-gray-500">
                         SVG, PNG, JPG or GIF (MAX. 800x400px)
@@ -474,45 +513,45 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold">Detail Profil Masyarakat</h1>
+            <h1 className="text-2xl font-bold text-[#025F96]">Detail Profil Masyarakat</h1>
 
-            <div className="flex flex-col justify-center items-center gap-4 w-full">
-              <div className="bg-red-500 rounded-full p-12">foto</div>
+            <div className="flex flex-col justify-center items-center gap-4 w-full mt-7">
+              <div className="bg-yellow-300 border-2 border-[#025F96] rounded-full p-12">foto</div>
               <div className="grid grid-cols-2 gap-4 w-full text-center">
                 <div>
                   <div className="text-[#025F96] font-bold underline">Nama</div>
                   <div>{dataMasyarakatbyId?.nama_masyarakat || " "}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">User</div>
+                  <div className="text-[#025F96] font-bold underline">User</div>
                   <div>{dataMasyarakatbyId?.username_masyarakat || " "}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Email</div>
+                  <div className="text-[#025F96] font-bold underline">Email</div>
                   <div>{dataMasyarakatbyId?.email_masyarakat || " "}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">NIK</div>
+                  <div className="text-[#025F96] font-bold underline">NIK</div>
                   <div>{dataMasyarakatbyId?.nik_masyarakat}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Alamat</div>
+                  <div className="text-[#025F96] font-bold underline">Alamat</div>
                   <div>{dataMasyarakatbyId?.alamat_masyarakat}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Nomor Telepon</div>
+                  <div className="text-[#025F96] font-bold underline">Nomor Telepon</div>
                   <div>{dataMasyarakatbyId?.notlp_masyarakat}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Jenis Kelamin</div>
+                  <div className="text-[#025F96] font-bold underline">Jenis Kelamin</div>
                   <div>{dataMasyarakatbyId?.jeniskelamin_masyarakat}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Tanggal Lahir</div>
+                  <div className="text-[#025F96] font-bold underline">Tanggal Lahir</div>
                   <div>{dataMasyarakatbyId?.tgl_lahir_masyarakat?.slice(0, 10)}</div>
                 </div>
-                <div>
-                  <div className="text-[#025F96]">Foto KTP</div>
+                <div >
+                  <div className="text-[#025F96] font-bold underline">Foto KTP</div>
                   <div className=" bg-orange-200 h-50 rounded-xl">
                       <img
                         src={dataMasyarakatbyId?.foto_ktp_masyarakat}
@@ -522,7 +561,7 @@ export default function ModalContent({
                   </div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Selfie dengan KTP</div>
+                  <div className="text-[#025F96] font-bold underline">Selfie dengan KTP</div>
                   <div className="bg-orange-200 h-50 rounded-xl">
                      <img
                         src={dataMasyarakatbyId?.selfie_ktp_masyarakat}
@@ -745,189 +784,224 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold">Tambah Data Dokter</h1>
-            <div className=" flex-1 flex-row">
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Nama
-                </label>
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full h-12 text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column w-full justify-center items-start gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Foto Profil
-                </label>
-
-                <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-2">
-                  <div class="flex items-center justify-center w-full">
-                    <label
-                      for="dropzone-file"
-                      class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-30  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
-                    >
-                      <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                        <svg
-                          class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 16"
-                        >
-                          <path
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                          />
-                        </svg>
-                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                          <span class="font-semibold">Click to upload</span> or
-                          drag and drop
-                        </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
-                          SVG, PNG, JPG or GIF (MAX. 800x400px)
-                        </p>
-                      </div>
-                      <input id="dropzone-file" type="file" class="hidden" />
-                    </label>
-                  </div>
-
-                  <button className=" px-4 py-2 border-2 border-gray-200 rounded-xl cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Spesialis
-                </label>
-
-                <form class="w-4/5">
+            <h1 className="text-2xl font-bold underline text-[#004A76]">Tambah Data Dokter</h1>
+            <form onSubmit={handleSubmitDokter} className="space-y-6" >
+              
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
                   <label
-                    for="Spesialis"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                  ></label>
-                  <select
-                    id="Spesialis"
-                    class="bg-gray-30 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    htmlFor="message"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" 
+                    style={{fontFamily: 'Nunito Sans'}}
                   >
-                    <option selected>Buka Spesialis</option>
-                    <option>Jantung</option>
-                    <option>Mata</option>
-                    <option>Mata</option>
-                    <option>Mata</option>
-                    <option>Mata</option>
-                    <option>Mata</option>
-                  </select>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Email
-                </label>
+                    Nama
+                  </label>
+                    <textarea
+                      name="nama_dokter"
+                      id="nama_dokter"
+                      rows="4"
+                      className="block p-2.5 w-4/5 h-12 text-sm text-gray-900 bg-gray-30 rounded-md 
+                            border dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 
+                            dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="dr. Tirta, Sp.O"
+                      value={formDokter.nama_dokter ||""}
+                      onChange={handleChangeDokter}
+                    ></textarea>
+                
+                </div>
+                <div className=" flex flex-column w-full justify-center items-start gap-10 mt-6">
+                  <label
+                    htmlFor="foto_profil_dokter"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
+                  >
+                    Foto Profil
+                  </label>
 
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  No. Handphone
-                </label>
+                  <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-2">
+                    <div className="flex items-center justify-center w-full">
+                      <label
+                        htmlFor="foto_profil_dokter"
+                        className="flex flex-col items-center justify-center w-full h-28 border-1 border-gray-300 border-dashed rounded-md  cursor-pointer bg-gray-30  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                      >
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <svg
+                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 20 16"
+                          >
+                            <path
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                            />
+                          </svg>
+                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            <span className="font-semibold">Klik untuk Mengunggah</span>
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            SVG, PNG, JPG or GIF (MAX. 800x400px)
+                          </p>
+                        </div>
+                        <input 
+                          name="foto_profil_dokter"
+                          id="foto_profil_dokter" 
+                          type="file" 
+                          className="hidden"
+                          onChange={handleFileChangeDokter}
+                          />
+                      </label>
+                    </div>
+                    <div className="font-light text-[14px] self-start text-lime-500">
+                    {formDokter.foto_profil_dokter
+                      ? formDokter.foto_profil_dokter.name
+                      : "Belum ada file yang dipilih"}
+                    </div>
 
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  No. STR
-                </label>
+                    <button className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
+                    Batalkan
+                    </button>
+                  </div>
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
+                  <label
+                    htmlFor="spesialis"
+                    className="block w-1/5 mb-2 text-sm font-medium text-gray-900 dark:text-black focus-ring-gray-500" style={{fontFamily: 'Nunito Sans'}}
+                  >
+                    Spesialis
+                  </label>
+                
+                  <Select
+                    name="spesialis"
+                    id="spesialis"
+                    options={options}
+                    className="text-sm focus:ring-2 w-4/5 focus:ring-gray-500 scrollbar-thumb-rounded-full"
+                    value = {formDokter.spesialis}
+                    placeholder="Buka Spesialis"
+                    styles={{
+                      control: (base, state) => ({
+                        ...base,
+                        borderColor: state.isFocused ? '#6B7280' : base.borderColor,
+                        boxShadow: state.isFocused ? '0 0 0 2px rgba(107,114,128,0.5)' : base.boxShadow,
+                        '&:hover': {
+                          borderColor: '#6B7280',
+                        },}),}}
+                    onChange={handleChangeSelectDokter}
+              
+                  />
+  
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
+                  <label
+                    htmlFor="email"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}} 
+                  >
+                    Email
+                  </label>
 
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Username
-                </label>
+                    <textarea
+                      name="email_dokter"
+                      id="email_dokter"
+                      rows="1"
+                      className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Masukkan Email"
+                      value={formDokter.email_dokter||""}
+                      onChange={handleChangeDokter}
+                    ></textarea>
 
-                <form class="w-4/5">
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
+                  <label
+                    htmlFor="notlp_dokter"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}} 
+                  >
+                    No. Handphone
+                  </label>
                   <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Password
-                </label>
+                      id="notlp_dokter"
+                      name="notlp_dokter"
+                      rows="1"
+                      className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Masukkan No. Handphone"
+                      value={formDokter.notlp_dokter||""}
+                      onChange={handleChangeDokter}
+                    ></textarea>
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
+                  <label
+                    htmlFor="no_str"
+                    className="block mb-2 text-sm  font-medium text-gray-900 dark:text-black w-1/5"
+                  >
+                    No. STR
+                  </label>
 
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
+                    <textarea
+                      id="str_dokter"
+                      name="str_dokter"
+                      rows="1"
+                      className="block p-2.5 text-sm w-4/5 text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Masukkan No. STR"
+                      value={formDokter.str_dokter||""}
+                      onChange={handleChangeDokter}
+                    ></textarea>
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
+                  <label
+                    htmlFor="username"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
+                  >
+                    Username
+                  </label>
+                    <textarea
+                      id="username"
+                      name="username"
+                      rows="1"
+                      className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Masukkan Username"
+                      value={formDokter.username||""}
+                      onChange={handleChangeDokter}
+                    ></textarea>
+                
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-5">
+                  <label
+                    htmlFor="message"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
+                  >
+                    Password
+                  </label>
+
+                  <div className="relative w-4/5">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      id="password"
+                      className="block w-full p-2.5 text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Masukkan Password"
+                      value={formDokter.password ||""}
+                      onChange={handleChangeDokter}
+                      
+                    />
+                    <div
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </div>
+                  </div>
+              
               </div>
-            </div>
-            <div className=" text-center">
-              <button className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5">
-                Tambah Data
-              </button>
-            </div>
+              <div className=" text-center">
+                <button className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5 font-[raleway] hover:bg-[#039FFC]/70"
+                  
+                >
+                  Tambah Data
+                </button>
+              </div>
+            </form>
+          
           </div>
         </>
       );
@@ -943,188 +1017,220 @@ export default function ModalContent({
               &times;
             </button>
             <h1 className="text-2xl font-bold font-[raleway] underline text-[#004A76]">Edit Data Dokter</h1>
-            <div className=" flex-1 flex-row">
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Nama
-                </label>
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full h-12 text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column w-full justify-center items-start gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Foto Profil
-                </label>
-
-                <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-2">
-                  <div class="flex items-center justify-center w-full">
-                    <label
-                      for="dropzone-file"
-                      class="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-30  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
-                    >
-                      <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                        <svg
-                          class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 16"
-                        >
-                          <path
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                          />
-                        </svg>
-                        <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                          <span class="font-semibold">Click to upload</span> or
-                          drag and drop
-                        </p>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">
-                          SVG, PNG, JPG or GIF (MAX. 800x400px)
-                        </p>
-                      </div>
-                      <input id="dropzone-file" type="file" class="hidden" />
-                    </label>
-                  </div>
-
-                  <button className=" px-4 py-2 border-2 border-gray-200 rounded-xl cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white">
-                    Cancel
-                  </button>
-                </div>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Spesialis
-                </label>
-
-                <form class="w-4/5">
+             <form onSubmit={handleSubmitDokter} className="space-y-6" >
+              
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
                   <label
-                    for="Spesialis"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-black"
-                  ></label>
-                  <select
-                    id="Spesialis"
-                    class="bg-gray-30 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    htmlFor="message"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" 
+                    style={{fontFamily: 'Nunito Sans'}}
                   >
-                    <option selected>Buka Spesialis</option>
-                    <option>Jantung</option>
-                    <option>Mata</option>
-                    <option>Mata</option>
-                    <option>Mata</option>
-                    <option>Mata</option>
-                    <option>Mata</option>
-                  </select>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Email
-                </label>
+                    Nama
+                  </label>
+                    <textarea
+                      name="nama_dokter"
+                      id="nama_dokter"
+                      rows="4"
+                      className="block p-2.5 w-4/5 h-12 text-sm text-gray-900 bg-gray-30 rounded-md 
+                            border dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 
+                            dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="dr. Tirta, Sp.O"
+                      value={formDokter.nama_dokter}
+                      onChange={handleChangeDokter}
+                    ></textarea>
+                
+                </div>
+                <div className=" flex flex-column w-full justify-center items-start gap-10 mt-6">
+                  <label
+                    htmlFor="message"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
+                  >
+                    Foto Profil
+                  </label>
 
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  No. Handphone
-                </label>
+                  <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-2">
+                    <div className="flex items-center justify-center w-full">
+                      <label
+                        htmlFor="foto_profil_dokter"
+                        className="flex flex-col items-center justify-center w-full h-28 border-1 border-gray-300 border-dashed rounded-md  cursor-pointer bg-gray-30  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                      >
+                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                          <svg
+                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 20 16"
+                          >
+                            <path
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                            />
+                          </svg>
+                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                            <span className="font-semibold">Klik untuk Mengunggah</span>
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            SVG, PNG, JPG or GIF (MAX. 800x400px)
+                          </p>
+                        </div>
+                        <input 
+                          name="foto_profil_dokter"
+                          id="foto_profil_dokter" 
+                          type="file" 
+                          className="hidden"
+                          onChange={handleFileChangeDokter}
+                          />
+                      </label>
+                    </div>
+                    <div className="font-light text-[14px] self-start text-lime-500">
+                    {formDokter.foto_profil_dokter
+                      ? formDokter.foto_profil_dokter.name
+                      : "Belum ada file yang dipilih"}
+                    </div>
 
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  No. STR
-                </label>
+                    <button className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
+                    Batalkan
+                    </button>
+                  </div>
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
+                  <label
+                    htmlFor="spesiali"
+                    className="block w-1/5 mb-2 text-sm font-medium text-gray-900 dark:text-black focus-ring-gray-500" style={{fontFamily: 'Nunito Sans'}}
+                  >
+                    Spesialis
+                  </label>
+                  <Select
+                    name="spesialis"
+                    id="spesialis"
+                    options={options}
+                    className="text-sm focus:ring-2 w-4/5 focus:ring-gray-500 scrollbar-thumb-rounded-full"
+                    value = {formDokter.spesialis}
+                    placeholder="Buka Spesialis"
+                    styles={{
+                      control: (base, state) => ({
+                        ...base,
+                        borderColor: state.isFocused ? '#6B7280' : base.borderColor,
+                        boxShadow: state.isFocused ? '0 0 0 2px rgba(107,114,128,0.5)' : base.boxShadow,
+                        '&:hover': {
+                          borderColor: '#6B7280',
+                        },}),}}
+                    onChange={handleChangeSelectDokter}
+              
+                  />
+  
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
+                  <label
+                    htmlFor="email"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}} 
+                  >
+                    Email
+                  </label>
 
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Username
-                </label>
+                    <textarea
+                      name="email_dokter"
+                      id="email_dokter"
+                      rows="1"
+                      className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Masukkan Email"
+                      value={formDokter.email_dokter}
+                      onChange={handleChangeDokter}
+                    ></textarea>
 
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
-              </div>
-              <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label
-                  for="message"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5"
-                >
-                  Password
-                </label>
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
+                  <label
+                    htmlFor="notlp_dokter"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}} 
+                  >
+                    No. Handphone
+                  </label>
+                   <textarea
+                      id="notlp_dokter"
+                      name="notlp_dokter"
+                      rows="1"
+                      className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Masukkan No. Handphone"
+                      value={formDokter.notlp_dokter}
+                      onChange={handleChangeDokter}
+                    ></textarea>
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
+                  <label
+                    htmlFor="no_str"
+                    className="block mb-2 text-sm  font-medium text-gray-900 dark:text-black w-1/5"
+                  >
+                    No. STR
+                  </label>
 
-                <form class="w-4/5">
-                  <textarea
-                    id="message"
-                    rows="4"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Leave a comment..."
-                  ></textarea>
-                </form>
+                    <textarea
+                      id="no_str"
+                      name="no_str"
+                      rows="1"
+                      className="block p-2.5 text-sm w-4/5 text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Masukkan No. STR"
+                      value={formDokter.str_dokter}
+                      onChange={handleChangeDokter}
+                    ></textarea>
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
+                  <label
+                    htmlFor="username"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
+                  >
+                    Username
+                  </label>
+                    <textarea
+                      id="username"
+                      name="username"
+                      rows="1"
+                      className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Masukkan Username"
+                      value={formDokter.username}
+                      onChange={handleChangeDokter}
+                    ></textarea>
+                
+                </div>
+                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-5">
+                  <label
+                    htmlFor="message"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
+                  >
+                    Password
+                  </label>
+
+                  <div className="relative w-4/5">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      id="password"
+                      className="block w-full p-2.5 text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Masukkan Password"
+                      value={formDokter.password}
+                      onChange={handleChangeDokter}
+                      
+                    />
+                    <div
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </div>
+                  </div>
+              
               </div>
-            </div>
-            <div className=" text-center">
-              <button className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5">
-                Tambah Data
-              </button>
-            </div>
+             
+              <div className=" text-center">
+                <button className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5">
+                  Simpan Perubahan
+                </button>
+              </div>
+            </form>
           </div>
         </>
       );
@@ -1144,38 +1250,38 @@ export default function ModalContent({
             </p>
 
             <div className="flex flex-col justify-center items-center gap-4">
-              <div className="bg-red-200 rounded-full p-12">foto</div>
-              <div className="grid grid-cols-2 gap-4 w-full text-center">
+              <div className="bg-red-200 rounded-full p-12 border-2 border-[#025F96] font-bold">foto</div>
+              <div className="grid grid-cols-2 gap-4 w-full text-center ">
                 <div>
-                  <div className="text-[#025F96]">Nama</div>
+                  <div className="text-[#025F96] font-bold underline">Nama</div>
                   <div>{dataDokterbyId?.nama_dokter}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Username</div>
+                  <div className="text-[#025F96]  font-bold underline">Username</div>
                   <div>{dataDokterbyId?.username_dokter}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Email</div>
+                  <div className="text-[#025F96]  font-bold underline">Email</div>
                   <div>{dataDokterbyId?.email_dokter}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">NIK</div>
-                  <div>{dataDokterbyId?.nik_dokter}</div>
+                  <div className="text-[#025F96]  font-bold underline">Rating Dokter</div>
+                  <div>{dataDokterbyId?.rating_dokter}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Bidang Dokter</div>
+                  <div className="text-[#025F96]  font-bold underline">Bidang Dokter</div>
                   <div>{dataDokterbyId?.spesialis_dokter}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Nomor Telepon</div>
+                  <div className="text-[#025F96]  font-bold underline ">Nomor Telepon</div>
                   <div>{dataDokterbyId?.notlp_dokter}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Tanggal Lahir</div>
+                  <div className="text-[#025F96]  font-bold underline">Tanggal Lahir</div>
                   <div>{dataDokterbyId?.username_dokter}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96]">Nomor.STR Kedokteran</div>
+                  <div className="text-[#025F96]  font-bold underline">Nomor.STR Kedokteran</div>
                   <div>{dataDokterbyId?.str_dokter}</div>
                 </div>
                 
