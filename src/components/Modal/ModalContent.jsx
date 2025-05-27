@@ -3,6 +3,7 @@ import axios from "axios";
 import useArtikel from "../_hooks/useArtikel";
 import useMasyarakat from "../_hooks/useMasyarakat";
 import useDokter from "../_hooks/useDokter";
+import TipTap from '../TipTap/TipTap'
 
 import Select from "react-select";
 import { FaEye, FaHeartbeat } from "react-icons/fa";
@@ -12,6 +13,7 @@ import { useParams } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";  
 import { IoCalendarOutline } from "react-icons/io5";
+import DOMPurify from "dompurify";
 
 
 export default function ModalContent({ 
@@ -146,7 +148,7 @@ export default function ModalContent({
                   htmlFor="dropzone-file"
                   className="block w-1/5 text-sm font-medium text-gray-900 dark:text-black"
                 >
-                  Foto Artikel
+                  Sampul Artikel
                 </label>
                 <div className="flex flex-col w-4/5 gap-2">
                   <label
@@ -179,6 +181,7 @@ export default function ModalContent({
                     </div>
                     <input
                       id="dropzone-file"
+                      name="foto"
                       type="file"
                       className="hidden"
                       onChange={handleFileChangeArtikel}
@@ -233,16 +236,18 @@ export default function ModalContent({
                 >
                   Deskripsi
                 </label>
-                <textarea
-                  id="deskripsi"
-                  name="deskripsi"
-                  rows="4"
-                  className="w-4/5 p-2 border rounded"
-                  placeholder="Deskripsi artikel"
-                  value={formArtikel.deskripsi}
-                  onChange={handleChangeArtikel}
-                  required
-                />
+                <div className="w-4/5 h-64  border-2 border-gray-100 rounded-lg" >
+                  <TipTap 
+                    id="deskripsi"
+                    rows="4"
+                    className="w-4/5 p-2 border rounded"
+                    name="deskripsi"
+                    value={formArtikel.deskripsi} 
+                    onChange={handleChangeArtikel}
+                    required
+                    />
+                </div>
+      
               </div>
 
               {/* Tombol Submit */}
@@ -329,10 +334,12 @@ export default function ModalContent({
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5">
                   Deskripsi
                 </label>
-                <div className="w-4/5">
-                  <div className="flex items-center w-full">
-                    : {dataArtikel?.detail_artikel || "-"}
-                  </div>
+                <div className="w-4/5 bg-yellow-100 rounded-lg p-4">
+                  
+                  <div
+                    className="flex items-center w-full"
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(dataArtikel?.detail_artikel || "<p>-</p>") }}
+                  />
                 </div>
               </div>
             </div>
@@ -374,7 +381,7 @@ export default function ModalContent({
                   id="judul"
                   name="judul"
                   rows={1}
-                  className="block p-2.5 w-4/5 text-sm  italic text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-[#004A76]"
+                  className="block p-2.5 w-4/5 text-sm  text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-[#004A76]"
                   placeholder="Masukkan Judul Artikel"
                   value={formArtikel.judul}
                   onChange={handleChangeArtikel}
@@ -383,7 +390,10 @@ export default function ModalContent({
               </div>
               
             <div  className="flex items-center gap-4">
-              <label>
+              <label
+                 htmlFor="foto"
+                 className="w-1/5 font-medium text-gray-900 dark:text-black " 
+              >
                 Tanggal Terbit
               </label>
               <div className="w-4/5">
@@ -400,7 +410,7 @@ export default function ModalContent({
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="foto"
-                  className="w-1/5 font-medium text-gray-900 dark:text-black  style={{ font-family: 'Nunito Sans' }}"
+                  className="w-1/5 font-medium text-gray-900 dark:text-black " 
                 >
                   Sampul Artikel
                 </label>
@@ -476,16 +486,14 @@ export default function ModalContent({
                 >
                   Deskripsi
                 </label>
-                <textarea
-                  id="deskripsi"
-                  name="deskripsi"
-                  rows={4}
-                  className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Deskripsi artikel"
-                  value={formArtikel.deskripsi}
-                  onChange={handleChangeArtikel}
-                  required
-                />
+                <div className="w-4/5 h-auto  border-2 border-gray-100 rounded-lg" >
+                  <TipTap 
+                    id="deskripsi_artikel"
+                    rows="4"
+                    name="deskripsi"
+                    value={formArtikel.deskripsi} 
+                    onChange={(html) => handleChangeArtikel("deskripsi", html)}/>
+                </div>
               </div>
 
               <div className="text-center">

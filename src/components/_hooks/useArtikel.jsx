@@ -2,6 +2,7 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { ToastContainer } from 'react-toastify';
 import { showSuccessToast, showErrorToast } from '../Modal/ToastModal'
+import DOMPurify from 'dompurify';
 
 export default function useArtikel({idArtikel,token,onClose}) {
     const [dataArtikel, setDataArtikel] = useState(null);
@@ -68,14 +69,43 @@ export default function useArtikel({idArtikel,token,onClose}) {
         deskripsi: dataArtikel.detail_artikel || "",
         });
     }, [dataArtikel]);
+    console.log("Form data:", formData);
     
   // Handle input teks dan select
-        const handleChange = (e) => {
-            const { name, value } = e.target;
-            setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-            }));
+        // const handleChange = (name, value) => {
+        //     const { name, value } = e.target;
+        //     console.log("handleChange:", { name, value }); // Debug
+        //     console.log(e);
+        //     console.log(e?.target);
+        //     setFormData((prev) => ({
+        //     ...prev,
+        //     [name]: value,
+        //     }));
+        // };
+        function escapeHTML(html) {
+            return html
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+        }
+
+        const handleChange = (eOrname, value) => {
+            if (typeof eOrname === "string") {
+                // dari TipTap
+                const sanitizedValue = DOMPurify.sanitize(value);
+                console.loh(sanitizedValue)
+                setFormData((prev) => ({
+                ...prev,
+                [eOrname]: sanitizedValue, // gunakan value yang sudah di-escape
+                }));
+            } else {
+                // dari input biasa
+                const { name, value } = eOrname.target;
+                setFormData((prev) => ({
+                ...prev,
+                [name]: value,
+             }));
+            }
         };
 
   // Handle file upload
@@ -109,11 +139,12 @@ export default function useArtikel({idArtikel,token,onClose}) {
             const imagePath = uploadRes.data.path;
 
             // Langkah 2: Kirim data artikel sesuai struktur backend
+            // const sanitizedDeskripsi = DOMPurify.sanitize(formData.deskripsi);
             const artikelData = {
                 nama_artikel: formData.judul,
                 tgl_terbit_artikel: formData.tanggalTerbit,
                 kategori_artikel: formData.kategori,
-                detail_artikel: formData.deskripsi,
+                detail_artikel: DOMPurify.sanitize(formData.deskripsi),
                 gambar_artikel: imagePath,
             };
 
@@ -129,7 +160,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
             );
 
             showSuccessToast("Artikel berhasil dibuat!");
-            // console.log("Artikel berhasil dibuat:", res.data);
+            console.log("Artikel berhasil dibuat:", res.data);
             // alert("Artikel berhasil dibuat!");
             // onRefresh();
             onClose(false);
@@ -175,7 +206,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
 
             const artikelData = {
                 nama_artikel: formData.judul,
-                tgl_terbit_artikel: formData.tanggalTerbit,
+                // tgl_terbit_artikel: formData.tanggalTerbit,
                 kategori_artikel: formData.kategori,
                 detail_artikel: formData.deskripsi,
                 gambar_artikel: imagePath,

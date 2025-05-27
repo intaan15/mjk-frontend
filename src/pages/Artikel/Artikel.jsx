@@ -185,9 +185,9 @@ export default function Artikel() {
       enableSorting: false,
     },
     {
-      accessorKey: "tgl_terbit_artikel",
+      accessorKey: "createdAt",
       header: "Tgl.Terbit",
-      enableSorting: false,
+      enableSorting: true,
       cell: (info) => formatTanggal(info.getValue()),
     },
     {

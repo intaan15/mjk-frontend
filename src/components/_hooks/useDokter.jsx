@@ -31,7 +31,7 @@ export default function useDokter ({idDokter,token,onClose}) {
         return;
         }
     
-        console.log("Fetching Dokter...", { idDokter, token });
+        // console.log("Fetching Dokter...", { idDokter, token });
     
     
         const fetchData = async () => {
