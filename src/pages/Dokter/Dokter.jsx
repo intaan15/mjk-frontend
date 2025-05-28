@@ -20,23 +20,6 @@ import ModalContent from "../../components/Modal/ModalContent";
 import Swal from "sweetalert2";
 import.meta.env.VITE_BASE_URL
 
-// const handleDelete = () => {
-//   Swal.fire({
-//     title: "Yakin mau hapus?",
-//     text: "Data yang dihapus tidak bisa dikembalikan!",
-//     icon: "warning",
-//     showCancelButton: true,
-//     confirmButtonColor: "#d33",
-//     cancelButtonColor: "#3085d6",
-//     confirmButtonText: "Ya, hapus!",
-//     cancelButtonText: "Batal",
-//   }).then((result) => {
-//     if (result.isConfirmed) {
-//       // Lanjutkan proses delete
-//       Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
-//     }
-//   });
-// };
 
 function Dokter() {
   const token = localStorage.getItem("token");

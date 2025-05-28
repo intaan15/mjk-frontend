@@ -6,13 +6,9 @@ import DOMPurify from 'dompurify';
 
 export default function useArtikel({idArtikel,token,onClose}) {
     const [dataArtikel, setDataArtikel] = useState(null);
-
-    
-
      // TAMBAH DATAAAA
     const [formData, setFormData] = useState({
         judul: "",
-        tanggalTerbit: "",
         foto: null,
         kategori: "",
         deskripsi: "",
@@ -27,8 +23,6 @@ export default function useArtikel({idArtikel,token,onClose}) {
         }
 
         // console.log("Fetching artikel...", { idArtikel, token });
-
-
         const fetchData = async () => {
         try {
             const response = await axios.get(
@@ -61,9 +55,6 @@ export default function useArtikel({idArtikel,token,onClose}) {
 
         setFormData({
         judul: dataArtikel.nama_artikel || "",
-        tanggalTerbit: dataArtikel.tgl_terbit_artikel
-            ? new Date(dataArtikel.tgl_terbit_artikel).toISOString().split("T")[0]
-            : "",
         foto: null,
         kategori: dataArtikel.kategori_artikel || "",
         deskripsi: dataArtikel.detail_artikel || "",
@@ -93,7 +84,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
             if (typeof eOrname === "string") {
                 // dari TipTap
                 const sanitizedValue = DOMPurify.sanitize(value);
-                console.loh(sanitizedValue)
+                console.log(sanitizedValue)
                 setFormData((prev) => ({
                 ...prev,
                 [eOrname]: sanitizedValue, // gunakan value yang sudah di-escape
@@ -142,11 +133,12 @@ export default function useArtikel({idArtikel,token,onClose}) {
             // const sanitizedDeskripsi = DOMPurify.sanitize(formData.deskripsi);
             const artikelData = {
                 nama_artikel: formData.judul,
-                tgl_terbit_artikel: formData.tanggalTerbit,
                 kategori_artikel: formData.kategori,
                 detail_artikel: DOMPurify.sanitize(formData.deskripsi),
                 gambar_artikel: imagePath,
             };
+            console.log("inihasilartikel:",artikelData)
+            console.log("Token:", token);
 
             const res = await axios.post(
                 "https://mjk-backend-production.up.railway.app/api/artikel/create",
@@ -166,8 +158,11 @@ export default function useArtikel({idArtikel,token,onClose}) {
             onClose(false);
             } catch (error) {
             console.error(
-                "Gagal buat artikel:",
-                error.response?.data || error.message
+                "Gagal buat artikel:", {
+                status: error.response?.status,
+                message: error.response?.data?.message,
+                data: error.response?.data,
+                }
             );
             showErrorToast("Gagal membuat artikel.");
             console.error("Gagal buat artikel:", error);
@@ -206,7 +201,6 @@ export default function useArtikel({idArtikel,token,onClose}) {
 
             const artikelData = {
                 nama_artikel: formData.judul,
-                // tgl_terbit_artikel: formData.tanggalTerbit,
                 kategori_artikel: formData.kategori,
                 detail_artikel: formData.deskripsi,
                 gambar_artikel: imagePath,
@@ -238,7 +232,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
         };
 
 
-return ({
+return {
 
     formData,
     handleChange,
@@ -247,4 +241,4 @@ return ({
     handleEditSubmit,
     dataArtikel,
   }
-)}
+}

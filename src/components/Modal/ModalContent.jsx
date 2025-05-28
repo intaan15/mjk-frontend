@@ -123,7 +123,7 @@ export default function ModalContent({
                 />
               </div>
 
-              {/* Tanggal Terbit */}
+              {/* Tanggal Terbit
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="tanggalTerbit"
@@ -140,7 +140,7 @@ export default function ModalContent({
                   className="w-4/5 p-2 border rounded"
                   required
                 />
-              </div>
+              </div> */}
 
               {/* Foto Artikel */}
               <div className="flex items-start gap-4">
@@ -389,7 +389,7 @@ export default function ModalContent({
                 />
               </div>
               
-            <div  className="flex items-center gap-4">
+            {/* <div  className="flex items-center gap-4">
               <label
                  htmlFor="foto"
                  className="w-1/5 font-medium text-gray-900 dark:text-black " 
@@ -399,13 +399,13 @@ export default function ModalContent({
               <div className="w-4/5">
                 <input
                   type="date"
-                  name="tgl_terbit_artikel"
-                  value={formArtikel.tgl_terbit_artikel || ""}
+                  name="tanggalTerbit"
+                  value={formArtikel.tanggalTerbit  || ""}
                   onChange={handleChangeArtikel}
                   className="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
                 />
               </div>
-            </div>
+            </div> */}
 
               <div className="flex items-center gap-4">
                 <label
