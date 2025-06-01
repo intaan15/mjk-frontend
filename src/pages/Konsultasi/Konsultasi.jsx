@@ -2,6 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import Basetable from "../../components/Table/Basetable";
 import { useAuth } from "../../components/Auth";
+import.meta.env.VITE_BASE_URL
 
 import { useState } from "react";
 import { useEffect } from "react";
@@ -12,9 +13,7 @@ import { IoIosSearch } from "react-icons/io";
 import { TiUser } from "react-icons/ti";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
-import { FaEdit } from "react-icons/fa";
-import { Card, Typography } from "@material-tailwind/react";
-import { BiSort } from "react-icons/bi";
+
 
 
 
@@ -23,11 +22,8 @@ import { BiSort } from "react-icons/bi";
 
 function Konsultasi() {
 
-
-
   const token = localStorage.getItem("token");
   const [filterStatus, setFilterStatus] = useState("Diproses");
-  const [username, setUsername] = useState('');
   const [allRows, setAllRows] = useState([]);
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -72,7 +68,7 @@ function Konsultasi() {
 
   // ENDPOINT GET DATA jadwal
   useEffect(() => {
-    axios.get(`https://mjk-backend-production.up.railway.app/api/jadwal/getall`,
+    axios.get(`${import.meta.env.VITE_BASE_URL}/api/jadwal/getall`,
         {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -91,25 +87,19 @@ function Konsultasi() {
   }, []);
 
    const columns = [
-      {
-          accessorKey: "foto_profil_dokter",
-          header: "Foto",
-          enableSorting: false,
-          cell: ({ getValue }) => {
-          const imageUrl = getValue();
-          return (
-              <img 
-              src="foto"
-              alt="Foto Dokter" 
-              className="w-10 h-10 object-cover rounded-full" 
-              />
-          );} 
-      },
+           {
+            header: "No",
+            enableSorting: false,
+            cell: ({ row }) => row.index + 1,
+          },
           {
               accessorKey: "nama_masyarakat",
-              header: "Nama",
+              header: "Nama Pasien",
               enableSorting: false,
-              cell: ({ row }) => row.original.masyarakat_id?.nama_masyarakat || "-"
+              cell: ({ row }) => 
+              <div className="w-40 truncate">
+                  {row.original.masyarakat_id?.nama_masyarakat || "-"}
+              </div>
           },
           {
               accessorKey: "spesialis_dokter",
@@ -133,7 +123,7 @@ function Konsultasi() {
           {
               accessorKey: "tgl_konsul",
               header: "Tgl. Konsultasi",
-              enableSorting: false,
+              enableSorting: true,
               cell: info => formatTanggal(info.getValue()),
 
           },
@@ -147,37 +137,44 @@ function Konsultasi() {
                 let bgColor = "";
                 let textColor = "";
                 let label = "";
+                let fontstyle = "";
 
                 switch (status) {
-                  case "selesai":
+                  case "selesai": //selesai konsultasi
                     bgColor = "bg-[#27AE60]";
-                    textColor = "text-white";
+                    textColor = "text-white" ;
                     label = "Selesai";
+                    fontstyle ="font-[raleway] font-semibold";
                     break;
-                  case "ditolak":
+                  case "ditolak": //ditolak dokter
                     bgColor = "bg-[#EF3826]";
                     textColor = "text-white";
                     label = "Ditolak";
+                    fontstyle ="font-[raleway] font-semibold";
                     break;
-                  case "diterima":
+                  case "diterima": //jadwal diterima belum melakukan konsultasi
                     bgColor = "bg-[#BCE2C5]";
                     textColor = "text-[#155724]";
                     label = "Diterima";
+                    fontstyle ="font-[raleway] font-semibold";
                     break;
-                  case "berlangsung":
+                  case "berlangsung": //sedang terjadi konsultasi
                     bgColor = "bg-[#3498DB]";
                     textColor = "text-white";
                     label = "Berlangsung";
+                    fontstyle ="font-[raleway] font-semibold";
                     break;
-                  case "menunggu":
-                    bgColor = "bg-[#E0F4FF]";
-                    textColor = "text-[#004A76]";
+                  case "menunggu": //menunggu konsultasi 
+                    bgColor = "bg-[#FFE592]";
+                    textColor = "text-[#856404]";
                     label = "Menunggu";
+                    fontstyle ="font-[raleway] font-semibold";
                     break;
                   default:
                     bgColor = "bg-gray-200";
                     textColor = "text-gray-800";
                     label = "Tidak diketahui";
+                    fontstyle ="font-[raleway] font-semibold";
                 }
                 return (
                   <span className={`px-2 py-1 rounded-full text-sm font-medium ${bgColor} ${textColor}`}>
@@ -279,7 +276,7 @@ function Konsultasi() {
 
     
         {/* HEADER TABEL Filtering Tabel BLM FIX */}
-        <div className="py-2">
+        <div className="py-5">
             {loading ? (
                 <p>Loading data...</p>
             ) : (

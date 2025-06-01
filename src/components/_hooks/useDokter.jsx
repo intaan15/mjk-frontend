@@ -13,11 +13,11 @@ export default function useDokter ({idDokter,token,onClose}) {
 
     const [formData, setFormData] = useState({
         nama_dokter: "",
-        username: "",
+        username_dokter: "",
         email_dokter:"",
         rating_dokter:"",
         spesialis:null,
-        tanggalLahir:"",
+        password_dokter:"",
         str_dokter :"",
         notlp_dokter:"",
         foto_profil_dokter:null,
@@ -66,27 +66,26 @@ export default function useDokter ({idDokter,token,onClose}) {
 
         setFormData({
             nama_dokter: dataDokterbyId.nama_dokter || "",
-            username: dataDokterbyId.username_dokter || "",
+            username_dokter: dataDokterbyId.username_dokter || "",
             email_dokter: dataDokterbyId.email_dokter || "",
-            NIK:dataDokterbyId.nik_dokter || "",
-            alamat:dataDokterbyId.alamat_dokter || "",
             notlp_dokter : dataDokterbyId.notlp_dokter || "",
-            jeniskelamin:dataDokterbyId.jeniskelamin_dokter || "",
             rating_dokter:dataDokterbyId.rating_dokter || "",
-            tanggalLahir:dataDokterbyId.tgl_lahir_dokter
-            ? new Date(dataDokterbyId.tgl_lahir_dokter).toISOString().split("T")[0]
-            : "",
             foto_profil_dokter:null,
-            selfie_ktp_dokter:null,
             spesialis: dataDokterbyId.spesialis_dokter
                 ? { label: dataDokterbyId.spesialis_dokter, value: dataDokterbyId.spesialis_dokter }
                 : null,
             str_dokter:dataDokterbyId.str_dokter || "",
+            password_dokter:dataDokterbyId.password_dokter||"",
     
     
         });
     }, [dataDokterbyId]);
     
+    console.log(formData)
+    console.log("foto_profil_dokter:", formData.foto_profil_dokter);
+
+
+    //handle opsi poli yang dipilih
     const handleChangeSelect = (selectedOption) => {
         setFormData((prev) => ({
             ...prev,
@@ -111,6 +110,7 @@ export default function useDokter ({idDokter,token,onClose}) {
     };
 
 
+    //UPDATE GAMBAR SETELAG UPLOAD
     const handleFileChange = (e) => {
         setFormData((prev) => ({
         ...prev,
@@ -121,12 +121,14 @@ export default function useDokter ({idDokter,token,onClose}) {
     // SUBMIT FORM TAMBAH DOKTER
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const data = new FormData();
-            data.append("foto_profil_dokter", formData.foto_profil_dokter); 
+
+            data.append("image", formData.foto_profil_dokter);
 
             const uploadRes = await axios.post(
-                `${import.meta.env.VITE_BASE_URL}/api/dokter/upload`,
+                `https://mjk-backend-production.up.railway.app/api/dokter/upload`,
                 data,
                 {
                     headers: {
@@ -141,18 +143,17 @@ export default function useDokter ({idDokter,token,onClose}) {
 
             const dokterData = {
                 nama_dokter: formData.nama_dokter,
-                username_dokter: formData.username,
+                username_dokter: formData.username_dokter,
                 email_dokter: formData.email_dokter,
-                nik_dokter: formData.NIK,
-                alamat_dokter: formData.alamat,
-                jeniskelamin_dokter: formData.jeniskelamin,
-                tgl_lahir_dokter: formData.tanggalLahir,
+                notlp_dokter:formData.notlp_dokter,
                 foto_profil_dokter: imgPath,
                 spesialis_dokter: formData.spesialis,
                 str_dokter: formData.str_dokter,
+                password_dokter:formData.password_dokter
                
             };
-            console.log(dokterData)
+            console.log("inidokterr",dokterData)
+            
 
 
             const res = await axios.post(
@@ -174,6 +175,21 @@ export default function useDokter ({idDokter,token,onClose}) {
         }
     };
 
+
+    //UPDATE UPLOAD GAMBAR
+    const handleResetFile = () => {
+        setFormData((prev) => ({
+            ...prev,
+            foto_profil_dokter: null,
+        }));
+
+        // Reset input file supaya UI input juga kosong
+        const inputFile = document.getElementById("foto_profil_dokter");
+        if (inputFile) inputFile.value = "";
+    };
+
+
+    //UPDATE DATA
     const handleEditSubmitDokter = async (e) => {
         e.preventDefault();
         try {
@@ -196,14 +212,12 @@ export default function useDokter ({idDokter,token,onClose}) {
 
             const dokterData = {
                 nama_dokter: formData.nama,
-                username_dokter: formData.username,
+                username_dokter: formData.username_dokter,
                 email_dokter: formData.email_dokter,
-                alamat_dokter: formData.alamat,
-                jeniskelamin_dokter: formData.jeniskelamin,
-                tgl_lahir_dokter: formData.tanggalLahir,
                 foto_profil_dokter: imgPath,
                 spesialis_dokter: formData.spesialis?.value || "",
                 no_str_dokter: formData.no_str,
+                
               
             };
 
@@ -234,7 +248,8 @@ export default function useDokter ({idDokter,token,onClose}) {
     handleChange,
     handleFileChange,
     handleSubmit,
-    handleChangeSelect
+    handleChangeSelect,
+    handleResetFile
 
     
     }

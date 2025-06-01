@@ -183,6 +183,7 @@ export default function Artikel() {
       accessorKey: "nama_artikel",
       header: "Judul Artikel",
       enableSorting: false,
+      
     },
     {
       accessorKey: "createdAt",

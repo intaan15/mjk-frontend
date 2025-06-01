@@ -62,6 +62,7 @@ export default function ModalContent({
     handleFileChange: handleFileChangeDokter,
     handleChangeSelect: handleChangeSelectDokter,
     handleSubmit:handleSubmitDokter,
+    handleResetFile:handleResetFileDokter
   } = useDokter({idDokter, token,dataDokterbyId, onClose});
   
    const options = [
@@ -217,7 +218,7 @@ export default function ModalContent({
                 <select
                   id="kategori"
                   name="kategori"
-                  value={formArtikel.kategori}
+                  value={dataArtikel?.kategori}
                   onChange={handleChangeArtikel}
                   className="w-4/5 p-2 border rounded"
                   required
@@ -337,7 +338,7 @@ export default function ModalContent({
                 <div className="w-4/5 bg-yellow-100 rounded-lg p-4">
                   
                   <div
-                    className="flex items-center w-full"
+                    className="w-full"
                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(dataArtikel?.detail_artikel || "<p>-</p>") }}
                   />
                 </div>
@@ -531,7 +532,7 @@ export default function ModalContent({
                   <div>{dataMasyarakatbyId?.nama_masyarakat || " "}</div>
                 </div>
                 <div>
-                  <div className="text-[#025F96] font-bold underline">User</div>
+                  <div className="text-[#025F96] font-bold underline">Username</div>
                   <div>{dataMasyarakatbyId?.username_masyarakat || " "}</div>
                 </div>
                 <div>
@@ -868,7 +869,7 @@ export default function ModalContent({
                       : "Belum ada file yang dipilih"}
                     </div>
 
-                    <button className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
+                    <button type="button" onClick={handleResetFileDokter} className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
                     Batalkan
                     </button>
                   </div>
@@ -963,12 +964,12 @@ export default function ModalContent({
                     Username
                   </label>
                     <textarea
-                      id="username"
-                      name="username"
+                      id="username_dokter"
+                      name="username_dokter"
                       rows="1"
                       className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Masukkan Username"
-                      value={formDokter.username||""}
+                      value={formDokter.username_dokter||""}
                       onChange={handleChangeDokter}
                     ></textarea>
                 
@@ -984,11 +985,11 @@ export default function ModalContent({
                   <div className="relative w-4/5">
                     <input
                       type={showPassword ? "text" : "password"}
-                      name="password"
-                      id="password"
+                      name="password_dokter"
+                      id="password_dokter"
                       className="block w-full p-2.5 text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Masukkan Password"
-                      value={formDokter.password ||""}
+                      value={formDokter.password_dokter ||""}
                       onChange={handleChangeDokter}
                       
                     />
@@ -1002,7 +1003,7 @@ export default function ModalContent({
               
               </div>
               <div className=" text-center">
-                <button className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5 font-[raleway] hover:bg-[#039FFC]/70"
+                <button type="submit" className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5 font-[raleway] hover:bg-[#039FFC]/70"
                   
                 >
                   Tambah Data
@@ -1050,7 +1051,7 @@ export default function ModalContent({
                 </div>
                 <div className=" flex flex-column w-full justify-center items-start gap-10 mt-6">
                   <label
-                    htmlFor="message"
+                    htmlFor="foto_profil_dokter"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
                   >
                     Foto Profil
@@ -1100,7 +1101,7 @@ export default function ModalContent({
                       : "Belum ada file yang dipilih"}
                     </div>
 
-                    <button className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
+                    <button type="button" className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
                     Batalkan
                     </button>
                   </div>
@@ -1283,10 +1284,6 @@ export default function ModalContent({
                 <div>
                   <div className="text-[#025F96]  font-bold underline ">Nomor Telepon</div>
                   <div>{dataDokterbyId?.notlp_dokter}</div>
-                </div>
-                <div>
-                  <div className="text-[#025F96]  font-bold underline">Tanggal Lahir</div>
-                  <div>{dataDokterbyId?.username_dokter}</div>
                 </div>
                 <div>
                   <div className="text-[#025F96]  font-bold underline">Nomor.STR Kedokteran</div>

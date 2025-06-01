@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 
-
 import "../../index.css";
 import Calendar from '../../components/Dashboard/Calendar';
 import Bar from '../../components/Bar/Bar';
 import { useAuth } from "../../components/Auth";
+import.meta.env.VITE_BASE_URL
 
 
 // icon
@@ -65,11 +65,11 @@ function Dashboard() {
       // API MASAYARAKAT
       const fetchMasyarakat = async () => {
         try {
-          const res = await axios.get('https://mjk-backend-production.up.railway.app/api/masyarakat/getall' ,{
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-          })
+          const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            });
           const jumlahPengguna = res.data.length; 
           const selected = selectedDate.toISOString().split('T')[0];  
           const pending = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending').length;
@@ -91,7 +91,7 @@ function Dashboard() {
       const fetchArtikel = async() =>{ 
         try {
           const res = await axios.get(
-            "https://mjk-backend-production.up.railway.app/api/artikel/getall",
+            `${import.meta.env.VITE_BASE_URL}/api/artikel/getall`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -101,9 +101,10 @@ function Dashboard() {
           const artikelPublish = res.data.length;
           const selected = selectedDate?.toISOString().split('T')[0];
           const artikelLog = res.data.filter (item => {
-            const tgl = new Date(item.tgl_terbit_artikel).toISOString().split('T')[0];
+            const tgl = new Date(item.createdAt).toISOString().split('T')[0];
             return tgl === selected;
           }).length;
+          console.log(artikelLog)
           
           setArtikelLog(artikelLog)
           setArtikelPublish(artikelPublish)
@@ -116,7 +117,7 @@ function Dashboard() {
       const fetchKonsultasi = async() => {
         try {
           const res = await axios.get(
-            `https://mjk-backend-production.up.railway.app/api/jadwal/getall`,
+            `${import.meta.env.VITE_BASE_URL}/api/jadwal/getall`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -144,7 +145,7 @@ function Dashboard() {
       const fetchDokter = async() =>{ 
         try {
           const res = await axios.get(
-            "https://mjk-backend-production.up.railway.app/api/dokter/getall",
+            `${import.meta.env.VITE_BASE_URL}/api/dokter/getall`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -190,7 +191,7 @@ function Dashboard() {
 
 
   return (
-    <div className="flex flex-row h-screen">
+    <div className="flex flex-row h-screen pb-10">
      {/* container main */}
       <main className="flex flex-col pl-8 pr-3 gap-1  pb-3 h-screen">
         <div className="flex flex-row  items-center justify-between pt-3">
@@ -245,7 +246,7 @@ function Dashboard() {
             </div>
             {/* Heading */}
             <div className="text-white ml-2">
-              <h2 className="font-[Poppins] text-3xl font-bold">Hi, Admin</h2>
+              <h2 className="font-[Poppins] text-3xl font-bold">Halo, Admin</h2>
               <p className="italic text-xl text-[#004A76] font-medium font-[Poppins]">
                 Selamat datang di Website Mojokerto Sehat
               </p>
@@ -284,32 +285,29 @@ function Dashboard() {
         </div>
 
         {/* LogPengguna */}
-        <div className='flex flex-col gap-3'>
-          <div className='flex grid-rows-2 items-start  justify-between p-3 rounded-lg'>
-            <p className="text-2xl font-bold pt-2  text-[#025f96] justify-start">
-              Log Pengguna Harian
-            </p>
-            {/* <p className="text-2xl font-bold pt-2  text-[#025f96]   ">
-              Log Statistik Data
-            </p> */}
+        <div className='flex flex-col gap-3 bg-'>
+          <div className='flex grid-rows-2 items-start justify-between p-3 rounded-lg'>
+            <span className='text-2xl font-bold pt-2  text-[#025f96] justify-start'>Log Pengguna Harian</span>
+          
+            
           </div>
 
           <div className='flex'>
-            <div className="grid grid-cols-2 gap-6 w-3/6 ">
+            <div className="grid grid-cols-2 gap-8 w-3/6 ">
               {/* Kartu 1 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
                 <div className='flex grid-rows-2  gap-3 justify-between items-center w-full'>
-                   <p className="text-6xl font-bold text-[#004A76] ">{jadwalbyTanggal}</p>
+                   <p className="text-6xl font-bold text-[#004A76] font-[raleway] ">{jadwalbyTanggal}</p>
                    <IoStatsChart className='w-20 h-20 text-[#FF8FA7]/70'/>
                 </div>
-                <p className="text-lg text-[#004A76] font-semibold underline">Konsultasi</p>
-                <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
+                  <p className="text-lg text-[#004A76] font-bold underline">Konsultasi</p>
+                  <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
 
               {/* Kartu 2 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
                 <div className='flex grid-rows-2 justify-between items-center w-full mb-2'>
-                   <p className="text-6xl font-bold text-[#004A76] ">{akunBaru}</p>
+                   <p className="text-6xl font-bold text-[#004A76] font-[raleway]  ">{akunBaru}</p>
                    <IoStatsChart className='w-20 h-20 text-[#4ED9D9]/70'/>
                 </div>
                 <p className="text-lg text-[#004A76] underline font-semibold">Akun Baru</p>
@@ -319,7 +317,7 @@ function Dashboard() {
               {/* Kartu 3 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
                 <div className='flex grid-rows-2  gap-3 justify-between items-center w-full'>
-                    <p className="text-5xl font-bold text-[#004A76]">{allDokter}</p>
+                    <p className="text-6xl font-bold text-[#004A76] font-[raleway]">{allDokter}</p>
                    <IoStatsChart className='w-20 h-20 text-[#5EB5EF]/70'/>
                 </div>
                 <p className="text-lg text-[#004A76] font-semibold underline">Dokter Terdaftar</p>
@@ -329,7 +327,7 @@ function Dashboard() {
               {/* Kartu 4 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
                 <div className='flex grid-rows-2  gap-3 justify-between items-center w-full'>
-                     <p className="text-5xl font-bold text-[#004A76]">{artikelLog}</p>
+                     <p className="text-6xl font-bold text-[#004A76] font-[raleway]">{artikelLog}</p>
                    <IoStatsChart className='w-20 h-20 text-[#FFD778]/70'/>
                 </div>
                 <p className="text-lg text-[#004A76] font-semibold underline">Artikel Publish</p>
@@ -340,12 +338,16 @@ function Dashboard() {
             {/* Chart Donut */}
             
             <div className=' flex justify-center w-3/6'>
-              <div className="flex justify-center w-5/6 bg-white rounded-xl shadow-md">
+              <div className="flex flex-col justify-center items-center bg-white w-5/6 rounded-xl shadow-md">
+                <span className='text-2xl font-bold pt-2 font-[raleway] text-[#025f96] underline text-center'>Statistik Total Data</span>
                 <Bar  values={dataBar} />
                 {/* <Bar data={dummyData} /> */}
               </div>
             </div>
           </div>
+        </div>
+        <div className=''>
+
         </div>
 
        

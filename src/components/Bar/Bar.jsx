@@ -3,6 +3,8 @@ import React from "react";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Doughnut } from "react-chartjs-2";
 
+
+
 function Bar({ values }) {
 
   const data = {
@@ -17,16 +19,16 @@ function Bar({ values }) {
           values?.konsultasi ?? 0,
         ],                       
         backgroundColor: [
-          "rgba(255, 99, 132, 0.5)",
-          "rgba(54, 162, 235, 0.5)",
-          "rgba(255, 206, 86, 0.5)",
-          "rgba(75, 192, 192, 0.5)",
+          "rgba(54, 162, 235, 0.5)", // hijau
+          "rgba(75, 192, 192, 0.5)", //kuning
+          "rgba(255, 206, 86, 0.5)",// biru
+          "rgba(255, 99, 132, 0.5)", // merah
         ],
         borderColor: [
-          "rgba(255, 99, 132, 1)",
           "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
           "rgba(75, 192, 192, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(255, 99, 132, 1)",
         ],
         borderWidth: 1,
         borderRadius: 5,
@@ -35,7 +37,7 @@ function Bar({ values }) {
   };
 
   const options = {
-    cutout: "70%",
+    cutout: "60%",
     plugins: {
       legend: {
         display: true,
@@ -43,6 +45,7 @@ function Bar({ values }) {
         labels: {
           color: "#333",
           font: { size: 12 },
+          
         },
       },
     },

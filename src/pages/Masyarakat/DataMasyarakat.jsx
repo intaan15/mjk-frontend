@@ -187,7 +187,7 @@ function DataMasyarakat() {
       header: "Detail",
       enableSorting: false,
       cell: ({ row }) => (
-      <div className="flex items-center justify-center p-2">
+      <div className="flex items-center justify-center p-2 bg-yellow-200 w-10 h-10">
         <button onClick={() => openModal("formeditmasyarakat",row.original._id)} title="Edit">
           <FaEdit className="text-gray-600 hover:text-[#004A76] text-2xl" />
         </button>

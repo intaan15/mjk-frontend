@@ -2,8 +2,7 @@ import React from 'react'
 import axios from 'axios' //library untuk melakukan request HTTP
 import { useState,useEffect,useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Typography } from "@material-tailwind/react";
-import renderModalContent  from "../../components/Modal/ModalContent";
+
 import Basetable from "../../components/Table/Basetable";
 import Modal from "../../components/Modal/ModalTemplate";
 import ModalContent from "../../components/Modal/ModalContent";
@@ -11,17 +10,15 @@ import { useAuth } from "../../components/Auth";
 
 
 import { TiUser } from 'react-icons/ti'
-import { FaUserAlt } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
-import { FaUserCheck } from "react-icons/fa";
-import { FaUserMinus } from "react-icons/fa6";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
 import { HiOutlineUsers } from "react-icons/hi2";
 import { HiOutlineUserPlus } from "react-icons/hi2";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { HiOutlineUserMinus } from "react-icons/hi2";
+import Swal from "sweetalert2";
 
 function Verifikasi() {
 
@@ -135,32 +132,149 @@ function Verifikasi() {
     
 
     // ENDPOINT UPDATE STATUS VERIFIKASI
-    const handleVerifikasi = (status, _id) => {
-        axios.patch(`https://mjk-backend-production.up.railway.app/api/masyarakat/update/${_id}`, {
-            verifikasi_akun_masyarakat: status,}
-            , {
+    // const handleVerifikasi = (status, _id) => {
+    //     axios.patch(`https://mjk-backend-production.up.railway.app/api/masyarakat/update/${_id}`, {
+    //         verifikasi_akun_masyarakat: status,}
+    //         , {
+    //             headers: {
+    //                 Authorization: `Bearer ${token}`,
+    //         },
+    //     })
+    //       .then(() => {
+    //         console.log("Status verifikasi berhasil diperbarui (PATCH)");
+    //         console.log("ID yang dikirim:", _id);
+
+    //         setAllRows((prevRows) =>
+    //           prevRows.map((item) =>
+    //             item._id === _id ? { ...item, verifikasi_akun_masyarakat: status } : item)
+    //         );
+    //         setFilterStatus(status);
+    //         setData((prevData) => prevData.filter((item) => item._id !== _id));
+    //         if (status === "diterima" || status === "ditolak") {
+    //             navigate("/masyarakat/verifikasi");
+    //         }
+    //       })
+    //       .catch((err) => {
+    //         console.error("Gagal update status", err);
+    //       });
+    // };
+
+
+    const handleVerifikasi = (status, _id, email_masyarakat) => {
+    Swal.fire({
+        title: `Yakin ingin ${status === "diterima" ? "menerima" : "menolak"} data ini?`,
+        text: "Pastikan semua data sudah diperiksa dengan benar.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: status === "diterima" ? "#27AE60" : "#FF1700",
+        cancelButtonColor: "#d33",
+        confirmButtonText: `Ya, ${status === "diterima" ? "terima" : "tolak"}`,
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+        if (status === "ditolak") {
+            // Konfirmasi tambahan untuk kirim pesan email
+            Swal.fire({
+            title: `Kirim pesan konfirmasi ke ${email_masyarakat}?`,
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonText: "Kirim Email",
+            cancelButtonText: "Tidak",
+            }).then((res) => {
+            if (res.isConfirmed) {
+                // Buka Gmail dengan draft email
+                const subject = encodeURIComponent("Konfirmasi Penolakan Verifikasi");
+                const body = encodeURIComponent(`Halo,\n\nData Anda ditolak. Mohon periksa kembali informasi yang diberikan.\n\nTerima kasih.`);
+                window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email_masyarakat}&su=${subject}&body=${body}`, "_blank");
+            }
+
+            // Lanjut update status di backend
+            axios
+                .patch(
+                `https://mjk-backend-production.up.railway.app/api/masyarakat/update/${_id}`,
+                {
+                    verifikasi_akun_masyarakat: status,
+                },
+                {
+                    headers: {
+                    Authorization: `Bearer ${token}`,
+                    },
+                }
+                )
+                .then(() => {
+                console.log("Status verifikasi berhasil diperbarui (PATCH)");
+                setAllRows((prevRows) =>
+                    prevRows.map((item) =>
+                    item._id === _id ? { ...item, verifikasi_akun_masyarakat: status } : item
+                    )
+                );
+                setFilterStatus(status);
+                setData((prevData) => prevData.filter((item) => item._id !== _id));
+
+                Swal.fire({
+                    icon: "success",
+                    title: `Data berhasil ditolak`,
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+
+                navigate("/masyarakat/verifikasi");
+                })
+                .catch((err) => {
+                console.error("Gagal update status", err);
+                Swal.fire("Gagal!", "Terjadi kesalahan saat memperbarui status.", "error");
+                });
+            });
+        } else {
+            // Jika status diterima, langsung update backend seperti biasa
+            axios
+            .patch(
+                `https://mjk-backend-production.up.railway.app/api/masyarakat/update/${_id}`,
+                {
+                verifikasi_akun_masyarakat: status,
+                },
+                {
                 headers: {
                     Authorization: `Bearer ${token}`,
-            },
-        })
-          .then(() => {
-            console.log("Status verifikasi berhasil diperbarui (PATCH)");
-            console.log("ID yang dikirim:", _id);
+                },
+                }
+            )
+            .then(() => {
+                console.log("Status verifikasi berhasil diperbarui (PATCH)");
+                setAllRows((prevRows) =>
+                prevRows.map((item) =>
+                    item._id === _id ? { ...item, verifikasi_akun_masyarakat: status } : item
+                )
+                );
+                setFilterStatus(status);
+                setData((prevData) => prevData.filter((item) => item._id !== _id));
 
-            setAllRows((prevRows) =>
-              prevRows.map((item) =>
-                item._id === _id ? { ...item, verifikasi_akun_masyarakat: status } : item)
-            );
-            setFilterStatus(status);
-            setData((prevData) => prevData.filter((item) => item._id !== _id));
-            if (status === "diterima" || status === "ditolak") {
+                Swal.fire({
+                icon: "success",
+                title: `Data berhasil diterima`,
+                showConfirmButton: false,
+                timer: 2000,
+                });
+
                 navigate("/masyarakat/verifikasi");
-            }
-          })
-          .catch((err) => {
-            console.error("Gagal update status", err);
-          });
+            })
+            .catch((err) => {
+                console.error("Gagal update status", err);
+                Swal.fire("Gagal!", "Terjadi kesalahan saat memperbarui status.", "error");
+            });
+        }
+        }
+    });
     };
+
+
+
+
+
+
+
+
+
 
     // ENDPOINT MENDAPATKAN DATA
     useEffect(() => {
@@ -206,7 +320,6 @@ function Verifikasi() {
         fetchData();
   },[selectedId, token]);
 
-
     
 
 
@@ -235,6 +348,11 @@ function Verifikasi() {
             accessorKey: "nama_masyarakat",
             header: "Nama",
             enableSorting: false,
+            cell: ({ row }) => 
+                <div className='w-40 truncate'>
+                    {row.original.nama_masyarakat}
+                </div>
+
         },
         {
             accessorKey: "email_masyarakat",
@@ -269,6 +387,7 @@ function Verifikasi() {
             header: "Status Konfirmasi",
             enableSorting: false,
             cell: ({ row }) => {
+                //untuk menampilkan hasil setelah diverifikasi
                 const status = row.original.verifikasi_akun_masyarakat;
 
                 if (status === "diterima") {
@@ -280,18 +399,19 @@ function Verifikasi() {
                 }
 
                 return (
+                //button sblm verifikasi
                 <div className="flex gap-2 items-center bg-[#FAFBFD]">
                     <button
-                        onClick={() => handleVerifikasi("diterima", row.original._id)}
+                        onClick={() => handleVerifikasi("diterima", row.original._id, row.original.email_masyarakat)}
                         title="Terima"
                         className="bg-[#27AE60] text-white w-15 hover:bg-green-200 hover:text-[#27AE60] p-1 rounded-[10px] transition">
-                        Terima
+                        Diterima
                     </button>
                     <button
-                        onClick={() => handleVerifikasi("ditolak", row.original._id)}
+                        onClick={() => handleVerifikasi("ditolak", row.original._id,row.original.email_masyarakat)}
                         title="Tolak"
                         className="bg-[#FF1700] text-white w-15  hover:bg-red-200 p-1 hover:text-[#FF1700] rounded-[10px] transition">
-                        Tolak
+                        Ditolak
                     </button>
                 </div>
                 );

@@ -107,6 +107,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
             }));
         };
 
+    
   // SUBMIT FORM
         const handleSubmit = async (e) => {
             e.preventDefault();
