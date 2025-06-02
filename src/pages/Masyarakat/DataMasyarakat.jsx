@@ -187,9 +187,9 @@ function DataMasyarakat() {
       header: "Detail",
       enableSorting: false,
       cell: ({ row }) => (
-      <div className="flex items-center justify-center p-2 bg-yellow-200 w-10 h-10">
+      <div className="flex items-center justify-center p-2 w-10 h-10">
         <button onClick={() => openModal("formeditmasyarakat",row.original._id)} title="Edit">
-          <FaEdit className="text-gray-600 hover:text-[#004A76] text-2xl" />
+          <FaEdit className="text-gray-600 hover:text-[#004A76] text-xl" />
         </button>
       </div>),
     },
@@ -278,14 +278,14 @@ function DataMasyarakat() {
         <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
           <div className="flex flex-row gap-8 bg-[#033E61] h-[70px] p-2 rounded-xl items-center px-6">
             <div className="bg-white p-3 rounded-full flex items-center justify-center">
-              <FaUserAlt className="text-[30px] item-center text-[#979797] " />
+              <img src="/icon_user_verifikasi.svg" alt=""  className="w-8 h-8 item-center text-[#979797] "/>
             </div>
             <div className="flex flex-col">
               <div className="font-[raleway] text-white font-bold text-[15px]">
                 Jumlah Pengguna
               </div>
               <div className="font-[Nunito] text-white font-medium text-[15px]">
-                {DataMasyarakat.length}
+                {DataMasyarakat.length} 
               </div>
             </div>
           </div>
