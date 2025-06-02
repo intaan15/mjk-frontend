@@ -30,7 +30,7 @@ export default function Artikel() {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const toggleDropdown = () => {setIsOpen(!isOpen);};
-  const [selectedKategori, setSelectedKategori] = useState("kesehatan");
+  const [selectedKategori, setSelectedKategori] = useState("");
   const [artikel, setArtikel] = useState([]); 
   const [selectedId, setSelectedId] = useState(null);
   const [dataArtikel, setDataArtikel] = useState(null);
@@ -66,7 +66,7 @@ export default function Artikel() {
 
   // FILTER ARTIKEL
   const filteredData = artikel?.filter((item) =>
-    item.kategori_artikel.toLowerCase() === selectedKategori.toLowerCase()
+    selectedKategori === "" ? true : item.kategori_artikel === selectedKategori
   );
 
   const formatTanggal = (isoDateString) => {
@@ -141,7 +141,7 @@ export default function Artikel() {
                 Authorization: `Bearer ${token}`,
                 }}
             );
-            console.log("Data diterima:", response.data);
+            // console.log("Data diterima:", response.data);
             setDataArtikel(response.data);
           } catch (error) {
               console.error("Gagal fetch artikel:", {
@@ -297,9 +297,9 @@ export default function Artikel() {
           <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-4xl items-center">
             <span className="font-bold text-gray-700 font-[raleway]">Kategori :</span>
             <button
-              onClick={() => setSelectedKategori("kesehatan")}
+              onClick={() => setSelectedKategori("Kesehatan")}
               className={` w-50 px-4 py-1 rounded-full border-2  font-[raleway] transition-all duration-200 ${
-                selectedKategori === "kesehatan"
+                selectedKategori === "Kesehatan"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
               }`}
@@ -308,9 +308,9 @@ export default function Artikel() {
             </button>
 
             <button
-              onClick={() => setSelectedKategori("obat")}
+              onClick={() => setSelectedKategori("Obat")}
               className={` w-50 px-4 py-1 rounded-full font-[raleway] border-2 transition-all duration-200 ${
-                selectedKategori === "obat"
+                selectedKategori === "Obat"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
               }`}

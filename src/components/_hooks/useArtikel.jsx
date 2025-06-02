@@ -48,20 +48,20 @@ export default function useArtikel({idArtikel,token,onClose}) {
         fetchData();
     }, [idArtikel, token]);
 
-    useEffect(() => {
-        if (!dataArtikel) return;
+        useEffect(() => {
+            if (!dataArtikel) return;
 
-        // console.log("Data artikel diterima:", dataArtikel); // Debug
+            // console.log("Data artikel diterima:", dataArtikel); // Debug
 
-        setFormData({
-        judul: dataArtikel.nama_artikel || "",
-        foto: null,
-        kategori: dataArtikel.kategori_artikel || "",
-        deskripsi: dataArtikel.detail_artikel || "",
-        });
-    }, [dataArtikel]);
-    console.log("Form data:", formData);
-    
+            setFormData({
+            judul: dataArtikel.nama_artikel || "",
+            foto: null,
+            kategori: dataArtikel.kategori_artikel || "",
+            deskripsi: dataArtikel.detail_artikel || "",
+            });
+        }, [dataArtikel]);
+        console.log("Form data:", formData.deskripsi);
+        
   // Handle input teks dan select
         // const handleChange = (name, value) => {
         //     const { name, value } = e.target;
@@ -84,7 +84,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
             if (typeof eOrname === "string") {
                 // dari TipTap
                 const sanitizedValue = DOMPurify.sanitize(value);
-                console.log(sanitizedValue)
+                // console.log(sanitizedValue)
                 setFormData((prev) => ({
                 ...prev,
                 [eOrname]: sanitizedValue, // gunakan value yang sudah di-escape
@@ -108,6 +108,13 @@ export default function useArtikel({idArtikel,token,onClose}) {
         };
 
     
+        const handleChangeKategori = (e) => {
+            const { name, value } = e.target;
+            setFormData((prev) => ({
+                ...prev,
+                [name]: value,
+            }));
+        };
   // SUBMIT FORM
         const handleSubmit = async (e) => {
             e.preventDefault();
@@ -134,12 +141,12 @@ export default function useArtikel({idArtikel,token,onClose}) {
             // const sanitizedDeskripsi = DOMPurify.sanitize(formData.deskripsi);
             const artikelData = {
                 nama_artikel: formData.judul,
-                kategori_artikel: formData.kategori,
+                kategori_artikel: formData.kategori?.value||"",
                 detail_artikel: DOMPurify.sanitize(formData.deskripsi),
                 gambar_artikel: imagePath,
             };
-            console.log("inihasilartikel:",artikelData)
-            console.log("Token:", token);
+            // console.log("inihasilartikel:",artikelData)
+            // console.log("Token:", token);
 
             const res = await axios.post(
                 "https://mjk-backend-production.up.railway.app/api/artikel/create",
@@ -198,14 +205,17 @@ export default function useArtikel({idArtikel,token,onClose}) {
                 }
                 );
                 imagePath = uploadRes.data.path;
+                console.log(imagePath)
             }
 
             const artikelData = {
                 nama_artikel: formData.judul,
                 kategori_artikel: formData.kategori,
-                detail_artikel: formData.deskripsi,
+                detail_artikel: DOMPurify.sanitize(formData.deskripsi),
                 gambar_artikel: imagePath,
             };
+         
+            console.log("inikategori",artikelData)
 
             await axios.patch(
                 `https://mjk-backend-production.up.railway.app/api/artikel/update/${idArtikel}`,
@@ -240,6 +250,7 @@ return {
     handleFileChange,
     handleSubmit,
     handleEditSubmit,
+    handleChangeKategori,
     dataArtikel,
   }
 }

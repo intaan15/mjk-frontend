@@ -4,21 +4,30 @@ import TextStyle from '@tiptap/extension-text-style'
 import { useEffect } from 'react';
 import { useEditor, EditorContent } from "@tiptap/react";
 import { EditorProvider, useCurrentEditor } from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
+import TextAlign from '@tiptap/extension-text-align'
+import StarterKit from '@tiptap/starter-kit';
 import { FaCode, FaBold, FaListUl, FaListOl, FaQuoteRight, FaUndo, FaRedo,FaItalic,FaStrikethrough, FaMinus, FaPaintBrush } from 'react-icons/fa';
 import { BiParagraph } from 'react-icons/bi';
 import { AiOutlineClear } from 'react-icons/ai';
 import { TbCodeCircle2 } from 'react-icons/tb';
+import { MdFormatAlignCenter } from "react-icons/md";
+import { MdFormatAlignJustify } from "react-icons/md";
 import { MdHorizontalRule } from 'react-icons/md';
+import { MdFormatAlignRight } from "react-icons/md";
+import { MdFormatAlignLeft } from "react-icons/md";
 import { RiTextSpacing } from 'react-icons/ri';
-import "../../index.css"
-import React from 'react'
+import { OrderedList } from '@tiptap/extension-ordered-list';
+import { BulletList } from '@tiptap/extension-bullet-list';
+import "../../index.css";
 
 
 
 const extensions = [
   Color.configure({ types: [TextStyle.name, ListItem.name] }),
   TextStyle.configure({ types: [ListItem.name] }),
+  TextAlign.configure({
+       types: ['heading', 'paragraph', 'listItem'], // tipe tag mana yang bisa di-align
+    }),
   StarterKit.configure({
     bulletList: {
       keepMarks: true,
@@ -50,9 +59,9 @@ const MenuBar = ({editor}) => {
                 <FaBold />
             </button>
             <button
-                onClick={() => editor.chain().focus().toggleCode().run()}
-                disabled={!editor.can().chain().focus().toggleCode().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('code') ? 'bg-blue-200 text-blue-700' : ''}`}
+                onClick={() => editor.chain().focus().toggleItalic().run()}
+                disabled={!editor.can().chain().focus().toggleItalic().run()}
+                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('italic') ? 'bg-blue-200 text-blue-700' : ''}`}
             >
                 <FaItalic />
             </button>
@@ -64,34 +73,28 @@ const MenuBar = ({editor}) => {
                 <FaCode />
             </button>
             <button
-                onClick={() => editor.chain().focus().toggleCode().run()}
-                disabled={!editor.can().chain().focus().toggleCode().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('code') ? 'bg-blue-200 text-blue-700' : ''}`}
+                onClick={() => editor.chain().focus().toggleStrike().run()}
+                disabled={!editor.can().chain().focus().toggleStrike().run()}
+                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('strike') ? 'bg-blue-200 text-blue-700' : ''}`}
             >
                <FaStrikethrough />
             </button>
-            <button
-                onClick={() => editor.chain().focus().toggleCode().run()}
-                disabled={
-                    !editor.can()
-                    .chain()
-                    .focus()
-                    .toggleCode()
-                    .run()
-                }
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('code') ? 'bg-blue-200 text-blue-700' : ''}`}
-                >
-                <FaCode />
-            </button>
-            <button onClick={() => editor.chain().focus().unsetAllMarks().run()}>
+            <button 
+                onClick={() => editor.chain().focus().setAllMarks().run()}
+                disabled={!editor.can().chain().focus().unsetAllMarks().run()}
+                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('allmarks') ? 'bg-blue-200 text-blue-700' : ''}`}
+                
+            >
                 <AiOutlineClear />
             </button>
             <button
-                onClick={() => editor.chain().focus().setParagraph().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('paragraph') ? 'bg-blue-200 text-blue-700' : ''}`}
+                 onClick={() => editor.chain().focus().setParagraph().run()}
+                 disabled={!editor.can().chain().focus().setParagraph().run()}
+                 className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('paragraph') ? 'bg-blue-200 text-blue-700' : ''}`}
             >
                 <BiParagraph />
             </button> 
+
             {[1, 2, 3, 4, 5, 6].map(level => (
                 <button
                 key={level}
@@ -141,6 +144,30 @@ const MenuBar = ({editor}) => {
                 className="p-2 rounded-md hover:bg-gray-200"
             >
                 <RiTextSpacing />
+            </button>
+            <button
+                onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive({ textAlign: 'justify' }) ? 'bg-blue-200 text-blue-700' : ''}`}
+                >
+                <MdFormatAlignJustify />
+            </button>
+            <button
+                onClick={() => editor.chain().focus().setTextAlign('left').run()}
+                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive({ textAlign: 'left' }) ? 'bg-blue-200 text-blue-700' : ''}`}
+                >
+                <MdFormatAlignLeft />
+            </button>
+            <button
+                onClick={() => editor.chain().focus().setTextAlign('center').run()}
+                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive({ textAlign: 'center' }) ? 'bg-blue-200 text-blue-700' : ''}`}
+                >
+                <MdFormatAlignCenter />
+            </button>
+            <button
+                onClick={() => editor.chain().focus().setTextAlign('right').run()}
+                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive({ textAlign: 'right' }) ? 'bg-blue-200 text-blue-700' : ''}`}
+                >
+               <MdFormatAlignRight />
             </button>
 
             <button
@@ -196,7 +223,7 @@ const TipTap = ({ value, onChange }) => {
   return (
     <div>
       <MenuBar editor={editor} />
-      <EditorContent editor={editor} />
+      <EditorContent editor={editor}  className="prose prose-sm  sm:prose lg:prose-lg xl:prose-xl list-disc list-inside" />
     </div>
   )
 }
