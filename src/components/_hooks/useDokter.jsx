@@ -6,11 +6,12 @@ import { showSuccessToast, showErrorToast } from '../Modal/ToastModal';
 import { rating } from '@material-tailwind/react';
 import.meta.env.VITE_BASE_URL
 
-export default function useDokter ({idDokter,token,onClose}) {
+export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
     // console.log("idDokter:", idDokter);
     // console.log("token:", token);
     const [dataDokterbyId, setDataDokterbyId] = useState(null);
 
+    //Menyimpan data inputan 
     const [formData, setFormData] = useState({
         nama_dokter: "",
         username_dokter: "",
@@ -45,7 +46,7 @@ export default function useDokter ({idDokter,token,onClose}) {
             }
             );
     
-            console.log("Data diterima:", response.data);
+            //console.log("Data diterima:", response.data);
             setDataDokterbyId(response.data);
         } catch (error) {
             console.error("Gagal fetch dokter:", {
@@ -81,8 +82,8 @@ export default function useDokter ({idDokter,token,onClose}) {
         });
     }, [dataDokterbyId]);
     
-    console.log(formData)
-    console.log("foto_profil_dokter:", formData.foto_profil_dokter);
+    //console.log(formData)
+    //console.log("foto_profil_dokter:", formData.foto_profil_dokter);
 
 
     //handle opsi poli yang dipilih
@@ -123,16 +124,16 @@ export default function useDokter ({idDokter,token,onClose}) {
         e.preventDefault();
 
         try {
+            
             const data = new FormData();
 
-            data.append("image", formData.foto_profil_dokter);
+            data.append("foto", formData.foto_profil_dokter);
 
             const uploadRes = await axios.post(
-                `https://mjk-backend-production.up.railway.app/api/dokter/upload`,
+                `https://mjk-backend-production.up.railway.app/api/dokter/upload/admin`,
                 data,
                 {
                     headers: {
-                        "Content-Type": "multipart/form-data",
                         Authorization: `Bearer ${token}`,
                     },
                 }
@@ -147,12 +148,12 @@ export default function useDokter ({idDokter,token,onClose}) {
                 email_dokter: formData.email_dokter,
                 notlp_dokter:formData.notlp_dokter,
                 foto_profil_dokter: imgPath,
-                spesialis_dokter: formData.spesialis,
+                spesialis_dokter: formData.spesialis?.value||"",
                 str_dokter: formData.str_dokter,
                 password_dokter:formData.password_dokter
                
             };
-            console.log("inidokterr",dokterData)
+            console.log("inidokterr_baru",dokterData)
             
 
 
@@ -161,21 +162,23 @@ export default function useDokter ({idDokter,token,onClose}) {
                 dokterData,
                 {
                     headers: {
-                        "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
             console.log("Response:", res.data);
+            if (onAddSuccess) {
+                onAddSuccess(dokterData); // data dokter baru dari response
+            }
             showSuccessToast("Berhasil menambah data dokter");
             onClose();
         } catch (error) {
-            console.error("Error updating data:",  error.response?.data || error.message);
+            console.error("Error add data:",  error.response?.data || error.message);
             showErrorToast("Gagal menambah data dokter");
         }
     };
 
-
+    
     //UPDATE UPLOAD GAMBAR
     const handleResetFile = () => {
         setFormData((prev) => ({
@@ -193,39 +196,47 @@ export default function useDokter ({idDokter,token,onClose}) {
     const handleEditSubmitDokter = async (e) => {
         e.preventDefault();
         try {
-            const data = new FormData();
-            for (const key in formData) {
-                data.append(key, formData[key]);
+            let imgPath = formData.foto_profil_dokter;
+            if (formData.foto){
+                const data = new FormData();
+                data.append("foto", formData.foto_profil_dokter);
+            
+                const uploadRes = await axios.put(
+                    `${import.meta.env.VITE_BASE_URL}/api/dokter/upload`,
+                    data,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+                imgPath = uploadRes.data.path;
             }
-            const uploadRes = await axios.put(
-                `${import.meta.env.VITE_BASE_URL}/api/dokter/upload`,
-                data,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
 
-            const imgPath = uploadRes.data.path;
+
 
             const dokterData = {
-                nama_dokter: formData.nama,
+                nama_dokter: formData.nama_dokter,
                 username_dokter: formData.username_dokter,
                 email_dokter: formData.email_dokter,
                 foto_profil_dokter: imgPath,
                 spesialis_dokter: formData.spesialis?.value || "",
-                no_str_dokter: formData.no_str,
+                str_dokter: formData. str_dokter,
+                notlp_dokter:formData.notlp_dokter,
+                password_dokter:formData.password_dokter
+
                 
               
             };
+            console.log("inidokter",dokterData)
 
             await axios.patch(
                 `${import.meta.env.VITE_BASE_URL}/api/dokter/update/${idDokter}`,
                 dokterData,
                 {
                     headers: {
+                        "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
                 }
@@ -233,7 +244,7 @@ export default function useDokter ({idDokter,token,onClose}) {
                 showSuccessToast("Berhasil mengupdate data dokter");
                 onClose();
         } catch (error) {
-            console.error("Error updating data:"|| error.message);
+            console.error("Error updating data:", error.response?.data || error.message || error);
             showErrorToast("Gagal mengupdate data dokter");
         }}
 
@@ -249,8 +260,7 @@ export default function useDokter ({idDokter,token,onClose}) {
     handleFileChange,
     handleSubmit,
     handleChangeSelect,
-    handleResetFile
-
+    handleResetFile,
     
     }
   )

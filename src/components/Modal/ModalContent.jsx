@@ -14,6 +14,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";  
 import { IoCalendarOutline } from "react-icons/io5";
 import DOMPurify from "dompurify";
+import "../../index.css";
+
 
 
 export default function ModalContent({ 
@@ -25,7 +27,8 @@ export default function ModalContent({
   dataMasyarakatbyId,
   idMasyarakat,
   dataDokterbyId,
-  idDokter,}) 
+  idDokter,
+  onAddSuccess}) 
 
 
 
@@ -39,6 +42,7 @@ export default function ModalContent({
       handleEditSubmit: handleEditSubmitArtikel,
       handleFileChange: handleFileChangeArtikel,
       handleSubmit:handleSubmitArtikel,
+      handleChangeKategori:handleChangeKategoriArtikel
    } = useArtikel({idArtikel, token,dataArtikel, onClose});
 
   //  const data = dataMasyarakatbyId;
@@ -58,12 +62,13 @@ export default function ModalContent({
   const {
     formData: formDokter,
     handleChange: handleChangeDokter,
-    handleEditSubmit: handleEditSubmitDokter,
+    handleEditSubmitDokter: handleEditSubmitDokter,
     handleFileChange: handleFileChangeDokter,
     handleChangeSelect: handleChangeSelectDokter,
     handleSubmit:handleSubmitDokter,
     handleResetFile:handleResetFileDokter
-  } = useDokter({idDokter, token,dataDokterbyId, onClose});
+    
+  } = useDokter({idDokter, token,dataDokterbyId, onClose,onAddSuccess });
   
    const options = [
     
@@ -85,6 +90,11 @@ export default function ModalContent({
 
     ];
     const [showPassword, setShowPassword] = useState(false);
+   
+    const optionKategori = [
+      { value: 'Kesehatan', label: 'Kesehatan' },
+      { value: 'Obat', label: 'Obat' },
+    ]
 
   switch (modalType) {
     // ARTIKEL
@@ -98,17 +108,17 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold text-[#004A76] underline">Edit Data Artikel</h1>
+            <h1 className="text-xl font-[raleway] text-[#004A76] underline font-extrabold mb-6">Edit Data Artikel</h1>
 
             <form
               onSubmit={handleEditSubmitArtikel}
-              className="flex flex-col gap-6 mt-4"
+              className="space-y-6"
             >
               {/* Judul */}
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="judul"
-                  className="block w-1/5 text-sm font-medium text-gray-900 dark:text-black"
+                  className="w-1/5 font-medium text-black dark:text-black" style={{fontFamily: 'Nunito Sans'}}
                 >
                   Judul
                 </label>
@@ -116,7 +126,7 @@ export default function ModalContent({
                   id="judul"
                   name="judul"
                   rows="1"
-                  className="w-4/5 p-2 border rounded"
+                  className="block p-2.5 w-4/5 text-sm  text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-[#004A76]"
                   placeholder="judul artikel"
                   value={formArtikel.judul}
                   onChange={handleChangeArtikel}
@@ -124,41 +134,23 @@ export default function ModalContent({
                 />
               </div>
 
-              {/* Tanggal Terbit
-              <div className="flex items-center gap-4">
-                <label
-                  htmlFor="tanggalTerbit"
-                  className="block w-1/5 text-sm font-medium text-gray-900 dark:text-black"
-                >
-                  Tanggal Terbit
-                </label>
-                <input
-                  type="date"
-                  id="tanggalTerbit"
-                  name="tanggalTerbit"
-                  value={formArtikel.tanggalTerbit}
-                  onChange={handleChangeArtikel}
-                  className="w-4/5 p-2 border rounded"
-                  required
-                />
-              </div> */}
 
               {/* Foto Artikel */}
               <div className="flex items-start gap-4">
                 <label
                   htmlFor="dropzone-file"
-                  className="block w-1/5 text-sm font-medium text-gray-900 dark:text-black"
+                  className="w-1/5 font-medium text-gray-900 dark:text-black " 
                 >
                   Sampul Artikel
                 </label>
-                <div className="flex flex-col w-4/5 gap-2">
+                <div className="w-4/5">
                   <label
                     htmlFor="dropzone-file"
-                    className="flex flex-col items-center justify-center h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-30 hover:bg-gray-100 dark:bg-white dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                    className="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-30 hover:bg-gray-100"
                   >
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                       <svg
-                        className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                        className="w-8 h-8 mb-4 text-gray-500 "
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -172,11 +164,10 @@ export default function ModalContent({
                           d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                         />
                       </svg>
-                      <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span className="font-semibold">Click to upload</span>{" "}
-                        or drag and drop
+                      <p className="mb-2 text-sm text-gray-500">
+                        <span className="font-semibold">Klik Untuk Mengunggah</span>{" "}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-xs text-gray-500">
                         SVG, PNG, JPG or GIF (MAX. 800x400px)
                       </p>
                     </div>
@@ -211,33 +202,36 @@ export default function ModalContent({
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="kategori"
-                  className="block w-1/5 text-sm font-medium text-gray-900 dark:text-black"
+                  className="w-1/5 font-medium text-gray-900 dark:text-black"
                 >
                   Kategori
                 </label>
                 <select
-                  id="kategori"
-                  name="kategori"
-                  value={dataArtikel?.kategori}
-                  onChange={handleChangeArtikel}
-                  className="w-4/5 p-2 border rounded"
-                  required
-                >
-                  <option value="">Pilih Kategori</option>
-                  <option value="kesehatan">Kesehatan</option>
-                  <option value="obat">Obat</option>
-                </select>
+                    id="kategori"
+                    name="kategori"
+                    className="bg-gray-30 border border-gray-300 text-gray-900 text-sm rounded-lg block w-4/5 p-2.5"
+                    value={formArtikel.kategori}
+                    onChange={handleChangeKategoriArtikel}
+                    required
+                  >
+                    <option value="">Pilih Kategori</option>
+                    {optionKategori.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
               </div>
 
               {/* Deskripsi */}
               <div className="flex items-start gap-4">
                 <label
                   htmlFor="deskripsi"
-                  className="block w-1/5 text-sm font-medium text-gray-900 dark:text-black"
+                  className="w-1/5 font-medium text-gray-900 dark:text-black"
                 >
                   Deskripsi
                 </label>
-                <div className="w-4/5 h-64  border-2 border-gray-100 rounded-lg" >
+                <div className="w-4/5 h-auto  border-2 border-gray-100 rounded-lg" >
                   <TipTap 
                     id="deskripsi"
                     rows="4"
@@ -288,7 +282,7 @@ export default function ModalContent({
                 </div>
               </div>
 
-              <div className="flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
+              {/* <div className="flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5">
                   Tanggal Terbit
                 </label>
@@ -302,7 +296,7 @@ export default function ModalContent({
                       : "-"}
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="flex flex-column w-full justify-center items-start gap-10 mt-8">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5">
@@ -335,12 +329,13 @@ export default function ModalContent({
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5">
                   Deskripsi
                 </label>
-                <div className="w-4/5 bg-yellow-100 rounded-lg p-4">
+                <div className="w-4/5 bg-gray-50 rounded-lg p-4">
                   
                   <div
-                    className="w-full"
-                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(dataArtikel?.detail_artikel || "<p>-</p>") }}
-                  />
+                    className="prose w-full  list-inside list-decimal"
+                    style={{ listStyleType: 'disc', paddingLeft: '1.25rem' }}
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(dataArtikel?.detail_artikel || " ") }}
+                    />
                 </div>
               </div>
             </div>
@@ -371,6 +366,8 @@ export default function ModalContent({
             </h1>
 
             <form onSubmit={handleSubmitArtikel} className="space-y-6">
+
+              {/*Add Judul */}
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="judul"
@@ -390,24 +387,7 @@ export default function ModalContent({
                 />
               </div>
               
-            {/* <div  className="flex items-center gap-4">
-              <label
-                 htmlFor="foto"
-                 className="w-1/5 font-medium text-gray-900 dark:text-black " 
-              >
-                Tanggal Terbit
-              </label>
-              <div className="w-4/5">
-                <input
-                  type="date"
-                  name="tanggalTerbit"
-                  value={formArtikel.tanggalTerbit  || ""}
-                  onChange={handleChangeArtikel}
-                  className="w-full border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
-                />
-              </div>
-            </div> */}
-
+              {/* Add foto */}
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="foto"
@@ -459,6 +439,7 @@ export default function ModalContent({
                 </div>
               </div>
 
+              {/* Update Kategori */}
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="kategori"
@@ -471,15 +452,19 @@ export default function ModalContent({
                   name="kategori"
                   className="bg-gray-30 border border-gray-300 text-gray-900 text-sm rounded-lg block w-4/5 p-2.5"
                   value={formArtikel.kategori}
-                  onChange={handleChangeArtikel}
+                  onChange={handleChangeKategoriArtikel}
                   required
                 >
-                  <option value="">Pilih Kategori</option>
-                  <option value="Kesehatan">Kesehatan</option>
-                  <option value="Obat">Obat</option>
+                  <option value="kategori">Pilih Kategori</option>
+                  {optionKategori.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 
+                {/* Deskripsi */}
               <div className="flex items-start gap-4">
                 <label
                   htmlFor="deskripsi"
@@ -1026,7 +1011,7 @@ export default function ModalContent({
               &times;
             </button>
             <h1 className="text-2xl font-bold font-[raleway] underline text-[#004A76]">Edit Data Dokter</h1>
-             <form onSubmit={handleSubmitDokter} className="space-y-6" >
+             <form onSubmit={handleEditSubmitDokter} className="space-y-6" >
               
                 <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
                   <label
@@ -1094,6 +1079,20 @@ export default function ModalContent({
                           onChange={handleFileChangeDokter}
                           />
                       </label>
+                       {/* Preview gambar yang dipilih */}
+                      {formDokter.foto_profil_dokter ? (
+                        <img
+                          src={URL.createObjectURL(formDokter.foto_profil_dokter)}
+                          alt="preview"
+                          className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                        />
+                      ) : dataDokterbyId?.foto_profil_dokter ? ( // <-- tambahkan tanda tanya (optional chaining)
+                        <img
+                          src={dataDokterbyId.foto_profil_dokter}
+                          alt=""
+                          className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                        />
+                  ) : null}
                     </div>
                     <div className="font-light text-[14px] self-start text-lime-500">
                     {formDokter.foto_profil_dokter
@@ -1195,47 +1194,19 @@ export default function ModalContent({
                     Username
                   </label>
                     <textarea
-                      id="username"
-                      name="username"
+                      id="username_dokter"
+                      name="username_dokter"
                       rows="1"
                       className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Masukkan Username"
-                      value={formDokter.username}
+                      value={formDokter.username_dokter}
                       onChange={handleChangeDokter}
                     ></textarea>
                 
                 </div>
-                <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-5">
-                  <label
-                    htmlFor="message"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
-                  >
-                    Password
-                  </label>
-
-                  <div className="relative w-4/5">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      name="password"
-                      id="password"
-                      className="block w-full p-2.5 text-sm text-gray-900 bg-gray-30 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Masukkan Password"
-                      value={formDokter.password}
-                      onChange={handleChangeDokter}
-                      
-                    />
-                    <div
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
-                    >
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}
-                    </div>
-                  </div>
-              
-              </div>
              
               <div className=" text-center">
-                <button className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5">
+                <button type="submit" className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5">
                   Simpan Perubahan
                 </button>
               </div>

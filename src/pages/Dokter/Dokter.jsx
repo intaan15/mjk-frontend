@@ -33,6 +33,7 @@ function Dokter() {
   const [selectedData, setSelectedData] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [dataDokterbyId, setdataDokterbyId] = useState(null);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
   const [dokter, setDokter] = useState([]); 
 
  const openModalWithId = (type,id) => {
@@ -54,7 +55,7 @@ function Dokter() {
   
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedData(null);
+    setSelectedId(null);
     setModalType("");
   };
 
@@ -112,6 +113,7 @@ function Dokter() {
             },
           }
         );
+        console.log("datadokter",response.data)
         setdataDokterbyId(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -154,6 +156,39 @@ function Dokter() {
 };
 
 
+const handleAfterAddDokter = (dokterData) => {
+  Swal.fire({
+    title: "Berhasil Menambahkan Dokter",
+    text: "Apakah Anda ingin mengirim email verifikasi ke dokter?",
+    icon: "success",
+    showCancelButton: true,
+    confirmButtonText: "Ya",
+    cancelButtonText: "Tidak",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const subject = encodeURIComponent("Verifikasi Akun Dokter - Mojokerto Sehat");
+      const body = encodeURIComponent(`Halo Dr. ${dokterData.nama_dokter},
+
+Anda telah berhasil terdaftar di sistem Mojokerto Sehat.
+
+Berikut detail akun Anda:
+- Username: ${dokterData.username_dokter}
+- Spesialis: ${dokterData.spesialis_dokter}
+- No. STR: ${dokterData.str_dokter}
+- Password : ${dokterData.password_dokter}
+
+(SILAHKAN SEGERA GANTI PASSWORD ANDA!)
+Silakan login dan lengkapi profil Anda.
+
+Salam,
+Admin Mojokerto Sehat`);
+
+      const mailtoLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${dokterData.email_dokter}&subject=${subject}&body=${body}`;
+      window.open(mailtoLink, "_blank");
+    }
+  });
+};
+
 
 const fetchDokter = useCallback(async ()=> {
   try {
@@ -170,9 +205,13 @@ const fetchDokter = useCallback(async ()=> {
       }
 },[])
 
+useEffect(() => {
+    fetchDokter();
+  }, [fetchDokter,reloadTrigger]);
+
 const handleCloseModal = () => {
   setIsModalOpen(false);
-  fetchdokter();
+  fetchDokter();
 };
 
 
@@ -361,6 +400,7 @@ const handleCloseModal = () => {
             dataDokterbyId={dataDokterbyId}
             onClose={handleCloseModal}
             token={token}
+            onAddSuccess={handleAfterAddDokter} 
           />
         </Modal>
       </main>

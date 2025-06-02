@@ -185,7 +185,7 @@ function Verifikasi() {
                 // Buka Gmail dengan draft email
                 const subject = encodeURIComponent("Konfirmasi Penolakan Verifikasi");
                 const body = encodeURIComponent(`Halo,\n\nData Anda ditolak. Mohon periksa kembali informasi yang diberikan.\n\nTerima kasih.`);
-                window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email_masyarakat}&su=${subject}&body=${body}`, "_blank");
+                window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email_masyarakat}&su=${subject}&body=${body}`);
             }
 
             // Lanjut update status di backend
