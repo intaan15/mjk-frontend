@@ -220,6 +220,11 @@ const handleCloseModal = () => {
   // paramater tabel
   const columns = [
       {
+          header: "No",
+          enableSorting: false,
+          cell: ({ row }) => row.index + 1,
+      },
+      {
         accessorKey: "foto_profil_dokter",
         header: "Foto",
         enableSorting: false,

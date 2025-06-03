@@ -111,7 +111,9 @@ function Konsultasi() {
               accessorKey: "nama_dokter",
               header: "Nama Dokter",
               enableSorting: false,
-              cell: ({ row }) =>  row.original.dokter_id?.nama_dokter || "-"
+              cell: ({ row }) =>  <div className="w-40 truncate">
+                  {row.original.dokter_id?.nama_dokter || "-"}
+              </div>
 
           },
           {

@@ -332,7 +332,7 @@ export default function ModalContent({
                 <div className="w-4/5 bg-gray-50 rounded-lg p-4">
                   
                   <div
-                    className="prose w-full  list-inside list-decimal"
+                    className="artikel-detail-content w-full  list-inside list-decimal"
                     style={{ listStyleType: 'disc', paddingLeft: '1.25rem' }}
                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(dataArtikel?.detail_artikel || " ") }}
                     />

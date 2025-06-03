@@ -7,6 +7,7 @@ import Basetable from "../../components/Table/Basetable";
 import Modal from "../../components/Modal/ModalTemplate";
 import ModalContent from "../../components/Modal/ModalContent";
 import { useAuth } from "../../components/Auth";
+import.meta.env.VITE_BASE_URL
 
 
 import { TiUser } from 'react-icons/ti'
@@ -133,7 +134,7 @@ function Verifikasi() {
 
     // ENDPOINT UPDATE STATUS VERIFIKASI
     // const handleVerifikasi = (status, _id) => {
-    //     axios.patch(`https://mjk-backend-production.up.railway.app/api/masyarakat/update/${_id}`, {
+    //     axios.patch(`${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${_id}`, {
     //         verifikasi_akun_masyarakat: status,}
     //         , {
     //             headers: {
@@ -191,7 +192,7 @@ function Verifikasi() {
             // Lanjut update status di backend
             axios
                 .patch(
-                `https://mjk-backend-production.up.railway.app/api/masyarakat/update/${_id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${_id}`,
                 {
                     verifikasi_akun_masyarakat: status,
                 },
@@ -229,7 +230,7 @@ function Verifikasi() {
             // Jika status diterima, langsung update backend seperti biasa
             axios
             .patch(
-                `https://mjk-backend-production.up.railway.app/api/masyarakat/update/${_id}`,
+                `${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${_id}`,
                 {
                 verifikasi_akun_masyarakat: status,
                 },
@@ -280,7 +281,7 @@ function Verifikasi() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`,
+                const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -306,7 +307,7 @@ function Verifikasi() {
         const fetchData = async () => {
         try {
             const response = await axios.get(
-            `https://mjk-backend-production.up.railway.app/api/masyarakat/getbyid/${selectedId}`,
+            `${import.meta.env.VITE_BASE_URL}/api/masyarakat/getbyid/${selectedId}`,
             {
                 headers: {
                 Authorization: `Bearer ${token}`,

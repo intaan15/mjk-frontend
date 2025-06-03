@@ -1,6 +1,6 @@
 import axios from "axios";
+import.meta.env.VITE_BASE_URL
 import { useState,useEffect,useCallback } from "react";
-import { Card, Typography } from "@material-tailwind/react";
 import Modal from "../../components/Modal/ModalTemplate";
 import ModalContent from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
@@ -65,10 +65,13 @@ export default function Artikel() {
   };
 
   // FILTER ARTIKEL
-  const filteredData = artikel?.filter((item) =>
-    selectedKategori === "" ? true : item.kategori_artikel === selectedKategori
-  );
+  const filteredData = Array.isArray(artikel)
+  ? artikel.filter((item) =>
+      selectedKategori === "" ? true : item.kategori_artikel === selectedKategori
+    )
+  : [];
 
+  // console.log("inikh",filteredData)
   const formatTanggal = (isoDateString) => {
   const date = new Date(isoDateString);
     return date.toLocaleDateString("id-ID", {
@@ -92,7 +95,7 @@ export default function Artikel() {
       if (result.isConfirmed) {
         try {
           await axios.delete(
-            `https://mjk-backend-production.up.railway.app/api/artikel/delete/${id}` , {
+            `${import.meta.env.VITE_BASE_URL}/api/artikel/delete/${id}` , {
               headers: {
                 Authorization: `Bearer ${token}`,
               }
@@ -118,7 +121,7 @@ export default function Artikel() {
   const fetchArtikel = useCallback(async () => {
     try {
       const res = await axios.get(
-        "https://mjk-backend-production.up.railway.app/api/artikel/getall", 
+        `${import.meta.env.VITE_BASE_URL}/api/artikel/getall`, 
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -135,7 +138,7 @@ export default function Artikel() {
      const fetchData = async () => {
       try {
           const response = await axios.get(
-            `https://mjk-backend-production.up.railway.app/api/artikel/getbyid/${selectedId}`,
+            `${import.meta.env.VITE_BASE_URL}/api/artikel/getbyid/${selectedId}`,
             {
                 headers: {
                 Authorization: `Bearer ${token}`,

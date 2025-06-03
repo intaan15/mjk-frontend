@@ -2,8 +2,8 @@ import React, { use } from 'react'
 import axios from 'axios' //library untuk melakukan request HTTP
 import { useState, useEffect,useCallback } from 'react' //hook untuk state dan efek samping
 import { useNavigate } from 'react-router-dom';
-import { Typography } from "@material-tailwind/react";
 import { useAuth } from "../../components/Auth";
+import.meta.env.VITE_BASE_URL
 
 
 import { TiUser } from 'react-icons/ti'
@@ -84,7 +84,7 @@ function DataMasyarakat() {
   const fetchDataMasyarakat = useCallback(async () => {
     try {
       const res = await axios.get(
-        "https://mjk-backend-production.up.railway.app/api/masyarakat/getall", 
+        `${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`, 
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -98,7 +98,7 @@ function DataMasyarakat() {
 
   // ENDPOINT GET DATA MASYARAKAT
   useEffect(() => {
-    axios.get(`https://mjk-backend-production.up.railway.app/api/masyarakat/getall`,
+    axios.get(`${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`,
          {
           headers: {
           Authorization: `Bearer ${token}`,
@@ -120,7 +120,7 @@ function DataMasyarakat() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `https://mjk-backend-production.up.railway.app/api/masyarakat/getbyid/${selectedId}`,
+          `${import.meta.env.VITE_BASE_URL}/api/masyarakat/getbyid/${selectedId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

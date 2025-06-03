@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import.meta.env.VITE_BASE_URL
 import { useMemo,useEffect, useState } from 'react';
 import Basetable from "../../components/Table/Basetable";
 import dayjs from "dayjs";
@@ -54,7 +55,7 @@ const Jadwal = () => {
     const fetchDokter = async () => {
       // ENPOINTE
       try {
-        const res = await axios.get(`https://mjk-backend-production.up.railway.app/api/dokter/getall`, {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/dokter/getall`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
