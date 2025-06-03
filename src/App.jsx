@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 
-import "./App.css";
+import "../src/App.css";
 import Layout from "./pages/MainLayout/Layout";
 import Splashscreen from "./pages/root/Splashscreen";
 import Loginakun from "./pages/root/Loginakun";
