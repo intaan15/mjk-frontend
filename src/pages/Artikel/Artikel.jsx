@@ -186,6 +186,10 @@ export default function Artikel() {
       accessorKey: "nama_artikel",
       header: "Judul Artikel",
       enableSorting: false,
+      cell: ({ getValue }) => (
+        <div className="whitespace-normal break-words max-w-sm">
+          {getValue()}
+        </div>)
       
     },
     {

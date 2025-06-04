@@ -12,7 +12,7 @@ const Layout = () => {
 
   return (
     
-    <div className='flex flex-row '>
+    <div className='flex flex-row transition-all duration-300 ease-in-out '>
         <div className=' w-1/6 lg:w-64 h-full shadow-lg hidden md:block md:h-screen '>
             <Sidebar/>
         </div>

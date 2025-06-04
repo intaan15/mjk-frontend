@@ -114,9 +114,22 @@ const Jadwal = () => {
    
   // DATA TABLE   
   const staticColumns = [
-          { id: "no", header: "No", cell: ({ row }) => row.index + 1 },
-      { accessorKey: "nama_dokter", header: "Nama",enableSorting: false, },       
-      { accessorKey: "spesialis_dokter", header: "Spesialis", enableSorting: false, }
+      { id: "no",
+        header: "No", 
+        cell: ({ row }) => row.index + 1 
+      },
+      { accessorKey: "nama_dokter", 
+        header: "Nama",
+        enableSorting: false, 
+        cell: ({ getValue }) => (
+        <div className="whitespace-normal break-words max-w-xs">
+          {getValue()}
+        </div>)
+      },       
+      { accessorKey: "spesialis_dokter", 
+        header: "Spesialis", 
+        enableSorting: false, 
+      }
     ];
     const tanggalArray = React.useMemo(() => {
       const all = dataDokter.flatMap((d) =>

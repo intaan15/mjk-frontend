@@ -162,7 +162,7 @@ function DataMasyarakat() {
       header: "Nama Pengguna",
       enableSorting: false,
       cell: ({ getValue }) => (
-        <div className="w-32 truncate" title={getValue()}>
+        <div  className="whitespace-normal break-words max-w-xs" title={getValue()}>
           {getValue()}
         </div>
       ),
