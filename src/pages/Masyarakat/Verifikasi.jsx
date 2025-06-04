@@ -25,7 +25,7 @@ function Verifikasi() {
 
     const token = localStorage.getItem("token");
     const { user } = useAuth();
-    const [searchTerm, setSearchTerm] = useState("");
+    const [searchTerm, setfiltersearch] = useState("");
     const [filterStatus, setFilterStatus] = useState("semua");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState(null);
@@ -98,7 +98,7 @@ function Verifikasi() {
         return matchSearch && matchStatus;
     });
 
-    useEffect(() => {console.log(filteresearch); // Ini untuk memeriksa apakah filteresearch berisi data
+    useEffect(() => {console.log("inifilter",filteresearch); // Ini untuk memeriksa apakah filteresearch berisi data
     }, [filteresearch]);
 
     const filteredRows = useMemo(() => {
@@ -133,34 +133,6 @@ function Verifikasi() {
     
 
     // ENDPOINT UPDATE STATUS VERIFIKASI
-    // const handleVerifikasi = (status, _id) => {
-    //     axios.patch(`${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${_id}`, {
-    //         verifikasi_akun_masyarakat: status,}
-    //         , {
-    //             headers: {
-    //                 Authorization: `Bearer ${token}`,
-    //         },
-    //     })
-    //       .then(() => {
-    //         console.log("Status verifikasi berhasil diperbarui (PATCH)");
-    //         console.log("ID yang dikirim:", _id);
-
-    //         setAllRows((prevRows) =>
-    //           prevRows.map((item) =>
-    //             item._id === _id ? { ...item, verifikasi_akun_masyarakat: status } : item)
-    //         );
-    //         setFilterStatus(status);
-    //         setData((prevData) => prevData.filter((item) => item._id !== _id));
-    //         if (status === "diterima" || status === "ditolak") {
-    //             navigate("/masyarakat/verifikasi");
-    //         }
-    //       })
-    //       .catch((err) => {
-    //         console.error("Gagal update status", err);
-    //       });
-    // };
-
-
     const handleVerifikasi = (status, _id, email_masyarakat) => {
     Swal.fire({
         title: `Yakin ingin ${status === "diterima" ? "menerima" : "menolak"} data ini?`,
