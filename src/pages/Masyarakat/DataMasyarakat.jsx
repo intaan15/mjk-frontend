@@ -197,7 +197,7 @@ function DataMasyarakat() {
 
     
   const filteredRows = DataMasyarakat.filter((item) => {
-    const search = searchTerm.toLowerCase();
+    const search = searchTerm.toLowerCase().trim();
     return (
       item.nama_masyarakat?.toLowerCase().includes(search) ||
       item.email_masyarakat?.toLowerCase().includes(search) ||
@@ -205,6 +205,8 @@ function DataMasyarakat() {
       item.nik_masyarakat?.includes(search) 
     );
   });
+
+  console.log("inidata",DataMasyarakat)
 
   useEffect(() => {
     // console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
@@ -226,9 +228,10 @@ function DataMasyarakat() {
               <IoIosSearch className="text-gray-400" />
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Cari Nama/Email/NIK"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                
                 className="text-gray-700 text-sm outline-none bg-transparent"
               />
             </div>
@@ -298,7 +301,7 @@ function DataMasyarakat() {
             <p>Loading data...</p>
           ) : (
             <>
-              <Basetable data={DataMasyarakat} columns={columns} />
+              <Basetable data={filteredRows} columns={columns} />
             </>
           )}
         </div>
