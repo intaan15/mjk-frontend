@@ -238,7 +238,7 @@ export default function ModalContent({
                     className="w-4/5 p-2 border rounded"
                     name="deskripsi"
                     value={formArtikel.deskripsi} 
-                    onChange={handleChangeArtikel}
+                     onChange={(html) => handleChangeArtikel("deskripsi", html)}
                     required
                     />
                 </div>
@@ -624,8 +624,8 @@ export default function ModalContent({
                     <label className="text-[#025F96] font-bold">Email</label>
                     <input
                         type="text"
-                        id="username"
-                        name="username"
+                        id="email"
+                        name="email"
                         defaultValue={formMasyarakat.email}
                         onChange={handleChangeMasyarakat}
                         className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -637,8 +637,8 @@ export default function ModalContent({
                     <label className="text-[#025F96] font-bold">NIK</label>
                      <input
                         type="text"
-                        id="username"
-                        name="username"
+                        id="NIK"
+                        name="NIK"
                         defaultValue={formMasyarakat.NIK}
                         onChange={handleChangeMasyarakat}
                         className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -650,6 +650,7 @@ export default function ModalContent({
                     <label className="text-[#025F96] font-bold">Alamat</label>
                     <input
                       type="text"
+                      id="alamat"
                       name="alamat"
                       defaultValue={formMasyarakat.alamat}
                       className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -662,6 +663,7 @@ export default function ModalContent({
                     <label className="text-[#025F96] font-bold">Nomor Telepon</label>
                     <input
                       type="text"
+                      id="nomorTelepon"
                       name="nomorTelepon"
                       defaultValue={formMasyarakat.notlp}
                       className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -689,6 +691,7 @@ export default function ModalContent({
                     <label className="text-[#025F96] font-bold">Tanggal Lahir</label>
                     <input
                       type="date"
+                      id="tanggalLahir"
                       name="tanggalLahir"
                       defaultValue={formMasyarakat.tanggalLahir.slice(0, 10)}
                       className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -745,7 +748,7 @@ export default function ModalContent({
                 </div>
                 <div className=" text-center flex flex-row gap-4 mt-5 items-center">
                   <button
-                     className="px-4 py-2 bg-gray-400 text-white rounded-xl w-50 hover:bg-gray-500 transition duration-200 ease-in-out"
+                    className="px-4 py-2 bg-gray-400 text-white rounded-xl w-50 hover:bg-gray-500 transition duration-200 ease-in-out"
                     onClick={() => setShowModal(false)}
                     
                   >

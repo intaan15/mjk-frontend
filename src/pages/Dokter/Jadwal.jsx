@@ -146,8 +146,8 @@ const Jadwal = () => {
     );
   }
 
-  const [mingguPage, setMingguPage] = useState(0);
-    const minDate = useMemo(
+
+  const minDate = useMemo(
     () => (tanggalArray.length ? dayjs(tanggalArray[0]) : dayjs()),
     [tanggalArray]
   );
@@ -196,7 +196,24 @@ const Jadwal = () => {
       () => [...staticColumns, ...dynamicColumns],
       [dynamicColumns]
     );
+
+  const handleLogout = () => {
+    // Hapus token dari localStorage
+    localStorage.removeItem("token");
+
+    // Redirect ke halaman login
+    navigate("/login");
+  };
   
+  const mingguSekarang = useMemo(() => {
+  const sekarang = dayjs().startOf("week");
+  const mondayPertama = tanggalArray.length
+    ? dayjs(tanggalArray[0]).startOf("week")
+    : sekarang;
+    return sekarang.diff(mondayPertama, "week");
+  }, [tanggalArray]);
+
+const [mingguPage, setMingguPage] = useState(mingguSekarang);
 
   
 
@@ -248,7 +265,7 @@ const Jadwal = () => {
         <div className='flex flex-row items-center justify-center text-center pt-3'>
           <div className='flex flex-row gap-3'>
             <button onClick={() => setMingguPage(mingguPage - 1)}
-              className='text-3xl text-[#004A76] items-center hover:bg-black'>
+              className='text-3xl text-[#004A76] items-center transition-transform duration-200 hover:scale-110 active:scale-95 hover:text-[#0077B6] active:text-[#005F8A]'>
               <LuSquareArrowLeft />
             </button>
             <div className='flex flex-row items-center w-56 justify-center gap-3 border-2 border-[#004A76]/50 rounded-sm px-2' >
@@ -256,7 +273,7 @@ const Jadwal = () => {
               <span className="font-semibold text-[#004A76] ">{labelRentang}</span>
             </div>
             <button 
-             className='text-3xl text-[#004A76] items-center hover:bg-black'
+             className='text-3xl text-[#004A76] items-center transition-transform duration-200 hover:scale-110 active:scale-95 hover:text-[#0077B6] active:text-[#005F8A]'
              onClick={() => setMingguPage(mingguPage + 1)}
             >
               <LuSquareArrowRight />

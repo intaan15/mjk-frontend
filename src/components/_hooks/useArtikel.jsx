@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { ToastContainer } from 'react-toastify';
 import { showSuccessToast, showErrorToast } from '../Modal/ToastModal'
 import DOMPurify from 'dompurify';
+import.meta.env.VITE_BASE_URL
 
 export default function useArtikel({idArtikel,token,onClose}) {
     const [dataArtikel, setDataArtikel] = useState(null);
@@ -26,7 +27,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
         const fetchData = async () => {
         try {
             const response = await axios.get(
-            `https://mjk-backend-production.up.railway.app/api/artikel/getbyid/${idArtikel}`,
+            `${import.meta.env.VITE_BASE_URL}/api/artikel/getbyid/${idArtikel}`,
             {
                 headers: {
                 Authorization: `Bearer ${token}`,
@@ -60,7 +61,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
             deskripsi: dataArtikel.detail_artikel || "",
             });
         }, [dataArtikel]);
-        console.log("Form data:", formData.deskripsi);
+        console.log("Form data:", formData);
         
   // Handle input teks dan select
         // const handleChange = (name, value) => {
@@ -125,7 +126,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
 
             // Langkah 1: Upload gambar
             const uploadRes = await axios.post(
-                "https://mjk-backend-production.up.railway.app/api/artikel/upload",
+                `${import.meta.env.VITE_BASE_URL}/api/artikel/upload`,
                 data,
                 {
                 headers: {
@@ -141,21 +142,21 @@ export default function useArtikel({idArtikel,token,onClose}) {
             // const sanitizedDeskripsi = DOMPurify.sanitize(formData.deskripsi);
             const artikelData = {
                 nama_artikel: formData.judul,
-                kategori_artikel: formData.kategori?.value||"",
+                kategori_artikel: formData.kategori,
                 detail_artikel: DOMPurify.sanitize(formData.deskripsi),
                 gambar_artikel: imagePath,
             };
-            // console.log("inihasilartikel:",artikelData)
             // console.log("Token:", token);
-
+            
             const res = await axios.post(
-                "https://mjk-backend-production.up.railway.app/api/artikel/create",
+                `${import.meta.env.VITE_BASE_URL}/api/artikel/create`,
                 artikelData,
                 {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    
                 }
             );
 
@@ -195,7 +196,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
                 data.append("foto", formData.foto);
 
                 const uploadRes = await axios.post(
-                "https://mjk-backend-production.up.railway.app/api/artikel/upload",
+                "${import.meta.env.VITE_BASE_URL}/api/artikel/upload",
                 data,
                 {
                     headers: {
@@ -218,7 +219,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
             console.log("inikategori",artikelData)
 
             await axios.patch(
-                `https://mjk-backend-production.up.railway.app/api/artikel/update/${idArtikel}`,
+                `${import.meta.env.VITE_BASE_URL}/api/artikel/update/${idArtikel}`,
                 artikelData,
                 {
                 headers: {

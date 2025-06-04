@@ -1,6 +1,8 @@
 import { useState,useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../components/Auth";
+
 
 
 
@@ -35,6 +37,7 @@ function Dokter() {
   const [dataDokterbyId, setdataDokterbyId] = useState(null);
   const [reloadTrigger, setReloadTrigger] = useState(0);
   const [dokter, setDokter] = useState([]); 
+  const { user } = useAuth();
 
  const openModalWithId = (type,id) => {
     if (!id) {
@@ -341,7 +344,7 @@ const handleCloseModal = () => {
                           className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3"
                         >
                           <HiOutlineUser className="text-[30px]" />
-                          Administrator
+                          {user?.username}
                         </a>
 
                         <a

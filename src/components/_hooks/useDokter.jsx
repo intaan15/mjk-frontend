@@ -130,7 +130,7 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
             data.append("foto", formData.foto_profil_dokter);
 
             const uploadRes = await axios.post(
-                `https://mjk-backend-production.up.railway.app/api/dokter/upload/admin`,
+                `${import.meta.env.VITE_BASE_URL}/api/dokter/upload/admin`,
                 data,
                 {
                     headers: {
@@ -232,7 +232,7 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
             console.log("inidokter",dokterData)
 
             await axios.patch(
-                `${import.meta.env.VITE_BASE_URL}/api/dokter/update/${idDokter}`,
+                `${import.meta.env.VITE_BASE_URL}api/dokter/update/${idDokter}`,
                 dokterData,
                 {
                     headers: {

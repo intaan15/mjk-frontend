@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { ToastContainer } from 'react-toastify';
 import { showSuccessToast, showErrorToast } from '../Modal/ToastModal';
 import DataMasyarakat from '../../pages/Masyarakat/DataMasyarakat';
+import.meta.env.VITE_BASE_URL
 
 
 
@@ -42,7 +43,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
     const fetchData = async () => {
       try {
           const response = await axios.get(
-          `https://mjk-backend-production.up.railway.app/api/masyarakat/getbyid/${idMasyarakat}`,
+          `${import.meta.env.VITE_BASE_URL}/api/masyarakat/getbyid/${idMasyarakat}`,
           {
               headers: {
               Authorization: `Bearer ${token}`,
@@ -117,7 +118,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
         data.append("foto", formData.foto);
 
         const uploadRes = await axios.post(
-        "https://mjk-backend-production.up.railway.app/api/masyarakat/upload",
+        `${import.meta.env.VITE_BASE_URL}/api/masyarakat/upload`,
         data,
         {
             headers: {
@@ -144,7 +145,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
   };
 
   await axios.patch(
-      `https://mjk-backend-production.up.railway.app/api/masyarakat/update/${idMasyarakat}`,
+      `${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${idMasyarakat}`,
       masyarakatData,
       {
       headers: {
