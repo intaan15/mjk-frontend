@@ -5,6 +5,7 @@ import Modal from "../../components/Modal/ModalTemplate";
 import ModalContent from "../../components/Modal/ModalContent";
 import Basetable from "../../components/Table/Basetable";
 import { useAuth } from "../../components/Auth";
+import { useMemo } from "react";
 import { showSuccessToast, showErrorToast } from '../../components/Modal/ToastModal'
 
 
@@ -65,11 +66,25 @@ export default function Artikel() {
   };
 
   // FILTER ARTIKEL
-  const filteredData = Array.isArray(artikel)
-  ? artikel.filter((item) =>
-      selectedKategori === "" ? true : item.kategori_artikel === selectedKategori
-    )
-  : [];
+  const filteredArtikel = useMemo(() => {
+    const search = searchTerm.toLowerCase();
+
+    return artikel
+      .filter((item) =>
+        selectedKategori === "" ? true : item.kategori_artikel === selectedKategori
+      )
+      .filter((item) => {
+        const judul = item.nama_artikel?.toLowerCase() || "";
+        const kategori = item.kategori_artikel?.toLowerCase() || "";
+        const isi = item.isi_artikel?.toLowerCase() || "";
+
+        return (
+          judul.includes(search) ||
+          kategori.includes(search) ||
+          isi.includes(search)
+        );
+      });
+  }, [artikel, selectedKategori, searchTerm]);
 
   // console.log("inikh",filteredData)
   const formatTanggal = (isoDateString) => {
@@ -341,7 +356,7 @@ export default function Artikel() {
             <p>Loading data...</p>
           ) : (
             <>
-              <Basetable data={filteredData} columns={columns} />
+              <Basetable data={filteredArtikel} columns={columns} />
             </>
           )}
         </div>

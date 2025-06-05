@@ -147,6 +147,7 @@ const Jadwal = () => {
   }
 
 
+  const [mingguPage, setMingguPage] = useState(0);
   const minDate = useMemo(
     () => (tanggalArray.length ? dayjs(tanggalArray[0]) : dayjs()),
     [tanggalArray]
@@ -213,7 +214,7 @@ const Jadwal = () => {
     return sekarang.diff(mondayPertama, "week");
   }, [tanggalArray]);
 
-const [mingguPage, setMingguPage] = useState(mingguSekarang);
+
 
   
 

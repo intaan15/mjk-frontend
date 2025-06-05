@@ -19,13 +19,14 @@ import { HiOutlineUsers } from "react-icons/hi2";
 import { HiOutlineUserPlus } from "react-icons/hi2";
 import { HiOutlineUserAdd } from "react-icons/hi";
 import { HiOutlineUserMinus } from "react-icons/hi2";
+import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import Swal from "sweetalert2";
 
 function Verifikasi() {
 
     const token = localStorage.getItem("token");
     const { user } = useAuth();
-    const [searchTerm, setfiltersearch] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
     const [filterStatus, setFilterStatus] = useState("semua");
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalType, setModalType] = useState(null);
@@ -82,31 +83,27 @@ function Verifikasi() {
     };
     
 
-    // Filtersearch
-    const filteresearch = allRows.filter((item) => {
-        const search = searchTerm.toLowerCase();
-        
-        const matchSearch =
-            item.nama_masyarakat?.toLowerCase().includes(search) ||
-            item.email_masyarakat?.toLowerCase().includes(search) ||
-            item.notlp_masyarakat?.toLowerCase().includes(search) ||
-            item.nik_masyarakat?.includes(search);
-        
+    // component Filtersearch
+    const filteredData = useMemo(() => {
+    const search = searchTerm.toLowerCase();
+
+    return allRows.filter((item) => {
+        // Match status
         const matchStatus =
-            filterStatus === "semua" || item.status_verifikasi === filterStatus;
-        
-        return matchSearch && matchStatus;
+        filterStatus === "semua"
+            ? item.verifikasi_akun_masyarakat === "pending"
+            : item.verifikasi_akun_masyarakat === filterStatus;
+
+        // Match keyword
+        const matchSearch =
+        item.nama_masyarakat?.toLowerCase().includes(search) ||
+        item.email_masyarakat?.toLowerCase().includes(search) ||
+        item.notlp_masyarakat?.toLowerCase().includes(search) ||
+        item.nik_masyarakat?.includes(search);
+
+        return matchStatus && matchSearch;
     });
-
-    useEffect(() => {console.log("inifilter",filteresearch); // Ini untuk memeriksa apakah filteresearch berisi data
-    }, [filteresearch]);
-
-    const filteredRows = useMemo(() => {
-         if (filterStatus === "semua") {
-            return allRows.filter(item => item.verifikasi_akun_masyarakat === "pending");
-        }
-        return allRows.filter(item => item.verifikasi_akun_masyarakat === filterStatus);
-    }, [allRows, filterStatus]);
+    }, [allRows, filterStatus, searchTerm]);
 
 
     // Swtich status
@@ -350,7 +347,7 @@ function Verifikasi() {
             cell: ({ row }) => (
             <div className="flex gap-2 items-center ">
             <button onClick={() =>openModal("detailprofilmasyarakat", row.original._id)} title="Detail">
-                <FaEdit className="w-7  h-7 p-1 flex text-center justify-center  text-[#033E61] rounded-sm transition" />
+                <HiOutlineExclamationCircle className="w-7  h-7 p-1 flex text-center justify-center  text-[#033E61] rounded-sm transition" />
             </button>
             </div>),
         },
@@ -514,7 +511,7 @@ function Verifikasi() {
                     <p>Loading data...</p>
                     ) : (
                     <>
-                        <Basetable data={filteredRows} columns={columns} />
+                        <Basetable data={filteredData} columns={columns} />
                     </>
                     )}
                 </div>

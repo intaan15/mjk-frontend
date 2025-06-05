@@ -2,6 +2,7 @@ import { useState,useEffect, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/Auth";
+import { useMemo } from "react";
 
 
 
@@ -157,6 +158,19 @@ function Dokter() {
     }
   }
 };
+
+const filteredDokter = useMemo(() => {
+  const search = searchTerm.toLowerCase();
+
+  return data.filter((item) => {
+    return (
+      item.nama_dokter?.toLowerCase().includes(search) ||
+      item.email_dokter?.toLowerCase().includes(search) ||
+      item.spesialisasi?.toLowerCase().includes(search) ||
+      item.no_hp?.toLowerCase().includes(search)
+    );
+  });
+}, [data, searchTerm]);
 
 
 const handleAfterAddDokter = (dokterData) => {
@@ -396,7 +410,7 @@ const handleCloseModal = () => {
             <p>Loading data...</p>
           ) : (
             <>
-              <Basetable data={data} columns={columns} />
+              <Basetable data={filteredDokter} columns={columns} />
             </>
           )}
         </div>
