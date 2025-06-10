@@ -1,21 +1,22 @@
 import React from 'react';
 import axios from 'axios';
-import.meta.env.VITE_BASE_URL
 import { useMemo,useEffect, useState } from 'react';
+import { groupBy, orderBy } from 'lodash';
 import Basetable from "../../components/Table/Basetable";
+import { useAuth } from "../../components/Auth";
 import dayjs from "dayjs";
 import _groupBy from "lodash/groupBy";
 import _orderBy from "lodash/orderBy";
 import uniq from "lodash/uniq";
 import "dayjs/locale/id";
 dayjs.locale("id");  
+import.meta.env.VITE_BASE_URL
 
 
 
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
 import { TiUser } from 'react-icons/ti'
-import { SiOpenstreetmap } from 'react-icons/si';
 import { LuSquareArrowLeft } from "react-icons/lu";
 import { LuSquareArrowRight } from "react-icons/lu";
 import { FaCalendarDays } from "react-icons/fa6";
@@ -50,6 +51,8 @@ const Jadwal = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [tanggalHeader,setTanggalHeader] = useState([]);
+  const token = localStorage.getItem("token");
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchDokter = async () => {
@@ -61,6 +64,8 @@ const Jadwal = () => {
           },
           });
         const alldokter = res.data;
+
+        // 1. mengambil data jadwal dari data dokter berdasarkan jam
         const allJadwal =alldokter.flatMap((d) =>
           (Array.isArray(d.jadwal) ? d.jadwal : []).flatMap((j) =>
             (Array.isArray(j.jam) ? j.jam : []).map((session) => ({
@@ -73,44 +78,51 @@ const Jadwal = () => {
           )
         );
 
-        const getJamRange = (slots) => {
-          if (!slots || slots.length === 0) return "-";
-          const sortedJam = slots.slice().sort((a, b) => a.time.localeCompare(b.time));
+        // 2. Menampilkan jam berbentuk range
+        const getJamRange = (waktu) => {
+          if (!waktu || waktu.length === 0) return "-";
+          const sortedJam = waktu.slice().sort((a, b) => a.time.localeCompare(b.time));
+          // console.log(sortedJam) mengurutkan jam/hari
           return `${sortedJam[0].time} - ${sortedJam[sortedJam.length - 1].time}`;
         };
 
-        
-        const byDate = _groupBy(allJadwal, "tanggal");
-        const sortDate = _orderBy(Object.keys(byDate), (t) => t, "asc");
-        const hasil = sortDate.map((tgl) => {
-          const byDoctor = _groupBy(byDate[tgl], "dokterId");
-          const dokterArr = Object.values(byDoctor).map((byJam) => {
-            const meta = byJam[0];
-            const jamSorted = _orderBy(byJam, (s) => s.time, "asc").map(
-              (s) => ({
-                time: s.time,
-                available: s.available
-              })
-            );
-            return {
-                id: meta.dokterId,
-                nama: meta.dokterNama,
-                spesialis: meta.spesialis,
-                foto: meta.foto,
-                slot: getJamRange(jamSorted)
-              };
-            });
-            return {tanggal: tgl,dokter: dokterArr};
-            });
-          
+       
+        //3. grup by jadwal(Waktu) by tanggal
+        const byDate = groupBy(allJadwal, "tanggal")
+
+        //4. DIurutkan by tanggal saja
+        const sortDate = orderBy(Object.keys(byDate), (t) => t, "asc");
+        console.log(sortDate)
+
+
+        // const hasil = sortDate.map((tgl) => {
+        //   const byDoctor = groupBy(byDate[tgl], "dokterId");
+        //   const dokterArr = Object.values(byDoctor).map((byJam) => {
+        //     const meta = byJam[0];
+        //     const jamSorted = orderBy(byJam, (s) => s.time, "asc").map(
+        //       (s) => ({
+        //         time: s.time,
+        //         available: s.available
+        //       })
+        //     );
+        //     return {
+        //         id: meta.dokterId,
+        //         nama: meta.dokterNama,
+        //         spesialis: meta.spesialis,
+        //         foto: meta.foto,
+        //         slot: getJamRange(jamSorted)
+        //       };
+        //     });
+        //     return {tanggal: tgl,dokter: dokterArr};
+        //     }); 
         setDataDokter(alldokter);
         setTanggalHeader(sortDate);
-        console.log("Data Dokter",sortDate);
+        // console.log("Data Dokter",sortDate);
       } catch (error) {
         console.error(error);}
       }; 
         fetchDokter()
-      },[]);
+    },[]);
    
   // DATA TABLE   
   const staticColumns = [
@@ -146,20 +158,19 @@ const Jadwal = () => {
     );
   }
 
-
   const [mingguPage, setMingguPage] = useState(0);
   const minDate = useMemo(
     () => (tanggalArray.length ? dayjs(tanggalArray[0]) : dayjs()),
     [tanggalArray]
   );
-  const monday0 = minDate.startOf("week");
+  const monday0 = dayjs().startOf("week");
   const mondayAktif =  useMemo(() => monday0.add(mingguPage, "week"),[monday0, mingguPage]);
   const startDate = dayjs(minDate);  
   const tanggalAktif = useMemo(
     () => getRentangMinggu(mondayAktif),
     [mondayAktif]
   );
-
+  
   const [tanggalPage, setTanggalPage] = useState(1);
   const tanggalPerPage = 6;    
   const firstIdx = (tanggalPage - 1) * tanggalPerPage;
@@ -190,6 +201,7 @@ const Jadwal = () => {
       [tanggalAktif]
     );
 
+    
     const labelRentang = `${mondayAktif.format("DD MMM")} – ${mondayAktif
       .add(6, "day")
       .format("DD MMM YYYY")}`;
@@ -198,22 +210,15 @@ const Jadwal = () => {
       [dynamicColumns]
     );
 
-  const handleLogout = () => {
-    // Hapus token dari localStorage
-    localStorage.removeItem("token");
-
-    // Redirect ke halaman login
-    navigate("/login");
-  };
+    
+    
+    const handleLogout = () => {
+      // Hapus token dari localStorage
+      localStorage.removeItem("token");
   
-  const mingguSekarang = useMemo(() => {
-  const sekarang = dayjs().startOf("week");
-  const mondayPertama = tanggalArray.length
-    ? dayjs(tanggalArray[0]).startOf("week")
-    : sekarang;
-    return sekarang.diff(mondayPertama, "week");
-  }, [tanggalArray]);
-
+      // Redirect ke halaman login
+      navigate("/login");
+    };
 
 
   
@@ -242,7 +247,7 @@ const Jadwal = () => {
                                 href=""
                                 className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
                                 <HiOutlineUser className='text-[30px]' />
-                                Administrator
+                                 {user?.username}
                             </a>
                             
                             <a
