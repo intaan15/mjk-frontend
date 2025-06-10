@@ -450,7 +450,8 @@ function Verifikasi() {
                <div className="flex flex-wrap justify-between items-center py-3 px-6 ">
                    <div className="flex flex-row gap-8 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
                        <div className="bg-white p-3 rounded-full flex items-center justify-center">
-                           <HiOutlineUsers className="text-[45px] item-center text-[#38B6FE]" />
+                            <img src="/icon_totalverifikasi.svg" alt="totalverifikasi" className="text-[45px] item-center text-[#38B6FE]" />
+                           {/* <HiOutlineUsers className="text-[45px] item-center text-[#38B6FE]" /> */}
                        </div>
                        <div className="flex flex-col">
                            <span className=" text-white font-bold text-md "  style={{ fontFamily: "Nunito Sans" }}>Total Verifikasi</span>
@@ -459,7 +460,7 @@ function Verifikasi() {
                    </div>
                    <div className="flex flex-row gap-4 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
                        <div className="bg-white p-3 rounded-full flex items-center justify-center">
-                           <HiOutlineUserAdd className="text-[45px] item-center text-[#6AC03D]" />
+                            <img src="/icon_verifikasiditerima.svg" alt="diterima" className="text-[50px] item-center text-[#6AC03D]" />
                        </div>
                        <div className="flex flex-col">
                            <span className=" text-white font-bold text-md"  style={{ fontFamily: "Nunito Sans" }}>Verifikasi Diterima</span>
@@ -468,7 +469,7 @@ function Verifikasi() {
                    </div>
                    <div className="flex flex-row gap-4 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
                        <div className="bg-white p-3 rounded-full flex items-center justify-center">
-                           <HiOutlineUserMinus className="text-[45px] item-center text-[#EF3826]" />
+                            <img src="/icon_verifikasiditolak.svg" alt="ditolak" className="text-[45px] item-center text-[#EF3826]" />
                        </div>
                        <div className="flex flex-col">
                            <span className="text-white font-bold text-md" style={{ fontFamily: "Nunito Sans" }}>Verifikasi Ditolak</span>
@@ -481,24 +482,24 @@ function Verifikasi() {
                     <div className="flex flex-row gap-8 bg-[#D9D9D9]/50 p-2 rounded-3xl items-center px-6">
                         <div
                             onClick={() => setFilterStatus("semua")}
-                            className={`cursor-pointer rounded-4xl border-2 px-4 py-1 border-[#033E61] ${
-                            filterStatus === "semua" ? "bg-[#025F96] text-white border-[#033E61]" : "bg-[#D9D9D9]/50 "
+                            className={`cursor-pointer font-[raleway] rounded-4xl border-2 px-4 py-1 border-[#033E61] ${
+                            filterStatus === "semua" ? "bg-[#025F96] font-bold text-white border-[#033E61]" : "bg-[#D9D9D9]/50 "
                             }`}>
                             Verifikasi
                         </div>
 
                         <div
                             onClick={() => setFilterStatus("diterima")}
-                            className={`cursor-pointer rounded-4xl border-2 px-4 py-1 border-[#033E61]  ${
-                            filterStatus === "diterima" ? "bg-[#025F96] text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
+                            className={`cursor-pointer font-[raleway]  rounded-4xl border-2 px-4 py-1 border-[#033E61]  ${
+                            filterStatus === "diterima" ? "bg-[#025F96] font-bold text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
                             }`}>
                             Diterima
                         </div>
 
                         <div
                             onClick={() => setFilterStatus("ditolak")}
-                            className={`cursor-pointer rounded-4xl border-2 px-4 py-1 border-[#033E61]  ${
-                                filterStatus === "ditolak" ? "bg-[#025F96] text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
+                            className={`cursor-pointer font-[raleway]  rounded-4xl border-2 px-4 py-1 border-[#033E61]  ${
+                                filterStatus === "ditolak" ? "bg-[#025F96] font-bold text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
                             }`}>
                             Ditolak
                         </div> 

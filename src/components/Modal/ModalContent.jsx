@@ -512,9 +512,9 @@ export default function ModalContent({
             <div className="flex flex-col justify-center items-center gap-4 w-4/5 mt-7 ">
               <div className=" border-2 border-[#025F96] rounded-full p-12">foto</div>
               <div className=" grid grid-cols-2 gap-5 w-full text-center p-4">
-                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold underline">Nama</div>
-                  <div>{dataMasyarakatbyId?.nama_masyarakat || " "}</div>
+                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10  bg-yellow-200">
+                  <span className="text-[#025F96] font-bold underline bg-blue-400">Nama</span>
+                  <div className="bg-red-400">{dataMasyarakatbyId?.nama_masyarakat || " "}</div>
                 </div>
                 <div className=" grid grid-rows-2 gap-2 w-full text-left px-10">
                   <div className="text-[#025F96] font-bold underline">Username</div>

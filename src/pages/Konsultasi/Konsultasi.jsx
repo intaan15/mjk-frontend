@@ -6,6 +6,7 @@ import.meta.env.VITE_BASE_URL
 
 import { useState } from "react";
 import { useEffect } from "react";
+import { useMemo } from 'react';
 
 
 // import Trash from "./icons/Trash";
@@ -31,21 +32,9 @@ function Konsultasi() {
   const toggleDropdown = () => setIsOpen(!isOpen);
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  // filterstatus
-  const filteredRows = data.filter((row) => {
-    const statusMatch =
-      filterStatus === "Diproses"
-        ? row.status_konsul === "menunggu" || row.status_konsul === "berlangsung" || row.status_konsul === "diterima"
-        : filterStatus === "Selesai"
-        ? row.status_konsul === "selesai" || row.status_konsul === "ditolak"
-        : true;
-    
-    // Filter berdasarkan nama pasien
-    const nameMatch = row.masyarakat_id?.nama_masyarakat?.toLowerCase().includes(searchTerm.toLowerCase());
-    return statusMatch && nameMatch;
-
-  });
 
   const handleLogout = () => {
     // Hapus token dari localStorage
@@ -54,17 +43,6 @@ function Konsultasi() {
     // Redirect ke halaman login
     navigate("/login");
   };
-
-
-   const formatTanggal = (isoDateString) => {
-  const date = new Date(isoDateString);
-    return date.toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
-
 
   // ENDPOINT GET DATA jadwal
   useEffect(() => {
@@ -86,7 +64,40 @@ function Konsultasi() {
         });
   }, []);
 
-   const columns = [
+    // filterstatus
+  const filteredRows = data.filter((row) => {
+    const statusMatch =
+      filterStatus === "Diproses"
+        ? row.status_konsul === "menunggu" || row.status_konsul === "berlangsung" || row.status_konsul === "diterima"
+        : filterStatus === "Selesai"
+        ? row.status_konsul === "selesai" || row.status_konsul === "ditolak"
+        : true;
+    
+    // Filter berdasarkan nama pasien
+    const nameMatch = row.masyarakat_id?.nama_masyarakat?.toLowerCase().includes(searchTerm.toLowerCase());
+    return statusMatch && nameMatch;
+
+  });
+
+  
+  const totalItems = filteredRows.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredRows.slice(start, start + itemsPerPage);
+  }, [filteredRows, currentPage, itemsPerPage]);
+
+  const formatTanggal = (isoDateString) => {
+  const date = new Date(isoDateString);
+    return date.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  const columns = [
            {
             header: "No",
             enableSorting: false,
@@ -190,9 +201,11 @@ function Konsultasi() {
         
           
       ];
+
       
   
-  
+
+  // FRONT END
   return (
     <div className="flex flex-row h-screen">
       <main className='flex flex-col pl-8 gap-1 w-full pr-3 h-screen'>
@@ -252,11 +265,12 @@ function Konsultasi() {
             </div>
           </div> 
         </div>
-       <div className="w-[100%] h-1 bg-[#1177B3]"></div>
+        <img src="/line style.svg" alt="" />
+       {/* <div className="w-[100%] h-1 bg-[#1177B3]"></div> */}
 
 
         {/* Button Tengah */}
-        <div className="flex flex-row justify-center w-full py-2 gap-20">
+        <div className="flex flex-row justify-center w-full py-2 gap-15">
           <button
             onClick={() => setFilterStatus("Diproses")}
             className={`${
@@ -278,20 +292,66 @@ function Konsultasi() {
           </button>
         </div>
 
-    
         {/* HEADER TABEL Filtering Tabel BLM FIX */}
         <div className="py-5">
             {loading ? (
                 <p>Loading data...</p>
             ) : (
                 <>
-                <Basetable data={filteredRows} columns={columns} />
+                <Basetable data={paginatedData} columns={columns} />
                 
                 </>
             )}
-            
         </div>
-        
+
+        {/* Pagination */}
+        <div className="grid grid-cols-3 items-center justify-center">
+          {/* Jumlah ditampilkan */}
+          <div className="text-sm text-gray-600">
+            Menampilkan {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems} hasil
+          </div>
+
+          {/* Navigasi dan Items per page */}
+          <div className="flex items-center gap-4">
+            {/* Pagination Number */}
+            <div className="flex items-center space-x-2">
+             <button
+                className={`px-2 py-1 border-2 rounded-md transition duration-200 
+                  ${currentPage === 1 
+                    ? "opacity-50 cursor-not-allowed border-gray-300"
+                    : "hover:bg-[#004A76] hover:text-white"}
+                `}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}>
+                &lt;
+              </button>
+
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`px-3 py-1  ${currentPage === i + 1 ? "bg-[#004A76] text-white" : ""}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                className={`px-2 py-1 border-2 rounded-md transition duration-200 
+                  ${currentPage === totalPages
+                    ? "opacity-50 cursor-not-allowed border-gray-300"
+                    : " hover:bg-[#004A76] hover:text-white"}
+                `}
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}>
+                &gt;
+              </button>
+            </div>
+          </div>
+        </div>
+
+
+       
       </main>
     </div>
     
