@@ -40,7 +40,7 @@ const Basetable = ({ data, columns }) => {
                     style={{ fontFamily: '"Nunito Sans"' }}
                     onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
                   >
-                    <div className="flex gap-1 p-4 border-blue-gray-50 justify-center ">
+                    <div className="flex gap-3 p-4 border-blue-gray-50 justify-start items-center text-center ">
                       {flexRender(header.column.columnDef.header, header.getContext())}
                     {isSortable && (
   <>
@@ -60,7 +60,7 @@ const Basetable = ({ data, columns }) => {
           {table.getRowModel().rows.map(row => (
             <tr key={row.id} className="hover:bg-gray-100 text-sm  ">
               {row.getVisibleCells().map(cell => (
-                <td key={cell.id} className={`border-b text-sm font-[Nunito Sans] p-2 text-justify ${
+                <td key={cell.id} className={`border-b text-sm font-[Nunito Sans] p-4 text-justify ${
                     ["str_dokter"].includes(cell.column.id) ? "text-center" : "text-left"
                   }`}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -196,7 +196,7 @@ function Dashboard() {
      {/* container main */}
       <main className="flex flex-col pl-8 pr-3 gap-1  pb-3 h-screen">
         <div className="flex flex-row  items-center justify-between pt-3">
-          <p className="text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
+          <p className="text-3xl font-[raleway] font-bold text-[#004A76]">
             Dashboard
           </p>
           <div className="flex flex-row gap-4 relative">

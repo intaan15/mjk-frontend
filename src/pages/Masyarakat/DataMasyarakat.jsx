@@ -152,7 +152,7 @@ function DataMasyarakat() {
         return (
           <img 
             src="foto"
-            alt="Foto Dokter" 
+            alt="Foto Masyrakat" 
             className="w-10 h-10 object-cover rounded-full" 
           />
         );} 
@@ -162,7 +162,7 @@ function DataMasyarakat() {
       header: "Nama Pengguna",
       enableSorting: false,
       cell: ({ getValue }) => (
-        <div  className="whitespace-normal break-words max-w-xs" title={getValue()}>
+        <div  className="whitespace-normal break-words max-w-60" title={getValue()}>
           {getValue()}
         </div>
       ),
@@ -216,15 +216,15 @@ function DataMasyarakat() {
     
 
   return (
-    <div className="flex flex-row ">
+    <div className="flex flex-row h-screen ">
       <main className="flex flex-col pl-8 gap-1 w-full pr-3 h-screen  ">
         {/* <footer> */}
-        <div className="flex flex-row items-center justify-between  pt-2">
-          <p className="text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
+        <div className="flex flex-row items-center justify-between  pt-3">
+          <p className="text-3xl font-[raleway] font-bold text-[#004A76]">
             Data Masyarakat
           </p>
-          <div className="flex flex-row gap-4">
-            <div className="flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
+          <div className="flex flex-row gap-2 relative">
+            <div className="flex items-center rounded-[19px] px-3 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
               <IoIosSearch className="text-gray-400" />
               <input
                 type="text"
@@ -238,8 +238,7 @@ function DataMasyarakat() {
             <div className="flex flex-row gap-4 relative">
               <button
                 onClick={toggleDropdown}
-                className="flex items-center space-x-2 focus:outline-none cursor-pointer"
-              >
+                className="flex items-center space-x-2 focus:outline-none cursor-pointer">
                 <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
               </button>
 

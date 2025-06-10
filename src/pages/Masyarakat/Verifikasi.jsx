@@ -317,7 +317,7 @@ function Verifikasi() {
             header: "Nama",
             enableSorting: false,
             cell: ({ row }) => 
-                <div className='w-40 truncate'>
+                <div className='whitespace-normal break-words max-w-60'>
                     {row.original.nama_masyarakat}
                 </div>
 
@@ -359,7 +359,7 @@ function Verifikasi() {
                 const status = row.original.verifikasi_akun_masyarakat;
 
                 if (status === "diterima") {
-                    return <span className="bg-[#27AE60] text-white w-15 hover:bg-green-200 hover:text-[#27AE60] p-1 rounded-[10px] transition">Diterima</span>;
+                    return <span className="bg-[#27AE60] text-white w-15  hover:bg-green-200 hover:text-[#27AE60] p-1 rounded-[10px] transition">Diterima</span>;
                 }
 
                 if (status === "ditolak") {
@@ -372,7 +372,7 @@ function Verifikasi() {
                     <button
                         onClick={() => handleVerifikasi("diterima", row.original._id, row.original.email_masyarakat)}
                         title="Terima"
-                        className="bg-[#27AE60] text-white w-15 hover:bg-green-200 hover:text-[#27AE60] p-1 rounded-[10px] transition">
+                        className="bg-[#27AE60] text-white w-15 text-center hover:bg-green-200 hover:text-[#27AE60] p-1 rounded-[10px] transition">
                         Diterima
                     </button>
                     <button
@@ -392,8 +392,10 @@ function Verifikasi() {
     return (
        <div className='flex flex-row'>
            <main className='flex flex-col pl-8 gap-1 w-full pr-3 h-screen'>
-               <div className='flex flex-row items-center justify-between pt-1'>
-                   <p className='text-3xl font-[Nunito Sans] font-bold text-[#004A76]'>Verifikasi Data Masyarakat</p>
+               <div className='flex flex-row items-center justify-between pt-3'>
+                   <p className='text-3xl font-[raleway] font-bold text-[#004A76]'>
+                        Verifikasi Data Masyarakat
+                    </p>
                    <div className="flex flex-row gap-4 relative">
                         <div className=" flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2 ">
                             <IoIosSearch className="text-gray-400"/>

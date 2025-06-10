@@ -179,7 +179,7 @@ function Konsultasi() {
                     fontstyle ="font-[raleway] font-semibold";
                 }
                 return (
-                  <span className={`px-2 py-1 rounded-full text-sm font-medium ${bgColor} ${textColor}`}>
+                  <span className={`px-2 py-1 rounded-md text-sm font-medium ${bgColor} ${textColor}`}>
                     {label}
                   </span>
                 );
@@ -199,13 +199,13 @@ function Konsultasi() {
         
         {/* Atas(search & profile) */}
         <div className='flex flex-row  items-center justify-between pt-3'>
-          <p className='text-3xl font-[Nunito Sans] font-bold text-[#004A76]'>
+          <p className='text-3xl font-[raleway] font-bold text-[#004A76]'>
             Konsultasi
           </p>
-          <div className="flex flex-row gap-4 relative">
+          <div className="flex flex-row gap-2 relative">
 
             {/* search */}
-            <div className="flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2">
+            <div className="flex items-center rounded-[19px] px-3 justify-start py-1 border-[1.5px] border-gray-300 gap-3">
               <IoIosSearch className="text-gray-400"/>
               <input
                 type="text"

@@ -272,7 +272,7 @@ export default function ModalContent({
             <h1 className="text-2xl font-extrabold font-[raleway] underline text-[#004A76]">Detail  Artikel</h1>
             <div className="flex-1 flex-row">
               <div className="flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label className="block mb-2 font-extrabold font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}>
+                <label className="block mb-2 font-extrabold text-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}>
                   Judul
                 </label>
                 <div className="w-4/5">
