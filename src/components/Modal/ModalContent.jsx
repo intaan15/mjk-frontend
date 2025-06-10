@@ -500,51 +500,52 @@ export default function ModalContent({
       // console.log("Data di modal:", dataMasyarakat);
       return (
         <>
-          <div className="text-start flex flex-col justify-center items-center ">
+          <div className="text-start flex flex-col justify-center items-center bg-red-300 ">
             <button
               onClick={onClose}
               className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold text-[#025F96]">Detail Profil Masyarakat</h1>
+            <h1 className="text-2xl font-bold text-[#025F96] font-[raleway]">Detail Profil Masyarakat</h1>
 
-            <div className="flex flex-col justify-center items-center gap-4 w-full mt-7">
+            <div className="flex flex-col justify-center items-center gap-4 w-4/5 mt-7 bg-yellow-100">
               <div className="bg-yellow-300 border-2 border-[#025F96] rounded-full p-12">foto</div>
-              <div className="grid grid-cols-2 gap-4 w-full text-center">
-                <div>
+              <div className="bg-red-200 grid grid-cols-2 gap-2 w-full text-center">
+                <div className="bg-blue-100 grid grid-rows-2 gap-2 w-full text-left px-5">
                   <div className="text-[#025F96] font-bold underline">Nama</div>
                   <div>{dataMasyarakatbyId?.nama_masyarakat || " "}</div>
                 </div>
-                <div>
+                <div className=" bg-blue-100 grid grid-rows-2 gap-2 w-full text-left px-5">
                   <div className="text-[#025F96] font-bold underline">Username</div>
                   <div>{dataMasyarakatbyId?.username_masyarakat || " "}</div>
                 </div>
-                <div>
+                <div className="bg-blue-100 grid grid-rows-2 gap-2 w-full text-left px-5">
                   <div className="text-[#025F96] font-bold underline">Email</div>
                   <div>{dataMasyarakatbyId?.email_masyarakat || " "}</div>
                 </div>
-                <div>
+                <div className="bg-blue-100 grid grid-rows-2 gap-2 w-full text-left px-5">
                   <div className="text-[#025F96] font-bold underline">NIK</div>
                   <div>{dataMasyarakatbyId?.nik_masyarakat}</div>
                 </div>
-                <div>
+                <div className="bg-blue-100 grid grid-rows-2 gap-2 w-full text-left px-5">
                   <div className="text-[#025F96] font-bold underline">Alamat</div>
                   <div>{dataMasyarakatbyId?.alamat_masyarakat}</div>
                 </div>
-                <div>
+                <div className="bg-blue-100 grid grid-rows-2 gap-2 w-full text-left px-5">
                   <div className="text-[#025F96] font-bold underline">Nomor Telepon</div>
                   <div>{dataMasyarakatbyId?.notlp_masyarakat}</div>
                 </div>
-                <div>
+                <div className="bg-blue-100 grid grid-rows-2 gap-2 w-full text-left px-5">
+
                   <div className="text-[#025F96] font-bold underline">Jenis Kelamin</div>
                   <div>{dataMasyarakatbyId?.jeniskelamin_masyarakat}</div>
                 </div>
-                <div>
+                <div className="bg-blue-100 grid grid-rows-2 gap-2 w-full text-left px-5">
                   <div className="text-[#025F96] font-bold underline">Tanggal Lahir</div>
                   <div>{dataMasyarakatbyId?.tgl_lahir_masyarakat?.slice(0, 10)}</div>
                 </div>
-                <div >
+                <div className="" >
                   <div className="text-[#025F96] font-bold underline">Foto KTP</div>
                   <div className=" bg-orange-200 h-50 rounded-xl">
                       <img
