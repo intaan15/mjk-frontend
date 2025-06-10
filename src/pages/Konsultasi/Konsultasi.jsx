@@ -195,11 +195,13 @@ function Konsultasi() {
   
   return (
     <div className="flex flex-row h-screen">
-      <main className='flex flex-col pl-8 gap-1 w-full pr-3 '>
+      <main className='flex flex-col pl-8 gap-1 w-full pr-3 h-screen'>
         
         {/* Atas(search & profile) */}
-        <div className='flex flex-row  items-center justify-between pt-2'>
-          <p className='text-3xl font-[Nunito Sans] font-bold text-[#004A76]'>Konsultasi</p>
+        <div className='flex flex-row  items-center justify-between pt-3'>
+          <p className='text-3xl font-[Nunito Sans] font-bold text-[#004A76]'>
+            Konsultasi
+          </p>
           <div className="flex flex-row gap-4 relative">
 
             {/* search */}

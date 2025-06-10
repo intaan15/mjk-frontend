@@ -278,8 +278,8 @@ function DataMasyarakat() {
         <img src="/line style.svg" alt="" />
 
         {/* jumlahPengguna */}
-        <div className="flex flex-row justify-between w-full  items-center px-10 py-2">
-          <div className="flex flex-row gap-8 bg-[#033E61] h-[70px] p-2 rounded-xl items-center px-6">
+        <div className="flex flex-row justify-between w-full  items-center px-10 py-2 ">
+          <div className="flex flex-row gap-8 bg-[#033E61] h-[70px] p-2 rounded-xl items-center px-6 shadow-2xl  ">
             <div className="bg-white p-3 rounded-full flex items-center justify-center">
               <img src="/icon_user_verifikasi.svg" alt=""  className="w-8 h-8 item-center text-[#979797] "/>
             </div>

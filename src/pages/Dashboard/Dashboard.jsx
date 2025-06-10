@@ -181,6 +181,7 @@ function Dashboard() {
     return `${day}-${month}-${year}`;
   };
 
+  
 // Data untuk chart
  const dataBar = {
   konsultasi: jumlahKonsultasi,
@@ -256,11 +257,11 @@ function Dashboard() {
 
         {/* statistik  */}
         <div className="bg-[#004A76] flex flex-row rounded-lg mt-2">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-white items-center">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-white items-center font-[raleway]">
                <div className="flex items-center gap-3">
                    <StatBox
                       icon={
-                      <BsFillBarChartFill className="w-[30px] h-[30px] text-white font-[Nunito Sans]"/>}
+                      <BsFillBarChartFill className="w-[30px] h-[30px] text-white font-[raleway]"/>}
                       title="Jumlah Pengguna"
                       value={jumlahPengguna}
                     />
@@ -268,7 +269,7 @@ function Dashboard() {
 
                <div className="flex items-center gap-3">
                     <StatBox
-                      icon={<GrArticle className="w-[30px] h-[30px] text-white" />}
+                      icon={<GrArticle className="w-[30px] h-[30px] text-white"/>}
                       title="Artikel Publish"
                       value={artikelPublish}
                     />

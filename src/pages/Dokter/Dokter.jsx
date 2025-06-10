@@ -267,6 +267,10 @@ const handleCloseModal = () => {
         accessorKey: "nama_dokter",
         header: "Nama",
         enableSorting: false,
+        cell: ({ row }) => 
+          <div className='w-50 truncate'>
+              {row.original.nama_dokter}
+          </div>
       },
       {
         accessorKey: "username_dokter",
