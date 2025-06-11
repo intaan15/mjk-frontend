@@ -17,7 +17,7 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
         username_dokter: "",
         email_dokter:"",
         rating_dokter:"",
-        spesialis:null,
+        spesialis:"",
         password_dokter:"",
         str_dokter :"",
         notlp_dokter:"",
@@ -60,6 +60,8 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
         };
             fetchData();
     }, [idDokter, token]);
+
+
         
 
     useEffect(() => {
@@ -73,7 +75,7 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
             email_dokter: dataDokterbyId.email_dokter || "",
             notlp_dokter : dataDokterbyId.notlp_dokter || "",
             rating_dokter:dataDokterbyId.rating_dokter || "",
-            foto_profil_dokter:null,
+            foto_profil_dokter:dataDokterbyId.foto_profil_dokter || "",
             spesialis: dataDokterbyId.spesialis_dokter
                 ? { label: dataDokterbyId.spesialis_dokter, value: dataDokterbyId.spesialis_dokter }
                 : null,
@@ -85,7 +87,7 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
     }, [dataDokterbyId]);
     
     //console.log(formData)
-    //console.log("foto_profil_dokter:", formData.foto_profil_dokter);
+    console.log("foto_profil_dokter:", formData.foto_profil_dokter);
 
 
     //handle opsi poli yang dipilih

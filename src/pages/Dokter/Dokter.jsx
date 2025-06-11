@@ -257,20 +257,17 @@ const totalItems = filteredDokter.length;
         cell: ({ getValue }) => {
           const imageUrl = getValue();
           console.log("Image URL:", imageUrl);
-          return (
+
+          return imageUrl ? (
             <img
-              src={
-                (`${import.meta.env.VITE_BASE_URL}/api/dokter/${imageUrl}`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                  },
-                })
-              }
+              src={`${import.meta.env.VITE_BASE_URL}${imageUrl}`}
               alt="Foto Dokter"
               className="w-10 h-10 object-cover rounded-full"
             />
-          );} 
+          ) : (
+            <div className="w-10 h-10 bg-gray-300 rounded-full" />
+          );
+        }
       },
       {
         accessorKey: "nama_dokter",
