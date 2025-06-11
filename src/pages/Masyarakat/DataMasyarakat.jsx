@@ -1,6 +1,6 @@
 import React, { use } from 'react'
 import axios from 'axios' //library untuk melakukan request HTTP
-import { useState, useEffect,useCallback } from 'react' //hook untuk state dan efek samping
+import { useState, useEffect,useCallback,useMemo } from 'react' //hook untuk state dan efek samping
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../components/Auth";
 import.meta.env.VITE_BASE_URL
@@ -36,6 +36,8 @@ function DataMasyarakat() {
   const [loading, setLoading] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const {user} = useAuth();
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
 
   const openModalWithId = (type,id) => {
@@ -159,7 +161,7 @@ function DataMasyarakat() {
     },
     {
       accessorKey: "nama_masyarakat",
-      header: "Nama Pengguna",
+      header: "Nama",
       enableSorting: false,
       cell: ({ getValue }) => (
         <div  className="whitespace-normal break-words max-w-60" title={getValue()}>
@@ -211,7 +213,14 @@ function DataMasyarakat() {
   useEffect(() => {
     // console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
   }, [filteredRows]);
-        
+  
+  const totalItems = filteredRows.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+    const paginatedData = useMemo(() => {
+      const start = (currentPage - 1) * itemsPerPage;
+      return filteredRows.slice(start, start + itemsPerPage);
+  }, [filteredRows, currentPage, itemsPerPage]);
       
     
 
@@ -292,18 +301,66 @@ function DataMasyarakat() {
             </div>
           </div>
         </div>
-
-        {/* main tabel  */}
+      
         {/* main  */}
         <div>
           {loading ? (
             <p>Loading data...</p>
           ) : (
             <>
-              <Basetable data={filteredRows} columns={columns} />
+              <Basetable data={paginatedData} columns={columns} />
             </>
           )}
         </div>
+
+
+        {/* Pagination */}
+          <div className="grid grid-cols-3 items-center justify-center">
+            {/* Jumlah ditampilkan */}
+            <div className="text-sm text-gray-600">
+              Menampilkan {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems} hasil
+            </div>
+
+            {/* Navigasi dan Items per page */}
+            <div className="flex items-center gap-4">
+              {/* Pagination Number */}
+              <div className="flex items-center space-x-2">
+              <button
+                  className={`px-2 py-1 border-2 rounded-md transition duration-200 
+                    ${currentPage === 1 
+                      ? "opacity-50 cursor-not-allowed border-gray-300"
+                      : "hover:bg-[#004A76] hover:text-white"}
+                  `}
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}>
+                  &lt;
+                  </button>
+
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={`px-3 py-1  ${currentPage === i + 1 ? "bg-[#004A76] text-white" : ""}`}
+                    >
+                      {i + 1}
+                    </button>
+                ))}
+
+                <button
+                  className={`px-2 py-1 border-2 rounded-md transition duration-200 
+                    ${currentPage === totalPages
+                      ? "opacity-50 cursor-not-allowed border-gray-300"
+                      : " hover:bg-[#004A76] hover:text-white"}
+                  `}
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}>
+                  &gt;
+                </button>
+              </div>
+            </div>
+          </div>
+
+        
 
         <Modal open={isModalOpen} onClose={closeModal}>
           <ModalContent
