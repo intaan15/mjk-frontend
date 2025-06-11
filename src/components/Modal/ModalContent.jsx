@@ -664,8 +664,8 @@ export default function ModalContent({
                     <label className="text-[#025F96] font-bold">Nomor Telepon</label>
                     <input
                       type="text"
-                      id="nomorTelepon"
-                      name="nomorTelepon"
+                      id="notlp"
+                      name="notlp"
                       defaultValue={formMasyarakat.notlp}
                       className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
                       onChange={handleChangeMasyarakat}
@@ -992,10 +992,12 @@ export default function ModalContent({
               
               </div>
               <div className=" text-center">
-                <button type="submit" className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5 font-[raleway] hover:bg-[#039FFC]/70"
-                  
+                <button 
+                  type="submit" 
+                  onClick={() => console.log("Tombol ditekan")}
+                  className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5 font-[raleway] hover:bg-[#039FFC]/50"
                 >
-                  Tambah Data
+                  Tambah Data dokter
                 </button>
               </div>
             </form>
