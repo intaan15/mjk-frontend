@@ -311,7 +311,7 @@ function Dashboard() {
                    <p className="text-6xl font-bold text-[#004A76] font-[raleway]  ">{akunBaru}</p>
                    <IoStatsChart className='w-20 h-20 text-[#4ED9D9]/70'/>
                 </div>
-                <p className="text-lg text-[#004A76] underline font-semibold">Akun Baru</p>
+                <a href='' className="text-lg text-[#004A76] underline font-semibold">Akun Baru</a>
                 <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
 
