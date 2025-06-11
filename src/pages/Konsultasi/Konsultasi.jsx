@@ -1,12 +1,9 @@
 import React from 'react'
-import axios from 'axios'
 import Basetable from "../../components/Table/Basetable";
+import useLogout from "../../components/_hooks/useLogout";
+import useKonsultasi from "../../components/_hooks/useKonsultasi";
 import { useAuth } from "../../components/Auth";
 import.meta.env.VITE_BASE_URL
-
-import { useState } from "react";
-import { useEffect } from "react";
-import { useMemo } from 'react';
 
 
 // import Trash from "./icons/Trash";
@@ -14,88 +11,42 @@ import { IoIosSearch } from "react-icons/io";
 import { TiUser } from "react-icons/ti";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
-
-
-
-
-
-
+import { TbReload } from "react-icons/tb";
 
 function Konsultasi() {
-
-  const token = localStorage.getItem("token");
-  const [filterStatus, setFilterStatus] = useState("Diproses");
-  const [allRows, setAllRows] = useState([]);
-  const [data, setData] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleDropdown = () => setIsOpen(!isOpen);
-  const [loading, setLoading] = useState(false);
   const { user } = useAuth();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const {handleLogout:handleLogout}=useLogout()
+  const token = localStorage.getItem("token");
+  const {
 
+    //state updater
+    setFilterStatus,
+    setSearchTerm,
+    setAllrows,
+    setIsOpen,
+    setCurrentPage,
+    setSelectedPoli,
+    setSelectedDate,
 
-  const handleLogout = () => {
-    // Hapus token dari localStorage
-    localStorage.removeItem("token");
-
-    // Redirect ke halaman login
-    navigate("/login");
-  };
-
-  // ENDPOINT GET DATA jadwal
-  useEffect(() => {
-    axios.get(`${import.meta.env.VITE_BASE_URL}/api/jadwal/getall`,
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }
-    )
-        .then((res) => {
-            const data = res.data;
-            setAllRows(data);
-            console.log(data);
-            setData(data);
-        })
-        .catch((err) => {
-        console.error('Error fetching data:', err);
-        });
-  }, []);
-
-    // filterstatus
-  const filteredRows = data.filter((row) => {
-    const statusMatch =
-      filterStatus === "Diproses"
-        ? row.status_konsul === "menunggu" || row.status_konsul === "berlangsung" || row.status_konsul === "diterima"
-        : filterStatus === "Selesai"
-        ? row.status_konsul === "selesai" || row.status_konsul === "ditolak"
-        : true;
     
-    // Filter berdasarkan nama pasien
-    const nameMatch = row.masyarakat_id?.nama_masyarakat?.toLowerCase().includes(searchTerm.toLowerCase());
-    return statusMatch && nameMatch;
+    //state
+    filterStatus,
+    searchTerm,
+    isOpen,
+    loading,
+    currentPage,
+    itemsPerPage,
+    formatTanggal,
+    selectedDate,
+    toggleDropdown,
+    paginatedData,
+    totalItems,
+    totalPages,
+    selectedPoli,
+    poliOptions,
+    handleResetFilter
 
-  });
-
-  
-  const totalItems = filteredRows.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  const paginatedData = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filteredRows.slice(start, start + itemsPerPage);
-  }, [filteredRows, currentPage, itemsPerPage]);
-
-  const formatTanggal = (isoDateString) => {
-  const date = new Date(isoDateString);
-    return date.toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
+  } = useKonsultasi(token);
 
   const columns = [
            {
@@ -202,8 +153,6 @@ function Konsultasi() {
           
       ];
 
-      
-  
 
   // FRONT END
   return (
@@ -250,7 +199,6 @@ function Konsultasi() {
                         </a>
                         
                         <a
-                          href="#"
                           onClick={handleLogout}
                           className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
                           <IoLogOutOutline className='text-[30px]' />
@@ -266,10 +214,9 @@ function Konsultasi() {
           </div> 
         </div>
         <img src="/line style.svg" alt="" />
-       {/* <div className="w-[100%] h-1 bg-[#1177B3]"></div> */}
 
 
-        {/* Button Tengah */}
+        {/* Button Tengah FILTER */}
         <div className="flex flex-row justify-center w-full py-2 gap-15">
           <button
             onClick={() => setFilterStatus("Diproses")}
@@ -290,10 +237,49 @@ function Konsultasi() {
             } hover:opacity-80 text-white w-[205px] h-[35px] rounded-[20px] text-[15px] border-[#E3F0F8] border-2 focus-ring-2 `}>
             Riwayat
           </button>
+        </div> 
+        
+        {/* filter by tanggal dan poli */}
+        <div className='flex flex-rows  gap-6 py-3 px-6 '>
+
+          <div className="flex flex-row  gap-3 items-center ">
+            <label className="font-[raleway] font-bold text-[#004A76]  ">Tanggal</label>
+            <input
+              type="date"
+              value={selectedDate}  
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="border rounded p-2 text-gray-700 border-[#004A76] h-10"
+            />
+          </div>
+          
+          <div className="flex flex-row gap-3 items-center">
+            <label className="font-[raleway] font-bold text-[#004A76] ">Filter Poli</label>
+            <select
+              value={selectedPoli}
+              onChange={(e) => setSelectedPoli(e.target.value)}
+              className="border rounded p-2 text-gray-700 border-[#004A76] h-10"
+            >
+              {poliOptions.map((poli, idx) => (
+                <option key={idx} value={poli}>
+                  {poli}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex items-center justify-center">
+            <button   
+              onClick={handleResetFilter}
+              className="bg-[#004A76] hover:bg-[#38B6FE]/50 text-white p-3 items-center rounded-md text-sm font-[raleway]"
+            >
+              <TbReload />
+            </button>
+          </div>
+
         </div>
 
         {/* HEADER TABEL Filtering Tabel BLM FIX */}
-        <div className="py-5">
+        <div className="py-1">
             {loading ? (
                 <p>Loading data...</p>
             ) : (
@@ -303,6 +289,7 @@ function Konsultasi() {
                 </>
             )}
         </div>
+
 
         {/* Pagination */}
         <div className="grid grid-cols-3 items-center justify-center">
@@ -324,16 +311,16 @@ function Konsultasi() {
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}>
                 &lt;
-              </button>
-
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentPage(i + 1)}
-                  className={`px-3 py-1  ${currentPage === i + 1 ? "bg-[#004A76] text-white" : ""}`}
-                >
-                  {i + 1}
                 </button>
+
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setCurrentPage(i + 1)}
+                    className={`px-3 py-1  ${currentPage === i + 1 ? "bg-[#004A76] text-white" : ""}`}
+                  >
+                    {i + 1}
+                  </button>
               ))}
 
               <button
