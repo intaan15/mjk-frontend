@@ -19,7 +19,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
     NIK:"",
     alamat:"",
     notlp:"",
-    jeniskelamin:"",
+    jeniskelamin_masyarakat:"",
     tanggalLahir:"",
     foto_ktp:null,
     selfie_ktp_masyarakat:null,
@@ -78,7 +78,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
       NIK:dataMasyarakatbyId.nik_masyarakat || "",
       notlp:dataMasyarakatbyId.notlp_masyarakat||"",
       alamat:dataMasyarakatbyId.alamat_masyarakat || "",
-      jeniskelamin:dataMasyarakatbyId.jeniskelamin_masyarakat || "",
+      jeniskelamin_masyarakat:dataMasyarakatbyId.jeniskelamin_masyarakat || "",
       notlp:dataMasyarakatbyId.notlp_masyarakat || "",
       tanggalLahir:dataMasyarakatbyId.tgl_lahir_masyarakat
         ? new Date(dataMasyarakatbyId.tgl_lahir_masyarakat).toISOString().split("T")[0]
@@ -90,6 +90,8 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
     });
     console.log("iniform",formData); // Debug
   }, [dataMasyarakatbyId]);
+
+ 
 
   
 
@@ -114,57 +116,58 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
     e.preventDefault();
 
     try {
-    let imagePath = dataMasyarakatbyId.foto_ktp || null; // <-- pakai optional chaining
+      let imagePath = dataMasyarakatbyId.foto_ktp || null; // <-- pakai optional chaining
 
-    if (formData.foto) {
-        const data = new FormData();
-        data.append("foto", formData.foto);
+      if (formData.foto) {
+          const data = new FormData();
+          data.append("foto", formData.foto);
 
-        const uploadRes = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/masyarakat/upload`,
-        data,
+          const uploadRes = await axios.post(
+          `${import.meta.env.VITE_BASE_URL}/api/masyarakat/upload`,
+          data,
+          {
+              headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+              },
+          }
+          );
+            if (!uploadRes.data?.path) {
+            throw new Error("Upload gagal: path tidak ditemukan"); // <-- ini penting
+          }
+          imagePath = uploadRes.data.path;
+    }
+
+    const masyarakatData = {
+        nama_masyarakat: formData.nama,
+        username_masyarakat: formData.username,
+        email_masyarakat: formData.email,
+        nik_masyarakat: formData.NIK,
+        notlp_masyarakat:formData.notlp,
+        alamat_masyarakat: formData.alamat,
+        jeniskelamin_masyarakat: formData.jeniskelamin_masyarakat,
+        tgl_lahir_masyarakat: formData.tanggalLahir,
+        foto_ktp: imagePath, // <-- gunakan imagePath yang sudah diupdate
+    };
+
+    console.log("inimasyarakat",masyarakatData)
+    await axios.patch(
+        `${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${idMasyarakat}`,
+        masyarakatData,
         {
-            headers: {
-            "Content-Type": "multipart/form-data",
+        headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-            },
-        }
-        );
-          if (!uploadRes.data?.path) {
-          throw new Error("Upload gagal: path tidak ditemukan"); // <-- ini penting
-        }
-        imagePath = uploadRes.data.path;
-  }
-
-  const masyarakatData = {
-      nama_masyarakat: formData.nama,
-      username_masyarakat: formData.username,
-      email_masyarakat: formData.email,
-      nik_masyarakat: formData.NIK,
-      notlp_masyarakat:formData.notlp,
-      alamat_masyarakat: formData.alamat,
-      jeniskelamin_masyarakat: formData.jeniskelamin,
-      tgl_lahir_masyarakat: formData.tanggalLahir,
-      foto_ktp: imagePath, // <-- gunakan imagePath yang sudah diupdate
-  };
-
-  await axios.patch(
-      `${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${idMasyarakat}`,
-      masyarakatData,
-      {
-      headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-      },
-      });
+        },
+        });
 
       showSuccessToast("Data masyarakat berhasil diubah");
       onClose(false);
       return;
-    } catch (error) {
-        console.error("Gagal update Data Masyarakat:",error.response?.data || error.message);
-        showErrorToast("Gagal mengubah Data Masyarakat");
-    }
+      } catch (error) {
+          console.error("Gagal update Data Masyarakat:",error.response?.data || error.message);
+          showErrorToast("Gagal mengubah Data Masyarakat");
+      }
     };
 
   return ({

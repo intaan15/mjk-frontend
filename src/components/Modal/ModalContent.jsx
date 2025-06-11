@@ -9,10 +9,7 @@ import Select from "react-select";
 import { FaEye, FaHeartbeat } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";  
-import { IoCalendarOutline } from "react-icons/io5";
 import DOMPurify from "dompurify";
 import "../../index.css";
 
@@ -677,8 +674,9 @@ export default function ModalContent({
                   <div className="flex flex-col items-center">
                     <label className="text-[#025F96] font-bold">Jenis Kelamin</label>
                     <select
-                      name="jenisKelamin"
-                      defaultValue={formMasyarakat.jeniskelamin}
+                      name="jeniskelamin_masyarakat"
+                      id="jeniskelamin_masyarakat"
+                      value={formMasyarakat.jeniskelamin_masyarakat}
                       className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
                       onChange={handleChangeMasyarakat}
                       required
