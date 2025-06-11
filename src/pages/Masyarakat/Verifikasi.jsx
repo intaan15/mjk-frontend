@@ -454,7 +454,7 @@ function Verifikasi() {
                            {/* <HiOutlineUsers className="text-[45px] item-center text-[#38B6FE]" /> */}
                        </div>
                        <div className="flex flex-col">
-                           <span className=" text-white font-bold text-md "  style={{ fontFamily: "Nunito Sans" }}>Total Verifikasi</span>
+                           <span className=" text-white font-bold text-md "  style={{ fontFamily: "Nunito Sans" }}>Menunggu Verifikasi</span>
                            <span className=" text-white font-extrabold text-4xl" style={{ fontFamily: "Nunito Sans" }}>{countStatus.pending}</span>
                        </div>
                    </div>
@@ -516,7 +516,8 @@ function Verifikasi() {
                     </>
                     )}
                 </div>
-        
+
+                 
                 <Modal open={isModalOpen} onClose={closeModal}>
                     <ModalContent
                     modalType={modalType}
