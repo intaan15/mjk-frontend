@@ -24,6 +24,8 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
         foto_profil_dokter:null,
 
     });
+
+    console.log(formData)
     
     useEffect(() => {
         // Debug: pastikan props valid
@@ -154,8 +156,7 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
                
             };
             console.log("inidokterr_baru",dokterData)
-            
-
+          
 
             const res = await axios.post(
                 `${import.meta.env.VITE_BASE_URL}/api/dokter/create`,

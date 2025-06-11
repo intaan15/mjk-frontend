@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useMemo,useEffect, useState } from 'react';
 import { groupBy, orderBy } from 'lodash';
 import Basetable from "../../components/Table/Basetable";
+import useLogout from "../../components/_hooks/useLogout";
 import { useAuth } from "../../components/Auth";
 import dayjs from "dayjs";
 import _groupBy from "lodash/groupBy";
@@ -42,6 +43,7 @@ function findSlotDokterPadaTanggal(dokterRow, tgl) {
 
 
 const Jadwal = () => {
+  const {handleLogout:handleLogout}=useLogout()
   const toggleDropdown = () => {setIsOpen(!isOpen);};
   const [loading, setLoading] = useState(false);
   const [jadwal, setJadwal] = useState([]);
@@ -212,14 +214,7 @@ const Jadwal = () => {
 
     
     
-    const handleLogout = () => {
-      // Hapus token dari localStorage
-      localStorage.removeItem("token");
   
-      // Redirect ke halaman login
-      navigate("/login");
-    };
-
 
   
 

@@ -18,6 +18,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
     email:"",
     NIK:"",
     alamat:"",
+    notlp:"",
     jeniskelamin:"",
     tanggalLahir:"",
     foto_ktp:null,
@@ -75,6 +76,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
       username: dataMasyarakatbyId.username_masyarakat || "",
       email: dataMasyarakatbyId.email_masyarakat || "",
       NIK:dataMasyarakatbyId.nik_masyarakat || "",
+      notlp:dataMasyarakatbyId.notlp_masyarakat||"",
       alamat:dataMasyarakatbyId.alamat_masyarakat || "",
       jeniskelamin:dataMasyarakatbyId.jeniskelamin_masyarakat || "",
       notlp:dataMasyarakatbyId.notlp_masyarakat || "",
@@ -99,6 +101,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
     }));
   };
 
+ 
   const handleFileChange = (e) => {
       setFormData((prev) => ({
       ...prev,
@@ -138,6 +141,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
       username_masyarakat: formData.username,
       email_masyarakat: formData.email,
       nik_masyarakat: formData.NIK,
+      notlp_masyarakat:formData.notlp,
       alamat_masyarakat: formData.alamat,
       jeniskelamin_masyarakat: formData.jeniskelamin,
       tgl_lahir_masyarakat: formData.tanggalLahir,
@@ -162,7 +166,6 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
         showErrorToast("Gagal mengubah Data Masyarakat");
     }
     };
-
 
   return ({
     dataMasyarakatbyId,

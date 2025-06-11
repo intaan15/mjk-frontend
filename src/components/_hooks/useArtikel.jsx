@@ -216,7 +216,6 @@ export default function useArtikel({idArtikel,token,onClose}) {
                 gambar_artikel: imagePath,
             };
          
-            console.log("inikategori",artikelData)
 
             await axios.patch(
                 `${import.meta.env.VITE_BASE_URL}/api/artikel/update/${idArtikel}`,
