@@ -106,7 +106,7 @@ const MotionButton = ({ isLoading }) => (
 
   return (
     <div className="flex flex-col justify-center items-center h-screen w-screen">
-      <div className="bg-[#025F96]/10 px-10 py-6 rounded-[10px] w-2/6">
+      <div className="bg-[#025F96]/10 px-10 py-6 rounded-[10px] md:w-2/6 ">
         {/* Logo */}
         <div className="flex flex-col items-center mb-5">
           <img
