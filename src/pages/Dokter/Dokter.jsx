@@ -1,6 +1,5 @@
 import { useState,useEffect, useCallback } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../components/Auth";
 import { useMemo } from "react";
 
@@ -39,6 +38,8 @@ function Dokter() {
   const [reloadTrigger, setReloadTrigger] = useState(0);
   const [dokter, setDokter] = useState([]); 
   const { user } = useAuth();
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
  const openModalWithId = (type,id) => {
     if (!id) {
@@ -231,6 +232,14 @@ const handleCloseModal = () => {
   fetchDokter();
 };
 
+const totalItems = filteredDokter.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * itemsPerPage;
+    return filteredDokter.slice(start, start + itemsPerPage);
+}, [filteredDokter, currentPage, itemsPerPage]);
+
 
 
 
@@ -298,7 +307,7 @@ const handleCloseModal = () => {
         header: "Detail",
         enableSorting: false,
         cell: ({ row }) => (
-         <div className="flex gap-2 items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797]">
+         <div className="grid grid-cols-3 gap-2 items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797]">
             <button onClick={() =>openModal("detailprofildokter",row.original._id )} title="Detail">
               <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg" />
             </button>
@@ -366,7 +375,7 @@ const handleCloseModal = () => {
                         </a>
 
                         <a
-                          href="#"
+                          href=""
                           onClick={handleLogout}
                           className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3"
                         >
@@ -414,10 +423,56 @@ const handleCloseModal = () => {
             <p>Loading data...</p>
           ) : (
             <>
-              <Basetable data={filteredDokter} columns={columns} />
+              <Basetable data={paginatedData} columns={columns} />
             </>
           )}
         </div>
+
+         {/* Pagination */}
+          <div className="grid grid-cols-3 items-center justify-center">
+            {/* Jumlah ditampilkan */}
+            <div className="text-sm text-gray-600">
+              Menampilkan {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems} hasil
+            </div>
+
+            {/* Navigasi dan Items per page */}
+            <div className="flex items-center gap-4">
+              {/* Pagination Number */}
+              <div className="flex items-center space-x-2">
+              <button
+                  className={`px-2 py-1 border-2 rounded-md transition duration-200 
+                    ${currentPage === 1 
+                      ? "opacity-50 cursor-not-allowed border-gray-300"
+                      : "hover:bg-[#004A76] hover:text-white"}
+                  `}
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}>
+                  &lt;
+                  </button>
+
+                  {[...Array(totalPages)].map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setCurrentPage(i + 1)}
+                      className={`px-3 py-1  ${currentPage === i + 1 ? "bg-[#004A76] text-white" : ""}`}
+                    >
+                      {i + 1}
+                    </button>
+                ))}
+
+                <button
+                  className={`px-2 py-1 border-2 rounded-md transition duration-200 
+                    ${currentPage === totalPages
+                      ? "opacity-50 cursor-not-allowed border-gray-300"
+                      : " hover:bg-[#004A76] hover:text-white"}
+                  `}
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}>
+                  &gt;
+                </button>
+              </div>
+            </div>
+          </div>
 
         <Modal open={isModalOpen} onClose={closeModal}>
           <ModalContent
