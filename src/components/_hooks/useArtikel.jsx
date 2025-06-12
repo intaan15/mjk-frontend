@@ -7,6 +7,8 @@ import.meta.env.VITE_BASE_URL
 
 export default function useArtikel({idArtikel,token,onClose}) {
     const [dataArtikel, setDataArtikel] = useState(null);
+    const [showImageModal, setShowImageModal] = useState(false);
+    const [selectedImage, setSelectedImage] = useState('');
      // TAMBAH DATAAAA
     const [formData, setFormData] = useState({
         judul: "",
@@ -61,7 +63,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
             deskripsi: dataArtikel.detail_artikel || "",
             });
         }, [dataArtikel]);
-        console.log("Form data:", formData);
+        // console.log("Form data:", formData);
         
   // Handle input teks dan select
         // const handleChange = (name, value) => {
@@ -161,7 +163,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
             );
 
             showSuccessToast("Artikel berhasil dibuat!");
-            console.log("Artikel berhasil dibuat:", res.data);
+            // console.log("Artikel berhasil dibuat:", res.data);
             // alert("Artikel berhasil dibuat!");
             // onRefresh();
             onClose(false);
@@ -206,7 +208,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
                 }
                 );
                 imagePath = uploadRes.data.path;
-                console.log(imagePath)
+                // console.log(imagePath)
             }
 
             const artikelData = {
@@ -242,15 +244,37 @@ export default function useArtikel({idArtikel,token,onClose}) {
             }
         };
 
+        const handleImageClick = (imageSrc) => {
+            setSelectedImage(imageSrc);
+            setShowImageModal(true);
+        };
+        
+        const closeImageModal = () => {
+            setShowImageModal(false);
+            setSelectedImage('');
+         };
+
+
 
 return {
 
-    formData,
-    handleChange,
-    handleFileChange,
-    handleSubmit,
-    handleEditSubmit,
-    handleChangeKategori,
-    dataArtikel,
+   // Data states
+        formData,
+        dataArtikel,
+        
+        // Modal zoom states
+        showImageModal,
+        selectedImage,
+        
+        // Form handlers
+        handleChange,
+        handleFileChange,
+        handleSubmit,
+        handleEditSubmit,
+        handleChangeKategori,
+        
+        // Modal zoom handlers
+        handleImageClick,
+        closeImageModal,
   }
 }

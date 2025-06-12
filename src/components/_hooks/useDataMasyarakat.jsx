@@ -12,19 +12,19 @@ export const useDataMasyarakat = (token) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const fetchDataMasyarakat = useCallback(async () => {
-        try {
-            const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`, {
-            headers: { Authorization: `Bearer ${token}` },
-            });
+    try {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`, {
+        headers: { Authorization: `Bearer ${token}` },
+        });
 
-            const filtered = res.data
-            .filter(item => item.verifikasi_akun_masyarakat === 'diterima')
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // <- SORT terbaru dulu
+        const filtered = res.data
+        .filter(item => item.verifikasi_akun_masyarakat === 'diterima')
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // <- SORT terbaru dulu
 
-            setDataMasyarakat(filtered);
-        } catch (err) {
-            console.error("Gagal fetch DataMasyarakat:", err);
-        }
+        setDataMasyarakat(filtered);
+    } catch (err) {
+        console.error("Gagal fetch DataMasyarakat:", err);
+    }
    }, [token]);
 
   const fetchDataById = useCallback(async () => {

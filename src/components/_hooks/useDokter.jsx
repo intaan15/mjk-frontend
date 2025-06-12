@@ -25,7 +25,7 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
 
     });
 
-    console.log(formData)
+    // console.log(formData)
     
     useEffect(() => {
         // Debug: pastikan props valid
@@ -87,7 +87,7 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
     }, [dataDokterbyId]);
     
     //console.log(formData)
-    console.log("foto_profil_dokter:", formData.foto_profil_dokter);
+    // console.log("foto_profil_dokter:", formData.foto_profil_dokter);
 
 
     //handle opsi poli yang dipilih
@@ -157,7 +157,7 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
                 password_dokter:formData.password_dokter
                
             };
-            console.log("inidokterr_baru",dokterData)
+            // console.log("inidokterr_baru",dokterData)
           
 
             const res = await axios.post(
@@ -169,7 +169,7 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
                     },
                 }
             );
-            console.log("Response:", res.data);
+            // console.log("Response:", res.data);
             if (onAddSuccess) {
                 onAddSuccess(dokterData); // data dokter baru dari response
             }

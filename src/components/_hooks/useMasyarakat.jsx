@@ -21,16 +21,16 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
     notlp:"",
     jeniskelamin_masyarakat:"",
     tanggalLahir:"",
-    foto_ktp:null,
+    foto_ktp_masyarakat:null,
     selfie_ktp_masyarakat:null,
-   
+    foto_profil_masyarakat:null,
   });
 
   const handleFotoKTPChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setFotoKTPFile(file);
-      setPreviewFotoKTP(URL.createObjectURL(file));
+
     }
   };
 
@@ -52,7 +52,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
           }
           );
 
-          console.log("Data diterima:", response.data);
+         console.log("😂 Data diterima:", response.data);
           setDataMasyarakatbyId(response.data);
       } catch (error) {
           console.error("Gagal fetch masyarakat:", {
@@ -83,12 +83,14 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
       tanggalLahir:dataMasyarakatbyId.tgl_lahir_masyarakat
         ? new Date(dataMasyarakatbyId.tgl_lahir_masyarakat).toISOString().split("T")[0]
         : "",
-    foto_ktp:null,
-    selfie_ktp_masyarakat:null,
+     foto_ktp_masyarakat: dataMasyarakatbyId.foto_ktp_masyarakat || null,
+     selfie_ktp_masyarakat: dataMasyarakatbyId.selfie_ktp_masyarakat || null,
+     foto_profil_masyarakat:null,
 
 
     });
     console.log("iniform",formData); // Debug
+    console.log("inifotoktp",formData.selfie_ktp_masyarakat); // Debug
   }, [dataMasyarakatbyId]);
 
  
@@ -108,6 +110,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
       setFormData((prev) => ({
       ...prev,
       foto: e.target.files[0], // simpan file object
+      
       }));
   };
 
@@ -116,14 +119,13 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
     e.preventDefault();
 
     try {
-      let imagePath = dataMasyarakatbyId.foto_ktp || null; // <-- pakai optional chaining
+      let imagePath = dataMasyarakatbyId.foto_ktp_masyarakat|| null; // <-- pakai optional chaining
 
       if (formData.foto) {
           const data = new FormData();
           data.append("foto", formData.foto);
-
           const uploadRes = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/api/masyarakat/upload`,
+          `${import.meta.env.VITE_BASE_URL}/api/auth/register_masyarakat`,
           data,
           {
               headers: {
@@ -147,10 +149,12 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
         alamat_masyarakat: formData.alamat,
         jeniskelamin_masyarakat: formData.jeniskelamin_masyarakat,
         tgl_lahir_masyarakat: formData.tanggalLahir,
-        foto_ktp: imagePath, // <-- gunakan imagePath yang sudah diupdate
+        foto_ktp_masyarakat: imagePath,
+        selfie_ktp_masyarakat:imagePath,
+        foto_profil_masyarakat:imagePath
     };
-
     console.log("inimasyarakat",masyarakatData)
+
     await axios.patch(
         `${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${idMasyarakat}`,
         masyarakatData,
