@@ -188,12 +188,16 @@ export default function Artikel() {
       enableSorting: false,
       cell: ({ getValue }) => {
         const imageUrl = getValue();
-        return (
+        console.log("Image URL:", imageUrl);
+
+        return imageUrl ? (
           <img
-            src="foto"
-            alt="Foto Dokter"
-            className="w-10 h-10 object-cover rounded-full"
+            src={`${import.meta.env.VITE_BASE_URL}${imageUrl}`}
+            alt="sampul artikel"
+            className="w-20 h-10 object-cover rounded-md"
           />
+        ) : (
+          <div className="w-10 h-10 bg-gray-300 rounded-full" />
         );
       },
     },
