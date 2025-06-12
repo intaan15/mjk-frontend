@@ -303,14 +303,21 @@ function Verifikasi() {
             header: "Foto",
             enableSorting: false,
             cell: ({ getValue }) => {
-            const imageUrl = getValue();
-            return (
-                <img 
-                src="foto"
-                alt="Foto Dokter" 
-                className="w-10 h-10 object-cover rounded-full" 
-                />
-            );} 
+                    const imageUrl = getValue();
+                    console.log("Image URL profil_masyarakat:", imageUrl);
+
+                    return imageUrl ? (
+                    <img
+                        src={`${import.meta.env.VITE_BASE_URL}${imageUrl}`}
+                        alt="foto"
+                        className="w-10 h-10 object-cover rounded-md"
+                    />
+                    ) : (
+                    <div className="w-10 h-10  ">
+                        <img src="/default-avatar.jpg" alt="foto_default" className='rounded-md' />
+                    </div>
+                    );
+            }
         },
         {
             accessorKey: "nama_masyarakat",
@@ -334,7 +341,7 @@ function Verifikasi() {
         },
         {
             accessorKey: "createdAt",
-            header: "Tgl. Registrasi",
+            header: "Tanggal Registrasi",
             enableSorting: true,
             cell: info => formatTanggal(info.getValue()),
         },
@@ -359,11 +366,11 @@ function Verifikasi() {
                 const status = row.original.verifikasi_akun_masyarakat;
 
                 if (status === "diterima") {
-                    return <span className="bg-[#27AE60] text-white w-15  hover:bg-green-200 hover:text-[#27AE60] p-1 rounded-[10px] transition">Diterima</span>;
+                    return <span className="bg-[#27AE60] text-white w-15 text-center p-3 text-md hover:bg-green-200 hover:text-[#27AE60] rounded-[10px] transition">Diterima</span>;
                 }
 
                 if (status === "ditolak") {
-                    return <span className="bg-[#FF1700] text-white w-15  hover:bg-red-200 p-1 hover:text-[#FF1700] rounded-[10px] transition">Ditolak</span>;
+                    return <span className="bg-[#FF1700] text-white w-15 text-center p-3 text-md hover:bg-red-200 p-1 hover:text-[#FF1700] rounded-[10px] transition">Ditolak</span>;
                 }
 
                 return (
@@ -372,13 +379,13 @@ function Verifikasi() {
                     <button
                         onClick={() => handleVerifikasi("diterima", row.original._id, row.original.email_masyarakat)}
                         title="Terima"
-                        className="bg-[#27AE60] text-white w-20 text-center p-4 hover:bg-green-200 text-md hover:text-[#27AE60] rounded-[10px] transition">
+                        className="bg-[#27AE60] text-white w-20 text-center p-3 hover:bg-green-200 text-md hover:text-[#27AE60] rounded-[10px] transition">
                         Diterima
                     </button>
                     <button
                         onClick={() => handleVerifikasi("ditolak", row.original._id,row.original.email_masyarakat)}
                         title="Tolak"
-                        className="bg-[#FF1700] text-white w-20 text-center p-4 hover:bg-red-200 text-md hover:text-[#FF1700] rounded-[10px] transition">
+                        className="bg-[#FF1700] text-white w-20 text-center p-3 hover:bg-red-200 text-md hover:text-[#FF1700] rounded-[10px] transition">
                         Ditolak
                     </button>
                 </div>
