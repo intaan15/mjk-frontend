@@ -372,13 +372,13 @@ function Verifikasi() {
                     <button
                         onClick={() => handleVerifikasi("diterima", row.original._id, row.original.email_masyarakat)}
                         title="Terima"
-                        className="bg-[#27AE60] text-white w-15 text-center hover:bg-green-200 hover:text-[#27AE60] p-1 rounded-[10px] transition">
+                        className="bg-[#27AE60] text-white w-20 text-center p-4 hover:bg-green-200 text-md hover:text-[#27AE60] rounded-[10px] transition">
                         Diterima
                     </button>
                     <button
                         onClick={() => handleVerifikasi("ditolak", row.original._id,row.original.email_masyarakat)}
                         title="Tolak"
-                        className="bg-[#FF1700] text-white w-15  hover:bg-red-200 p-1 hover:text-[#FF1700] rounded-[10px] transition">
+                        className="bg-[#FF1700] text-white w-20 text-center p-4 hover:bg-red-200 text-md hover:text-[#FF1700] rounded-[10px] transition">
                         Ditolak
                     </button>
                 </div>
@@ -478,11 +478,11 @@ function Verifikasi() {
                    </div>
                </div>
                 <div className="flex flex-row gap-2  w-full  items-center px-4 py-1">
-                    <div className="font-bold text-[#033E61]">Kategori :</div>
-                    <div className="flex flex-row gap-8 bg-[#D9D9D9]/50 p-2 rounded-3xl items-center px-6">
+                    <div className="flex flex-row gap-8 bg-[#D9D9D9]/50 p-2 rounded-xl items-center px-6">
+                        <div className="font-bold text-[#033E61]">Kategori :</div>
                         <div
                             onClick={() => setFilterStatus("semua")}
-                            className={`cursor-pointer font-[raleway] rounded-4xl border-2 px-4 py-1 border-[#033E61] ${
+                            className={`cursor-pointer font-[raleway] rounded-xl border-2 px-4 py-1 border-[#033E61] ${
                             filterStatus === "semua" ? "bg-[#025F96] font-bold text-white border-[#033E61]" : "bg-[#D9D9D9]/50 "
                             }`}>
                             Verifikasi
@@ -490,7 +490,7 @@ function Verifikasi() {
 
                         <div
                             onClick={() => setFilterStatus("diterima")}
-                            className={`cursor-pointer font-[raleway]  rounded-4xl border-2 px-4 py-1 border-[#033E61]  ${
+                            className={`cursor-pointer font-[raleway]  rounded-xl border-2 px-4 py-1 border-[#033E61]  ${
                             filterStatus === "diterima" ? "bg-[#025F96] font-bold text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
                             }`}>
                             Diterima
@@ -498,7 +498,7 @@ function Verifikasi() {
 
                         <div
                             onClick={() => setFilterStatus("ditolak")}
-                            className={`cursor-pointer font-[raleway]  rounded-4xl border-2 px-4 py-1 border-[#033E61]  ${
+                            className={`cursor-pointer font-[raleway]  rounded-xl border-2 px-4 py-1 border-[#033E61]  ${
                                 filterStatus === "ditolak" ? "bg-[#025F96] font-bold text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
                             }`}>
                             Ditolak

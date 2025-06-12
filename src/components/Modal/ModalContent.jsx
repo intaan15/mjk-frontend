@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import.meta.env.VITE_BASE_URL
 import useArtikel from "../_hooks/useArtikel";
 import useMasyarakat from "../_hooks/useMasyarakat";
 import useDokter from "../_hooks/useDokter";
@@ -1092,7 +1093,7 @@ export default function ModalContent({
                         />
                       ) : dataDokterbyId?.foto_profil_dokter ? ( // <-- tambahkan tanda tanya (optional chaining)
                         <img
-                          src={dataDokterbyId.foto_profil_dokter}
+                          src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
                           alt=""
                           className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
                         />
@@ -1234,7 +1235,15 @@ export default function ModalContent({
             </p>
 
             <div className="flex flex-col justify-center items-center gap-4">
-              <div className="bg-red-200 rounded-full p-12 border-2 border-[#025F96] font-bold">foto</div>
+              <div className=" rounded-full p-1 border-2 border-[#025F96] font-bold">
+                 {dataDokterbyId?.foto_profil_dokter && (
+                    <img
+                      src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
+                      alt="Foto Dokter"
+                      className="w-20 h-20 rounded-full object-cover"
+                    />
+                  )}
+              </div>
               <div className="grid grid-cols-2 gap-4 w-full text-center ">
                 <div>
                   <div className="text-[#025F96] font-bold underline">Nama</div>

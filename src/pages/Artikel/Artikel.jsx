@@ -316,11 +316,11 @@ export default function Artikel() {
 
         {/* choose */}
         <div className="flex flex-row justify-between w-full  items-center px-2 py-2">
-          <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-4xl items-center">
+          <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-xl items-center">
             <span className="font-bold text-gray-700 font-[raleway]">Kategori :</span>
             <button
               onClick={() => setSelectedKategori("Kesehatan")}
-              className={` w-50 px-4 py-1 rounded-full border-2  font-[raleway] transition-all duration-200 ${
+              className={` w-50 px-4 py-1 rounded-xl border-2  font-[raleway] transition-all duration-200 ${
                 selectedKategori === "Kesehatan"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
@@ -331,7 +331,7 @@ export default function Artikel() {
 
             <button
               onClick={() => setSelectedKategori("Obat")}
-              className={` w-50 px-4 py-1 rounded-full font-[raleway] border-2 transition-all duration-200 ${
+              className={` w-50 px-4 py-1 rounded-xl font-[raleway] border-2 transition-all duration-200 ${
                 selectedKategori === "Obat"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
@@ -342,7 +342,7 @@ export default function Artikel() {
           </div>
           <div className="">
             <button
-              className=" bg-[#004A76] rounded-full shadow-xl px-4 py-2 cursor-pointer text-white font-[raleway] hover:bg-white hover:text-[#004A76] hover:border-2  "
+              className=" bg-[#004A76] rounded-xl shadow-xl px-4 py-2 cursor-pointer text-white font-[raleway] hover:bg-white hover:text-[#004A76] hover:border-2  "
               onClick={() => openModal("tambahartikel")}
             >
               + Tambah Data Artikel

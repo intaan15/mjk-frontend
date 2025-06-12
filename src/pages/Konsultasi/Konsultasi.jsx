@@ -48,6 +48,7 @@ function Konsultasi() {
 
   } = useKonsultasi(token);
 
+  //kolom konsultasi 
   const columns = [
            {
             header: "No",
@@ -192,7 +193,6 @@ function Konsultasi() {
                     <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
                       <div className="py-1 justify-center">
                         <a
-                          href=""
                           className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
                           <HiOutlineUser className='text-[30px]' />
                           {user?.username}
@@ -224,17 +224,17 @@ function Konsultasi() {
                filterStatus === "Diproses"
                 ? "bg-[#004A76] font-bold font-[raleway]"
                 : "bg-[#B3B3B3]" 
-             } hover:opacity-80 text-white w-[205px] h-[35px] rounded-[20px] text-[15px] border-[#E3F0F8]`}>
+             } hover:opacity-80 text-white w-50 h-10 rounded-md text-md border-[#E3F0F8]`}>
              Diproses 
           </button>
-
+          <div className='h-10 bg-[#004A76] w-1'> </div>
           <button
             onClick={() => setFilterStatus("Selesai")}
             className={`${
               filterStatus === "Selesai"
                ?"bg-[#004A76] font-bold font-[raleway]" 
                :"bg-[#B3B3B3]"
-            } hover:opacity-80 text-white w-[205px] h-[35px] rounded-[20px] text-[15px] border-[#E3F0F8] border-2 focus-ring-2 `}>
+            } hover:opacity-80 text-white w-50 h-10 rounded-md text-md border-[#E3F0F8] border-2 focus-ring-2 `}>
             Riwayat
           </button>
         </div> 

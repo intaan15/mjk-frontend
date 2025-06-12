@@ -37,7 +37,7 @@ const Splashscreen = () => {
               <p className='text-[16px] text-[#438222] italic item-ends justify-end mr-0'>Dinas Kesehatan Kab.Mojokerto</p>
             </div>
       </animated.div>
-      <div className='flex flex-col w-full items-center bottom-0 justify-center absolute'>
+      <div className='flex flex-col w-screen items-center bottom-0 justify-center absolute transition-all'>
         <img className='flex flex-row justify-center object-contain' src="/footer.svg" alt="imgfooter" />
       </div>
     </div>

@@ -225,7 +225,7 @@ const fetchDokter = useCallback(async ()=> {
 
 useEffect(() => {
     fetchDokter();
-  }, [fetchDokter,reloadTrigger]);
+}, [fetchDokter,reloadTrigger]);
 
 const handleCloseModal = () => {
   setIsModalOpen(false);
@@ -406,7 +406,7 @@ const totalItems = filteredDokter.length;
           </div>
           <button
             onClick={() => openModal("tambahdatadokter")}
-            className="bg-[#033E61] rounded-2xl font-[Raleway] p-6 py-2 cursor-pointer text-white text-sm shadow-lg flex items-center gap-2"
+            className="bg-[#033E61] rounded-xl font-[Raleway] p-4 hover:bg-white hover:text-[#004A76] hover:border-2 cursor-pointer text-white text-sm shadow-lg flex items-center gap-2"
           >
             <IoIosAddCircleOutline size={18} />
             Tambah Data Dokter

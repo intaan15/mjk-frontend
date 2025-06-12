@@ -59,6 +59,7 @@ function DataMasyarakat() {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedData(null);
+    fetchDataMasyarakat();
     setModalType("");
   };
 
@@ -107,7 +108,9 @@ function DataMasyarakat() {
           },
         })
         .then((res) => {
-          const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'diterima');
+          const filteredData = res.data
+          .filter(item => item.verifikasi_akun_masyarakat === 'diterima')
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
           // console.log(res.data);
           setDataMasyarakat(filteredData);
         })
@@ -137,6 +140,43 @@ function DataMasyarakat() {
 
     fetchData();
   },[selectedId, token]);
+
+
+    const formatTanggal = (isoDateString) => {
+  const date = new Date(isoDateString);
+    return date.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+
+    
+  const filteredRows = DataMasyarakat.filter((item) => {
+    const search = searchTerm.toLowerCase().trim();
+    return (
+      item.nama_masyarakat?.toLowerCase().includes(search) ||
+      item.email_masyarakat?.toLowerCase().includes(search) ||
+      item.notlp_masyarakat?.toLowerCase().includes(search) ||
+      item.nik_masyarakat?.includes(search) 
+    );
+  });
+
+  console.log("inidata",DataMasyarakat)
+
+  useEffect(() => {
+    // console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
+  }, [filteredRows]);
+  
+  const totalItems = filteredRows.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+    const paginatedData = useMemo(() => {
+      const start = (currentPage - 1) * itemsPerPage;
+      return filteredRows.slice(start, start + itemsPerPage);
+  }, [filteredRows, currentPage, itemsPerPage]);
+      
 
   // paramater tabel
   const columns = [
@@ -185,8 +225,14 @@ function DataMasyarakat() {
       enableSorting: false,
     },
     {
-      accessorKey: "detail",
-      header: "Detail",
+      accessorKey: "createdAt",
+      header: "Tanggal Registrasi",
+      enableSorting: true,
+      cell: info => formatTanggal(info.getValue()),
+    },
+    {
+      accessorKey: "Edit",
+      header: "Edit",
       enableSorting: false,
       cell: ({ row }) => (
       <div className="flex items-center justify-center p-2 w-10 h-10">
@@ -197,31 +243,7 @@ function DataMasyarakat() {
     },
   ]
 
-    
-  const filteredRows = DataMasyarakat.filter((item) => {
-    const search = searchTerm.toLowerCase().trim();
-    return (
-      item.nama_masyarakat?.toLowerCase().includes(search) ||
-      item.email_masyarakat?.toLowerCase().includes(search) ||
-      item.notlp_masyarakat?.toLowerCase().includes(search) ||
-      item.nik_masyarakat?.includes(search) 
-    );
-  });
 
-  console.log("inidata",DataMasyarakat)
-
-  useEffect(() => {
-    // console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
-  }, [filteredRows]);
-  
-  const totalItems = filteredRows.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-  
-    const paginatedData = useMemo(() => {
-      const start = (currentPage - 1) * itemsPerPage;
-      return filteredRows.slice(start, start + itemsPerPage);
-  }, [filteredRows, currentPage, itemsPerPage]);
-      
     
 
   return (

@@ -11,8 +11,9 @@ import { FaSort } from "react-icons/fa";
 
 
 const Basetable = ({ data, columns }) => {
-   const [sorting, setSorting] = useState([]);
-
+  const [sorting, setSorting] = useState([
+    { id: "createdAt", desc: true }, 
+  ]);
   const table = useReactTable({
     data,
     columns,
