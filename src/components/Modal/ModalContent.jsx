@@ -4,6 +4,7 @@ import.meta.env.VITE_BASE_URL
 import useArtikel from "../_hooks/useArtikel";
 import useMasyarakat from "../_hooks/useMasyarakat";
 import useDokter from "../_hooks/useDokter";
+import ImageZoomModal from './ImageZoomModal';
 import TipTap from '../TipTap/TipTap'
 
 import Select from "react-select";
@@ -181,17 +182,33 @@ export default function ModalContent({
 
                   {/* Preview gambar yang dipilih */}
                   {formArtikel.foto ? (
-                    <img
-                      src={URL.createObjectURL(formArtikel.foto)}
-                      alt="preview"
-                      className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
-                    />
-                  ) : dataArtikel?.gambar_artikel ? ( // <-- tambahkan tanda tanya (optional chaining)
-                    <img
-                      src={dataArtikel.gambar_artikel}
-                      alt="foto artikel lama"
-                      className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
-                    />
+                    <div className="mt-4 relative group">
+                      <img
+                        src={`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`}
+                        alt="preview"
+                        className="w-[200px] h-[100px] object-cover rounded-xl border border-black cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => handleImageClick(`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`)}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-30 rounded-xl">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                        </svg>
+                      </div>
+                    </div>
+                  ) : dataArtikel?.gambar_artikel ? (
+                    <div className="mt-4 relative group">
+                      <img
+                        src={`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`}
+                        alt="foto artikel lama"
+                        className="w-[200px] h-[100px] object-cover rounded-xl border border-black cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => handleImageClick(`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`)}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-30 rounded-xl">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                        </svg>
+                      </div>
+                    </div>
                   ) : null}
                 </div>
               </div>
@@ -304,9 +321,9 @@ export default function ModalContent({
                   <div className="flex w-full">
                     :
                     <img
-                      src={dataArtikel?.gambar_artikel || null}
+                      src={`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`}
                       alt="foto artikel"
-                      className="ml-2 border border-black w-[200px] h-[100px] object-cover rounded-xl"
+                      className="ml-2 border border-black w-[200px] h-[100px] object-cover rounded-xl transition-transform duration-300 hover:scale-150"
                     />
                   </div>
                 </div>
@@ -505,14 +522,23 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <h1 className="text-2xl font-bold text-[#025F96] font-[raleway]">Detail Profil Masyarakat</h1>
+            <h1 className="text-xl font-bold text-[#025F96] font-[raleway] py-2">Detail Profil Masyarakat</h1>
 
-            <div className="flex flex-col justify-center items-center gap-4 w-4/5 mt-7 ">
-              <div className=" border-2 border-[#025F96] rounded-full p-12">foto</div>
+            <div className="flex flex-col justify-center items-center gap-4">
+              {/* <div className=" border-2 border-[#025F96] rounded-full p-12">foto</div> */}
+              <div className=" rounded-full p-1 w-40 h-40 border-2 border-[#025F96] font-bold">
+                 {dataMasyarakatbyId?.foto_profil_masyarakat && (
+                    <img
+                      src={`${import.meta.env.VITE_BASE_URL}${dataMasyarakatbyId?.foto_profil_masyarakat}`}
+                      alt="foto"
+                      className="w-40 h-40 rounded-full object-cover"
+                    />
+                  )}
+              </div>
               <div className=" grid grid-cols-2 gap-5 w-full text-center p-4">
-                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10  bg-yellow-200">
-                  <span className="text-[#025F96] font-bold underline bg-blue-400">Nama</span>
-                  <div className="bg-red-400">{dataMasyarakatbyId?.nama_masyarakat || " "}</div>
+                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10  ">
+                  <span className="text-[#025F96] font-bold underline ">Nama</span>
+                  <div className="">{dataMasyarakatbyId?.nama_masyarakat || " "}</div>
                 </div>
                 <div className=" grid grid-rows-2 gap-2 w-full text-left px-10">
                   <div className="text-[#025F96] font-bold underline">Username</div>
@@ -583,15 +609,27 @@ export default function ModalContent({
           <div className="text-start ">
             <button
               onClick={onClose}
-              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
+              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-3xl font-bold"
             >
               &times;
             </button>
-            <h1 className="text-xl font-bold text-[#004A76] underline">Edit Profil Masyarakat </h1>
+            <h1 className="text-xl font-bold text-[#004A76] underline">
+              Edit Profil Masyarakat 
+            </h1>
 
             <form onSubmit={handleEditSubmitMasyarakat} className="space-y-6">
-              <div className="flex flex-col justify-center items-center gap-4">
-                <div className="bg-red-200 rounded-full p-12">foto</div>
+              <div className="flex flex-col  justify-center items-center gap-4">
+                <div className="w-40 h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center ">
+                  <img
+                    src={
+                          dataMasyarakatbyId?.foto_profil_masyarakat
+                            ? `${import.meta.env.VITE_BASE_URL}${dataMasyarakatbyId.foto_profil_masyarakat}`
+                            : "/default-avatar.jpg" 
+                        }
+                    alt="foto_profil_masyarakat"
+                    className="w-40 h-40 p-1 border-2 border-[#025F96] rounded-full object-cover"
+                  />
+                </div>
                 <div className="grid grid-cols-2 gap-4 w-full text-center">
                   <div className="flex flex-col items-center">
                     <label className="text-[#025F96] font-bold">Nama</label>
@@ -671,7 +709,6 @@ export default function ModalContent({
                       required
                     />
                   </div>
-                  
                   <div className="flex flex-col items-center">
                     <label className="text-[#025F96] font-bold">Jenis Kelamin</label>
                     <select
@@ -703,59 +740,40 @@ export default function ModalContent({
                  
                   <div className="flex flex-col items-center gap-2">
                     <label className="text-[#025F96] font-bold">Foto KTP</label>
-                      <div className="bg-orange-200 rounded-xl p-2 w-44 h-44 flex items-center justify-center">
-                        {previewFotoKTP ? (
-                          <img
-                            src={previewFotoKTP}
-                            alt="Preview Foto KTP"
-                            className="object-cover w-full h-full rounded-xl"
-                          />
-                        ) : (
-                          <span className="text-gray-600 text-center">Belum ada gambar</span>
+                      <div className=" rounded-xl p-2 w-60 h-40 flex items-center justify-center gap-2">
+                        {dataMasyarakatbyId?.foto_ktp_masyarakat ? (
+                            <img
+                              src={`${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.foto_ktp_masyarakat}`}
+                              alt="foto_ktp_masyarakat"
+                              className="rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150"
+                            />
+                          ) : (
+                            <p className="text-gray-500 text-sm italic">Belum ada foto</p>
                         )}
                       </div>
-                      <input
-                      type="file"
-                      name="fotoKTP"
-                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                      onChange={handleChangeMasyarakat}
-                      maxLength={50}
-                      required
-                    />
+                      
                   </div>
                   <div className="flex flex-col items-center gap-2" >
                     <label className="text-[#025F96] font-bold">Selfie dengan KTP</label>
-                    <div className="bg-orange-200 rounded-xl p-2 w-44 h-44 flex items-center justify-center gap-2">
-                      {previewFotoKTP ? (
+                    <div className="rounded-xl p-2 w-60 h-40 flex items-center justify-center gap-2">
                         <img
-                          src={previewFotoKTP}
-                          alt="Preview Foto KTP"
-                          className="object-cover w-full h-full rounded-xl"
+                          src={
+                            dataMasyarakatbyId?.selfie_ktp_masyarakat
+                              ? `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.selfie_ktp_masyarakat}`
+                              : null
+                          }
+                          alt="selfie_ktp_masyarakat"
+                          className="rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full "
                         />
-                      ) : (
-                        <span className="text-gray-600 text-center">Belum ada gambar</span>
-                      )}
+                        
                     </div>
-                    <input
-                      type="file"
-                      name="fotoKTP"
-                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                      onChange={handleChangeMasyarakat}
-                      maxLength={50}
-                      required
-                    />
+                   
                   </div>
                 </div>
                 <div className=" text-center flex flex-row gap-4 mt-5 items-center">
+                 
                   <button
-                    className="px-4 py-2 bg-gray-400 text-white rounded-xl w-50 hover:bg-gray-500 transition duration-200 ease-in-out"
-                    onClick={() => setShowModal(false)}
-                    
-                  >
-                    Batalkan
-                  </button>
-                  <button
-                     className="px-4 py-2 bg-[#1177B3] text-white rounded-xl hover:bg-[#0d5e90] w-50 transition duration-200 ease-in-out"
+                    className="px-4 py-2 bg-[#1177B3] text-white rounded-xl hover:bg-[#0d5e90] w-50 transition duration-200 ease-in-out"
                     onClick={handleEditSubmitMasyarakat}
                     
                   >
@@ -1087,7 +1105,7 @@ export default function ModalContent({
                        {/* Preview gambar yang dipilih */}
                       {formDokter.foto_profil_dokter ? (
                         <img
-                          src={URL.createObjectURL(formDokter.foto_profil_dokter)}
+                          src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
                           alt="preview"
                           className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
                         />
@@ -1230,19 +1248,21 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <p className="text-center text-xl font-bold items-center py-2">
+            <p className="text-center text-xl font-bold items-center py-2 font-[raleway]">
               Detail Profil Dokter
             </p>
 
             <div className="flex flex-col justify-center items-center gap-4">
-              <div className=" rounded-full p-1 border-2 border-[#025F96] font-bold">
-                 {dataDokterbyId?.foto_profil_dokter && (
-                    <img
-                      src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
-                      alt="Foto Dokter"
-                      className="w-20 h-20 rounded-full object-cover"
-                    />
-                  )}
+              <div className="w-40 h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
+                <img
+                  src={
+                    dataDokterbyId?.foto_profil_dokter
+                      ? `${import.meta.env.VITE_BASE_URL}${dataDokterbyId.foto_profil_dokter}`
+                      : "/default-avatar.jpg" 
+                  }
+                  alt="Foto Dokter"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="grid grid-cols-2 gap-4 w-full text-center ">
                 <div>
