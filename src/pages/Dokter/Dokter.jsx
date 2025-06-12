@@ -262,10 +262,12 @@ const totalItems = filteredDokter.length;
             <img
               src={`${import.meta.env.VITE_BASE_URL}${imageUrl}`}
               alt="Foto Dokter"
-              className="w-10 h-10 object-cover rounded-full"
+              className="w-10 h-10 object-cover rounded-md"
             />
           ) : (
-            <div className="w-10 h-10 bg-gray-300 rounded-full" />
+            <div className="w-10 h-10  ">
+                <img src="/default-avatar.jpg" alt="foto_default" className='rounded-md' />
+            </div>
           );
         }
       },
@@ -295,7 +297,7 @@ const totalItems = filteredDokter.length;
       },
       {
         accessorKey: "createdAt",
-        header: "Tgl. Registrasi",
+        header: "Tanggal Registrasi",
         enableSorting: true,
         cell: info => formatTanggal(info.getValue()),
       },
