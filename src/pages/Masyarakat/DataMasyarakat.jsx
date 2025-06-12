@@ -65,7 +65,6 @@ function DataMasyarakat() {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    fetchDataMasyarakat();
   };
 
     const handleLogout = () => {
@@ -110,7 +109,7 @@ function DataMasyarakat() {
         .then((res) => {
           const filteredData = res.data
           .filter(item => item.verifikasi_akun_masyarakat === 'diterima')
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          // .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
           // console.log(res.data);
           setDataMasyarakat(filteredData);
         })
@@ -120,6 +119,8 @@ function DataMasyarakat() {
     }, 
   []);
 
+
+  //mengambil data by id
   useEffect(() => {
      if (!selectedId) return; 
     const fetchData = async () => {
@@ -142,7 +143,7 @@ function DataMasyarakat() {
   },[selectedId, token]);
 
 
-    const formatTanggal = (isoDateString) => {
+  const formatTanggal = (isoDateString) => {
   const date = new Date(isoDateString);
     return date.toLocaleDateString("id-ID", {
       day: "2-digit",
@@ -163,19 +164,13 @@ function DataMasyarakat() {
     );
   });
 
-  console.log("inidata",DataMasyarakat)
+  console.log("datamasyarakat diterima",filteredRows) //debug
 
   useEffect(() => {
     // console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
   }, [filteredRows]);
   
-  const totalItems = filteredRows.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-  
-    const paginatedData = useMemo(() => {
-      const start = (currentPage - 1) * itemsPerPage;
-      return filteredRows.slice(start, start + itemsPerPage);
-  }, [filteredRows, currentPage, itemsPerPage]);
+
       
 
   // paramater tabel
@@ -186,18 +181,25 @@ function DataMasyarakat() {
       cell: ({ row }) => row.index + 1,
     },
     {
-      accessorKey: "foto_profil_dokter",
+      accessorKey: "foto_profil_masyarakat",
       header: "Foto",
       enableSorting: false,
       cell: ({ getValue }) => {
-        const imageUrl = getValue();
-        return (
-          <img 
-            src="foto"
-            alt="Foto Masyrakat" 
-            className="w-10 h-10 object-cover rounded-full" 
-          />
-        );} 
+            const imageUrl = getValue();
+            console.log("Image URL profil_masyarakat:", imageUrl);
+
+            return imageUrl ? (
+              <img
+                src={`${import.meta.env.VITE_BASE_URL}${imageUrl}`}
+                alt="foto"
+                className="w-10 h-10 object-cover rounded-md"
+              />
+            ) : (
+              <div className="w-10 h-10  ">
+                <img src="/default-avatar.jpg" alt="foto_default" className='rounded-md' />
+              </div>
+            );
+      }
     },
     {
       accessorKey: "nama_masyarakat",
@@ -242,7 +244,13 @@ function DataMasyarakat() {
       </div>),
     },
   ]
-
+  const totalItems = filteredRows.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+    const paginatedData = useMemo(() => {
+      const start = (currentPage - 1) * itemsPerPage;
+      return filteredRows.slice(start, start + itemsPerPage);
+  }, [filteredRows, currentPage, itemsPerPage]);
 
     
 
