@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-import.meta.env.VITE_BASE_URL
 import useArtikel from "../_hooks/useArtikel";
 import useMasyarakat from "../_hooks/useMasyarakat";
 import useDokter from "../_hooks/useDokter";
@@ -15,8 +14,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import DOMPurify from "dompurify";
 import "../../index.css";
 
-
-
 export default function ModalContent({ 
   modalType, 
   onClose, 
@@ -28,27 +25,22 @@ export default function ModalContent({
   dataDokterbyId,
   idDokter,
   onAddSuccess}) 
-
-
-
-  {   
-    // DEBUG
-  //  const data = dataArtikel; 
-  //  console.log("Data di ModalContent:", data);
+{   
+   // PERBAIKI DESTRUCTURING - HAPUS formData: formArtikel
    const {
-      formData: formArtikel,
-      handleChange: handleChangeArtikel,
-      handleEditSubmit: handleEditSubmitArtikel,
-      handleFileChange: handleFileChangeArtikel,
-      handleSubmit:handleSubmitArtikel,
-      handleChangeKategori:handleChangeKategoriArtikel,
-      handleImageClick:handleImageClickArtikel,
-      closeImageModal, showImageModal, selectedImage,
-
-   } = useArtikel({idArtikel, token,dataArtikel, onClose});
-
-  //  const data = dataMasyarakatbyId;
-  //  console.log("Data di masyarakat:", data);
+      formArtikel,  // LANGSUNG GUNAKAN formArtikel
+      handleChangeArtikel,
+      handleEditSubmitArtikel,
+      handleFileChangeArtikel,
+      handleSubmit: handleSubmitArtikel,
+      handleChangeKategoriArtikel,
+      handleImageClick: handleImageClickArtikel,
+      closeImageModal, 
+      showImageModal, 
+      selectedImage, 
+      selectedImageAlt,
+      dataArtikel: dataArtikelFromHook  // TAMBAHKAN INI
+   } = useArtikel({idArtikel, token, dataArtikel, onClose});
 
    const {
     formData: formMasyarakat,
@@ -58,9 +50,6 @@ export default function ModalContent({
     previewFotoKTP: previewFotoKTP,
    }= useMasyarakat({idMasyarakat, token, onClose,dataMasyarakatbyId});
 
-  // const data = dataDokterbyId;
-  // console.log("Data di dokter:", data);
-  
   const {
     formData: formDokter,
     handleChange: handleChangeDokter,
@@ -73,7 +62,6 @@ export default function ModalContent({
   } = useDokter({idDokter, token,dataDokterbyId, onClose,onAddSuccess });
   
    const options = [
-    
       { value: "Umum", label: <><img src="../icon_poli/poli_umum.svg" className="inline mr-2 w-5 h-5"/> Spesialis Umum</> },
       { value: "Mata", label: <><img src="../icon_poli/poli_mata.svg" className="inline mr-2 w-5 h-5"/> Spesialis Mata</> },
       { value: "Anak", label: <><img src="../icon_poli/poli_anak.svg" className="inline mr-2 w-5 h-5"/> Spesialis Anak</> },
@@ -89,8 +77,8 @@ export default function ModalContent({
       { value: "Fisioterapi", label: <><img src="../icon_poli/fisioterapi.svg" className="inline mr-2 w-5 h-5"/> Fisioterapi</> },
       { value: "Lambung", label: <><img src="../icon_poli/lambung.png" className="inline mr-2 w-5 h-5"/> Lambung</> },
       { value: "Hati", label: <><img src="../icon_poli/hati.svg" className="inline mr-2 w-5 h-5"/> Hati</> },
-
     ];
+    
     const [showPassword, setShowPassword] = useState(false);
    
     const optionKategori = [
@@ -111,9 +99,7 @@ export default function ModalContent({
       setPreviewImage(null);
     };
 
-
   switch (modalType) {
-    // ARTIKEL
     case "editdataartikel":
       return (
         <>
@@ -124,17 +110,17 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <h1 className="text-xl font-[raleway] text-[#004A76] underline font-extrabold mb-6">Edit Data Artikel</h1>
+            <h1 className="text-xl font-[raleway] text-[#004A76] underline font-extrabold mb-6">
+              Edit Data Artikel
+            </h1>
 
-            <form
-              onSubmit={handleEditSubmitArtikel}
-              className="space-y-6"
-            >
+            <form onSubmit={handleEditSubmitArtikel} className="space-y-6">
               {/* Judul */}
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="judul"
-                  className="w-1/5 font-medium text-black dark:text-black" style={{fontFamily: 'Nunito Sans'}}
+                  className="w-1/5 font-medium text-black dark:text-black"
+                  style={{ fontFamily: "Nunito Sans" }}
                 >
                   Judul
                 </label>
@@ -150,73 +136,94 @@ export default function ModalContent({
                 />
               </div>
 
-
               {/* Foto Artikel */}
               <div className="flex items-start gap-4 ">
                 <label
                   htmlFor="dropzone-file"
-                  className="w-1/5 font-medium text-gray-900 dark:text-black " 
+                  className="w-1/5 font-medium text-gray-900 dark:text-black "
                 >
                   Sampul Artikel
                 </label>
-                <div className="w-4/5  ">
-                  <label
-                    htmlFor="dropzone-file"
-                    className="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-30 hover:bg-gray-100"
-                  >
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6 ">
-                      <svg
-                        className="w-8 h-8 mb-4 text-gray-500 "
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 16"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                        />
-                      </svg>
-                      <p className="mb-2 text-sm text-gray-500">
-                        <span className="font-semibold">Klik Untuk Mengunggah</span>{" "}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        SVG, PNG, JPG or GIF (MAX. 800x400px)
-                      </p>
-                    </div>
-                    <input
-                      id="dropzone-file"
-                      name="foto"
-                      type="file"
-                      className="hidden"
-                      onChange={handleFileChangeArtikel}
-                      accept="image/*"
-                    />
-                  </label>
-                  {/* Preview gambar yang dipilih */}
-                  {formArtikel.foto ? (
-                      <ImagePreviewCard
-                        imageSrc={
-                          formArtikel.foto
-                            ? URL.createObjectURL(formArtikel.foto)
-                            : `${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`
-                        }
-                        imageAlt="Sampul Artikel"
-                        label="Preview Sampul"
-                        onImageClick={(src, alt) => handleImageClickArtikel(src)}
+
+                <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-2">
+                  <div className="flex items-center justify-center w-full">
+                    <label
+                      htmlFor="gambar_artikel"
+                      className="flex flex-col items-center justify-center w-full h-28 border-1 border-gray-300 border-dashed rounded-md  cursor-pointer bg-gray-30  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                    >
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <svg
+                          className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                          aria-hidden="true"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 20 16"
+                        >
+                          <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                          />
+                        </svg>
+                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <span className="font-semibold">
+                            Klik untuk Mengunggah
+                          </span>
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          SVG, PNG, JPG or GIF (MAX. 800x400px)
+                        </p>
+                      </div>
+                      <input
+                        name="gambar_artikel"
+                        id="gambar_artikel"
+                        type="file"
+                        className="hidden"
+                        onChange={handleFileChangeArtikel}
                       />
+                    </label>
+                    {/* Preview gambar */}
+                    {formArtikel.gambar_artikel && typeof formArtikel.gambar_artikel === 'object' ? (
+                      <img
+                        src={URL.createObjectURL(formArtikel.gambar_artikel)}
+                        alt="preview"
+                        className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                      />
+                    ) : (dataArtikelFromHook || dataArtikel)?.gambar_artikel ? (
+                      <img
+                        src={`${import.meta.env.VITE_BASE_URL}${(dataArtikelFromHook || dataArtikel)?.gambar_artikel}`}
+                        alt="current"
+                        className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                      />
+                    ) : null}
+                  </div>
+                  
+                  {/* Status File */}
+                  <div className="font-light text-[14px] self-start">
+                    {formArtikel.gambar_artikel && formArtikel.gambar_artikel.name ? (
+                      <span className="text-green-600">
+                        ✅ File baru: {formArtikel.gambar_artikel.name}
+                      </span>
+                    ) : (dataArtikelFromHook || dataArtikel)?.gambar_artikel ? (
+                      <span className="text-blue-600">
+                        📷 Menggunakan gambar saat ini: {(dataArtikelFromHook || dataArtikel)?.gambar_artikel.split('/').pop()}
+                      </span>
                     ) : (
-                      <p className="text-sm italic text-gray-500 ">Belum ada gambar dipilih</p>
-                  )}
-                  <ImagePreviewModal
-                    isOpen={showImageModal}
-                    imageSrc={selectedImage}
-                    imageAlt={selectedImageAlt || "Sampul Artikel"}
-                    onClose={closeImageModal}
-                  />
+                      <span className="text-gray-400">
+                        ❌ Belum ada file yang dipilih
+                      </span>
+                    )}
+                  </div>
+
+                  <button
+                    type="button"
+                    className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"
+                    style={{ fontFamily: "Nunito Sans" }}
+                  >
+                    Batalkan
+                  </button>
                 </div>
               </div>
 
@@ -229,20 +236,20 @@ export default function ModalContent({
                   Kategori
                 </label>
                 <select
-                    id="kategori"
-                    name="kategori"
-                    className="bg-gray-30 border border-gray-300 text-gray-900 text-sm rounded-lg block w-4/5 p-2.5"
-                    value={formArtikel.kategori}
-                    onChange={handleChangeKategoriArtikel}
-                    required
-                  >
-                    <option value="">Pilih Kategori</option>
-                    {optionKategori.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
+                  id="kategori"
+                  name="kategori"
+                  className="bg-gray-30 border border-gray-300 text-gray-900 text-sm rounded-lg block w-4/5 p-2.5"
+                  value={formArtikel.kategori}
+                  onChange={handleChangeKategoriArtikel}
+                  required
+                >
+                  <option value="">Pilih Kategori</option>
+                  {optionKategori.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Deskripsi */}
@@ -253,18 +260,17 @@ export default function ModalContent({
                 >
                   Deskripsi
                 </label>
-                <div className="w-4/5 h-auto  border-2 border-gray-100 rounded-lg" >
-                  <TipTap 
+                <div className="w-4/5 h-auto  border-2 border-gray-100 rounded-lg">
+                  <TipTap
                     id="deskripsi"
                     rows="4"
                     className="w-4/5 p-2 border rounded"
                     name="deskripsi"
-                    value={formArtikel.deskripsi} 
-                     onChange={(html) => handleChangeArtikel("deskripsi", html)}
+                    value={formArtikel.deskripsi}
+                    onChange={(html) => handleChangeArtikel("deskripsi", html)}
                     required
-                    />
+                  />
                 </div>
-      
               </div>
 
               {/* Tombol Submit */}
@@ -277,7 +283,6 @@ export default function ModalContent({
                 </button>
               </div>
             </form>
-             
           </div>
         </>
       );
@@ -472,16 +477,16 @@ export default function ModalContent({
                     />
                   </label>
                   <div className="font-light text-[14px] self-start text-lime-500">
-                    {formArtikel.foto
-                      ? formArtikel.foto.name
+                    {formArtikel.gambar_artikel
+                      ? formArtikel.gambar_artikel.name
                       : "Belum ada file yang dipilih"}
                   </div>
 
                   {/* Preview Gambar */}
                   <div className="mt-4">
-                    {formArtikel.foto ? (
+                    {formArtikel.gambar_artikel ? (
                       <img
-                        src={URL.createObjectURL(formArtikel.foto)}
+                        src={URL.createObjectURL(formArtikel.gambar_artikel)}
                         alt="Preview"
                         className="w-[200px] h-[100px] object-cover rounded-lg border border-gray-400"
                       />
@@ -617,12 +622,12 @@ export default function ModalContent({
                       <img
                           src={
                             dataMasyarakatbyId?.foto_ktp_masyarakat
-                              ? `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.foto_ktp_masyarakat}`
+                              ? `${import.meta.env.VITE_BASE_URL}/images-be/${dataMasyarakatbyId.foto_ktp_masyarakat}`
                               : null
                           }
                           alt="foto_ktp_masyarakat"
                           onClick={() => openPreview(
-                            `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.foto_ktp_masyarakat}`,
+                            `${import.meta.env.VITE_BASE_URL}/images-be/${dataMasyarakatbyId.foto_ktp_masyarakat}`,
                             "Foto KTP"
                           )}
                           className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full"
@@ -635,12 +640,12 @@ export default function ModalContent({
                      <img
                           src={
                             dataMasyarakatbyId?.selfie_ktp_masyarakat
-                              ? `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.selfie_ktp_masyarakat}`
+                              ? `${import.meta.env.VITE_BASE_URL}/images-be/${dataMasyarakatbyId.selfie_ktp_masyarakat}`
                               : null
                           }
                           alt="Selfie dengan KTP"
                           onClick={() => openPreview(
-                            `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.selfie_ktp_masyarakat}`,
+                            `${import.meta.env.VITE_BASE_URL}/images-be/${dataMasyarakatbyId.selfie_ktp_masyarakat}`,
                             "Selfie dengan KTP"
                           )}
                           className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full"
@@ -808,12 +813,12 @@ export default function ModalContent({
                         <img
                           src={
                             dataMasyarakatbyId?.foto_ktp_masyarakat
-                              ? `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.foto_ktp_masyarakat}`
+                              ? `${import.meta.env.VITE_BASE_URL}/images-be/${dataMasyarakatbyId.foto_ktp_masyarakat}`
                               : null
                           }
                           alt="foto_ktp_masyarakat"
                           onClick={() => openPreview(
-                            `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.foto_ktp_masyarakat}`,
+                            `${import.meta.env.VITE_BASE_URL}/images-be/${dataMasyarakatbyId.foto_ktp_masyarakat}`,
                             "Foto KTP"
                           )}
                           className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full"
@@ -827,12 +832,12 @@ export default function ModalContent({
                        <img
                           src={
                             dataMasyarakatbyId?.selfie_ktp_masyarakat
-                              ? `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.selfie_ktp_masyarakat}`
+                              ? `${import.meta.env.VITE_BASE_URL}/images-be/${dataMasyarakatbyId.selfie_ktp_masyarakat}`
                               : null
                           }
                           alt="Selfie dengan KTP"
                           onClick={() => openPreview(
-                            `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.selfie_ktp_masyarakat}`,
+                            `${import.meta.env.VITE_BASE_URL}/images-be/${dataMasyarakatbyId.selfie_ktp_masyarakat}`,
                             "Selfie dengan KTP"
                           )}
                           className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full"

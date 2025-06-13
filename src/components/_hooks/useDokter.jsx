@@ -65,25 +65,28 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
         
 
     useEffect(() => {
-        if (!dataDokterbyId) return;
+      if (!dataDokterbyId) return;
 
-        // console.log("Data artikel diterima:", dataArtikel); // Debug
+      console.log("Data dokter diterima:", dataDokterbyId);
 
-        setFormData({
-            nama_dokter: dataDokterbyId.nama_dokter || "",
-            username_dokter: dataDokterbyId.username_dokter || "",
-            email_dokter: dataDokterbyId.email_dokter || "",
-            notlp_dokter : dataDokterbyId.notlp_dokter || "",
-            rating_dokter:dataDokterbyId.rating_dokter || "",
-            foto_profil_dokter:dataDokterbyId.foto_profil_dokter || "",
-            spesialis: dataDokterbyId.spesialis_dokter
-                ? { label: dataDokterbyId.spesialis_dokter, value: dataDokterbyId.spesialis_dokter }
-                : null,
-            str_dokter:dataDokterbyId.str_dokter || "",
-            password_dokter:dataDokterbyId.password_dokter||"",
-    
-    
-        });
+      setFormData({
+        nama_dokter: dataDokterbyId.nama_dokter || "",
+        username_dokter: dataDokterbyId.username_dokter || "",
+        email_dokter: dataDokterbyId.email_dokter || "",
+        notlp_dokter: dataDokterbyId.notlp_dokter || "",
+        rating_dokter: dataDokterbyId.rating_dokter || "",
+        // PENTING: Jangan set foto_profil_dokter ke string path di sini
+        // Biarkan null supaya tidak conflict dengan File object
+        foto_profil_dokter: null,
+        spesialis: dataDokterbyId.spesialis_dokter
+          ? {
+              label: dataDokterbyId.spesialis_dokter,
+              value: dataDokterbyId.spesialis_dokter,
+            }
+          : null,
+        str_dokter: dataDokterbyId.str_dokter || "",
+        password_dokter: dataDokterbyId.password_dokter || "",
+      });
     }, [dataDokterbyId]);
     
     //console.log(formData)
@@ -197,59 +200,70 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
 
     //UPDATE DATA
     const handleEditSubmitDokter = async (e) => {
-        e.preventDefault();
-        try {
-            let imgPath = formData.foto_profil_dokter;
-            if (formData.foto){
-                const data = new FormData();
-                data.append("foto", formData.foto_profil_dokter);
-            
-                const uploadRes = await axios.put(
-                    `${import.meta.env.VITE_BASE_URL}/api/dokter/upload`,
-                    data,
-                    {
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-                imgPath = uploadRes.data.path;
+      e.preventDefault();
+      try {
+        // Ambil path foto lama dari data yang sudah ada
+        let imgPath = dataDokterbyId?.foto_profil_dokter || "";
+
+        // Cek apakah ada file baru yang diupload (File object)
+        if (
+          formData.foto_profil_dokter &&
+          formData.foto_profil_dokter instanceof File
+        ) {
+          const data = new FormData();
+          data.append("foto", formData.foto_profil_dokter);
+
+          const uploadRes = await axios.post(
+            `${import.meta.env.VITE_BASE_URL}/api/dokter/upload/admin`,
+            data,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${token}`,
+              },
             }
+          );
+          imgPath = uploadRes.data.path;
+        }
 
+        const dokterData = {
+          nama_dokter: formData.nama_dokter,
+          username_dokter: formData.username_dokter,
+          email_dokter: formData.email_dokter,
+          foto_profil_dokter: imgPath, // Pastikan ini selalu string
+          spesialis_dokter: formData.spesialis?.value || "",
+          str_dokter: formData.str_dokter,
+          notlp_dokter: formData.notlp_dokter,
+          password_dokter: formData.password_dokter,
+        };
 
+        console.log("Data dokter yang akan diupdate:", dokterData);
+        console.log(
+          "Type foto_profil_dokter:",
+          typeof dokterData.foto_profil_dokter
+        );
 
-            const dokterData = {
-                nama_dokter: formData.nama_dokter,
-                username_dokter: formData.username_dokter,
-                email_dokter: formData.email_dokter,
-                foto_profil_dokter: imgPath,
-                spesialis_dokter: formData.spesialis?.value || "",
-                str_dokter: formData. str_dokter,
-                notlp_dokter:formData.notlp_dokter,
-                password_dokter:formData.password_dokter
+        await axios.patch(
+          `${import.meta.env.VITE_BASE_URL}/api/dokter/update/${idDokter}`,
+          dokterData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-                
-              
-            };
-            console.log("inidokter",dokterData)
-
-            await axios.patch(
-                `${import.meta.env.VITE_BASE_URL}api/dokter/update/${idDokter}`,
-                dokterData,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-                showSuccessToast("Berhasil mengupdate data dokter");
-                onClose();
-        } catch (error) {
-            console.error("Error updating data:", error.response?.data || error.message || error);
-            showErrorToast("Gagal mengupdate data dokter");
-        }}
+        showSuccessToast("Berhasil mengupdate data dokter");
+        onClose();
+      } catch (error) {
+        console.error(
+          "Error updating data:",
+          error.response?.data || error.message || error
+        );
+        showErrorToast("Gagal mengupdate data dokter");
+      }
+    };
 
 
 
