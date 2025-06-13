@@ -158,52 +158,53 @@ function Konsultasi() {
   // FRONT END
   return (
     <div className="flex flex-row h-screen">
-      <main className='flex flex-col pl-8 gap-1 w-full pr-3 h-screen'>
-        
+      <main className="flex flex-col pl-8 gap-1 w-full pr-3 h-screen">
         {/* Atas(search & profile) */}
-        <div className='flex flex-row  items-center justify-between pt-3'>
-          <p className='text-3xl font-[raleway] font-bold text-[#004A76]'>
+        <div className="flex flex-row  items-center justify-between pt-3">
+          <p className="text-3xl font-[raleway] font-bold text-[#004A76]">
             Konsultasi
           </p>
           <div className="flex flex-row gap-2 relative">
-
             {/* search */}
             <div className="flex items-center rounded-[19px] px-3 justify-start py-1 border-[1.5px] border-gray-300 gap-3">
-              <IoIosSearch className="text-gray-400"/>
+              <IoIosSearch className="text-gray-400" />
               <input
                 type="text"
                 placeholder="Cari Nama"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="text-gray-700 text-sm outline-none bg-transparent" />             
+                className="text-gray-700 text-sm outline-none bg-transparent"
+              />
             </div>
 
             {/* akun */}
             <div className="flex flex-row gap-4 relative">
               <button
-                onClick= {toggleDropdown}
-                className="flex items-center space-x-2 focus:outline-none cursor-pointer">
+                onClick={toggleDropdown}
+                className="flex items-center space-x-2 focus:outline-none cursor-pointer"
+              >
                 <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
               </button>
 
-             <div>
+              <div>
                 {isOpen && (
                   <>
-                    <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setIsOpen(false)}></div>
+                    <div
+                      className="fixed inset-0 bg-black/30 z-40"
+                      onClick={() => setIsOpen(false)}
+                    ></div>
                     <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
                       <div className="py-1 justify-center">
-                        <a
-                          className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
-                          <HiOutlineUser className='text-[30px]' />
+                        <a className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
+                          <HiOutlineUser className="text-[30px]" />
                           {user?.username}
                         </a>
-                        
+
                         <a
                           onClick={handleLogout}
-                          className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
-                          <IoLogOutOutline className='text-[30px]' />
-                          {" "}
-                          Log Out
+                          className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3"
+                        >
+                          <IoLogOutOutline className="text-[30px]" /> Log Out
                         </a>
                       </div>
                     </div>
@@ -211,53 +212,57 @@ function Konsultasi() {
                 )}
               </div>
             </div>
-          </div> 
+          </div>
         </div>
         <img src="/line style.svg" alt="" />
-
 
         {/* Button Tengah FILTER */}
         <div className="flex flex-row justify-center w-full py-2 gap-15">
           <button
             onClick={() => setFilterStatus("Diproses")}
             className={`${
-               filterStatus === "Diproses"
+              filterStatus === "Diproses"
                 ? "bg-[#004A76] font-bold font-[raleway]"
-                : "bg-[#B3B3B3]" 
-             } hover:opacity-80 text-white w-50 h-10 rounded-md text-md border-[#E3F0F8]`}>
-             Diproses 
+                : "bg-[#B3B3B3]"
+            } hover:opacity-80 text-white w-50 h-10 rounded-md text-md border-[#E3F0F8] cursor-pointer`}
+          >
+            Diproses
           </button>
-          <div className='h-10 bg-[#004A76] w-1'> </div>
+          <div className="h-10 bg-[#004A76] w-1"> </div>
           <button
             onClick={() => setFilterStatus("Selesai")}
             className={`${
               filterStatus === "Selesai"
-               ?"bg-[#004A76] font-bold font-[raleway]" 
-               :"bg-[#B3B3B3]"
-            } hover:opacity-80 text-white w-50 h-10 rounded-md text-md border-[#E3F0F8] border-2 focus-ring-2 `}>
+                ? "bg-[#004A76] font-bold font-[raleway]"
+                : "bg-[#B3B3B3]"
+            } hover:opacity-80 text-white w-50 h-10 rounded-md text-md border-[#E3F0F8] border-2 focus-ring-2 cursor-pointer `}
+          >
             Riwayat
           </button>
-        </div> 
-        
-        {/* filter by tanggal dan poli */}
-        <div className='flex flex-rows  gap-6 py-3 px-6 '>
+        </div>
 
+        {/* filter by tanggal dan poli */}
+        <div className="flex flex-rows  gap-6 py-3 px-6 ">
           <div className="flex flex-row  gap-3 items-center ">
-            <label className="font-[raleway] font-bold text-[#004A76]  ">Tanggal</label>
+            <label className="font-[raleway] font-bold text-[#004A76]  ">
+              Tanggal
+            </label>
             <input
               type="date"
-              value={selectedDate}  
+              value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="border rounded p-2 text-gray-700 border-[#004A76] h-10"
+              className="border rounded p-2 text-gray-700 border-[#004A76] h-10 cursor-pointer"
             />
           </div>
-          
+
           <div className="flex flex-row gap-3 items-center">
-            <label className="font-[raleway] font-bold text-[#004A76] ">Filter Poli</label>
+            <label className="font-[raleway] font-bold text-[#004A76] ">
+              Filter Poli
+            </label>
             <select
               value={selectedPoli}
               onChange={(e) => setSelectedPoli(e.target.value)}
-              className="border rounded p-2 text-gray-700 border-[#004A76] h-10"
+              className="border rounded p-2 text-gray-700 border-[#004A76] h-10 cursor-pointer"
             >
               {poliOptions.map((poli, idx) => (
                 <option key={idx} value={poli}>
@@ -268,80 +273,85 @@ function Konsultasi() {
           </div>
 
           <div className="flex items-center justify-center">
-            <button   
+            <button
               onClick={handleResetFilter}
-              className="bg-[#004A76] hover:bg-[#38B6FE]/50 text-white p-3 items-center rounded-md text-sm font-[raleway]"
+              className="bg-[#004A76] hover:bg-[#38B6FE]/50 text-white p-3 items-center rounded-md text-sm font-[raleway] cursor-pointer"
             >
               <TbReload />
             </button>
           </div>
-
         </div>
 
         {/* HEADER TABEL Filtering Tabel BLM FIX */}
         <div className="py-1">
-            {loading ? (
-                <p>Loading data...</p>
-            ) : (
-                <>
-                <Basetable data={paginatedData} columns={columns} />
-                
-                </>
-            )}
+          {loading ? (
+            <p>Loading data...</p>
+          ) : (
+            <>
+              <Basetable data={paginatedData} columns={columns} />
+            </>
+          )}
         </div>
-
 
         {/* Pagination */}
         <div className="grid grid-cols-3 items-center justify-center">
           {/* Jumlah ditampilkan */}
           <div className="text-sm text-gray-600">
-            Menampilkan {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems} hasil
+            Menampilkan {(currentPage - 1) * itemsPerPage + 1} -{" "}
+            {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems}{" "}
+            hasil
           </div>
 
           {/* Navigasi dan Items per page */}
           <div className="flex items-center gap-4">
             {/* Pagination Number */}
             <div className="flex items-center space-x-2">
-             <button
+              <button
                 className={`px-2 py-1 border-2 rounded-md transition duration-200 
-                  ${currentPage === 1 
-                    ? "opacity-50 cursor-not-allowed border-gray-300"
-                    : "hover:bg-[#004A76] hover:text-white"}
+                  ${
+                    currentPage === 1
+                      ? "opacity-50 cursor-not-allowed border-gray-300"
+                      : "hover:bg-[#004A76] hover:text-white"
+                  }
                 `}
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}>
+                disabled={currentPage === 1}
+              >
                 &lt;
-                </button>
+              </button>
 
-                {[...Array(totalPages)].map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentPage(i + 1)}
-                    className={`px-3 py-1  ${currentPage === i + 1 ? "bg-[#004A76] text-white" : ""}`}
-                  >
-                    {i + 1}
-                  </button>
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`px-3 py-1  ${
+                    currentPage === i + 1 ? "bg-[#004A76] text-white" : ""
+                  }`}
+                >
+                  {i + 1}
+                </button>
               ))}
 
               <button
                 className={`px-2 py-1 border-2 rounded-md transition duration-200 
-                  ${currentPage === totalPages
-                    ? "opacity-50 cursor-not-allowed border-gray-300"
-                    : " hover:bg-[#004A76] hover:text-white"}
+                  ${
+                    currentPage === totalPages
+                      ? "opacity-50 cursor-not-allowed border-gray-300"
+                      : " hover:bg-[#004A76] hover:text-white"
+                  }
                 `}
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}>
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              >
                 &gt;
               </button>
             </div>
           </div>
         </div>
-
-
-       
       </main>
     </div>
-    
   );
 }
 

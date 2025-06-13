@@ -208,8 +208,8 @@ export default function Artikel() {
       cell: ({ getValue }) => (
         <div className="whitespace-normal break-words max-w-sm">
           {getValue()}
-        </div>)
-      
+        </div>
+      ),
     },
     {
       accessorKey: "createdAt",
@@ -227,12 +227,12 @@ export default function Artikel() {
       header: "Detail",
       enableSorting: false,
       cell: ({ row }) => (
-        <div className="flex gap-2 items-center ">
+        <div className="flex gap-2  items-center ">
           <button
             onClick={() => openModal("detailartikel", row.original._id)}
             title="Detail"
           >
-            <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg text-center" />
+            <HiOutlineExclamationCircle className="text-black cursor-pointer hover:text-[#004A76] text-lg text-center" />
           </button>
         </div>
       ),
@@ -243,12 +243,15 @@ export default function Artikel() {
       enableSorting: false,
       cell: ({ row }) => (
         <div className="inline-flex overflow-hidden items-center bg-[#FAFBFD] p-2 gap-3 rounded-xl border-1 border-[#979797]">
-          <button onClick={() => openModal("editdataartikel", row.original._id)} title="Edit">
-            <FaEdit className="w-5 h-5 text-gray-600 hover:text-[#004A76] text-lg" />
+          <button
+            onClick={() => openModal("editdataartikel", row.original._id)}
+            title="Edit"
+          >
+            <FaEdit className="w-5 h-5 text-gray-600 hover:text-[#004A76] text-lg cursor-pointer" />
           </button>
 
           <button onClick={() => handleDelete(row.original._id)} title="Hapus">
-            <FaTrashAlt className="w-5 h-5 text-red-500 hover:text-red-700 text-lg" />
+            <FaTrashAlt className="w-5 h-5 text-red-500 hover:text-red-700 text-lg cursor-pointer" />
           </button>
         </div>
       ),
@@ -295,7 +298,8 @@ export default function Artikel() {
                       <div className="py-1 justify-center">
                         <a
                           href=""
-                          className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
+                          className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3"
+                        >
                           <HiOutlineUser className="text-[30px]" />
                           {user?.username}
                         </a>
@@ -321,10 +325,12 @@ export default function Artikel() {
         {/* choose */}
         <div className="flex flex-row justify-between w-full  items-center px-2 py-2">
           <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-xl items-center">
-            <span className="font-bold text-gray-700 font-[raleway]">Kategori :</span>
+            <span className="font-bold text-gray-700 font-[raleway]">
+              Kategori :
+            </span>
             <button
               onClick={() => setSelectedKategori("Kesehatan")}
-              className={` w-50 px-4 py-1 rounded-xl border-2  font-[raleway] transition-all duration-200 ${
+              className={` w-50 px-4 py-1 rounded-xl border-2  cursor-pointer font-[raleway] transition-all duration-200 hover:bg-[#004A76] hover:text-white ${
                 selectedKategori === "Kesehatan"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
@@ -335,7 +341,7 @@ export default function Artikel() {
 
             <button
               onClick={() => setSelectedKategori("Obat")}
-              className={` w-50 px-4 py-1 rounded-xl font-[raleway] border-2 transition-all duration-200 ${
+              className={` w-50 px-4 py-1 rounded-xl font-[raleway] cursor-pointer border-2 transition-all duration-200 hover:bg-[#004A76] hover:text-white ${
                 selectedKategori === "Obat"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
@@ -346,7 +352,7 @@ export default function Artikel() {
           </div>
           <div className="">
             <button
-              className=" bg-[#004A76] rounded-xl shadow-xl px-4 py-2 cursor-pointer text-white font-[raleway] hover:bg-white hover:text-[#004A76] hover:border-2  "
+              className=" bg-[#004A76] rounded-xl shadow-xl px-8 py-3 cursor-pointer text-sm font-semibold text-white font-[raleway] hover:opacity-75 "
               onClick={() => openModal("tambahartikel")}
             >
               + Tambah Data Artikel

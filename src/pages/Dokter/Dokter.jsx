@@ -245,83 +245,91 @@ const totalItems = filteredDokter.length;
 
   // paramater tabel
   const columns = [
-      {
-          header: "No",
-          enableSorting: false,
-          cell: ({ row }) => row.index + 1,
-      },
-      {
-        accessorKey: "foto_profil_dokter",
-        header: "Foto",
-        enableSorting: false,
-        cell: ({ getValue }) => {
-          const imageUrl = getValue();
-          console.log("Image URL:", imageUrl);
+    {
+      header: "No",
+      enableSorting: false,
+      cell: ({ row }) => row.index + 1,
+    },
+    {
+      accessorKey: "foto_profil_dokter",
+      header: "Foto",
+      enableSorting: false,
+      cell: ({ getValue }) => {
+        const imageUrl = getValue();
+        console.log("Image URL:", imageUrl);
 
-          return imageUrl ? (
+        return imageUrl ? (
+          <img
+            src={`${import.meta.env.VITE_BASE_URL}${imageUrl}`}
+            alt="Foto Dokter"
+            className="w-10 h-10 object-cover rounded-md"
+          />
+        ) : (
+          <div className="w-10 h-10  ">
             <img
-              src={`${import.meta.env.VITE_BASE_URL}${imageUrl}`}
-              alt="Foto Dokter"
-              className="w-10 h-10 object-cover rounded-md"
+              src="/default-avatar.jpg"
+              alt="foto_default"
+              className="rounded-md"
             />
-          ) : (
-            <div className="w-10 h-10  ">
-                <img src="/default-avatar.jpg" alt="foto_default" className='rounded-md' />
-            </div>
-          );
-        }
-      },
-      {
-        accessorKey: "nama_dokter",
-        header: "Nama",
-        enableSorting: false,
-        cell: ({ row }) => 
-          <div className='w-50 truncate'>
-              {row.original.nama_dokter}
           </div>
+        );
       },
-      {
-        accessorKey: "username_dokter",
-        header: "Username",
-        enableSorting: false,
-      },
-      {
-        accessorKey: "spesialis_dokter",
-        header: "Spesialisasi",
-        enableSorting: false,
-      },
-      {
-        accessorKey: "str_dokter",
-        header: "Nomor STR",
-        enableSorting: false,
-      },
-      {
-        accessorKey: "createdAt",
-        header: "Tanggal Registrasi",
-        enableSorting: true,
-        cell: info => formatTanggal(info.getValue()),
-      },
-      {
-        accessorKey: "detail", 
-        header: "Detail",
-        enableSorting: false,
-        cell: ({ row }) => (
-         <div className="grid grid-cols-3 gap-2 items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797]">
-            <button onClick={() =>openModal("detailprofildokter",row.original._id )} title="Detail">
-              <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg" />
-            </button>
+    },
+    {
+      accessorKey: "nama_dokter",
+      header: "Nama",
+      enableSorting: false,
+      cell: ({ row }) => (
+        <div className="w-50 truncate">{row.original.nama_dokter}</div>
+      ),
+    },
+    {
+      accessorKey: "username_dokter",
+      header: "Username",
+      enableSorting: false,
+    },
+    {
+      accessorKey: "spesialis_dokter",
+      header: "Spesialisasi",
+      enableSorting: false,
+    },
+    {
+      accessorKey: "str_dokter",
+      header: "Nomor STR",
+      enableSorting: false,
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Tanggal Registrasi",
+      enableSorting: true,
+      cell: (info) => formatTanggal(info.getValue()),
+    },
+    {
+      accessorKey: "detail",
+      header: "Detail",
+      enableSorting: false,
+      cell: ({ row }) => (
+        <div className="grid grid-cols-3 gap-2 items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797]">
+          <button
+            onClick={() => openModal("detailprofildokter", row.original._id)}
+            title="Detail"
+          >
+            <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg cursor-pointer" />
+          </button>
 
-            <button onClick={() => openModal("editdatadokter",row.original._id)} title="Edit">
-              <FaEdit className="text-gray-600 hover:text-[#004A76] text-lg" />
-            </button>
+          <button
+            onClick={() => openModal("editdatadokter", row.original._id)}
+            title="Edit"
+          >
+            <FaEdit className="text-gray-600 hover:text-[#004A76] text-lg cursor-pointer" />
+          </button>
 
-            <button onClick={() =>handleDelete(row.original._id)} title="Hapus">
-              <FaTrashAlt className="text-red-500 hover:text-red-700 text-lg" />
-            </button>
-          </div>),
-          
-          
-      },
+          <button onClick={() => handleDelete(row.original._id)} title="Hapus">
+            <FaTrashAlt className="text-red-500 hover:text-red-700 text-lg cursor-pointer" />
+          </button>
+        </div>
+      ),
+    },
   ];
 
 
@@ -427,51 +435,63 @@ const totalItems = filteredDokter.length;
           )}
         </div>
 
-         {/* Pagination */}
-          <div className="grid grid-cols-3 items-center justify-center">
-            {/* Jumlah ditampilkan */}
-            <div className="text-sm text-gray-600">
-              Menampilkan {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems} hasil
-            </div>
+        {/* Pagination */}
+        <div className="grid grid-cols-3 items-center justify-center">
+          {/* Jumlah ditampilkan */}
+          <div className="text-sm text-gray-600">
+            Menampilkan {(currentPage - 1) * itemsPerPage + 1} -{" "}
+            {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems}{" "}
+            hasil
+          </div>
 
-            {/* Navigasi dan Items per page */}
-            <div className="flex items-center gap-4">
-              {/* Pagination Number */}
-              <div className="flex items-center space-x-2">
+          {/* Navigasi dan Items per page */}
+          <div className="flex items-center gap-4">
+            {/* Pagination Number */}
+            <div className="flex items-center space-x-2">
               <button
-                  className={`px-2 py-1 border-2 rounded-md transition duration-200 
-                    ${currentPage === 1 
-                      ? "opacity-50 cursor-not-allowed border-gray-300"
-                      : "hover:bg-[#004A76] hover:text-white"}
+                className={`px-2 py-1 border-2 rounded-md transition duration-200 cursor-pointer
+                    ${
+                      currentPage === 1
+                        ? "opacity-50 cursor-not-allowed border-gray-300"
+                        : "hover:bg-[#004A76] hover:text-white"
+                    }
                   `}
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}>
-                  &lt;
-                  </button>
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                &lt;
+              </button>
 
-                  {[...Array(totalPages)].map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setCurrentPage(i + 1)}
-                      className={`px-3 py-1  ${currentPage === i + 1 ? "bg-[#004A76] text-white" : ""}`}
-                    >
-                      {i + 1}
-                    </button>
-                ))}
-
+              {[...Array(totalPages)].map((_, i) => (
                 <button
-                  className={`px-2 py-1 border-2 rounded-md transition duration-200 
-                    ${currentPage === totalPages
-                      ? "opacity-50 cursor-not-allowed border-gray-300"
-                      : " hover:bg-[#004A76] hover:text-white"}
-                  `}
-                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}>
-                  &gt;
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`px-3 py-1 cursor-pointer ${
+                    currentPage === i + 1 ? "bg-[#004A76] text-white" : ""
+                  }`}
+                >
+                  {i + 1}
                 </button>
-              </div>
+              ))}
+
+              <button
+                className={`px-2 py-1 border-2 rounded-md transition duration-200 cursor-pointer
+                    ${
+                      currentPage === totalPages
+                        ? "opacity-50 cursor-not-allowed border-gray-300"
+                        : " hover:bg-[#004A76] hover:text-white"
+                    }
+                  `}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              >
+                &gt;
+              </button>
             </div>
           </div>
+        </div>
 
         <Modal open={isModalOpen} onClose={closeModal}>
           <ModalContent
@@ -480,7 +500,7 @@ const totalItems = filteredDokter.length;
             dataDokterbyId={dataDokterbyId}
             onClose={handleCloseModal}
             token={token}
-            onAddSuccess={handleAfterAddDokter} 
+            onAddSuccess={handleAfterAddDokter}
           />
         </Modal>
       </main>

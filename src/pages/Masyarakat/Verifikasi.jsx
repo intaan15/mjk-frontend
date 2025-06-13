@@ -293,105 +293,137 @@ function Verifikasi() {
 
     // HEADER TABLE
     const columns = [
-        {
-            header: "No",
-            enableSorting: false,
-            cell: ({ row }) => row.index + 1,
-        },
-        {
-            accessorKey: "foto_profil_masyarakat",
-            header: "Foto",
-            enableSorting: false,
-            cell: ({ getValue }) => {
-                    const imageUrl = getValue();
-                    console.log("Image URL profil_masyarakat:", imageUrl);
+      {
+        header: "No",
+        enableSorting: false,
+        cell: ({ row }) => row.index + 1,
+      },
+      {
+        accessorKey: "foto_profil_masyarakat",
+        header: "Foto",
+        enableSorting: false,
+        cell: ({ getValue }) => {
+          const imageUrl = getValue();
+          console.log("Image URL profil_masyarakat:", imageUrl);
 
-                    return imageUrl ? (
-                    <img
-                        src={`${import.meta.env.VITE_BASE_URL}${imageUrl}`}
-                        alt="foto"
-                        className="w-10 h-10 object-cover rounded-md"
-                    />
-                    ) : (
-                    <div className="w-10 h-10  ">
-                        <img src="/default-avatar.jpg" alt="foto_default" className='rounded-md' />
-                    </div>
-                    );
-            }
+          return imageUrl ? (
+            <img
+              src={`${import.meta.env.VITE_BASE_URL}${imageUrl}`}
+              alt="foto"
+              className="w-10 h-10 object-cover rounded-md"
+            />
+          ) : (
+            <div className="w-10 h-10  ">
+              <img
+                src="/default-avatar.jpg"
+                alt="foto_default"
+                className="rounded-md"
+              />
+            </div>
+          );
         },
-        {
-            accessorKey: "nama_masyarakat",
-            header: "Nama",
-            enableSorting: false,
-            cell: ({ row }) => 
-                <div className='whitespace-normal break-words max-w-60'>
-                    {row.original.nama_masyarakat}
-                </div>
-
-        },
-        {
-            accessorKey: "email_masyarakat",
-            header: "Email",
-            enableSorting: false,
-        },       
-        {
-            accessorKey: "nik_masyarakat",
-            header: "NIK",
-            enableSorting: false,
-        },
-        {
-            accessorKey: "createdAt",
-            header: "Tanggal Registrasi",
-            enableSorting: true,
-            cell: info => formatTanggal(info.getValue()),
-        },
-        {
-            accessorKey: "detail",
-            header: "Detail",
-            enableSorting: false,
-            cell: ({ row }) => (
-            <div className="flex gap-2 items-center ">
-            <button onClick={() =>openModal("detailprofilmasyarakat", row.original._id)} title="Detail">
-                <HiOutlineExclamationCircle className="w-7  h-7 p-1 flex text-center justify-center  text-[#033E61] rounded-sm transition" />
+      },
+      {
+        accessorKey: "nama_masyarakat",
+        header: "Nama",
+        enableSorting: false,
+        cell: ({ row }) => (
+          <div className="whitespace-normal break-words max-w-60">
+            {row.original.nama_masyarakat}
+          </div>
+        ),
+      },
+      {
+        accessorKey: "email_masyarakat",
+        header: "Email",
+        enableSorting: false,
+      },
+      {
+        accessorKey: "nik_masyarakat",
+        header: "NIK",
+        enableSorting: false,
+      },
+      {
+        accessorKey: "createdAt",
+        header: "Tanggal Registrasi",
+        enableSorting: true,
+        cell: (info) => formatTanggal(info.getValue()),
+      },
+      {
+        accessorKey: "detail",
+        header: "Detail",
+        enableSorting: false,
+        cell: ({ row }) => (
+          <div className="flex gap-2 items-center  ">
+            <button
+              onClick={() =>
+                openModal("detailprofilmasyarakat", row.original._id)
+              }
+              title="Detail"
+            >
+              <HiOutlineExclamationCircle className="w-7  h-7 p-1 flex text-center justify-center  text-[#033E61] rounded-sm transition cursor-pointer" />
             </button>
-            </div>),
-        },
-    
-        {
-            accessorKey: "actions",
-            header: "Status Konfirmasi",
-            enableSorting: false,
-            cell: ({ row }) => {
-                //untuk menampilkan hasil setelah diverifikasi
-                const status = row.original.verifikasi_akun_masyarakat;
+          </div>
+        ),
+      },
 
-                if (status === "diterima") {
-                    return <span className="bg-[#27AE60] text-white w-15 text-center p-3 text-md hover:bg-green-200 hover:text-[#27AE60] rounded-[10px] transition">Diterima</span>;
+      {
+        accessorKey: "actions",
+        header: "Status Konfirmasi",
+        enableSorting: false,
+        cell: ({ row }) => {
+          //untuk menampilkan hasil setelah diverifikasi
+          const status = row.original.verifikasi_akun_masyarakat;
+
+          if (status === "diterima") {
+            return (
+              <span className="bg-[#27AE60] text-white w-full text-center p-3 text-md hover:bg-green-200 hover:text-[#27AE60] rounded-[10px] transition ">
+                Diterima
+              </span>
+            );
+          }
+
+          if (status === "ditolak") {
+            return (
+              <span className="bg-[#FF1700] text-white w-15 text-center p-3 text-md hover:bg-red-200  hover:text-[#FF1700] rounded-[10px] transition">
+                Ditolak
+              </span>
+            );
+          }
+
+          return (
+            //button sblm verifikasi
+            <div className="flex gap-2 items-center bg-[#FAFBFD]">
+              <button
+                onClick={() =>
+                  handleVerifikasi(
+                    "diterima",
+                    row.original._id,
+                    row.original.email_masyarakat
+                  )
                 }
-
-                if (status === "ditolak") {
-                    return <span className="bg-[#FF1700] text-white w-15 text-center p-3 text-md hover:bg-red-200 p-1 hover:text-[#FF1700] rounded-[10px] transition">Ditolak</span>;
+                title="Terima"
+                className="bg-[#27AE60] cursor-pointer text-white w-20 text-center p-3 hover:bg-green-200 text-md hover:text-[#27AE60] rounded-[10px] transition"
+              >
+                Diterima
+              </button>
+              <button
+                onClick={() =>
+                  handleVerifikasi(
+                    "ditolak",
+                    row.original._id,
+                    row.original.email_masyarakat
+                  )
                 }
-
-                return (
-                //button sblm verifikasi
-                <div className="flex gap-2 items-center bg-[#FAFBFD]">
-                    <button
-                        onClick={() => handleVerifikasi("diterima", row.original._id, row.original.email_masyarakat)}
-                        title="Terima"
-                        className="bg-[#27AE60] text-white w-20 text-center p-3 hover:bg-green-200 text-md hover:text-[#27AE60] rounded-[10px] transition">
-                        Diterima
-                    </button>
-                    <button
-                        onClick={() => handleVerifikasi("ditolak", row.original._id,row.original.email_masyarakat)}
-                        title="Tolak"
-                        className="bg-[#FF1700] text-white w-20 text-center p-3 hover:bg-red-200 text-md hover:text-[#FF1700] rounded-[10px] transition">
-                        Ditolak
-                    </button>
-                </div>
-                );
-            }
+                title="Tolak"
+                className="bg-[#FF1700] cursor-pointer text-white w-20 text-center p-3 hover:bg-red-200 text-md hover:text-[#FF1700] rounded-[10px] transition"
+              >
+                Ditolak
+              </button>
+            </div>
+          );
         },
+      },
     ];
     
 
@@ -467,7 +499,7 @@ function Verifikasi() {
                    </div>
                    <div className="flex flex-row gap-4 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
                        <div className="bg-white p-3 rounded-full flex items-center justify-center">
-                            <img src="/icon_verifikasiditerima.svg" alt="diterima" className="text-[50px] item-center text-[#6AC03D]" />
+                            <img src="/icon_verifikasiditerima.svg" alt="diterima" className="text-[50px] item-center cursor-pointer text-[#6AC03D]" />
                        </div>
                        <div className="flex flex-col">
                            <span className=" text-white font-bold text-md"  style={{ fontFamily: "Nunito Sans" }}>Verifikasi Diterima</span>

@@ -185,28 +185,35 @@ function DataMasyarakat() {
       header: "Foto",
       enableSorting: false,
       cell: ({ getValue }) => {
-            const imageUrl = getValue();
-            console.log("Image URL profil_masyarakat:", imageUrl);
+        const imageUrl = getValue();
+        console.log("Image URL profil_masyarakat:", imageUrl);
 
-            return imageUrl ? (
-              <img
-                src={`${import.meta.env.VITE_BASE_URL}${imageUrl}`}
-                alt="foto"
-                className="w-10 h-10 object-cover rounded-md"
-              />
-            ) : (
-              <div className="w-10 h-10  ">
-                <img src="/default-avatar.jpg" alt="foto_default" className='rounded-md' />
-              </div>
-            );
-      }
+        return imageUrl ? (
+          <img
+            src={`${import.meta.env.VITE_BASE_URL}${imageUrl}`}
+            alt="foto"
+            className="w-10 h-10 object-cover rounded-md"
+          />
+        ) : (
+          <div className="w-10 h-10  ">
+            <img
+              src="/default-avatar.jpg"
+              alt="foto_default"
+              className="rounded-md"
+            />
+          </div>
+        );
+      },
     },
     {
       accessorKey: "nama_masyarakat",
       header: "Nama",
       enableSorting: false,
       cell: ({ getValue }) => (
-        <div  className="whitespace-normal break-words max-w-60" title={getValue()}>
+        <div
+          className="whitespace-normal break-words max-w-60"
+          title={getValue()}
+        >
           {getValue()}
         </div>
       ),
@@ -230,20 +237,24 @@ function DataMasyarakat() {
       accessorKey: "createdAt",
       header: "Tanggal Registrasi",
       enableSorting: true,
-      cell: info => formatTanggal(info.getValue()),
+      cell: (info) => formatTanggal(info.getValue()),
     },
     {
       accessorKey: "Edit",
       header: "Edit",
       enableSorting: false,
       cell: ({ row }) => (
-      <div className="flex items-center justify-center p-2 w-10 h-10">
-        <button onClick={() => openModal("formeditmasyarakat",row.original._id)} title="Edit">
-          <FaEdit className="text-gray-600 hover:text-[#004A76] text-xl" />
-        </button>
-      </div>),
+        <div className="flex items-center justify-center p-2 w-10 h-10">
+          <button
+            onClick={() => openModal("formeditmasyarakat", row.original._id)}
+            title="Edit"
+          >
+            <FaEdit className="text-gray-600 hover:text-[#004A76] text-xl cursor-pointer" />
+          </button>
+        </div>
+      ),
     },
-  ]
+  ];
   const totalItems = filteredRows.length;
     const totalPages = Math.ceil(totalItems / itemsPerPage);
   
@@ -270,14 +281,14 @@ function DataMasyarakat() {
                 placeholder="Cari Nama/Email/NIK"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                
                 className="text-gray-700 text-sm outline-none bg-transparent"
               />
             </div>
             <div className="flex flex-row gap-4 relative">
               <button
                 onClick={toggleDropdown}
-                className="flex items-center space-x-2 focus:outline-none cursor-pointer">
+                className="flex items-center space-x-2 focus:outline-none cursor-pointer"
+              >
                 <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
               </button>
 
@@ -319,19 +330,23 @@ function DataMasyarakat() {
         <div className="flex flex-row justify-between w-full  items-center px-10 py-2 ">
           <div className="flex flex-row gap-8 bg-[#033E61] h-[70px] p-2 rounded-xl items-center px-6 shadow-2xl  ">
             <div className="bg-white p-3 rounded-full flex items-center justify-center">
-              <img src="/icon_user_verifikasi.svg" alt=""  className="w-8 h-8 item-center "/>
+              <img
+                src="/icon_user_verifikasi.svg"
+                alt=""
+                className="w-8 h-8 item-center "
+              />
             </div>
             <div className="flex flex-col">
               <div className="font-[raleway] text-white font-bold text-[15px]">
                 Jumlah Pengguna
               </div>
               <div className="font-[Nunito] text-white font-medium text-[15px]">
-                {DataMasyarakat.length} 
+                {DataMasyarakat.length}
               </div>
             </div>
           </div>
         </div>
-      
+
         {/* main  */}
         <div>
           {loading ? (
@@ -343,54 +358,63 @@ function DataMasyarakat() {
           )}
         </div>
 
-
         {/* Pagination */}
-          <div className="grid grid-cols-3 items-center justify-center">
-            {/* Jumlah ditampilkan */}
-            <div className="text-sm text-gray-600">
-              Menampilkan {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems} hasil
-            </div>
-
-            {/* Navigasi dan Items per page */}
-            <div className="flex items-center gap-4">
-              {/* Pagination Number */}
-              <div className="flex items-center space-x-2">
-              <button
-                  className={`px-2 py-1 border-2 rounded-md transition duration-200 
-                    ${currentPage === 1 
-                      ? "opacity-50 cursor-not-allowed border-gray-300"
-                      : "hover:bg-[#004A76] hover:text-white"}
-                  `}
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}>
-                  &lt;
-                  </button>
-
-                  {[...Array(totalPages)].map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setCurrentPage(i + 1)}
-                      className={`px-3 py-1  ${currentPage === i + 1 ? "bg-[#004A76] text-white" : ""}`}
-                    >
-                      {i + 1}
-                    </button>
-                ))}
-
-                <button
-                  className={`px-2 py-1 border-2 rounded-md transition duration-200 
-                    ${currentPage === totalPages
-                      ? "opacity-50 cursor-not-allowed border-gray-300"
-                      : " hover:bg-[#004A76] hover:text-white"}
-                  `}
-                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}>
-                  &gt;
-                </button>
-              </div>
-            </div>
+        <div className="grid grid-cols-3 items-center justify-center">
+          {/* Jumlah ditampilkan */}
+          <div className="text-sm text-gray-600">
+            Menampilkan {(currentPage - 1) * itemsPerPage + 1} -{" "}
+            {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems}{" "}
+            hasil
           </div>
 
-        
+          {/* Navigasi dan Items per page */}
+          <div className="flex items-center gap-4">
+            {/* Pagination Number */}
+            <div className="flex items-center space-x-2">
+              <button
+                className={`px-2 py-1 border-2 rounded-md transition duration-200 cursor-pointer
+                    ${
+                      currentPage === 1
+                        ? "opacity-50 cursor-not-allowed border-gray-300"
+                        : "hover:bg-[#004A76] hover:text-white"
+                    }
+                  `}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                &lt;
+              </button>
+
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`px-3 py-1 cursor-pointer  ${
+                    currentPage === i + 1 ? "bg-[#004A76] text-white" : ""
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                className={`px-2 py-1 border-2 rounded-md transition duration-200 cursor-pointer
+                    ${
+                      currentPage === totalPages
+                        ? "opacity-50 cursor-not-allowed border-gray-300"
+                        : " hover:bg-[#004A76] hover:text-white"
+                    }
+                  `}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              >
+                &gt;
+              </button>
+            </div>
+          </div>
+        </div>
 
         <Modal open={isModalOpen} onClose={closeModal}>
           <ModalContent
@@ -402,7 +426,6 @@ function DataMasyarakat() {
             onClose={handleCloseModal}
           />
         </Modal>
-
       </main>
     </div>
   );
