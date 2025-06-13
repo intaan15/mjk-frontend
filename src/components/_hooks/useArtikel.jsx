@@ -171,7 +171,13 @@ export default function useArtikel({ idArtikel, token, onClose }) {
       let imagePath = dataArtikel?.gambar_artikel || null;
 
       if (formArtikel.gambar_artikel) {
-        // UBAH DARI formData.foto
+        // ✅ VALIDASI UKURAN MAKSIMAL 2MB
+        if (formArtikel.gambar_artikel.size > 2 * 1024 * 1024) {
+          showErrorToast("Ukuran gambar maksimal 2MB.");
+          return;
+        }
+
+        // Upload gambar
         const data = new FormData();
         data.append("foto", formArtikel.gambar_artikel);
 
@@ -220,10 +226,10 @@ export default function useArtikel({ idArtikel, token, onClose }) {
       }
 
       console.error("Gagal update artikel:", message);
-      showErrorToast(message); // <-- ini toast yang akan muncul
+      showErrorToast(message);
     }
-    
   };
+  
 
   const handleImageClick = (imageSrc) => {
     console.log("Klik gambar:", imageSrc); // Debug

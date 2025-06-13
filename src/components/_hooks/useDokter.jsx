@@ -210,6 +210,15 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
         // Ambil path foto lama dari data yang sudah ada
         let imgPath = dataDokterbyId?.foto_profil_dokter || "";
 
+        if (formData.foto_profil_dokter) {
+          // ✅ VALIDASI UKURAN MAKSIMAL 2MB
+          if (formData.foto_profil_dokter.size > 2 * 1024 * 1024) {
+            showErrorToast("Ukuran gambar maksimal 2MB.");
+            return;
+          }
+        }
+  
+
         // Cek apakah ada file baru yang diupload (File object)
         if (
           formData.foto_profil_dokter &&
