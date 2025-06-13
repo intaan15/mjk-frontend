@@ -6,16 +6,16 @@ export const ImagePreviewCard = ({ imageSrc, imageAlt, label, onImageClick, clas
       <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">
         {label}
       </label>
-      <div className="rounded-xl p-2 w-60 h-40 flex items-center justify-center gap-2 relative group">
+      <div className="relative w-full max-w-[240px] aspect-[4/3] group">
         {imageSrc ? (
           <div 
             className="relative cursor-pointer"
             onClick={() => onImageClick(imageSrc, imageAlt)}
           >
-            <img
+           <img
               src={imageSrc}
               alt={imageAlt}
-              className="rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-all duration-300 group-hover:brightness-75"
+              className="absolute inset-0 w-full h-full object-cover rounded-xl border-2 border-[#025F96] transition-all duration-300 group-hover:brightness-75"
             />
             {/* Zoom Icon Overlay */}
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -77,12 +77,14 @@ export const ImagePreviewModal = ({ isOpen, imageSrc, imageAlt, onClose }) => {
         </button>
         
         {/* Image */}
-        <img
-          src={imageSrc}
-          alt={imageAlt}
-          className="max-w-auto max-h-auto object-contain rounded-lg shadow-2xl"
-          onClick={(e) => e.stopPropagation()}
-        />
+       <div className="aspect-[4/3] w-full max-w-3xl mx-auto relative">
+          <img
+            src={imageSrc}
+            alt={imageAlt}
+            className="w-auto h-auto max-w-full max-h-screen object-cover rounded-lg shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
         
         {/* Image Title */}
         <div className="absolute bottom-0 left-0 right-0 bg-[#004A76] text-xl text-white p-3 rounded-b-lg">

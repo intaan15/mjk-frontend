@@ -197,7 +197,7 @@ export default function ModalContent({
                     />
                   </label>
                   {/* Preview gambar yang dipilih */}
-                  {formArtikel.foto || dataArtikel?.gambar_artikel ? (
+                  {formArtikel.foto ? (
                       <ImagePreviewCard
                         imageSrc={
                           formArtikel.foto
@@ -214,7 +214,7 @@ export default function ModalContent({
                   <ImagePreviewModal
                     isOpen={showImageModal}
                     imageSrc={selectedImage}
-                    imageAlt="Sampul Artikel"
+                    imageAlt={selectedImageAlt || "Sampul Artikel"}
                     onClose={closeImageModal}
                   />
                 </div>
@@ -476,6 +476,23 @@ export default function ModalContent({
                       ? formArtikel.foto.name
                       : "Belum ada file yang dipilih"}
                   </div>
+
+                  {/* Preview Gambar */}
+                  <div className="mt-4">
+                    {formArtikel.foto ? (
+                      <img
+                        src={URL.createObjectURL(formArtikel.foto)}
+                        alt="Preview"
+                        className="w-[200px] h-[100px] object-cover rounded-lg border border-gray-400"
+                      />
+                    ) : dataArtikel?.gambar_artikel ? (
+                      <img
+                        src={`${import.meta.env.VITE_BASE_URL}${dataArtikel.gambar_artikel}`}
+                        alt="Sampul Lama"
+                        className="w-[200px] h-[100px] object-cover rounded-lg border border-gray-400"
+                      />
+                    ) : null}
+                  </div>
                 </div>
               </div>
 
@@ -612,8 +629,8 @@ export default function ModalContent({
                       />
                   </div>
                 </div>
-                <div className="text-left px-10">
-                  <div className="text-[#025F96] font-bold underline">Selfie dengan KTP</div>
+                <div className="flex flex-col gap-2 w-full text-left px-10">
+                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Selfie dengan KTP</div>
                   <div className="rounded-xl p-2 w-60 h-40 flex items-center justify-center ">
                      <img
                           src={
