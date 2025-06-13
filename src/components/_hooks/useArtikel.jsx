@@ -153,13 +153,13 @@ export default function useArtikel({ idArtikel, token, onClose }) {
       // console.log("Artikel berhasil dibuat:", res.data);
       onClose(false);
     } catch (error) {
-      console.error("Gagal buat artikel:", {
-        status: error.response?.status,
-        message: error.response?.data?.message,
-        data: error.response?.data,
-      });
-      showErrorToast("Gagal membuat artikel.");
-      console.error("Gagal buat artikel:", error);
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        "Terjadi kesalahan saat menambah artikel.";
+
+      console.error("Gagal menambah artikel:", message);
+      showErrorToast(message);
     }
   };
 

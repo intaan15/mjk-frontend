@@ -106,7 +106,7 @@ export default function ModalContent({
           <div className="text-start w-full">
             <button
               onClick={onClose}
-              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
+              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
             >
               &times;
             </button>
@@ -293,7 +293,7 @@ export default function ModalContent({
           <div className="text-start w-full ">
             <button
               onClick={onClose}
-              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
+              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
             >
               &times;
             </button>
@@ -402,7 +402,7 @@ export default function ModalContent({
           <div className="text-start w-full relative">
             <button
               onClick={onClose}
-              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
+              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
             >
               &times;
             </button>
@@ -565,7 +565,7 @@ export default function ModalContent({
           <div className="text-start flex flex-col justify-center items-center ">
             <button
               onClick={onClose}
-              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
+              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
             >
               &times;
             </button>
@@ -884,7 +884,7 @@ export default function ModalContent({
           <div className="text-start w-full ">
             <button
               onClick={onClose}
-              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
+              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
             >
               &times;
             </button>
@@ -957,14 +957,28 @@ export default function ModalContent({
                           onChange={handleFileChangeDokter}
                           />
                       </label>
+                       {/* Preview gambar yang dipilih */}
+                      {formDokter.foto_profil_dokter ? (
+                        <img
+                          src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
+                          alt="preview"
+                          className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                        />
+                      ) : dataDokterbyId?.foto_profil_dokter ? ( // <-- tambahkan tanda tanya (optional chaining)
+                        <img
+                          src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
+                          alt=""
+                          className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                        />
+                  ) : null}
                     </div>
                     <div className="font-light text-[14px] self-start text-lime-500">
-                    {formDokter.foto_profil_dokter
-                      ? formDokter.foto_profil_dokter.name
+                    {formDokter
+                      ? formDokter.name
                       : "Belum ada file yang dipilih"}
                     </div>
 
-                    <button type="button" onClick={handleResetFileDokter} className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
+                    <button type="button" className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
                     Batalkan
                     </button>
                   </div>
@@ -1118,7 +1132,7 @@ export default function ModalContent({
           <div className="text-start w-full ">
             <button
               onClick={onClose}
-              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
+              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
             >
               &times;
             </button>
@@ -1336,7 +1350,7 @@ export default function ModalContent({
           <div className="">
             <button
               onClick={onClose}
-              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
+              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
             >
               &times;
             </button>

@@ -179,8 +179,13 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
             showSuccessToast("Berhasil menambah data dokter");
             onClose();
         } catch (error) {
-            console.error("Error add data:",  error.response?.data || error.message);
-            showErrorToast("Gagal menambah data dokter");
+          const message =
+            error.response?.data?.message ||
+            error.message ||
+            "Error add data";
+
+          console.error("Gagal menambah data dokter:", message);
+          showErrorToast(message);
         }
     };
 
@@ -257,12 +262,21 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
         showSuccessToast("Berhasil mengupdate data dokter");
         onClose();
       } catch (error) {
-        console.error(
-          "Error updating data:",
-          error.response?.data || error.message || error
-        );
-        showErrorToast("Gagal mengupdate data dokter");
+        const message =
+          error.response?.data?.message ||
+          error.message ||
+          "Error updating data";
+
+        console.error("Gagal update dokter:", message);
+        showErrorToast(message);
       }
+    //   {
+    //     console.error(
+    //       "Error updating data:",
+    //       error.response?.data || error.message || error
+    //     );
+    //     showErrorToast("Gagal mengupdate data dokter");
+    //   }
     };
 
 
