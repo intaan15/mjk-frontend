@@ -339,7 +339,7 @@ export default function ModalContent({
                             `${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`,
                             "Sampul Artikel"
                           )}
-                          className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full"
+                          className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover "
                     />
                    
                   </div>
@@ -379,7 +379,7 @@ export default function ModalContent({
             </div>
 
             <div className="text-center">
-              <button className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5"
+              <button className="w-40 px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5 transition duration-200 ease-in-out"
                onClick={() => onClose(false)}             
               >
                 Tutup
@@ -640,7 +640,7 @@ export default function ModalContent({
             </div>
             <div className=" text-center">
               <button
-                className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5"
+                className="w-40 px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5 transition duration-200 ease-in-out"
                 onClick={() => onClose(false)}
               >
                 Tutup
