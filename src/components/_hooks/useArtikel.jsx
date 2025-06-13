@@ -198,7 +198,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
                 data.append("foto", formData.foto);
 
                 const uploadRes = await axios.post(
-                "${import.meta.env.VITE_BASE_URL}/api/artikel/upload",
+                `${import.meta.env.VITE_BASE_URL}/api/artikel/upload}`,
                 data,
                 {
                     headers: {
@@ -245,6 +245,7 @@ export default function useArtikel({idArtikel,token,onClose}) {
         };
 
         const handleImageClick = (imageSrc) => {
+            console.log("Klik gambar:", imageSrc); // Debug
             setSelectedImage(imageSrc);
             setShowImageModal(true);
         };
@@ -258,23 +259,16 @@ export default function useArtikel({idArtikel,token,onClose}) {
 
 return {
 
-   // Data states
-        formData,
-        dataArtikel,
-        
-        // Modal zoom states
-        showImageModal,
-        selectedImage,
-        
-        // Form handlers
-        handleChange,
-        handleFileChange,
-        handleSubmit,
-        handleEditSubmit,
-        handleChangeKategori,
-        
-        // Modal zoom handlers
-        handleImageClick,
-        closeImageModal,
+    formData,
+    dataArtikel,
+    handleChange,
+    handleFileChange,
+    handleChangeKategori,
+    handleSubmit,
+    handleEditSubmit,
+    handleImageClick,
+    closeImageModal,
+    showImageModal,       // <--- tambahkan ini
+    selectedImage         // <--- dan ini
   }
 }
