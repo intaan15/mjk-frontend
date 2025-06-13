@@ -1,6 +1,8 @@
 // komponen  react
 import React from 'react'
 import { useState, useRef, useEffect } from 'react';
+import useDashboard from '../../components/_hooks/useDashboard';
+import useLogout  from '../../components/_hooks/useLogout';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
@@ -37,159 +39,26 @@ const StatBox = ({ icon, title, value }) => (
 
 
 function Dashboard() {
-  const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleDropdown = () => setIsOpen(!isOpen);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const today = new Date().toISOString().split('T')[0];  
-  const [jumlahKonsultasi, setJumlahKonsultasi] = useState(0);
-  const [jumlahPengguna, setJumlahPengguna] = useState(0);
-  const [verifikasiakun,setVerifikasiAkun] = useState(0)
-  const [artikelLog, setArtikelLog] = useState(0);
-  const [jadwalbyTanggal,setJadwalbyTanggal] = useState();
-  const [akunBaru, setAkunBaru] =useState(0)
-  const [artikelPublish,setArtikelPublish]=useState(0);
-  const [allDokter, setAllDokter] = useState(0);
-  const [jumlahDokter, setDokter] = useState(0);
-  const [stats, setStats] = useState({});
-  const [data, setData] = useState([]);''
+  const token = localStorage.getItem("token");
   const { user } = useAuth();
-  const handleLogout = () => {
-    localStorage.removeItem("token"); // Hapus token dari localStorage
-    navigate("/login");      // Redirect ke halaman login
-  };
-
-    // endpoint untuk ambil datat
-    useEffect(() => {
-
-      // API MASAYARAKAT
-      const fetchMasyarakat = async () => {
-        try {
-          const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`, {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            });
-          const jumlahPengguna = res.data.length; 
-          const selected = selectedDate.toISOString().split('T')[0];  
-          const pending = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending').length;
-          const akunBaru = res.data.filter(item =>{
-            const tglCreate = new Date(item.createdAt).toISOString().split('T')[0];
-            return tglCreate === selected;
-          }).length;
-          
-          setAkunBaru(akunBaru);
-          setJumlahPengguna(jumlahPengguna);
-          setVerifikasiAkun(pending);
-        } catch (err) {
-          console.error('Gagal fetch masyarakat:', err);
-        }
-      };
-
-
-      // API ARTIKEL
-      const fetchArtikel = async() =>{ 
-        try {
-          const res = await axios.get(
-            `${import.meta.env.VITE_BASE_URL}/api/artikel/getall`,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-          const artikelPublish = res.data.length;
-          const selected = selectedDate?.toISOString().split('T')[0];
-          const artikelLog = res.data.filter (item => {
-            const tgl = new Date(item.createdAt).toISOString().split('T')[0];
-            return tgl === selected;
-          }).length;
-          console.log(artikelLog)
-          
-          setArtikelLog(artikelLog)
-          setArtikelPublish(artikelPublish)
-        }catch(err){
-          console.error('Gagal fetch artikel:', err);
-        }
-      };
-
-      // API JADWAL KONSULTASI
-      const fetchKonsultasi = async() => {
-        try {
-          const res = await axios.get(
-            `${import.meta.env.VITE_BASE_URL}/api/jadwal/getall`,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-          const jumlahKonsultasi = res.data.length;
-          const selected = selectedDate?.toISOString().split('T')[0];
-          const jadwalbyTanggal =  res.data.filter(item => {
-            const tgl = new Date(item.tgl_konsul).toISOString().split('T')[0];
-            return tgl === selected && (
-              item.status_konsul === 'diterima' || 
-              item.status_konsul === 'selesai' || 
-              item.status_konsul === 'menunggu' ||
-              item.status_konsul === 'ditolak')
-          }).length;
-
-          setJumlahKonsultasi(jumlahKonsultasi)
-          setJadwalbyTanggal(jadwalbyTanggal)
-        } catch (err){
-          console.error('Gagal fetch jadwal:', err);
-        }
-      };
-
-      const fetchDokter = async() =>{ 
-        try {
-          const res = await axios.get(
-            `${import.meta.env.VITE_BASE_URL}/api/dokter/getall`,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-          const dokter = res.data.length;
-          const selected = selectedDate?.toISOString().split('T')[0];
-          const allDokter = res.data.filter(item => {
-             const tgl = new Date(item.createdAt).toISOString().split('T')[0];
-             return tgl === selected
-          }).length
-
-          setDokter(dokter)
-          setAllDokter(allDokter)
-        }catch(err){
-          console.error('Gagal fetch artikel:', err);
-        }
-      };
-
-      fetchDokter();
-      fetchKonsultasi();
-      fetchMasyarakat();
-      fetchArtikel();
-    },  [selectedDate]);
-
-  // Format tanggal ke dalam format dd-mm-yyyy
-  const formatTanggal = (tanggal) => {
-    const dateObj = new Date(tanggal);
-    const day = String(dateObj.getDate()).padStart(2, '0');
-    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-    const year = dateObj.getFullYear();
-    return `${day}-${month}-${year}`;
-  };
-
-  
-// Data untuk chart
- const dataBar = {
-  konsultasi: jumlahKonsultasi,
-  masyarakat: jumlahPengguna, 
-  dokter: jumlahDokter,
-  artikel: artikelPublish,
-  };
-
+  const {handleLogout:handleLogout}=useLogout()
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const {
+    jumlahKonsultasi,
+    jumlahPengguna,
+    verifikasiAkun,
+    artikelLog,
+    akunBaru,
+    artikelPublish,
+    allDokter,
+    jumlahDokter,
+    jadwalByTanggal,
+    formatTanggal,
+    toggleDropdown,
+    isOpen,
+    dataBar,
+    
+  } = useDashboard(selectedDate);
 
   return (
     <div className="flex flex-row h-screen pb-10">
@@ -219,7 +88,6 @@ function Dashboard() {
                       </a>
                       
                       <a
-                        href=""
                         onClick={handleLogout}
                         className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
                         <IoLogOutOutline className='text-[30px]' />
@@ -242,13 +110,13 @@ function Dashboard() {
           {/* Overlay teks dan kalender */}
           <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-5 ">
             {/* Kalender */}
-            <div className="rounded p-2">
+            <div className="rounded p-2 ">
               < Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
             </div>
             {/* Heading */}
             <div className="text-white ml-2">
               <h2 className="font-[Poppins] text-3xl font-bold">Halo, Admin</h2>
-              <p className="italic text-xl text-[#004A76] font-medium font-[Poppins]">
+              <p className="italic text-xl cursor-pointer  text-[#004A76] font-medium font-[Poppins]">
                 Selamat datang di Website Mojokerto Sehat
               </p>
             </div>
@@ -279,7 +147,7 @@ function Dashboard() {
                   <StatBox
                     icon={<FaUserClock className="w-[30px] h-[30px] text-white" />}
                     title="Verifikasi Pengguna"
-                    value={verifikasiakun}
+                    value={verifikasiAkun}
                   />
                </div>
           </div>
@@ -298,10 +166,10 @@ function Dashboard() {
               {/* Kartu 1 */}
               <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
                 <div className='flex grid-rows-2  gap-3 justify-between items-center w-full'>
-                   <p className="text-6xl font-bold text-[#004A76] font-[raleway] ">{jadwalbyTanggal}</p>
+                   <p className="text-6xl font-bold text-[#004A76] font-[raleway] ">{jadwalByTanggal}</p>
                    <IoStatsChart className='w-20 h-20 text-[#FF8FA7]/70'/>
                 </div>
-                  <p className="text-lg text-[#004A76] font-bold underline">Konsultasi</p>
+                  <a href='/konsultasi' className="cursor-pointer text-lg text-[#004A76] font-bold underline">Konsultasi</a>
                   <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
 

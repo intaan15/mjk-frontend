@@ -24,6 +24,8 @@ const useDashboard = (selectedDate) => {
   const [allDokter, setAllDokter] = useState(0);
   const [jumlahDokter, setJumlahDokter] = useState(0);
   const [jadwalByTanggal, setJadwalByTanggal] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
   const token = localStorage.getItem("token");
   const selected = selectedDate?.toISOString().split("T")[0];
@@ -98,6 +100,10 @@ const useDashboard = (selectedDate) => {
   }, [selectedDate]);
 
   return {
+    setIsOpen,
+
+    isOpen,
+    toggleDropdown,
     jumlahKonsultasi,
     jumlahPengguna,
     verifikasiAkun,
@@ -108,7 +114,9 @@ const useDashboard = (selectedDate) => {
     jumlahDokter,
     jadwalByTanggal,
     formatTanggal,
-    dataBar
+    dataBar,
+    selected
+
   };
 };
 

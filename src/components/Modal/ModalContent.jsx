@@ -4,7 +4,7 @@ import.meta.env.VITE_BASE_URL
 import useArtikel from "../_hooks/useArtikel";
 import useMasyarakat from "../_hooks/useMasyarakat";
 import useDokter from "../_hooks/useDokter";
-import ImageZoomModal from './ImageZoomModal';
+import { ImagePreviewCard, ImagePreviewModal } from "./ImagePreviewCard"; 
 import TipTap from '../TipTap/TipTap'
 
 import Select from "react-select";
@@ -41,7 +41,10 @@ export default function ModalContent({
       handleEditSubmit: handleEditSubmitArtikel,
       handleFileChange: handleFileChangeArtikel,
       handleSubmit:handleSubmitArtikel,
-      handleChangeKategori:handleChangeKategoriArtikel
+      handleChangeKategori:handleChangeKategoriArtikel,
+      handleImageClick:handleImageClickArtikel,
+      closeImageModal, showImageModal, selectedImage,
+
    } = useArtikel({idArtikel, token,dataArtikel, onClose});
 
   //  const data = dataMasyarakatbyId;
@@ -95,6 +98,20 @@ export default function ModalContent({
       { value: 'Obat', label: 'Obat' },
     ]
 
+    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const [previewImage, setPreviewImage] = useState(null);
+
+    const openPreview = (imageSrc, imageAlt) => {
+      setPreviewImage({ src: imageSrc, alt: imageAlt });
+      setIsPreviewOpen(true);
+    };
+
+    const closePreview = () => {
+      setIsPreviewOpen(false);
+      setPreviewImage(null);
+    };
+
+
   switch (modalType) {
     // ARTIKEL
     case "editdataartikel":
@@ -135,19 +152,19 @@ export default function ModalContent({
 
 
               {/* Foto Artikel */}
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-4 ">
                 <label
                   htmlFor="dropzone-file"
                   className="w-1/5 font-medium text-gray-900 dark:text-black " 
                 >
                   Sampul Artikel
                 </label>
-                <div className="w-4/5">
+                <div className="w-4/5  ">
                   <label
                     htmlFor="dropzone-file"
                     className="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-30 hover:bg-gray-100"
                   >
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6 ">
                       <svg
                         className="w-8 h-8 mb-4 text-gray-500 "
                         aria-hidden="true"
@@ -179,37 +196,27 @@ export default function ModalContent({
                       accept="image/*"
                     />
                   </label>
-
                   {/* Preview gambar yang dipilih */}
-                  {formArtikel.foto ? (
-                    <div className="mt-4 relative group">
-                      <img
-                        src={`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`}
-                        alt="preview"
-                        className="w-[200px] h-[100px] object-cover rounded-xl border border-black cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={() => handleImageClick(`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`)}
+                  {formArtikel.foto || dataArtikel?.gambar_artikel ? (
+                      <ImagePreviewCard
+                        imageSrc={
+                          formArtikel.foto
+                            ? URL.createObjectURL(formArtikel.foto)
+                            : `${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`
+                        }
+                        imageAlt="Sampul Artikel"
+                        label="Preview Sampul"
+                        onImageClick={(src, alt) => handleImageClickArtikel(src)}
                       />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-30 rounded-xl">
-                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                        </svg>
-                      </div>
-                    </div>
-                  ) : dataArtikel?.gambar_artikel ? (
-                    <div className="mt-4 relative group">
-                      <img
-                        src={`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`}
-                        alt="foto artikel lama"
-                        className="w-[200px] h-[100px] object-cover rounded-xl border border-black cursor-pointer hover:opacity-80 transition-opacity"
-                        onClick={() => handleImageClick(`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`)}
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black bg-opacity-30 rounded-xl">
-                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
-                        </svg>
-                      </div>
-                    </div>
-                  ) : null}
+                    ) : (
+                      <p className="text-sm italic text-gray-500 ">Belum ada gambar dipilih</p>
+                  )}
+                  <ImagePreviewModal
+                    isOpen={showImageModal}
+                    imageSrc={selectedImage}
+                    imageAlt="Sampul Artikel"
+                    onClose={closeImageModal}
+                  />
                 </div>
               </div>
 
@@ -264,12 +271,13 @@ export default function ModalContent({
               <div className="text-center mt-5">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer"
+                  className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5"
                 >
                   Simpan Perubahan
                 </button>
               </div>
             </form>
+             
           </div>
         </>
       );
@@ -320,12 +328,27 @@ export default function ModalContent({
                 <div className="flex flex-col h-auto w-4/5 justify-center items-start gap-2">
                   <div className="flex w-full">
                     :
-                    <img
-                      src={`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`}
-                      alt="foto artikel"
-                      className="ml-2 border border-black w-[200px] h-[100px] object-cover rounded-xl transition-transform duration-300 hover:scale-150"
+                     <img
+                          src={
+                            dataArtikel?.gambar_artikel
+                              ? `${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`
+                              : null
+                          }
+                          alt="Sampul Artikel"
+                          onClick={() => openPreview(
+                            `${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`,
+                            "Sampul Artikel"
+                          )}
+                          className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full"
                     />
+                   
                   </div>
+                   <ImagePreviewModal
+                isOpen={isPreviewOpen}
+                imageSrc={previewImage?.src}
+                imageAlt={previewImage?.alt}
+                onClose={closePreview}
+              />
                 </div>
               </div>
 
@@ -362,6 +385,8 @@ export default function ModalContent({
                 Tutup
               </button>
             </div>
+
+            
           </div>
         </>
       );
@@ -500,7 +525,7 @@ export default function ModalContent({
               <div className="text-center">
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-xl cursor-pointer mt-5 bg-[#004A76] hover:bg-[#039FFC]/70 text-white justify-between"
+                  className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5"
                 >
                   Simpan Data
                 </button>
@@ -522,9 +547,9 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <h1 className="text-xl font-bold text-[#025F96] font-[raleway] py-2">Detail Profil Masyarakat</h1>
+            <h1 className="text-xl font-bold text-[#004A76] underline text-center">Detail Profil Masyarakat</h1>
 
-            <div className="flex flex-col justify-center items-center gap-4">
+            <div className="flex flex-col justify-center items-center gap-4 py-3">
               {/* <div className=" border-2 border-[#025F96] rounded-full p-12">foto</div> */}
               <div className=" rounded-full p-1 w-40 h-40 border-2 border-[#025F96] font-bold">
                  {dataMasyarakatbyId?.foto_profil_masyarakat && (
@@ -569,31 +594,53 @@ export default function ModalContent({
                   <div className="text-[#025F96] font-bold underline">Tanggal Lahir</div>
                   <div>{dataMasyarakatbyId?.tgl_lahir_masyarakat?.slice(0, 10)}</div>
                 </div>
-                <div className="text-left px-10" >
-                  <div className="text-[#025F96] font-bold underline">Foto KTP</div>
-                  <div className=" bg-orange-200 h-50 rounded-xl">
+                <div className="flex flex-col gap-2 w-full text-left px-10" >
+                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Foto KTP</div>
+                  <div className=" rounded-xl p-2 w-60 h-40 flex items-center justify-center ">
                       <img
-                        src={dataMasyarakatbyId?.foto_ktp_masyarakat}
-                        alt="Foto KTP"
-                        className="object-cover w-40 h-40 mx-auto"
+                          src={
+                            dataMasyarakatbyId?.foto_ktp_masyarakat
+                              ? `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.foto_ktp_masyarakat}`
+                              : null
+                          }
+                          alt="foto_ktp_masyarakat"
+                          onClick={() => openPreview(
+                            `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.foto_ktp_masyarakat}`,
+                            "Foto KTP"
+                          )}
+                          className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full"
                       />
                   </div>
                 </div>
                 <div className="text-left px-10">
                   <div className="text-[#025F96] font-bold underline">Selfie dengan KTP</div>
-                  <div className="bg-orange-200 h-50 rounded-xl">
+                  <div className="rounded-xl p-2 w-60 h-40 flex items-center justify-center ">
                      <img
-                        src={dataMasyarakatbyId?.selfie_ktp_masyarakat}
-                        alt="Selfie KTP"
-                        className="object-cover w-40 h-40 mx-auto"
+                          src={
+                            dataMasyarakatbyId?.selfie_ktp_masyarakat
+                              ? `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.selfie_ktp_masyarakat}`
+                              : null
+                          }
+                          alt="Selfie dengan KTP"
+                          onClick={() => openPreview(
+                            `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.selfie_ktp_masyarakat}`,
+                            "Selfie dengan KTP"
+                          )}
+                          className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full"
                       />
                   </div>
                 </div>
               </div>
+              <ImagePreviewModal
+                isOpen={isPreviewOpen}
+                imageSrc={previewImage?.src}
+                imageAlt={previewImage?.alt}
+                onClose={closePreview}
+              />
             </div>
             <div className=" text-center">
               <button
-                className="px-4 py-2 bg-[#1177B3] text-white rounded-xl cursor-pointer mt-5"
+                className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5"
                 onClick={() => onClose(false)}
               >
                 Tutup
@@ -613,11 +660,11 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <h1 className="text-xl font-bold text-[#004A76] underline">
+            <h1 className="text-xl font-bold text-[#004A76] underline text-center" >
               Edit Profil Masyarakat 
             </h1>
 
-            <form onSubmit={handleEditSubmitMasyarakat} className="space-y-6">
+            <form onSubmit={handleEditSubmitMasyarakat} className="py-3">
               <div className="flex flex-col  justify-center items-center gap-4">
                 <div className="w-40 h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center ">
                   <img
@@ -631,20 +678,20 @@ export default function ModalContent({
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4 w-full text-center">
-                  <div className="flex flex-col items-center">
-                    <label className="text-[#025F96] font-bold">Nama</label>
+                  <div className="flex flex-col gap-2 w-full text-left px-10">
+                    <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Nama</label>
                     <input
                       type="text"
                       name="nama"
                       defaultValue={formMasyarakat.nama}
-                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
                       onChange={handleChangeMasyarakat}
                       maxLength={50}
                       required
                     />
                   </div>
-                  <div className="flex flex-col items-center">
-                    <label className="text-[#025F96] font-bold">Username</label>
+                  <div className="flex flex-col gap-2 w-full text-left px-10">
+                    <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Username</label>
                     <input
                         type="text"
                         id="username"
@@ -657,8 +704,8 @@ export default function ModalContent({
                       />
                   </div>
     
-                  <div className="flex flex-col items-center">
-                    <label className="text-[#025F96] font-bold">Email</label>
+                  <div className="flex flex-col gap-2 w-full text-left px-10">
+                    <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Email</label>
                     <input
                         type="text"
                         id="email"
@@ -670,8 +717,8 @@ export default function ModalContent({
                         required
                       />
                   </div>
-                  <div className="flex flex-col items-center">
-                    <label className="text-[#025F96] font-bold">NIK</label>
+                  <div className="flex flex-col gap-2 w-full text-left px-10">
+                    <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">NIK</label>
                      <input
                         type="text"
                         id="NIK"
@@ -683,8 +730,8 @@ export default function ModalContent({
                         required
                       />
                   </div>
-                  <div className="flex flex-col items-center">
-                    <label className="text-[#025F96] font-bold">Alamat</label>
+                  <div className="flex flex-col gap-2 w-full text-left px-10">
+                    <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Alamat</label>
                     <input
                       type="text"
                       id="alamat"
@@ -696,8 +743,8 @@ export default function ModalContent({
                       required
                     />
                   </div>
-                  <div className="flex flex-col items-center">
-                    <label className="text-[#025F96] font-bold">Nomor Telepon</label>
+                  <div className="flex flex-col gap-2 w-full text-left px-10">
+                    <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Nomor Telepon</label>
                     <input
                       type="text"
                       id="notlp"
@@ -709,8 +756,8 @@ export default function ModalContent({
                       required
                     />
                   </div>
-                  <div className="flex flex-col items-center">
-                    <label className="text-[#025F96] font-bold">Jenis Kelamin</label>
+                  <div className="flex flex-col gap-2 w-full text-left px-10">
+                    <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Jenis Kelamin</label>
                     <select
                       name="jeniskelamin_masyarakat"
                       id="jeniskelamin_masyarakat"
@@ -724,8 +771,8 @@ export default function ModalContent({
                       <option value="Perempuan">Perempuan</option>
                     </select>
                   </div>
-                  <div className="flex flex-col items-center">
-                    <label className="text-[#025F96] font-bold">Tanggal Lahir</label>
+                  <div className="flex flex-col gap-2 w-full text-left px-10">
+                    <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Tanggal Lahir</label>
                     <input
                       type="date"
                       id="tanggalLahir"
@@ -738,42 +785,56 @@ export default function ModalContent({
                     />
                   </div>
                  
-                  <div className="flex flex-col items-center gap-2">
-                    <label className="text-[#025F96] font-bold">Foto KTP</label>
+                  <div className="flex flex-col gap-2 w-full text-left px-10">
+                    <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Foto KTP</label>
                       <div className=" rounded-xl p-2 w-60 h-40 flex items-center justify-center gap-2">
-                        {dataMasyarakatbyId?.foto_ktp_masyarakat ? (
-                            <img
-                              src={`${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.foto_ktp_masyarakat}`}
-                              alt="foto_ktp_masyarakat"
-                              className="rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150"
-                            />
-                          ) : (
-                            <p className="text-gray-500 text-sm italic">Belum ada foto</p>
-                        )}
+                        <img
+                          src={
+                            dataMasyarakatbyId?.foto_ktp_masyarakat
+                              ? `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.foto_ktp_masyarakat}`
+                              : null
+                          }
+                          alt="foto_ktp_masyarakat"
+                          onClick={() => openPreview(
+                            `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.foto_ktp_masyarakat}`,
+                            "Foto KTP"
+                          )}
+                          className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full"
+                        />
                       </div>
                       
                   </div>
-                  <div className="flex flex-col items-center gap-2" >
-                    <label className="text-[#025F96] font-bold">Selfie dengan KTP</label>
+                  <div className="flex flex-col gap-2 w-full text-left px-10" >
+                    <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Selfie dengan KTP</label>
                     <div className="rounded-xl p-2 w-60 h-40 flex items-center justify-center gap-2">
-                        <img
+                       <img
                           src={
                             dataMasyarakatbyId?.selfie_ktp_masyarakat
                               ? `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.selfie_ktp_masyarakat}`
                               : null
                           }
-                          alt="selfie_ktp_masyarakat"
-                          className="rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full "
+                          alt="Selfie dengan KTP"
+                          onClick={() => openPreview(
+                            `${import.meta.env.VITE_BASE_URL}/images/${dataMasyarakatbyId.selfie_ktp_masyarakat}`,
+                            "Selfie dengan KTP"
+                          )}
+                          className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover transition-transform duration-300 hover:scale-150 hover:h-full"
                         />
-                        
                     </div>
                    
                   </div>
                 </div>
                 <div className=" text-center flex flex-row gap-4 mt-5 items-center">
+                   <button
+                        type="button" 
+                        className="w-50 px-4 py-2 bg-white text-[#004A76] border-2 hover:bg-gray-600 hover:text-white rounded-xl cursor-pointer mt-5 transition duration-200 ease-in-out"
+                        onClick={onClose}// Fungsi untuk handle cancel
+                      >
+                        Batal
+                    </button>
                  
                   <button
-                    className="px-4 py-2 bg-[#1177B3] text-white rounded-xl hover:bg-[#0d5e90] w-50 transition duration-200 ease-in-out"
+                    className="w-50 px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5 transition duration-200 ease-in-out"
                     onClick={handleEditSubmitMasyarakat}
                     
                   >
@@ -781,6 +842,12 @@ export default function ModalContent({
                   </button>
                 </div>
               </div>
+              <ImagePreviewModal
+                isOpen={isPreviewOpen}
+                imageSrc={previewImage?.src}
+                imageAlt={previewImage?.alt}
+                onClose={closePreview}
+              />
             </form>
 
 
@@ -1012,7 +1079,7 @@ export default function ModalContent({
                 <button 
                   type="submit" 
                   onClick={() => console.log("Tombol ditekan")}
-                  className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5 font-[raleway] hover:bg-[#039FFC]/50"
+                  className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5 transition duration-200 ease-in-out"
                 >
                   Tambah Data dokter
                 </button>
@@ -1229,7 +1296,10 @@ export default function ModalContent({
                 </div>
              
               <div className=" text-center">
-                <button type="submit" className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5">
+                <button 
+                  type="submit" 
+                  className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5 transition duration-200 ease-in-out"
+                >
                   Simpan Perubahan
                 </button>
               </div>
@@ -1248,11 +1318,11 @@ export default function ModalContent({
             >
               &times;
             </button>
-            <p className="text-center text-xl font-bold items-center py-2 font-[raleway]">
+            <p className="text-center text-xl font-bold items-center py-2 font-[raleway] underline text-[#004A76]">
               Detail Profil Dokter
             </p>
 
-            <div className="flex flex-col justify-center items-center gap-4">
+            <div className="flex flex-col justify-center items-center gap-4 py-3">
               <div className="w-40 h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
                 <img
                   src={
@@ -1264,40 +1334,42 @@ export default function ModalContent({
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4 w-full text-center ">
-                <div>
-                  <div className="text-[#025F96] font-bold underline">Nama</div>
+              <div className="grid grid-cols-2 gap-4 w-full text-center px-10 ">
+                <div className="flex flex-col gap-2 w-full text-left px-10">
+                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Nama</div>
                   <div>{dataDokterbyId?.nama_dokter}</div>
                 </div>
-                <div>
-                  <div className="text-[#025F96]  font-bold underline">Username</div>
+                <div className="flex flex-col gap-2 w-full text-left px-10">
+                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Username</div>
                   <div>{dataDokterbyId?.username_dokter}</div>
                 </div>
-                <div>
-                  <div className="text-[#025F96]  font-bold underline">Email</div>
+                <div className="flex flex-col gap-2 w-full text-left px-10"> 
+                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Email</div>
                   <div>{dataDokterbyId?.email_dokter}</div>
                 </div>
-                <div>
-                  <div className="text-[#025F96]  font-bold underline">Rating Dokter</div>
+                <div className="flex flex-col gap-2 w-full text-left px-10">
+                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Rating Dokter</div>
                   <div>{dataDokterbyId?.rating_dokter}</div>
                 </div>
-                <div>
-                  <div className="text-[#025F96]  font-bold underline">Bidang Dokter</div>
+                <div className="flex flex-col gap-2 w-full text-left px-10">
+                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Bidang Dokter</div>
                   <div>{dataDokterbyId?.spesialis_dokter}</div>
                 </div>
-                <div>
-                  <div className="text-[#025F96]  font-bold underline ">Nomor Telepon</div>
+                <div className="flex flex-col gap-2 w-full text-left px-10">
+                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway] ">Nomor Telepon</div>
                   <div>{dataDokterbyId?.notlp_dokter}</div>
                 </div>
-                <div>
-                  <div className="text-[#025F96]  font-bold underline">Nomor.STR Kedokteran</div>
+                <div className="flex flex-col gap-2 w-full text-left px-10"> 
+                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Nomor.STR Kedokteran</div>
                   <div>{dataDokterbyId?.str_dokter}</div>
                 </div>
                 
               </div>
               <div className=" text-center">
-                <button className="px-4 py-2 bg-[#004A76] text-white rounded-xl cursor-pointer mt-5"
-                 onClick={() => onClose(false)}>
+                <button 
+                 className="w-40 px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5 transition duration-200 ease-in-out"
+                 onClick={() => onClose(false)}
+                >
                  Tutup
                 </button>
             </div>
