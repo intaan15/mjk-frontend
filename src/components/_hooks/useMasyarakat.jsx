@@ -9,6 +9,8 @@ import.meta.env.VITE_BASE_URL
 
 
 export default function useMasyarakat({idMasyarakat,token,onClose}) {
+  const [previewImage, setPreviewImage] = useState(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [dataMasyarakatbyId, setDataMasyarakatbyId] = useState(null);
   const [previewFotoKTP, setPreviewFotoKTP] = useState(dataMasyarakatbyId?.foto_ktp_masyarakat || null);
   const [fotoKTPFile, setFotoKTPFile] = useState(null);
@@ -173,6 +175,15 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
           showErrorToast("Gagal mengubah Data Masyarakat");
       }
     };
+ const openPreview = (imageSrc, imageAlt) => {
+        setPreviewImage({ src: imageSrc, alt: imageAlt });
+        setIsPreviewOpen(true);
+    };
+
+    const closePreview = () => {
+      setPreviewImage(null);
+      setIsPreviewOpen(false);
+    };
 
   return ({
     dataMasyarakatbyId,
@@ -183,9 +194,14 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
     handleFotoKTPChange,
     previewFotoKTP,
     fotoKTPFile,
+    previewImage,
+    isPreviewOpen,
+    openPreview,
+    closePreview
    
 
   }
+   
 
 )
 }
