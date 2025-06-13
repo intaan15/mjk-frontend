@@ -209,14 +209,20 @@ export default function useArtikel({ idArtikel, token, onClose }) {
       showSuccessToast("Artikel berhasil diubah!");
       onClose(false);
     } catch (error) {
-      const message =
+      const status = error.response?.status;
+      let message =
         error.response?.data?.message ||
         error.message ||
         "Terjadi kesalahan saat mengubah artikel.";
 
+      if (status === 413) {
+        message = "Ukuran file terlalu besar. Maksimal 2MB.";
+      }
+
       console.error("Gagal update artikel:", message);
-      showErrorToast(message);
+      showErrorToast(message); // <-- ini toast yang akan muncul
     }
+    
   };
 
   const handleImageClick = (imageSrc) => {

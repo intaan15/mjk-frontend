@@ -262,13 +262,18 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
         showSuccessToast("Berhasil mengupdate data dokter");
         onClose();
       } catch (error) {
-        const message =
+        const status = error.response?.status;
+        let message =
           error.response?.data?.message ||
           error.message ||
-          "Error updating data";
+          "Terjadi kesalahan saat mengubah data dokter.";
 
-        console.error("Gagal update dokter:", message);
-        showErrorToast(message);
+        if (status === 413) {
+          message = "Ukuran file terlalu besar. Maksimal 2MB.";
+        }
+
+        console.error("Gagal update artikel:", message);
+        showErrorToast(message); // <-- ini toast yang akan muncul
       }
     //   {
     //     console.error(
