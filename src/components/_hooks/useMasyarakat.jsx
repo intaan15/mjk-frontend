@@ -78,7 +78,6 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
       username: dataMasyarakatbyId.username_masyarakat || "",
       email: dataMasyarakatbyId.email_masyarakat || "",
       NIK:dataMasyarakatbyId.nik_masyarakat || "",
-      notlp:dataMasyarakatbyId.notlp_masyarakat||"",
       alamat:dataMasyarakatbyId.alamat_masyarakat || "",
       jeniskelamin_masyarakat:dataMasyarakatbyId.jeniskelamin_masyarakat || "",
       notlp:dataMasyarakatbyId.notlp_masyarakat || "",
