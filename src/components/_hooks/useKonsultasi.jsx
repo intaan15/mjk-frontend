@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 
 const useKonsultasi = (token) => {
-  const [filterStatus, setFilterStatus] = useState("Diproses");
+  const [filterStatus, setFilterStatus] = useState("");
   const [allRows, setAllRows] = useState([]);
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -56,12 +56,18 @@ const useKonsultasi = (token) => {
 });
 
   const totalItems = filteredRows.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
 
   const paginatedData = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
-    return filteredRows.slice(start, start + itemsPerPage);
-  }, [filteredRows, currentPage, itemsPerPage]);
+    const end = start + itemsPerPage;
+    
+    console.log(`Menampilkan data ${start + 1}-${Math.min(end, totalItems)} dari ${totalItems}`);
+    
+    return filteredRows.slice(start, end);
+  }, [filteredRows, currentPage, itemsPerPage, totalItems]);
+
+  
 
   const formatTanggal = (isoDateString) => {
     const date = new Date(isoDateString);
@@ -87,6 +93,23 @@ const useKonsultasi = (token) => {
   };
 
   console.log(handleResetFilter)
+
+  const getPaginationRange = (currentPage, totalPages, maxVisible = 5) => {
+    if (totalPages <= maxVisible) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    const half = Math.floor(maxVisible / 2);
+    let start = Math.max(1, currentPage - half);
+    let end = Math.min(totalPages, start + maxVisible - 1);
+
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
+
   return {
     setFilterStatus,
     setSearchTerm,
@@ -112,7 +135,8 @@ const useKonsultasi = (token) => {
     totalPages,
     selectedPoli,
     poliOptions,
-    handleResetFilter
+    handleResetFilter,
+    getPaginationRange
 
   };
 };

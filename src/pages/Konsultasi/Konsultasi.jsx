@@ -44,7 +44,8 @@ function Konsultasi() {
     totalPages,
     selectedPoli,
     poliOptions,
-    handleResetFilter
+    handleResetFilter,
+    getPaginationRange,
 
   } = useKonsultasi(token);
 
@@ -154,7 +155,8 @@ function Konsultasi() {
           
       ];
 
-
+  
+      
   // FRONT END
   return (
     <div className="flex flex-row h-screen">
@@ -295,7 +297,7 @@ function Konsultasi() {
 
         {/* Pagination */}
         <div className="grid grid-cols-3 items-center justify-center">
-          {/* Jumlah ditampilkan */}
+          {/* Jumlah ditampilkan - TIDAK BERUBAH */}
           <div className="text-sm text-gray-600">
             Menampilkan {(currentPage - 1) * itemsPerPage + 1} -{" "}
             {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems}{" "}
@@ -304,42 +306,93 @@ function Konsultasi() {
 
           {/* Navigasi dan Items per page */}
           <div className="flex items-center gap-4">
-            {/* Pagination Number */}
+            {/* Pagination Number - EDIT BAGIAN INI */}
             <div className="flex items-center space-x-2">
               <button
                 className={`px-2 py-1 border-2 rounded-md transition duration-200 
-                  ${
-                    currentPage === 1
-                      ? "opacity-50 cursor-not-allowed border-gray-300"
-                      : "hover:bg-[#004A76] hover:text-white"
-                  }
-                `}
+          ${
+            currentPage === 1
+              ? "opacity-50 cursor-not-allowed border-gray-300"
+              : "hover:bg-[#004A76] hover:text-white"
+          }
+        `}
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
               >
                 &lt;
               </button>
 
-              {[...Array(totalPages)].map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setCurrentPage(i + 1)}
-                  className={`px-3 py-1  ${
-                    currentPage === i + 1 ? "bg-[#004A76] text-white" : ""
-                  }`}
-                >
-                  {i + 1}
-                </button>
-              ))}
+              {/* SLIDING PAGINATION - Hanya 5 halaman */}
+              {(() => {
+                const maxVisible = 5;
+                const paginationRange = getPaginationRange(
+                  currentPage,
+                  totalPages,
+                  maxVisible
+                );
+
+                return (
+                  <>
+                    {/* First page + ellipsis jika range tidak dimulai dari 1 */}
+                    {paginationRange[0] > 1 && (
+                      <>
+                        <button
+                          onClick={() => setCurrentPage(1)}
+                          className="px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white border-gray-300"
+                        >
+                          1
+                        </button>
+                        {paginationRange[0] > 2 && (
+                          <span className="px-2 py-1 text-gray-500">...</span>
+                        )}
+                      </>
+                    )}
+
+                    {/* Range pages (maksimal 5) */}
+                    {paginationRange.map((pageNum) => (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white
+                  ${
+                    currentPage === pageNum
+                      ? "bg-[#004A76] text-white border-[#004A76]"
+                      : "border-gray-300"
+                  }
+                `}
+                      >
+                        {pageNum}
+                      </button>
+                    ))}
+
+                    {/* Ellipsis + Last page jika range tidak berakhir di totalPages */}
+                    {paginationRange[paginationRange.length - 1] <
+                      totalPages && (
+                      <>
+                        {paginationRange[paginationRange.length - 1] <
+                          totalPages - 1 && (
+                          <span className="px-2 py-1 text-gray-500">...</span>
+                        )}
+                        <button
+                          onClick={() => setCurrentPage(totalPages)}
+                          className="px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white border-gray-300"
+                        >
+                          {totalPages}
+                        </button>
+                      </>
+                    )}
+                  </>
+                );
+              })()}
 
               <button
                 className={`px-2 py-1 border-2 rounded-md transition duration-200 
-                  ${
-                    currentPage === totalPages
-                      ? "opacity-50 cursor-not-allowed border-gray-300"
-                      : " hover:bg-[#004A76] hover:text-white"
-                  }
-                `}
+          ${
+            currentPage === totalPages
+              ? "opacity-50 cursor-not-allowed border-gray-300"
+              : " hover:bg-[#004A76] hover:text-white"
+          }
+        `}
                 onClick={() =>
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                 }
