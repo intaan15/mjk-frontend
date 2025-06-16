@@ -50,6 +50,8 @@ export default function ModalContent({
     previewFotoKTP: previewFotoKTP,
    }= useMasyarakat({idMasyarakat, token, onClose,dataMasyarakatbyId});
 
+   console.log("Data Masyarakat by ID:", formMasyarakat);
+
   const {
     formData: formDokter,
     handleChange: handleChangeDokter,
@@ -60,6 +62,8 @@ export default function ModalContent({
     handleResetFile:handleResetFileDokter
     
   } = useDokter({idDokter, token,dataDokterbyId, onClose,onAddSuccess });
+  
+ 
   
    const options = [
       { value: "Umum", label: <><img src="../icon_poli/poli_umum.svg" className="inline mr-2 w-5 h-5"/> Spesialis Umum</> },
@@ -309,23 +313,6 @@ export default function ModalContent({
                   </div>
                 </div>
               </div>
-
-              {/* <div className="flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
-                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5">
-                  Tanggal Terbit
-                </label>
-                <div className="w-4/5">
-                  <div className="flex items-center w-full">
-                    :{" "}
-                    {dataArtikel?.tgl_terbit_artikel
-                      ? new Date(
-                          dataArtikel.tgl_terbit_artikel
-                        ).toLocaleDateString()
-                      : "-"}
-                  </div>
-                </div>
-              </div> */}
-
               <div className="flex flex-column w-full justify-center items-start gap-10 mt-8">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5">
                   Foto Artikel
@@ -1206,13 +1193,13 @@ export default function ModalContent({
                           />
                       </label>
                        {/* Preview gambar yang dipilih */}
-                      {formDokter.foto_profil_dokter ? (
+                      {formDokter.foto_profil_dokter && typeof formDokter.foto_profil_dokter === 'object' ? (
                         <img
                           src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
                           alt="preview"
                           className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
                         />
-                      ) : dataDokterbyId?.foto_profil_dokter ? ( // <-- tambahkan tanda tanya (optional chaining)
+                      ) : dataDokterbyId?.foto_profil_dokter ? ( 
                         <img
                           src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
                           alt=""

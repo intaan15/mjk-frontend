@@ -6,7 +6,7 @@ import { showSuccessToast, showErrorToast } from '../Modal/ToastModal';
 import { rating } from '@material-tailwind/react';
 import.meta.env.VITE_BASE_URL
 
-export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
+export default function useDokter ({idDokter,token,onClose}) {
     // console.log("idDokter:", idDokter);
     // console.log("token:", token);
     const [dataDokterbyId, setDataDokterbyId] = useState(null);
@@ -173,11 +173,12 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
                 }
             );
             // console.log("Response:", res.data);
-            if (onAddSuccess) {
-                onAddSuccess(dokterData); // data dokter baru dari response
-            }
+            // if (onAddSuccess) {
+            //     onAddSuccess(dokterData); // data dokter baru dari response
+            // }
+            
             showSuccessToast("Berhasil menambah data dokter");
-            onClose();
+            onClose(false);
         } catch (error) {
           const message =
             error.response?.data?.message ||
@@ -248,7 +249,7 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
           spesialis_dokter: formData.spesialis?.value || "",
           str_dokter: formData.str_dokter,
           notlp_dokter: formData.notlp_dokter,
-          password_dokter: formData.password_dokter,
+          // password_dokter: formData.password_dokter,
         };
 
         console.log("Data dokter yang akan diupdate:", dokterData);
@@ -268,8 +269,12 @@ export default function useDokter ({idDokter,token,onClose,onAddSuccess}) {
           }
         );
 
+        // if (onUpdateSuccess) {
+        //   onUpdateSuccess(dokterData); // Kirim data terbaru ke parent
+        // }
+
         showSuccessToast("Berhasil mengupdate data dokter");
-        onClose();
+        onClose(false);
       } catch (error) {
         const status = error.response?.status;
         let message =

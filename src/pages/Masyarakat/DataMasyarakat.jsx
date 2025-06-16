@@ -35,6 +35,7 @@ function DataMasyarakat() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+  const [reloadTrigger, setReloadTrigger] = useState(0);
   const {user} = useAuth();
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
@@ -59,12 +60,12 @@ function DataMasyarakat() {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedData(null);
-    fetchDataMasyarakat();
     setModalType("");
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    fetchDataMasyarakat();
   };
 
     const handleLogout = () => {
@@ -83,41 +84,31 @@ function DataMasyarakat() {
       setIsOpen(!isOpen);
   };
 
+  
+
+
   const fetchDataMasyarakat = useCallback(async () => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`, 
+        `${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-          }}
+          },
+        }
       );
-      setDataMasyarakat(res.data);
+
+      // Filter data untuk verifikasi_akun_masyarakat === 'diterima'
+      const filteredData = res.data.filter(
+        (item) => item.verifikasi_akun_masyarakat === "diterima"
+      );
+      // .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Uncomment jika perlu sorting
+
+      setDataMasyarakat(filteredData);
     } catch (err) {
       console.error("Gagal fetch DataMasyarakat:", err);
     }
-  }, []);
-
-  // ENDPOINT GET DATA MASYARAKAT
-  useEffect(() => {
-    axios.get(`${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`,
-         {
-          headers: {
-          Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          const filteredData = res.data
-          .filter(item => item.verifikasi_akun_masyarakat === 'diterima')
-          // .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-          // console.log(res.data);
-          setDataMasyarakat(filteredData);
-        })
-        .catch((err) => {
-        console.error('Error fetching data:', err);
-        });
-    }, 
-  []);
+  }, [token]);
 
 
   //mengambil data by id
@@ -154,21 +145,24 @@ function DataMasyarakat() {
 
 
     
-  const filteredRows = DataMasyarakat.filter((item) => {
-    const search = searchTerm.toLowerCase().trim();
-    return (
-      item.nama_masyarakat?.toLowerCase().includes(search) ||
-      item.email_masyarakat?.toLowerCase().includes(search) ||
-      item.notlp_masyarakat?.toLowerCase().includes(search) ||
-      item.nik_masyarakat?.includes(search) 
-    );
-  });
+  const filteredRows = DataMasyarakat.filter(
+    (item) => {
+      const search = searchTerm.toLowerCase().trim();
+      return (
+        item.nama_masyarakat?.toLowerCase().includes(search) ||
+        item.email_masyarakat?.toLowerCase().includes(search) ||
+        item.notlp_masyarakat?.toLowerCase().includes(search) ||
+        item.nik_masyarakat?.includes(search)
+      );
+    },
+    [DataMasyarakat, searchTerm]
+  );
 
   console.log("datamasyarakat diterima",filteredRows) //debug
 
   useEffect(() => {
-    // console.log(filteredRows); // Ini untuk memeriksa apakah filteredRows berisi data
-  }, [filteredRows]);
+    fetchDataMasyarakat();
+  }, [fetchDataMasyarakat, reloadTrigger]);
   
 
       

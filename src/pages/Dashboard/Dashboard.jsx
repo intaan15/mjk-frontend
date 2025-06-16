@@ -44,6 +44,10 @@ function Dashboard() {
   const {handleLogout:handleLogout}=useLogout()
   const [selectedDate, setSelectedDate] = useState(new Date());
   const {
+
+    setIsOpen,
+
+    
     jumlahKonsultasi,
     jumlahPengguna,
     verifikasiAkun,

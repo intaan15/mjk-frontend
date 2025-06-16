@@ -89,22 +89,30 @@ function Dokter() {
   };
 
   // ENDPOINT GET DATA DOKTER
+  const fetchDokter = useCallback(async () => {
+    setLoading(true); // Set loading state saat mulai fetch
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/dokter/getall`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setDokter(res.data);
+      setData(res.data); // Update kedua state sekaligus
+      setLoading(false);
+    } catch (err) {
+      console.error("Gagal fetch dokter:", err);
+      setLoading(false);
+    }
+  }, [token]);
+
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_BASE_URL}/api/dokter/getall`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((res) => {
-        setData(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Gagal mengambil data dokter:", err);
-        setLoading(false);
-      });
-  }, []);
+    fetchDokter();
+  }, [fetchDokter, reloadTrigger]);
+
 
   useEffect(() => {
     if (!selectedId) return; 
@@ -208,24 +216,7 @@ Admin Mojokerto Sehat`);
 };
 
 
-const fetchDokter = useCallback(async ()=> {
-  try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/dokter/getall`, 
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            }}
-        );
-        setDokter(res.data);
-      } catch (err) {
-        console.error("Gagal fetch dokter:", err);
-      }
-},[])
 
-useEffect(() => {
-    fetchDokter();
-}, [fetchDokter,reloadTrigger]);
 
 const handleCloseModal = () => {
   setIsModalOpen(false);
