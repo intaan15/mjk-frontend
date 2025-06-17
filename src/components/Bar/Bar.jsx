@@ -8,7 +8,12 @@ import { Doughnut } from "react-chartjs-2";
 function Bar({ values }) {
 
   const data = {
-    labels: ["Masyarakat", "Artikel", "Dokter", "Konsultasi"],
+    labels: [
+      `Konsultasi (${values?.konsultasi ?? 0})`, 
+      `Artikel (${values?.artikel ?? 0})`, 
+      `Dokter (${values?.dokter ?? 0})`, 
+      `Masyarakat (${values?.masyarakat ?? 0})`
+    ],
     datasets: [
       {
         label: "Statistik",
@@ -19,32 +24,32 @@ function Bar({ values }) {
           values?.konsultasi ?? 0,
         ],                       
         backgroundColor: [
-          "rgba(54, 162, 235, 0.5)", // hijau
-          "rgba(75, 192, 192, 0.5)", //kuning
-          "rgba(255, 206, 86, 0.5)",// biru
-          "rgba(255, 99, 132, 0.5)", // merah
+          "#FD809B", // pink untuk Konsultasi
+          "#FDD576", // kuning untuk Artikel  
+          "#5CB3ED", // biru muda untuk Dokter
+          "#4CD7D7", // tosca untuk Masyarakat
         ],
         borderColor: [
-          "rgba(54, 162, 235, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(255, 99, 132, 1)",
+          "#FF6B9D",
+          "#FFD93D", 
+          "#4ECDC4",
+          "#45B7D1",
         ],
-        borderWidth: 1,
+        borderWidth: 0,
         borderRadius: 5,
       },
     ],
   };
 
   const options = {
-    cutout: "60%",
+    cutout: "50%",
     plugins: {
       legend: {
         display: true,
         position: "right",
         labels: {
           color: "#333",
-          font: { size: 12 },
+          font: { size: 15 },
           
         },
       },
@@ -52,8 +57,8 @@ function Bar({ values }) {
   };
 
   return (
-    <div className="doughnut w-[300px] h-[300px]">
-      <Doughnut data={data} options={options} />
+    <div className="doughnut w-md">
+      <Doughnut data={data} options={options}  />
     </div>
   );
 }

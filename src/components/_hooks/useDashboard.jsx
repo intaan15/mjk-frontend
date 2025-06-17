@@ -1,18 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-// // komponen  react
-// import React from 'react'
-// import { useState, useRef, useEffect } from 'react';
-// import useDashboard from '../../components/_hooks/useDashboard';
-// import { useNavigate } from "react-router-dom";
-// import axios from 'axios';
+import useLogout  from './useLogout';
 
-
-// import "../../index.css";
-// import Calendar from '../../components/Dashboard/Calendar';
-import Bar from '../../components/Bar/Bar';
-// import { useAuth } from "../../components/Auth";
-// import.meta.env.VITE_BASE_URL
 
 const useDashboard = (selectedDate) => {
   const [jumlahKonsultasi, setJumlahKonsultasi] = useState(0);
@@ -26,7 +15,7 @@ const useDashboard = (selectedDate) => {
   const [jadwalByTanggal, setJadwalByTanggal] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const toggleDropdown = () => setIsOpen(!isOpen);
-
+  const {handleLogout:handleLogout}=useLogout()
   const token = localStorage.getItem("token");
   const selected = selectedDate?.toISOString().split("T")[0];
 
@@ -115,7 +104,8 @@ const useDashboard = (selectedDate) => {
     jadwalByTanggal,
     formatTanggal,
     dataBar,
-    selected
+    selected,
+    handleLogout,
 
   };
 };

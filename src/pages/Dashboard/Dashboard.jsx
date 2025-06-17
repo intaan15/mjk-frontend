@@ -1,16 +1,12 @@
 // komponen  react
 import React from 'react'
 import { useState, useRef, useEffect } from 'react';
+import { useAuth } from "../../components/Auth";
 import useDashboard from '../../components/_hooks/useDashboard';
 import useLogout  from '../../components/_hooks/useLogout';
-import { useNavigate } from "react-router-dom";
-import axios from 'axios';
-
-
-import "../../index.css";
 import Calendar from '../../components/Dashboard/Calendar';
 import Bar from '../../components/Bar/Bar';
-import { useAuth } from "../../components/Auth";
+import "../../index.css";
 import.meta.env.VITE_BASE_URL
 
 
@@ -39,29 +35,23 @@ const StatBox = ({ icon, title, value }) => (
 
 
 function Dashboard() {
-  const token = localStorage.getItem("token");
   const { user } = useAuth();
-  const {handleLogout:handleLogout}=useLogout()
   const [selectedDate, setSelectedDate] = useState(new Date());
   const {
-
     setIsOpen,
-
-    
-    jumlahKonsultasi,
+   
     jumlahPengguna,
     verifikasiAkun,
     artikelLog,
     akunBaru,
     artikelPublish,
     allDokter,
-    jumlahDokter,
     jadwalByTanggal,
     formatTanggal,
     toggleDropdown,
     isOpen,
     dataBar,
-    
+    handleLogout,
   } = useDashboard(selectedDate);
 
   return (
@@ -213,7 +203,8 @@ function Dashboard() {
             <div className=' flex justify-center w-3/6'>
               <div className="flex flex-col justify-center items-center bg-white w-5/6 rounded-xl shadow-md">
                 <span className='text-2xl font-bold pt-2 font-[raleway] text-[#025f96] underline text-center'>Statistik Total Data</span>
-                <Bar  values={dataBar} />
+                <Bar values={dataBar} className="w-80 h-80 md:w-96 md:h-96 lg:w-[500px] lg:h-[400px]"/>
+
                 {/* <Bar data={dummyData} /> */}
               </div>
             </div>
@@ -222,14 +213,6 @@ function Dashboard() {
         <div className=''>
 
         </div>
-
-       
-
-       
-
-
-        
-       
       </main>
     </div>
   )
