@@ -29,7 +29,7 @@ const Splashscreen = () => {
 
   return (
 
-    <div className='loginapage logo flex flex-col w-screen h-screen justify-center items-center bg-[#F2F2F2] animate-fade-in transition-opacity duration-500'>  
+    <div className='loginapage logo flex flex-col w-100% h-screen justify-center items-center bg-[#F2F2F2] animate-fade-in transition-opacity duration-500'>  
       <animated.div style={fadeInStyles} className='logo flex flex-col items-center pb-16'>
             <img className='flex flex-row w-40 md:w-64 lg:w-80 justify-center' src="/Logo Mojokerto Sehat.svg" alt="imglogo" />
             <p className='font-[raleway] font-extrabold text-[#025F96] text-2xl md:text-3xl lg:text-4xl items-center '>MOJOKERTO SEHAT</p>
@@ -38,7 +38,7 @@ const Splashscreen = () => {
             </div>
       </animated.div>
       <div className='flex flex-col w-screen items-center bottom-0 justify-center absolute transition-all'>
-        <img className='flex flex-row justify-center object-contain' src="/footer.svg" alt="imgfooter" />
+        <img className='flex flex-row justify-center object-contain w-screen' src="/footer.svg" alt="imgfooter" />
       </div>
     </div>
 
