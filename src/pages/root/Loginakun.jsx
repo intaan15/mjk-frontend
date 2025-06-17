@@ -36,7 +36,7 @@ function Loginakun() {
       setSuccess(false);
       setLoginError("");
     } catch (error) {
-      console.error("Gagal ambil captcha:", error);
+      console.error("❌ Gagal ambil captcha:", error);
     }
   };
 
@@ -95,7 +95,7 @@ const MotionButton = ({ isLoading }) => (
     } catch (error) {
       console.error("Error saat login:", error);
       setLoginError(
-        error.response?.data?.message || "Terjadi kesalahan saat login"
+        error.response?.data?.message || "❌Terjadi kesalahan saat login"
         
       );
       console.error("Login error:", error.response);
