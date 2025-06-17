@@ -59,9 +59,11 @@ export default function ModalContent({
     handleFileChange: handleFileChangeDokter,
     handleChangeSelect: handleChangeSelectDokter,
     handleSubmit:handleSubmitDokter,
-    handleResetFile:handleResetFileDokter
+    handleResetFile:handleResetFileDokter,
+    regeneratePassword:regeneratePasswordDokter,
+    generatePassword:generatePasswordDokter
     
-  } = useDokter({idDokter, token,dataDokterbyId, onClose,onAddSuccess });
+  } = useDokter({idDokter, token,dataDokterbyId, onClose,onAddSuccess, modalType });
   
  
   
@@ -1095,6 +1097,13 @@ export default function ModalContent({
                     >
                       {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </div>
+                    <button
+                      type="button"
+                      onClick={regeneratePasswordDokter}
+                      className="absolute right-12 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-700"
+                    >
+                      🔄
+                    </button>
                   </div>
               
               </div>

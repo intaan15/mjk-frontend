@@ -6,7 +6,7 @@ import { showSuccessToast, showErrorToast } from '../Modal/ToastModal';
 import { rating } from '@material-tailwind/react';
 import.meta.env.VITE_BASE_URL
 
-export default function useDokter ({idDokter,token,onClose}) {
+export default function useDokter ({idDokter,token,onClose,modalType,onAddSuccess}) {
     // console.log("idDokter:", idDokter);
     // console.log("token:", token);
     const [dataDokterbyId, setDataDokterbyId] = useState(null);
@@ -173,9 +173,9 @@ export default function useDokter ({idDokter,token,onClose}) {
                 }
             );
             // console.log("Response:", res.data);
-            // if (onAddSuccess) {
-            //     onAddSuccess(dokterData); // data dokter baru dari response
-            // }
+            if (onAddSuccess) {
+                onAddSuccess(dokterData); // data dokter baru dari response
+            }
             
             showSuccessToast("Berhasil menambah data dokter");
             onClose(false);
@@ -289,14 +289,36 @@ export default function useDokter ({idDokter,token,onClose}) {
         console.error("Gagal update artikel:", message);
         showErrorToast(message); // <-- ini toast yang akan muncul
       }
-    //   {
-    //     console.error(
-    //       "Error updating data:",
-    //       error.response?.data || error.message || error
-    //     );
-    //     showErrorToast("Gagal mengupdate data dokter");
-    //   }
+      //   {
+      //     console.error(
+      //       "Error updating data:",
+      //       error.response?.data || error.message || error
+      //     );
+      //     showErrorToast("Gagal mengupdate data dokter");
+      //   }
     };
+
+    const generatePassword = (length = 8) => {
+      // set random karakter
+      const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        password += charset.charAt(Math.floor(Math.random() * charset.length));
+      }
+      console.log("👌generate password succes",password)
+      return password;
+    };
+
+
+    useEffect(() => {
+        if (modalType === "tambahdatadokter") {
+            const newPassword = generatePassword(8); 
+            setFormData(prev => ({
+                ...prev,
+                password_dokter: newPassword
+            }));
+        }
+    }, [modalType]); 
 
 
 
@@ -311,6 +333,7 @@ export default function useDokter ({idDokter,token,onClose}) {
     handleSubmit,
     handleChangeSelect,
     handleResetFile,
+    generatePassword,        
     
     }
   )
