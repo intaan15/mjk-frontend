@@ -62,15 +62,15 @@ const Sidebar = () => {
   // Tampilan sidebar
   return (
   
-    <div className={`bg-white h-full shadow-lg p-6 pt-10 w-1/6 lg:w-64 transition-all duration-300`}>
+    <div className={`bg-white h-full shadow-lg p-4 pt-10 md:w-2/6 lg:w-64 transition-all duration-400`}>
 
-      <div className={`flex items-center justify-center gap-3 mb-6 ${!isOpen }`}>
+      <div className={`flex items-center justify-center gap-5 mb-6 ${!isOpen }`}>
           <div className='flex flex-row gap-2 overflow-hidden'>
                  <img className={`transition-all duration-500 relative w-21`}
                  src="/Logo Mojokerto Sehat.svg" 
                  alt="imglogo" />
                 {isOpen && (
-                  <h1 className="font-[raleway] font-extrabold text-[#025F96] text-[18px] transition-opacity duration-300">
+                  <h1 className="font-[raleway] font-extrabold text-[#025F96] text-xl transition-opacity duration-300">
                     MOJOKERTO SEHAT
                   </h1>)}
           </div>
@@ -78,17 +78,18 @@ const Sidebar = () => {
 
 
 
-      <ul className="space-y-4 pt-6 items-center justify-center">
+      <ul className="space-y-4 pt-12 items-center justify-center">
         {menuItems.map((item, idx) => (
+          // parent
           <li key={idx}>
             {item.children ? (
               <>
                 <div
                   onClick={() => toggleDropdown(item.label)}
-                  className={`flex items-center justify-between px-2 py-2 cursor-pointer hover:bg-gray-100 rounded-md ${
+                  className={`flex items-center justify-between px-2 py-2 cursor-pointer hover:bg-gray-300 rounded-md  font-[raleway] ${
                     item.children.some(child => location.pathname === child.to)
-                      ? "bg-[#E0F2FE] text-[#025F96] font-semibold font-[raleway] "
-                      : "text-[#025F96]"
+                      ? "bg-[#E0F2FE]  text-[#025F96] font-extrabold "
+                      : "text-[#025F96] font-medium"
                     }`} >
                   <div className="flex items-center gap-3 text-[#025F96]">
                     <span className="w-6 h-6">{item.icon}</span>
@@ -103,20 +104,19 @@ const Sidebar = () => {
                   {isOpen && (openDropdown === item.label ? <IoCaretUpSharp /> : <IoCaretDownSharp />)}
                 </div>
 
-
-                   {/* dropdown      */}
+              {/* dropdown*/}
                 <div
-                  className={`ml-8 mt-1 overflow-hidden transition-all duration-300 ${
-                    openDropdown === item.label ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                  className={`ml-8 mt-1 overflow-hidden transition-all duration-300 font-[raleway] ${
+                  openDropdown === item.label ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
                   }`}
                 >
                   {item.children.map((child, i) => (
                     <Link
                       key={i}
                       to={child.to}
-                      className={`block px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded-md 
+                      className={`block px-2 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded-md font-[raleway]
                         ${location.pathname === child.to
-                        ? "bg-[#E0F2FE] font-semibold text-[#025F96]"
+                        ? "bg-[#E0F2FE]  text-[#025F96] font-semibold"
                         : "text-gray-700 hover:bg-gray-100"}`}
                       
                     >
@@ -128,10 +128,10 @@ const Sidebar = () => {
             ) : (
               <Link
                 to={item.to}
-                className={`flex items-center gap-3 px-2 py-2 rounded-md transition 
+                className={`flex items-center gap-3 px-2 py-2 rounded-md transition font-[raleway] 
                   ${location.pathname === item.to
-                    ? "bg-[#E0F2FE] text-[#025F96] font-semibold"
-                    : "text-[#025F96] hover:bg-gray-100"}`}>
+                    ? "bg-[#E0F2FE] text-[#025F96] font-extrabold"
+                    : "text-[#025F96] hover:bg-gray-100 font-medium"}`}>
                 <span className="w-6 h-6">{item.icon}</span>
                 <span
                   className={`transition-all duration-300 origin-left ${
