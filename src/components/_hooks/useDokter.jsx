@@ -29,6 +29,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
     
     useEffect(() => {
         // Debug: pastikan props valid
+        const token = localStorage.getItem("token");
         if (!idDokter || !token) {
             console.error("Tidak bisa fetch: idDokter/token tidak ada");
         return;
@@ -65,6 +66,8 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
         
 
     useEffect(() => {
+      
+      const token = localStorage.getItem("token");
       if (!dataDokterbyId) return;
 
       console.log("Data dokter diterima:", dataDokterbyId);
@@ -89,7 +92,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
       });
     }, [dataDokterbyId]);
     
-    //console.log(formData)
+    console.log(formData)
     // console.log("foto_profil_dokter:", formData.foto_profil_dokter);
 
 
@@ -131,7 +134,8 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
         e.preventDefault();
 
         try {
-            
+
+            const token = localStorage.getItem("token");
             const data = new FormData();
 
             data.append("foto", formData.foto_profil_dokter);
@@ -172,7 +176,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
                     },
                 }
             );
-            // console.log("Response:", res.data);
+            console.log("Response:", res.data);
             if (onAddSuccess) {
                 onAddSuccess(dokterData); // data dokter baru dari response
             }

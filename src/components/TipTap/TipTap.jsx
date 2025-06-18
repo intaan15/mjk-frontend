@@ -1,7 +1,7 @@
 import { Color } from '@tiptap/extension-color'
 import ListItem from '@tiptap/extension-list-item'
 import TextStyle from '@tiptap/extension-text-style'
-import { useEffect } from 'react';
+import { useEffect,useState, useRef, useCallback  } from 'react';
 import { useEditor, EditorContent } from "@tiptap/react";
 import { EditorProvider, useCurrentEditor } from '@tiptap/react'
 import TextAlign from '@tiptap/extension-text-align'
@@ -31,11 +31,11 @@ const extensions = [
   StarterKit.configure({
     bulletList: {
       keepMarks: true,
-      keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+      keepAttributes: false, 
     },
     orderedList: {
       keepMarks: true,
-      keepAttributes: false, // TODO : Making this as `false` becase marks are not preserved when I try to preserve attrs, awaiting a bit of help
+      keepAttributes: false,
     },
   }),
 ]
@@ -46,186 +46,245 @@ const MenuBar = ({editor}) => {
   if (!editor) {
     return null
   }
+  const buttonClass = "p-2 rounded-md hover:bg-gray-200 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
+  const activeClass = "bg-blue-200 text-blue-700";
 
   return (
-    <div className="control-group">
+    <div className="control-group border-b border-gray-200 mb-4">
       <div className="button-group">
-        <div className="flex flex-wrap items-center gap-2 bg-gray-100 p-3 rounded-md shadow-sm">
+        <div className="flex flex-wrap items-center gap-1 sm:gap-2 bg-gray-100 p-2 sm:p-3 rounded-md shadow-sm">
+          {/* Text Formatting */}
+          <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
-                onClick={() => editor.chain().focus().toggleBold().run()}
-                disabled={!editor.can().chain().focus().toggleBold().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('bold') ? 'bg-blue-200 text-blue-700' : ''}`}
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              disabled={!editor.can().chain().focus().toggleBold().run()}
+              className={`${buttonClass} ${editor.isActive('bold') ? activeClass : ''}`}
+              title="Bold"
             >
-                <FaBold />
+              <FaBold />
             </button>
             <button
-                onClick={() => editor.chain().focus().toggleItalic().run()}
-                disabled={!editor.can().chain().focus().toggleItalic().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('italic') ? 'bg-blue-200 text-blue-700' : ''}`}
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              disabled={!editor.can().chain().focus().toggleItalic().run()}
+              className={`${buttonClass} ${editor.isActive('italic') ? activeClass : ''}`}
+              title="Italic"
             >
-                <FaItalic />
+              <FaItalic />
             </button>
             <button
-                onClick={() => editor.chain().focus().toggleCode().run()}
-                disabled={!editor.can().chain().focus().toggleCode().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('code') ? 'bg-blue-200 text-blue-700' : ''}`}
+              onClick={() => editor.chain().focus().toggleStrike().run()}
+              disabled={!editor.can().chain().focus().toggleStrike().run()}
+              className={`${buttonClass} ${editor.isActive('strike') ? activeClass : ''}`}
+              title="Strikethrough"
             >
-                <FaCode />
+              <FaStrikethrough />
             </button>
             <button
-                onClick={() => editor.chain().focus().toggleStrike().run()}
-                disabled={!editor.can().chain().focus().toggleStrike().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('strike') ? 'bg-blue-200 text-blue-700' : ''}`}
+              onClick={() => editor.chain().focus().toggleCode().run()}
+              disabled={!editor.can().chain().focus().toggleCode().run()}
+              className={`${buttonClass} ${editor.isActive('code') ? activeClass : ''}`}
+              title="Inline Code"
             >
-               <FaStrikethrough />
+              <FaCode />
             </button>
+          </div>
+
+          {/* Clear Formatting */}
+          <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button 
-                onClick={() => editor.chain().focus().setAllMarks().run()}
-                disabled={!editor.can().chain().focus().unsetAllMarks().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('allmarks') ? 'bg-blue-200 text-blue-700' : ''}`}
-                
+              onClick={() => editor.chain().focus().unsetAllMarks().run()}
+              disabled={!editor.can().chain().focus().unsetAllMarks().run()}
+              className={buttonClass}
+              title="Clear Formatting"
             >
-                <AiOutlineClear />
+              <AiOutlineClear />
             </button>
+          </div>
+
+          {/* Paragraph & Headings */}
+          <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
-                 onClick={() => editor.chain().focus().setParagraph().run()}
-                 disabled={!editor.can().chain().focus().setParagraph().run()}
-                 className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('paragraph') ? 'bg-blue-200 text-blue-700' : ''}`}
+              onClick={() => editor.chain().focus().setParagraph().run()}
+              disabled={!editor.can().chain().focus().setParagraph().run()}
+              className={`${buttonClass} ${editor.isActive('paragraph') ? activeClass : ''}`}
+              title="Paragraph"
             >
-                <BiParagraph />
-            </button> 
+              <BiParagraph />
+            </button>
 
             {[1, 2, 3, 4, 5, 6].map(level => (
-                <button
+              <button
                 key={level}
                 onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('heading', { level }) ? 'bg-blue-200 text-blue-700' : ''}`}
-                >
+                className={`${buttonClass} text-xs sm:text-sm ${editor.isActive('heading', { level }) ? activeClass : ''}`}
+                title={`Heading ${level}`}
+              >
                 H{level}
-                </button>
+              </button>
             ))}
+          </div>
 
-             <button
-                onClick={() => editor.chain().focus().toggleBulletList().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('bulletList') ? 'bg-blue-200 text-blue-700' : ''}`}
+          {/* Lists */}
+          <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
+            <button
+              onClick={() => editor.chain().focus().toggleBulletList().run()}
+              className={`${buttonClass} ${editor.isActive('bulletList') ? activeClass : ''}`}
+              title="Bullet List"
             >
-                <FaListUl />
+              <FaListUl />
             </button>
+            <button
+              onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              className={`${buttonClass} ${editor.isActive('orderedList') ? activeClass : ''}`}
+              title="Ordered List"
+            >
+              <FaListOl />
+            </button>
+          </div>
 
+          {/* Blocks */}
+          <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
-                onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('orderedList') ? 'bg-blue-200 text-blue-700' : ''}`}
+              onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+              className={`${buttonClass} ${editor.isActive('codeBlock') ? activeClass : ''}`}
+              title="Code Block"
             >
-                <FaListOl />
+              <TbCodeCircle2 />
             </button>
+            <button
+              onClick={() => editor.chain().focus().toggleBlockquote().run()}
+              className={`${buttonClass} ${editor.isActive('blockquote') ? activeClass : ''}`}
+              title="Blockquote"
+            >
+              <FaQuoteRight />
+            </button>
+            <button
+              onClick={() => editor.chain().focus().setHorizontalRule().run()}
+              className={buttonClass}
+              title="Horizontal Rule"
+            >
+              <MdHorizontalRule />
+            </button>
+          </div>
 
+          {/* Text Alignment */}
+          <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
-                onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('codeBlock') ? 'bg-blue-200 text-blue-700' : ''}`}
+              onClick={() => editor.chain().focus().setTextAlign('left').run()}
+              className={`${buttonClass} ${editor.isActive({ textAlign: 'left' }) ? activeClass : ''}`}
+              title="Align Left"
             >
-                <TbCodeCircle2 />
+              <MdFormatAlignLeft />
             </button>
+            <button
+              onClick={() => editor.chain().focus().setTextAlign('center').run()}
+              className={`${buttonClass} ${editor.isActive({ textAlign: 'center' }) ? activeClass : ''}`}
+              title="Align Center"
+            >
+              <MdFormatAlignCenter />
+            </button>
+            <button
+              onClick={() => editor.chain().focus().setTextAlign('right').run()}
+              className={`${buttonClass} ${editor.isActive({ textAlign: 'right' }) ? activeClass : ''}`}
+              title="Align Right"
+            >
+              <MdFormatAlignRight />
+            </button>
+            <button
+              onClick={() => editor.chain().focus().setTextAlign('justify').run()}
+              className={`${buttonClass} ${editor.isActive({ textAlign: 'justify' }) ? activeClass : ''}`}
+              title="Justify"
+            >
+              <MdFormatAlignJustify />
+            </button>
+          </div>
 
+          {/* Utilities */}
+          <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
-                onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('blockquote') ? 'bg-blue-200 text-blue-700' : ''}`}
+              onClick={() => editor.chain().focus().setHardBreak().run()}
+              className={buttonClass}
+              title="Line Break"
             >
-                <FaQuoteRight />
+              <RiTextSpacing />
             </button>
             <button
-                onClick={() => editor.chain().focus().setHorizontalRule().run()}
-                className="p-2 rounded-md hover:bg-gray-200"
+              onClick={() => editor.chain().focus().setColor('#958DF1').run()}
+              className={`${buttonClass} ${editor.isActive('textStyle', { color: '#958DF1' }) ? 'bg-purple-200 text-purple-700' : ''}`}
+              title="Text Color"
             >
-                <MdHorizontalRule />
+              <FaPaintBrush />
             </button>
+          </div>
 
+          {/* History */}
+          <div className="flex items-center gap-1">
             <button
-                onClick={() => editor.chain().focus().setHardBreak().run()}
-                className="p-2 rounded-md hover:bg-gray-200"
+              onClick={() => editor.chain().focus().undo().run()}
+              disabled={!editor.can().chain().focus().undo().run()}
+              className={buttonClass}
+              title="Undo"
             >
-                <RiTextSpacing />
+              <FaUndo />
             </button>
             <button
-                onClick={() => editor.chain().focus().setTextAlign('justify').run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive({ textAlign: 'justify' }) ? 'bg-blue-200 text-blue-700' : ''}`}
-                >
-                <MdFormatAlignJustify />
-            </button>
-            <button
-                onClick={() => editor.chain().focus().setTextAlign('left').run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive({ textAlign: 'left' }) ? 'bg-blue-200 text-blue-700' : ''}`}
-                >
-                <MdFormatAlignLeft />
-            </button>
-            <button
-                onClick={() => editor.chain().focus().setTextAlign('center').run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive({ textAlign: 'center' }) ? 'bg-blue-200 text-blue-700' : ''}`}
-                >
-                <MdFormatAlignCenter />
-            </button>
-            <button
-                onClick={() => editor.chain().focus().setTextAlign('right').run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive({ textAlign: 'right' }) ? 'bg-blue-200 text-blue-700' : ''}`}
-                >
-               <MdFormatAlignRight />
-            </button>
-
-            <button
-                onClick={() => editor.chain().focus().undo().run()}
-                disabled={!editor.can().chain().focus().undo().run()}
-                className="p-2 rounded-md hover:bg-gray-200"
+              onClick={() => editor.chain().focus().redo().run()}
+              disabled={!editor.can().chain().focus().redo().run()}
+              className={buttonClass}
+              title="Redo"
             >
-                <FaUndo />
+              <FaRedo />
             </button>
-
-            <button
-                onClick={() => editor.chain().focus().redo().run()}
-                disabled={!editor.can().chain().focus().redo().run()}
-                className="p-2 rounded-md hover:bg-gray-200"
-            >
-                <FaRedo />
-            </button>
-
-            <button
-                onClick={() => editor.chain().focus().setColor('#958DF1').run()}
-                className={`p-2 rounded-md hover:bg-gray-200 ${editor.isActive('textStyle', { color: '#958DF1' }) ? 'bg-purple-200 text-purple-700' : ''}`}
-            >
-                <FaPaintBrush />
-            </button>
-
+          </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 
 
 
-const TipTap = ({ value, onChange }) => {
-    const editor = useEditor({
-        extensions,
-        content: value,
-        onUpdate: ({ editor }) => {
-        onChange(editor.getHTML())
-        },
-    })
+const TipTap = ({ value = '', onChange, placeholder = "Start typing..." }) => {
+  const editor = useEditor({
+    extensions,
+    content: value,
+    onUpdate: ({ editor }) => {
+      const html = editor.getHTML();
+      onChange?.(html);
+    },
+    editorProps: {
+      attributes: {
+        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-xl max-w-none focus:outline-none min-h-[200px] p-4 border border-gray-200 rounded-lg',
+      },
+    },
+  });
 
-    
   useEffect(() => {
     if (editor && value !== editor.getHTML()) {
-      editor.commands.setContent(value)
+      editor.commands.setContent(value || '');
     }
-  }, [value, editor])
+  }, [value, editor]);
 
-  if (!editor) return null
+  if (!editor) return null;
 
   return (
-    <div>
+    <div className="w-full">
       <MenuBar editor={editor} />
-      <EditorContent editor={editor}  className="prose prose-sm  sm:prose lg:prose-lg xl:prose-xl list-disc list-inside" />
+      <div className="relative">
+        <EditorContent 
+          editor={editor}
+          className="min-h-[200px] max-h-[400px] overflow-y-auto"
+        />
+        {editor.isEmpty && (
+          <div className="absolute top-4 left-4 text-gray-400 pointer-events-none">
+            {placeholder}
+          </div>
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};
+
 
 export default TipTap

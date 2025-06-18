@@ -487,6 +487,11 @@ export default function ModalContent({
                       />
                     ) : null}
                   </div>
+                    <button  
+                      onClick={() => FormArtikel({ ...formArtikel, gambar_artikel: null })}
+                      className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
+                      Batalkan
+                    </button>
                 </div>
               </div>
 
@@ -909,7 +914,7 @@ export default function ModalContent({
                     Foto Profil
                   </label>
 
-                  <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-2">
+                  <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-6">
                     <div className="flex items-center justify-center w-full">
                       <label
                         htmlFor="foto_profil_dokter"
@@ -938,6 +943,11 @@ export default function ModalContent({
                             SVG, PNG, JPG or GIF (MAX. 800x400px)
                           </p>
                         </div>
+                        <div className="font-light text-[14px] self-start text-lime-500">
+                          {formDokter.foto_profil_dokter
+                            ?  `Upload 📷 : ${formDokter.foto_profil_dokter.name}`
+                            : "❌ Belum ada file yang dipilih"}
+                        </div>
                         <input 
                           name="foto_profil_dokter"
                           id="foto_profil_dokter" 
@@ -946,32 +956,30 @@ export default function ModalContent({
                           onChange={handleFileChangeDokter}
                           />
                       </label>
-                       {/* Preview gambar yang dipilih */}
-                      {formDokter.foto_profil_dokter ? (
-                        <img
-                          src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
-                          alt="preview"
-                          className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
-                        />
-                      ) : dataDokterbyId?.foto_profil_dokter ? ( // <-- tambahkan tanda tanya (optional chaining)
-                        <img
-                          src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
-                          alt=""
-                          className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
-                        />
-                  ) : null}
-                    </div>
-                    <div className="font-light text-[14px] self-start text-lime-500">
-                    {formDokter
-                      ? formDokter.name
-                      : "Belum ada file yang dipilih"}
+
                     </div>
 
-                    <button type="button" className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
-                    Batalkan
-                    </button>
-                  </div>
+                    {/* Preview gambar yang dipilih */}
+                    <div className="mt-4" >
+                        {formDokter.foto_profil_dokter ? (
+                          <img
+                            src={URL.createObjectURL(formDokter.foto_profil_dokter)}
+                            alt="preview"
+                            className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                          />
+                        ) : dataDokterbyId?.foto_profil_dokter ? ( // <-- tambahkan tanda tanya (optional chaining)
+                          <img
+                            src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
+                            alt=""
+                            className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                          />
+                        ) : null}
+                    </div>
+                   
+                  </div >
                 </div>
+
+
                 <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
                   <label
                     htmlFor="spesialis"
