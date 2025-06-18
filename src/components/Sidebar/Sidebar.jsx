@@ -530,7 +530,7 @@ const ResponsiveSidebar = () => {
       {/* Mobile/Small Tablet: Bottom Navigation Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-50">
         {/* Navigation Items - Mobile */}
-        <div className="flex items-center justify-around px-2 bg-red-400 py-1 sm:bg-green-400 sm:py-2">
+        <div className="flex items-center justify-around px-2 py-1 sm:py-2">
           {menuItems.map((item, idx) => (
             <div key={idx} className="flex-1">
               {item.children ? (
