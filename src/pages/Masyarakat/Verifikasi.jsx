@@ -429,146 +429,212 @@ function Verifikasi() {
 
  
     return (
-       <div className='flex flex-row'>
-           <main className='flex flex-col pl-8 gap-1 w-full pr-3 h-screen'>
-               <div className='flex flex-row items-center justify-between pt-3'>
-                   <p className='text-3xl font-[raleway] font-bold text-[#004A76]'>
-                        Verifikasi Data Masyarakat
-                    </p>
-                   <div className="flex flex-row gap-4 relative">
-                        <div className=" flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2 ">
-                            <IoIosSearch className="text-gray-400"/>
-                            <input
-                                type="text"
-                                placeholder="Pencarian"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="text-gray-700 text-sm outline-none bg-transparent"
-                            />
-                        </div>
-
-                        <div className="flex flex-row gap-4 relative">
-                            <button 
-                            onClick={toggleDropdown} 
-                            className="flex items-center focus:outline-none cursor-pointer">
-                            <TiUser className='w-11 h-11 text-[#292D32]'> </TiUser>
-                            </button>
-        
-                            <div>
-                            {isOpen && (
-                                <>
-                                <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setIsOpen(false)}></div>
-                                <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
-                                    <div className="py-1 justify-center">
-                                    <a
-                                        href=""
-                                        className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
-                                        <HiOutlineUser className='text-[30px]' />
-                                        {user?.username}
-                                    </a>
-                                    
-                                    <a
-                                        href="#"
-                                        onClick={handleLogout}
-                                        className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
-                                        <IoLogOutOutline className='text-[30px]' />
-                                        {" "}
-                                        Log Out
-                                    </a>
-                                    </div>
-                                </div>
-                                </>
-                            )}
-                            </div>
-                        </div>
-                    </div> 
-               </div>
-               <img src="/line style.svg" alt="" />
-   
-   
-               <div className="flex flex-wrap justify-between items-center py-3 px-6 ">
-                   <div className="flex flex-row gap-8 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
-                       <div className="bg-white p-3 rounded-full flex items-center justify-center">
-                            <img src="/icon_totalverifikasi.svg" alt="totalverifikasi" className="text-[45px] item-center text-[#38B6FE]" />
-                           {/* <HiOutlineUsers className="text-[45px] item-center text-[#38B6FE]" /> */}
-                       </div>
-                       <div className="flex flex-col">
-                           <span className=" text-white font-bold text-md "  style={{ fontFamily: "Nunito Sans" }}>Menunggu Verifikasi</span>
-                           <span className=" text-white font-extrabold text-4xl" style={{ fontFamily: "Nunito Sans" }}>{countStatus.pending}</span>
-                       </div>
-                   </div>
-                   <div className="flex flex-row gap-4 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
-                       <div className="bg-white p-3 rounded-full flex items-center justify-center">
-                            <img src="/icon_verifikasiditerima.svg" alt="diterima" className="text-[50px] item-center cursor-pointer text-[#6AC03D]" />
-                       </div>
-                       <div className="flex flex-col">
-                           <span className=" text-white font-bold text-md"  style={{ fontFamily: "Nunito Sans" }}>Verifikasi Diterima</span>
-                           <span className=" text-white font-extrabold text-4xl" style={{ fontFamily: "Nunito Sans" }}>{countStatus.diterima}</span>
-                       </div>
-                   </div>
-                   <div className="flex flex-row gap-4 bg-[#004A76] p-2 rounded-2xl items-center px-6 h-sm shadow-md">
-                       <div className="bg-white p-3 rounded-full flex items-center justify-center">
-                            <img src="/icon_verifikasiditolak.svg" alt="ditolak" className="text-[45px] item-center text-[#EF3826]" />
-                       </div>
-                       <div className="flex flex-col">
-                           <span className="text-white font-bold text-md" style={{ fontFamily: "Nunito Sans" }}>Verifikasi Ditolak</span>
-                           <span className="text-white font-extrabold text-4xl"  style={{ fontFamily: "Nunito Sans" }}>{countStatus.ditolak}</span>
-                       </div>
-                   </div>
-               </div>
-                <div className="flex flex-row gap-2  w-full  items-center px-4 py-1">
-                    <div className="flex flex-row gap-8 bg-[#D9D9D9]/50 p-2 rounded-xl items-center px-6">
-                        <div className="font-bold text-[#033E61]">Kategori :</div>
-                        <div
-                            onClick={() => setFilterStatus("semua")}
-                            className={`cursor-pointer font-[raleway] rounded-xl border-2 px-4 py-1 border-[#033E61] ${
-                            filterStatus === "semua" ? "bg-[#025F96] font-bold text-white border-[#033E61]" : "bg-[#D9D9D9]/50 "
-                            }`}>
-                            Verifikasi
-                        </div>
-
-                        <div
-                            onClick={() => setFilterStatus("diterima")}
-                            className={`cursor-pointer font-[raleway]  rounded-xl border-2 px-4 py-1 border-[#033E61]  ${
-                            filterStatus === "diterima" ? "bg-[#025F96] font-bold text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
-                            }`}>
-                            Diterima
-                        </div>
-
-                        <div
-                            onClick={() => setFilterStatus("ditolak")}
-                            className={`cursor-pointer font-[raleway]  rounded-xl border-2 px-4 py-1 border-[#033E61]  ${
-                                filterStatus === "ditolak" ? "bg-[#025F96] font-bold text-white border-[#033E61]" : "bg-[#D9D9D9]/50"
-                            }`}>
-                            Ditolak
-                        </div> 
-                    </div>
-                    
-                </div>
-   
-               <div className="py-2">
-                    {loading ? (
-                    <p>Loading data...</p>
-                    ) : (
+      <div className="flex flex-row min-h-screen">
+        <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 w-full">
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-[raleway] font-bold text-[#004A76]">
+               Verifikasi Data Masyarakat
+            </h1>
+            <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+              {/* Search Bar */}
+              <div className="flex items-center rounded-xl px-3 py-1 border-[1.5px] border-gray-300 gap-3 w-full sm:w-auto">
+                <IoIosSearch className="text-gray-400 text-lg" />
+                <input
+                  type="text"
+                  placeholder="Cari Nama"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="text-gray-700 text-sm outline-none bg-transparent flex-1 sm:w-40"
+                />
+              </div>
+  
+              {/* Profile Dropdown */}
+              <div className="flex flex-row gap-4 relative">
+                <button
+                  onClick={toggleDropdown}
+                  className="flex items-center space-x-2 focus:outline-none cursor-pointer"
+                >
+                  <TiUser className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 text-[#292D32]" />
+                </button>
+  
+                <div>
+                  {isOpen && (
                     <>
-                        <Basetable data={filteredData} columns={columns} />
+                      <div
+                        className="fixed inset-0 bg-black/30 z-40"
+                        onClick={() => setIsOpen(false)}
+                      ></div>
+                      <div className="absolute right-0 origin-top-right mt-8 w-48 px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50">
+                        <div className="py-1 justify-center">
+                          <a className="flex flex-row py-2 text-sm sm:text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
+                            <HiOutlineUser className="text-xl sm:text-2xl md:text-[30px]" />
+                            {user?.username}
+                          </a>
+  
+                          <a
+                            onClick={handleLogout}
+                            className="flex flex-row py-2 text-sm sm:text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3 cursor-pointer"
+                          >
+                            <IoLogOutOutline className="text-xl sm:text-2xl md:text-[30px]" />
+                            Log Out
+                          </a>
+                        </div>
+                      </div>
                     </>
-                    )}
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <img src="/line style.svg" alt="" className="w-full" />
+
+          {/* Statistics Cards */}
+          <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center py-3 px-2 sm:px-4 lg:px-6 gap-4 lg:gap-2">
+            
+            {/* Card 1: Menunggu Verifikasi */}
+            <div className="flex flex-row gap-4 sm:gap-6 lg:gap-6 bg-[#004A76] p-3 sm:p-2 rounded-2xl items-center px-4 sm:px-8 shadow-md">
+              <div className="bg-white p-2 sm:p-3 rounded-full flex items-center justify-center flex-shrink-0">
+                <img
+                  src="/icon_totalverifikasi.svg"
+                  alt="totalverifikasi"
+                  className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
+                />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span
+                  className="text-white font-bold text-sm sm:text-md leading-tight"
+                  style={{ fontFamily: "Nunito Sans" }}
+                >
+                  Menunggu Verifikasi
+                </span>
+                <span
+                  className="text-white font-extrabold text-2xl sm:text-3xl lg:text-4xl"
+                  style={{ fontFamily: "Nunito Sans" }}
+                >
+                  {countStatus.pending}
+                </span>
+              </div>
+            </div>
+
+            {/* Card 2: Verifikasi Diterima */}
+            <div className="flex flex-row gap-4 sm:gap-6 lg:gap-8 bg-[#004A76] p-3 sm:p-2 rounded-2xl items-center px-4 sm:px-8 shadow-md ">
+              <div className="bg-white p-2 sm:p-3 rounded-full flex items-center justify-center flex-shrink-0">
+                <img
+                  src="/icon_verifikasiditerima.svg"
+                  alt="diterima"
+                  className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
+                />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span
+                  className="text-white font-bold text-sm sm:text-md leading-tight"
+                  style={{ fontFamily: "Nunito Sans" }}
+                >
+                  Verifikasi Diterima
+                </span>
+                <span
+                  className="text-white font-extrabold text-2xl sm:text-3xl lg:text-4xl"
+                  style={{ fontFamily: "Nunito Sans" }}
+                >
+                  {countStatus.diterima}
+                </span>
+              </div>
+            </div>
+
+            {/* Card 3: Verifikasi Ditolak */}
+            <div className="flex flex-row gap-4 sm:gap-6 lg:gap-8 bg-[#004A76] p-3 sm:p-2 rounded-2xl items-center px-4 sm:px-8 shadow-md ">
+              <div className="bg-white p-2 sm:p-3 rounded-full flex items-center justify-center flex-shrink-0">
+                <img
+                  src="/icon_verifikasiditolak.svg"
+                  alt="ditolak"
+                  className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12"
+                />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span
+                  className="text-white font-bold text-sm sm:text-md leading-tight"
+                  style={{ fontFamily: "Nunito Sans" }}
+                >
+                  Verifikasi Ditolak
+                </span>
+                <span
+                  className="text-white font-extrabold text-2xl sm:text-3xl lg:text-4xl"
+                  style={{ fontFamily: "Nunito Sans" }}
+                >
+                  {countStatus.ditolak}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Filter Categories */}
+          <div className="flex flex-row gap-2 w-full items-center px-2 sm:px-4 py-1">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-8 bg-[#D9D9D9]/50 p-3 sm:p-2 rounded-xl items-start sm:items-center px-4 sm:px-6 w-full sm:w-auto">
+              <div className="font-bold text-[#033E61] text-sm sm:text-base whitespace-nowrap">
+                Kategori :
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
+                <div
+                  onClick={() => setFilterStatus("semua")}
+                  className={`cursor-pointer font-[raleway] rounded-xl border-2 px-3 sm:px-4 py-1 border-[#033E61] text-center text-sm sm:text-base transition-all duration-200 ${
+                    filterStatus === "semua"
+                      ? "bg-[#025F96] font-bold text-white border-[#033E61]"
+                      : "bg-[#D9D9D9]/50 hover:bg-[#025F96]/20"
+                  }`}
+                >
+                  Verifikasi
                 </div>
 
-                 
-                <Modal open={isModalOpen} onClose={closeModal}>
-                    <ModalContent
-                    modalType={modalType}
-                    idMasyarakat={selectedId}
-                    token={token}
-                    dataMasyarakatbyId={dataMasyarakatbyId}
-                    onClose={handleCloseModal}
-                    />
-                </Modal>
-           </main>
-       </div>
-     )
+                <div
+                  onClick={() => setFilterStatus("diterima")}
+                  className={`cursor-pointer font-[raleway] rounded-xl border-2 px-3 sm:px-4 py-1 border-[#033E61] text-center text-sm sm:text-base transition-all duration-200 ${
+                    filterStatus === "diterima"
+                      ? "bg-[#025F96] font-bold text-white border-[#033E61]"
+                      : "bg-[#D9D9D9]/50 hover:bg-[#025F96]/20"
+                  }`}
+                >
+                  Diterima
+                </div>
+
+                <div
+                  onClick={() => setFilterStatus("ditolak")}
+                  className={`cursor-pointer font-[raleway] rounded-xl border-2 px-3 sm:px-4 py-1 border-[#033E61] text-center text-sm sm:text-base transition-all duration-200 ${
+                    filterStatus === "ditolak"
+                      ? "bg-[#025F96] font-bold text-white border-[#033E61]"
+                      : "bg-[#D9D9D9]/50 hover:bg-[#025F96]/20"
+                  }`}
+                >
+                  Ditolak
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="py-2 flex-1">
+            {loading ? (
+              <div className="flex items-center justify-center h-32">
+                <p className="text-gray-600">Loading data...</p>
+              </div>
+            ) : (
+              <Basetable data={filteredData} columns={columns} />
+            )}
+          </div>
+
+          <Modal open={isModalOpen} onClose={closeModal}>
+            <ModalContent
+              modalType={modalType}
+              idMasyarakat={selectedId}
+              token={token}
+              dataMasyarakatbyId={dataMasyarakatbyId}
+              onClose={handleCloseModal}
+            />
+          </Modal>
+        </main>
+      </div>
+    );
   
 }
 

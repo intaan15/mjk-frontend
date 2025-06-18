@@ -289,13 +289,6 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
         console.error("Gagal update artikel:", message);
         showErrorToast(message); // <-- ini toast yang akan muncul
       }
-      //   {
-      //     console.error(
-      //       "Error updating data:",
-      //       error.response?.data || error.message || error
-      //     );
-      //     showErrorToast("Gagal mengupdate data dokter");
-      //   }
     };
 
     const generatePassword = (length = 8) => {
@@ -305,8 +298,18 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
       for (let i = 0; i < length; i++) {
         password += charset.charAt(Math.floor(Math.random() * charset.length));
       }
-      console.log("👌generate password succes",password)
+      console.log("👌generate password succes")
       return password;
+    };
+
+    const regeneratePassword = () => {
+      const newPassword = generatePassword(8); // Perbaiki nama fungsi
+      setFormData(prev => ({
+        ...prev,
+        password_dokter: newPassword,
+        
+      }));
+      console.log("☑️regenerate password succes")
     };
 
 
@@ -333,7 +336,8 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
     handleSubmit,
     handleChangeSelect,
     handleResetFile,
-    generatePassword,        
+    generatePassword,  
+    regeneratePassword      
     
     }
   )

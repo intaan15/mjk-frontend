@@ -29,7 +29,11 @@ const Splashscreen = () => {
 
   return (
 
-    <div className='loginapage logo flex flex-col w-100% h-screen justify-center items-center bg-[#F2F2F2] animate-fade-in transition-opacity duration-500'>  
+    <div className='loginapage logo flex flex-col w-100% h-screen justify-center items-center bg-[#F2F2F2] animate-fade-in transition-opacity duration-500'> 
+      <div className='absolute top-3 md:top-3 lg:top-3'>
+        <img className='w-30 md:w-30 lg:w-35 ' src="FElogo.png" alt="" /> 
+      </div>
+
       <animated.div style={fadeInStyles} className='logo flex flex-col items-center pb-16'>
             <img className='flex flex-row w-40 md:w-64 lg:w-80 justify-center' src="/Logo Mojokerto Sehat.svg" alt="imglogo" />
             <p className='font-[raleway] font-extrabold text-[#025F96] text-2xl md:text-3xl lg:text-4xl items-center '>MOJOKERTO SEHAT</p>

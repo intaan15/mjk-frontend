@@ -159,33 +159,34 @@ function Konsultasi() {
       
   // FRONT END
   return (
-    <div className="flex flex-row h-screen">
-      <main className="flex flex-col pl-8 gap-1 w-full pr-3 h-screen">
-        {/* Atas(search & profile) */}
-        <div className="flex flex-row  items-center justify-between pt-3">
-          <p className="text-3xl font-[raleway] font-bold text-[#004A76]">
+    <div className="flex flex-row min-h-screen">
+      <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 w-full">
+        {/* Navbar */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-[raleway] font-bold text-[#004A76]">
             Konsultasi
-          </p>
-          <div className="flex flex-row gap-2 relative">
-            {/* search */}
-            <div className="flex items-center rounded-[19px] px-3 justify-start py-1 border-[1.5px] border-gray-300 gap-3">
-              <IoIosSearch className="text-gray-400" />
+          </h1>
+          
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            {/* Search Bar */}
+            <div className="flex items-center rounded-xl px-3 py-1 border-[1.5px] border-gray-300 gap-3 w-full sm:w-auto">
+              <IoIosSearch className="text-gray-400 text-lg" />
               <input
                 type="text"
                 placeholder="Cari Nama"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="text-gray-700 text-sm outline-none bg-transparent"
+                className="text-gray-700 text-sm outline-none bg-transparent flex-1 sm:w-40"
               />
             </div>
 
-            {/* akun */}
+            {/* Profile Dropdown */}
             <div className="flex flex-row gap-4 relative">
               <button
                 onClick={toggleDropdown}
                 className="flex items-center space-x-2 focus:outline-none cursor-pointer"
               >
-                <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
+                <TiUser className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 text-[#292D32]" />
               </button>
 
               <div>
@@ -195,18 +196,19 @@ function Konsultasi() {
                       className="fixed inset-0 bg-black/30 z-40"
                       onClick={() => setIsOpen(false)}
                     ></div>
-                    <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
+                    <div className="absolute right-0 origin-top-right mt-8 w-48 px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50">
                       <div className="py-1 justify-center">
-                        <a className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
-                          <HiOutlineUser className="text-[30px]" />
+                        <a className="flex flex-row py-2 text-sm sm:text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
+                          <HiOutlineUser className="text-xl sm:text-2xl md:text-[30px]" />
                           {user?.username}
                         </a>
 
                         <a
                           onClick={handleLogout}
-                          className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3"
+                          className="flex flex-row py-2 text-sm sm:text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3 cursor-pointer"
                         >
-                          <IoLogOutOutline className="text-[30px]" /> Log Out
+                          <IoLogOutOutline className="text-xl sm:text-2xl md:text-[30px]" />
+                          Log Out
                         </a>
                       </div>
                     </div>
@@ -216,55 +218,56 @@ function Konsultasi() {
             </div>
           </div>
         </div>
-        <img src="/line style.svg" alt="" />
+        
+        <img src="/line style.svg" alt="" className="w-full" />
 
-        {/* Button Tengah FILTER */}
-        <div className="flex flex-row justify-center w-full py-2 gap-15">
+        {/* Filter Buttons */}
+        <div className="flex flex-row justify-center w-full py-2 gap-2 sm:gap-4">
           <button
             onClick={() => setFilterStatus("Diproses")}
             className={`${
               filterStatus === "Diproses"
-                ? "bg-[#004A76] font-bold font-[raleway]"
+                ? "bg-[#004A76] font-bold"
                 : "bg-[#B3B3B3]"
-            } hover:opacity-80 text-white w-50 h-10 rounded-md text-md border-[#E3F0F8] cursor-pointer`}
+            } hover:opacity-80 text-white px-4 sm:px-6 md:px-8 h-10 rounded-md text-sm sm:text-md font-[raleway] cursor-pointer flex-1 sm:flex-initial`}
           >
             Diproses
           </button>
-          <div className="h-10 bg-[#004A76] w-1"> </div>
+          <div className="h-10 bg-[#004A76] w-1"></div>
           <button
             onClick={() => setFilterStatus("Selesai")}
             className={`${
               filterStatus === "Selesai"
-                ? "bg-[#004A76] font-bold font-[raleway]"
+                ? "bg-[#004A76] font-bold"
                 : "bg-[#B3B3B3]"
-            } hover:opacity-80 text-white w-50 h-10 rounded-md text-md border-[#E3F0F8] border-2 focus-ring-2 cursor-pointer `}
+            } hover:opacity-80 text-white px-4 sm:px-6 md:px-8 h-10 rounded-md text-sm sm:text-md font-[raleway] cursor-pointer flex-1 sm:flex-initial`}
           >
             Riwayat
           </button>
         </div>
 
-        {/* filter by tanggal dan poli */}
-        <div className="flex flex-rows  gap-6 py-3 px-6 ">
-          <div className="flex flex-row  gap-3 items-center ">
-            <label className="font-[raleway] font-bold text-[#004A76]  ">
+        {/* Filter Controls */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 py-3 px-2 sm:px-6">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center">
+            <label className="font-[raleway] font-bold text-[#004A76] text-sm sm:text-base">
               Tanggal
             </label>
             <input
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="border rounded p-2 text-gray-700 border-[#004A76] h-10 cursor-pointer"
+              className="border rounded p-2 text-gray-700 border-[#004A76] h-10 cursor-pointer w-full sm:w-auto text-sm"
             />
           </div>
 
-          <div className="flex flex-row gap-3 items-center">
-            <label className="font-[raleway] font-bold text-[#004A76] ">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center">
+            <label className="font-[raleway] font-bold text-[#004A76] text-sm sm:text-base whitespace-nowrap">
               Filter Poli
             </label>
             <select
               value={selectedPoli}
               onChange={(e) => setSelectedPoli(e.target.value)}
-              className="border rounded p-2 text-gray-700 border-[#004A76] h-10 cursor-pointer"
+              className="border rounded p-2 text-gray-700 border-[#004A76] h-10 cursor-pointer w-full sm:w-auto text-sm"
             >
               {poliOptions.map((poli, idx) => (
                 <option key={idx} value={poli}>
@@ -274,7 +277,7 @@ function Konsultasi() {
             </select>
           </div>
 
-          <div className="flex items-center justify-center">
+          <div className="flex items-center justify-center sm:justify-start">
             <button
               onClick={handleResetFilter}
               className="bg-[#004A76] hover:bg-[#38B6FE]/50 text-white p-3 items-center rounded-md text-sm font-[raleway] cursor-pointer"
@@ -284,47 +287,48 @@ function Konsultasi() {
           </div>
         </div>
 
-        {/* HEADER TABEL Filtering Tabel BLM FIX */}
-        <div className="py-1">
+        {/* Table */}
+        <div className="py-1 overflow-x-auto">
           {loading ? (
-            <p>Loading data...</p>
+            <div className="flex justify-center items-center py-8">
+              <p className="text-gray-600">Loading data...</p>
+            </div>
           ) : (
-            <>
+            <div className="min-w-full">
               <Basetable data={paginatedData} columns={columns} />
-            </>
+            </div>
           )}
         </div>
 
         {/* Pagination */}
-        <div className="grid grid-cols-3 items-center justify-center">
-          {/* Jumlah ditampilkan - TIDAK BERUBAH */}
-          <div className="text-sm text-gray-600">
+        <div className="flex flex-col sm:grid sm:grid-cols-3 gap-4 sm:gap-0 items-center justify-center mt-4">
+          {/* Info Text */}
+          <div className="text-xs sm:text-sm text-gray-600 text-center sm:text-left order-2 sm:order-1">
             Menampilkan {(currentPage - 1) * itemsPerPage + 1} -{" "}
             {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems}{" "}
             hasil
           </div>
 
-          {/* Navigasi dan Items per page */}
-          <div className="flex items-center gap-4">
-            {/* Pagination Number - EDIT BAGIAN INI */}
-            <div className="flex items-center space-x-2">
+          {/* Pagination Controls */}
+          <div className="flex items-center gap-2 sm:gap-4 order-1 sm:order-2 overflow-x-auto">
+            <div className="flex items-center space-x-1 sm:space-x-2">
               <button
-                className={`px-2 py-1 border-2 rounded-md transition duration-200 
-          ${
-            currentPage === 1
-              ? "opacity-50 cursor-not-allowed border-gray-300"
-              : "hover:bg-[#004A76] hover:text-white"
-          }
-        `}
+                className={`px-2 py-1 border-2 rounded-md transition duration-200 text-sm
+                  ${
+                    currentPage === 1
+                      ? "opacity-50 cursor-not-allowed border-gray-300"
+                      : "hover:bg-[#004A76] hover:text-white"
+                  }
+                `}
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
               >
                 &lt;
               </button>
 
-              {/* SLIDING PAGINATION - Hanya 5 halaman */}
+              {/* Pagination Numbers */}
               {(() => {
-                const maxVisible = 5;
+                const maxVisible = window.innerWidth < 640 ? 3 : 5; // Responsive max visible
                 const paginationRange = getPaginationRange(
                   currentPage,
                   totalPages,
@@ -333,49 +337,47 @@ function Konsultasi() {
 
                 return (
                   <>
-                    {/* First page + ellipsis jika range tidak dimulai dari 1 */}
+                    {/* First page + ellipsis */}
                     {paginationRange[0] > 1 && (
                       <>
                         <button
                           onClick={() => setCurrentPage(1)}
-                          className="px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white border-gray-300"
+                          className="px-2 sm:px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white border-gray-300 text-sm"
                         >
                           1
                         </button>
                         {paginationRange[0] > 2 && (
-                          <span className="px-2 py-1 text-gray-500">...</span>
+                          <span className="px-1 sm:px-2 py-1 text-gray-500 text-sm">...</span>
                         )}
                       </>
                     )}
 
-                    {/* Range pages (maksimal 5) */}
+                    {/* Range pages */}
                     {paginationRange.map((pageNum) => (
                       <button
                         key={pageNum}
                         onClick={() => setCurrentPage(pageNum)}
-                        className={`px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white
-                  ${
-                    currentPage === pageNum
-                      ? "bg-[#004A76] text-white border-[#004A76]"
-                      : "border-gray-300"
-                  }
-                `}
+                        className={`px-2 sm:px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white text-sm
+                          ${
+                            currentPage === pageNum
+                              ? "bg-[#004A76] text-white border-[#004A76]"
+                              : "border-gray-300"
+                          }
+                        `}
                       >
                         {pageNum}
                       </button>
                     ))}
 
-                    {/* Ellipsis + Last page jika range tidak berakhir di totalPages */}
-                    {paginationRange[paginationRange.length - 1] <
-                      totalPages && (
+                    {/* Ellipsis + Last page */}
+                    {paginationRange[paginationRange.length - 1] < totalPages && (
                       <>
-                        {paginationRange[paginationRange.length - 1] <
-                          totalPages - 1 && (
-                          <span className="px-2 py-1 text-gray-500">...</span>
+                        {paginationRange[paginationRange.length - 1] < totalPages - 1 && (
+                          <span className="px-1 sm:px-2 py-1 text-gray-500 text-sm">...</span>
                         )}
                         <button
                           onClick={() => setCurrentPage(totalPages)}
-                          className="px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white border-gray-300"
+                          className="px-2 sm:px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white border-gray-300 text-sm"
                         >
                           {totalPages}
                         </button>
@@ -386,13 +388,13 @@ function Konsultasi() {
               })()}
 
               <button
-                className={`px-2 py-1 border-2 rounded-md transition duration-200 
-          ${
-            currentPage === totalPages
-              ? "opacity-50 cursor-not-allowed border-gray-300"
-              : " hover:bg-[#004A76] hover:text-white"
-          }
-        `}
+                className={`px-2 py-1 border-2 rounded-md transition duration-200 text-sm
+                  ${
+                    currentPage === totalPages
+                      ? "opacity-50 cursor-not-allowed border-gray-300"
+                      : "hover:bg-[#004A76] hover:text-white"
+                  }
+                `}
                 onClick={() =>
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                 }
@@ -402,10 +404,14 @@ function Konsultasi() {
               </button>
             </div>
           </div>
+
+          {/* Empty div for grid alignment */}
+          <div className="hidden sm:block order-3"></div>
         </div>
       </main>
     </div>
   );
+
 }
 
 export default Konsultasi

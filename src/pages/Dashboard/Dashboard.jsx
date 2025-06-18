@@ -55,36 +55,38 @@ function Dashboard() {
   } = useDashboard(selectedDate);
 
   return (
-    <div className="flex flex-row h-screen pb-10">
+    <div className="flex flex-row min-h-screen ">
      {/* container main */}
-      <main className="flex flex-col pl-8 pr-3 gap-1  pb-3 h-screen">
-        <div className="flex flex-row  items-center justify-between pt-3">
-          <p className="text-3xl font-[raleway] font-bold text-[#004A76]">
+      <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1">
+
+        {/* navbar */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-[raleway] font-bold text-[#004A76]">
             Dashboard
-          </p>
+          </h1>
           <div className="flex flex-row gap-4 relative">
             <button
               onClick= {toggleDropdown}
               className="flex items-center space-x-2 focus:outline-none cursor-pointer">
-              <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
+              <TiUser className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 text-[#292D32]" />
             </button>
             <div>
               {isOpen && (
                 <>
                  <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setIsOpen(false)}></div>
-                  <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
+                  <div className="absolute right-0 origin-top-right mt-8 w-48 px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50">
                     <div className="py-1 justify-center">
                       <a
                         href="#"
-                        className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
-                        <HiOutlineUser className='text-[30px]' />
+                        className="flex flex-row py-2 text-sm sm:text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">                        
+                        <HiOutlineUser className='text-xl sm:text-2xl md:text-[30px]'/>
                         {user?.username}
                       </a>
                       
                       <a
                         onClick={handleLogout}
-                        className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3">
-                        <IoLogOutOutline className='text-[30px]' />
+                        className="flex flex-row py-2 text-sm sm:text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3 cursor-pointer">
+                        <IoLogOutOutline className='text-xl sm:text-2xl md:text-[30px]'/>
                         Log Out
                       </a>
                     </div>
@@ -99,18 +101,20 @@ function Dashboard() {
         {/* header */}
         <div className='relative w-full'>
           {/* Gambar sebagai latar */}
-          <img src="img_org.svg" alt="" className="w-full object-cover h-auto" />
+          <img src="img_org.svg" alt="" className="w-full object-cover h-48 sm:h-56 md:h-64 lg:h-auto rounded-lg"/>
 
           {/* Overlay teks dan kalender */}
-          <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-5 ">
+          <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-3 sm:p-4 md:p-5">
             {/* Kalender */}
             <div className="rounded p-2 ">
               < Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
             </div>
             {/* Heading */}
-            <div className="text-white ml-2">
-              <h2 className="font-[Poppins] text-3xl font-bold">Halo, Admin</h2>
-              <p className="italic text-xl cursor-pointer  text-[#004A76] font-medium font-[Poppins]">
+             <div className="text-white text-center md:text-left">
+              <h2 className="font-[Poppins] text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold">
+                Halo, Admin
+              </h2>
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl italic text-[#004A76] font-medium font-[Poppins]">
                 Selamat datang di Website Mojokerto Sehat
               </p>
             </div>
@@ -119,7 +123,7 @@ function Dashboard() {
 
         {/* statistik  */}
         <div className="bg-[#004A76] flex flex-row rounded-lg mt-2">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 text-white items-center font-[raleway]">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 text-white items-center font-[raleway]">
                <div className="flex items-center gap-3">
                    <StatBox
                       icon={
@@ -148,71 +152,94 @@ function Dashboard() {
         </div>
 
         {/* LogPengguna */}
-        <div className='flex flex-col gap-3 bg-'>
-          <div className='flex grid-rows-2 items-start justify-between p-3 rounded-lg'>
-            <span className='text-2xl font-bold pt-2  text-[#025f96] justify-start'>Log Pengguna Harian</span>
-          
-            
+        <div className='flex flex-col gap-4'>
+          <div className='flex items-center justify-between'>
+           <h2 className='text-lg sm:text-xl md:text-2xl font-bold text-[#025f96]'>
+              Log Pengguna Harian
+           </h2>
           </div>
 
-          <div className='flex'>
-            <div className="grid grid-cols-2 gap-8 w-3/6 ">
-              {/* Kartu 1 */}
-              <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <div className='flex grid-rows-2  gap-3 justify-between items-center w-full'>
-                   <p className="text-6xl font-bold text-[#004A76] font-[raleway] ">{jadwalByTanggal}</p>
-                   <IoStatsChart className='w-20 h-20 text-[#FF8FA7]/70'/>
+          <div className='flex flex-col xl:flex-row gap-6'>
+            <div className="w-full xl:w-1/2">
+
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                {/* Kartu 1 */}
+                <div className="bg-white shadow-md p-4 sm:p-6 rounded-xl flex flex-col items-start">
+                  <div className='flex justify-between items-center w-full mb-2'>
+                    <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#004A76] font-[raleway]">
+                      {jadwalByTanggal}
+                    </p>
+                    <IoStatsChart className='w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 text-[#FF8FA7]/70'/>
+                  </div>
+                  <a href='/konsultasi' className="cursor-pointer text-sm sm:text-base md:text-lg text-[#004A76] font-bold underline hover:text-[#025f96]">
+                    Konsultasi
+                  </a>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                    {formatTanggal(selectedDate)}
+                  </p>
                 </div>
-                  <a href='/konsultasi' className="cursor-pointer text-lg text-[#004A76] font-bold underline">Konsultasi</a>
-                  <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
-              </div>
-
-              {/* Kartu 2 */}
-              <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <div className='flex grid-rows-2 justify-between items-center w-full mb-2'>
-                   <p className="text-6xl font-bold text-[#004A76] font-[raleway]  ">{akunBaru}</p>
-                   <IoStatsChart className='w-20 h-20 text-[#4ED9D9]/70'/>
+                
+                {/* Kartu 2 */}
+                <div className="bg-white shadow-md p-4 sm:p-6 rounded-xl flex flex-col items-start">
+                  <div className='flex justify-between items-center w-full mb-2'>
+                    <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#004A76] font-[raleway]">
+                      {akunBaru}
+                    </p>
+                    <IoStatsChart className='w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 text-[#4ED9D9]/70'/>
+                  </div>
+                  <a href='/datamasyarakat' className="cursor-pointer text-sm sm:text-base md:text-lg text-[#004A76] font-bold underline hover:text-[#025f96]">
+                    Akun Baru
+                  </a>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                    {formatTanggal(selectedDate)}
+                  </p>
                 </div>
-                <a href='' className="text-lg text-[#004A76] underline font-semibold">Akun Baru</a>
-                <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
-              </div>
-
-              {/* Kartu 3 */}
-              <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <div className='flex grid-rows-2  gap-3 justify-between items-center w-full'>
-                    <p className="text-6xl font-bold text-[#004A76] font-[raleway]">{allDokter}</p>
-                   <IoStatsChart className='w-20 h-20 text-[#5EB5EF]/70'/>
+                
+                
+                {/* Card 3 - Dokter Terdaftar */}
+                <div className="bg-white shadow-md p-4 sm:p-6 rounded-xl flex flex-col items-start">
+                  <div className='flex justify-between items-center w-full mb-2'>
+                    <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#004A76] font-[raleway]">
+                      {allDokter}
+                    </p>
+                    <IoStatsChart className='w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 text-[#5EB5EF]/70'/>
+                  </div>
+                  <p className="text-sm sm:text-base md:text-lg text-[#004A76] font-semibold underline">
+                    Dokter Terdaftar
+                  </p>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                    {formatTanggal(selectedDate)}
+                  </p>
                 </div>
-                <p className="text-lg text-[#004A76] font-semibold underline">Dokter Terdaftar</p>
-                <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
-              </div>
 
-              {/* Kartu 4 */}
-              <div className="bg-white shadow-md p-4 rounded-xl flex flex-col items-start">
-                <div className='flex grid-rows-2  gap-3 justify-between items-center w-full'>
-                     <p className="text-6xl font-bold text-[#004A76] font-[raleway]">{artikelLog}</p>
-                   <IoStatsChart className='w-20 h-20 text-[#FFD778]/70'/>
+                {/* Card 4 - Artikel Publish */}
+                <div className="bg-white shadow-md p-4 sm:p-6 rounded-xl flex flex-col items-start">
+                    <div className='flex justify-between items-center w-full mb-2'>
+                      <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#004A76] font-[raleway]">
+                        {artikelLog}
+                      </p>
+                      <IoStatsChart className='w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 text-[#FFD778]/70'/>
+                    </div>
+                    <p className="text-sm sm:text-base md:text-lg text-[#004A76] font-semibold underline">
+                      Artikel Publish
+                    </p>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                      {formatTanggal(selectedDate)}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-lg text-[#004A76] font-semibold underline">Artikel Publish</p>
-                <p className="text-sm text-gray-500">{formatTanggal(selectedDate)}</p>
               </div>
-            </div>
-
-            {/* Chart Donut */}
-            
-            <div className=' flex justify-center w-3/6'>
-              <div className="flex flex-col justify-center items-center bg-white w-5/6 rounded-xl shadow-md">
-                <span className='text-2xl font-bold pt-2 font-[raleway] text-[#025f96] underline text-center'>Statistik Total Data</span>
-                <Bar values={dataBar} className="w-80 h-80 md:w-96 md:h-96 lg:w-[500px] lg:h-[400px]"/>
-
-                {/* <Bar data={dummyData} /> */}
+              <div className='w-full xl:w-1/2 flex justify-center'>
+                <div className="w-full max-w-lg bg-white rounded-xl shadow-md p-4 sm:p-6">
+                  <span className='text-lg sm:text-xl md:text-2xl font-bold font-[raleway] text-[#025f96] underline text-center mb-4'>Statistik Total Data</span>
+                  <div className='flex-1 flex items-center justify-center'>
+                    <Bar values={dataBar} className="w-full h-full min-h-[400px] sm:min-h-[400px] md:min-h-[500px]"/>
+                  </div>
+                </div>
               </div>
+
             </div>
           </div>
-        </div>
-        <div className=''>
-
-        </div>
       </main>
     </div>
   )

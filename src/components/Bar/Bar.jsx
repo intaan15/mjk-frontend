@@ -49,7 +49,7 @@ function Bar({ values }) {
         position: "right",
         labels: {
           color: "#333",
-          font: { size: 15 },
+          font: { size: 13 },
           
         },
       },
@@ -57,7 +57,7 @@ function Bar({ values }) {
   };
 
   return (
-    <div className="doughnut w-md">
+    <div className="">
       <Doughnut data={data} options={options}  />
     </div>
   );

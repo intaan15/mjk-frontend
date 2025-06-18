@@ -260,77 +260,81 @@ export default function Artikel() {
 
 
   // MAINCONTENT  
-  return (
-    <div className="flex flex-row h-screen ">
-      <main className="flex flex-col pl-8 gap-1 w-full pr-3">
-        {/* navbar */}
-        <div className="flex flex-row items-center justify-between  pt-2">
-          <div className=" text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
-            Artikel
+  
+return (
+  <div className="flex flex-row h-screen">
+    <main className="flex flex-col pl-4 md:pl-8 gap-1 w-full pr-2 md:pr-3">
+      {/* Navbar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-2 gap-3 sm:gap-0">
+        <div className="text-xl sm:text-2xl md:text-3xl font-[Nunito Sans] font-bold text-[#004A76]">
+          Artikel
+        </div>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start sm:items-center w-full sm:w-auto relative">
+          <div className="flex items-center rounded-[19px] px-3 sm:px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2 w-full sm:w-auto min-w-[200px] sm:min-w-[250px]">
+            <IoIosSearch className="text-gray-400 flex-shrink-0" />
+            <input
+              type="text"
+              placeholder="Pencarian"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="text-gray-700 text-sm outline-none bg-transparent w-full"
+            />
           </div>
-          <div className="flex flex-row gap-4 items-center relative">
-            <div className=" flex items-center rounded-[19px] px-5 justify-start py-1 border-[1.5px] border-gray-300 gap-2 ">
-              <IoIosSearch className="text-gray-400" />
-              <input
-                type="text"
-                placeholder="Pencarian"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="text-gray-700 text-sm outline-none bg-transparent"
-              />
-            </div>
-            <div className="flex flex-row gap-4 relative">
-              <button
-                onClick={toggleDropdown}
-                className="flex items-center focus:outline-none cursor-pointer"
-              >
-                <TiUser className="w-11 h-11 text-[#292D32]"> </TiUser>
-              </button>
+          <div className="flex flex-row gap-4 relative justify-end sm:justify-start self-end sm:self-auto">
+            <button
+              onClick={toggleDropdown}
+              className="flex items-center focus:outline-none cursor-pointer"
+            >
+              <TiUser className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 text-[#292D32]" />
+            </button>
 
-              <div>
-                {isOpen && (
-                  <>
-                    <div
-                      className="fixed inset-0 bg-black/30 z-40"
-                      onClick={() => setIsOpen(false)}
-                    ></div>
-                    <div className="absolute right-0 origin-top-right mt-8 w-48 lg: px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 ">
-                      <div className="py-1 justify-center">
-                        <a
-                          href=""
-                          className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3"
-                        >
-                          <HiOutlineUser className="text-[30px]" />
-                          {user?.username}
-                        </a>
+            <div>
+              {isOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 bg-black/30 z-40"
+                    onClick={() => setIsOpen(false)}
+                  ></div>
+                  <div className="absolute right-0 origin-top-right mt-8 w-48 px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50">
+                    <div className="py-1 justify-center">
+                      <a
+                        href=""
+                        className="flex flex-row py-2 text-md font-[raleway] items-center font-bold text-[#004A76] gap-3"
+                      >
+                        <HiOutlineUser className="text-[24px] sm:text-[30px]" />
+                        <span className="truncate">{user?.username}</span>
+                      </a>
 
-                        <a
-                          href=""
-                          onClick={handleLogout}
-                          className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3"
-                        >
-                          <IoLogOutOutline className="text-[30px]" /> Log Out
-                        </a>
-                      </div>
+                      <a
+                        href=""
+                        onClick={handleLogout}
+                        className="flex flex-row py-2 text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3"
+                      >
+                        <IoLogOutOutline className="text-[24px] sm:text-[30px]" />
+                        Log Out
+                      </a>
                     </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
+      </div>
 
-        <img src="line style.svg" alt="" />
+      <img src="line style.svg" alt="" className="w-full" />
 
-        {/* choose */}
-        <div className="flex flex-row justify-between w-full  items-center px-2 py-2">
-          <div className="flex flex-row gap-8 bg-slate-300 p-2 rounded-xl items-center">
-            <span className="font-bold text-gray-700 font-[raleway]">
-              Kategori :
-            </span>
+      {/* Category Selection & Add Button */}
+      <div className="flex flex-col lg:flex-row justify-between w-full items-start lg:items-center px-2 py-2 gap-3 lg:gap-0">
+        {/* Category Buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-8 bg-slate-300 p-3 sm:p-2 rounded-xl items-start sm:items-center w-full lg:w-auto">
+          <span className="font-bold text-gray-700 font-[raleway] text-sm sm:text-base whitespace-nowrap">
+            Kategori :
+          </span>
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full sm:w-auto">
             <button
               onClick={() => setSelectedKategori("Kesehatan")}
-              className={` w-50 px-4 py-1 rounded-xl border-2  cursor-pointer font-[raleway] transition-all duration-200 hover:bg-[#004A76] hover:text-white ${
+              className={`px-3 sm:px-4 py-2 sm:py-1 rounded-xl border-2 cursor-pointer font-[raleway] transition-all duration-200 hover:bg-[#004A76] hover:text-white text-sm sm:text-base w-full sm:w-auto ${
                 selectedKategori === "Kesehatan"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
@@ -341,7 +345,7 @@ export default function Artikel() {
 
             <button
               onClick={() => setSelectedKategori("Obat")}
-              className={` w-50 px-4 py-1 rounded-xl font-[raleway] cursor-pointer border-2 transition-all duration-200 hover:bg-[#004A76] hover:text-white ${
+              className={`px-3 sm:px-4 py-2 sm:py-1 rounded-xl font-[raleway] cursor-pointer border-2 transition-all duration-200 hover:bg-[#004A76] hover:text-white text-sm sm:text-base w-full sm:w-auto ${
                 selectedKategori === "Obat"
                   ? "bg-[#0c4a6e] text-white border-transparent font-semibold"
                   : "text-[#0c4a6e] border-[#7aa6c2] bg-white"
@@ -350,38 +354,40 @@ export default function Artikel() {
               Artikel Obat
             </button>
           </div>
-          <div className="">
-            <button
-              className=" bg-[#004A76] rounded-xl shadow-xl px-8 py-3 cursor-pointer text-sm font-semibold text-white font-[raleway] hover:opacity-75 "
-              onClick={() => openModal("tambahartikel")}
-            >
-              + Tambah Data Artikel
-            </button>
+        </div>
+
+        {/* Add Button */}
+        <div className="w-full lg:w-auto">
+          <button
+            className="bg-[#004A76] rounded-xl shadow-xl px-4 sm:px-6 lg:px-8 py-2 sm:py-3 cursor-pointer text-xs sm:text-sm font-semibold text-white font-[raleway] hover:opacity-75 w-full lg:w-auto whitespace-nowrap"
+            onClick={() => openModal("tambahartikel")}
+          >
+            + Tambah Data Artikel
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="py-2 flex-1">
+        {loading ? (
+          <div className="flex items-center justify-center h-32">
+            <p className="text-gray-600">Loading data...</p>
           </div>
-        </div>
+        ) : (
+          <Basetable data={filteredArtikel} columns={columns} />
+        )}
+      </div>
 
-        {/* main  */}
-        <div className="py-2">
-          {loading ? (
-            <p>Loading data...</p>
-          ) : (
-            <>
-              <Basetable data={filteredArtikel} columns={columns} />
-            </>
-          )}
-        </div>
-
-        <Modal open={isModalOpen} onClose={closeModal}>
-          <ModalContent
-            modalType={modalType}
-            // onClose={closeModal}
-            idArtikel={selectedId}
-            dataArtikel={dataArtikel}
-            token={token}
-            onClose={handleCloseModal}
-          />
-        </Modal>
-      </main>
-    </div>
-  );
+      <Modal open={isModalOpen} onClose={closeModal}>
+        <ModalContent
+          modalType={modalType}
+          idArtikel={selectedId}
+          dataArtikel={dataArtikel}
+          token={token}
+          onClose={handleCloseModal}
+        />
+      </Modal>
+    </main>
+  </div>
+);
 }
