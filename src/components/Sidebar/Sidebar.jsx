@@ -332,6 +332,7 @@
 // export default Sidebar;
 
 //ke 3
+
 import React from "react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -370,6 +371,7 @@ const ResponsiveSidebar = () => {
   const menuItems = [
     {
       label: "Dashboard",
+      mobileLabel: "Dashboard",
       icon: (
         <RiDashboardHorizontalFill className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-[#004A76]" />
       ),
@@ -377,6 +379,7 @@ const ResponsiveSidebar = () => {
     },
     {
       label: "Konsultasi",
+      mobileLabel: "Konsultasi",
       icon: (
         <BiSolidUserVoice className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-[#004A76]" />
       ),
@@ -384,6 +387,7 @@ const ResponsiveSidebar = () => {
     },
     {
       label: "Data Masyarakat",
+      mobileLabel: "Masyarakat",
       icon: (
         <HiMiniUserGroup className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-[#004A76]" />
       ),
@@ -394,6 +398,7 @@ const ResponsiveSidebar = () => {
     },
     {
       label: "Data Dokter",
+      mobileLabel: "Dokter",
       icon: (
         <FaUserDoctor className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-[#004A76]" />
       ),
@@ -404,6 +409,7 @@ const ResponsiveSidebar = () => {
     },
     {
       label: "Artikel",
+      mobileLabel: "Artikel",
       icon: (
         <RiNewspaperFill className="w-5 h-5 sm:w-6 sm:h-6 lg:w-8 lg:h-8 text-[#004A76]" />
       ),
@@ -524,13 +530,13 @@ const ResponsiveSidebar = () => {
       {/* Mobile/Small Tablet: Bottom Navigation Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 z-50">
         {/* Navigation Items - Mobile */}
-        <div className="flex items-center justify-around px-2 py-3 sm:py-4">
+        <div className="flex items-center justify-around px-2 py-1 sm:py-2">
           {menuItems.map((item, idx) => (
             <div key={idx} className="flex-1">
               {item.children ? (
                 <button
                   onClick={() => toggleDropdown(item.label)}
-                  className={`w-full flex justify-center items-center p-3 rounded-lg transition-all
+                  className={`w-full flex flex-col items-center gap-1 p-1 rounded-lg transition-all font-[raleway]
                            ${
                              item.children.some(
                                (child) => location.pathname === child.to
@@ -540,11 +546,14 @@ const ResponsiveSidebar = () => {
                            }`}
                 >
                   <span className="flex-shrink-0">{item.icon}</span>
+                  <span className="text-[8px] font-medium text-center leading-tight">
+                    {item.mobileLabel}
+                  </span>
                 </button>
               ) : (
                 <Link
                   to={item.to}
-                  className={`w-full flex justify-center items-center p-3 rounded-lg transition-all
+                  className={`w-full flex flex-col items-center gap-1 p-1 rounded-lg transition-all font-[raleway]
                            ${
                              location.pathname === item.to
                                ? "bg-[#E0F2FE] text-[#025F96]"
@@ -552,6 +561,9 @@ const ResponsiveSidebar = () => {
                            }`}
                 >
                   <span className="flex-shrink-0">{item.icon}</span>
+                  <span className="text-[8px] font-medium text-center leading-tight">
+                    {item.mobileLabel}
+                  </span>
                 </Link>
               )}
             </div>
@@ -606,7 +618,7 @@ const ResponsiveSidebar = () => {
       )}
 
       {/* Spacer for mobile bottom nav */}
-      <div className="md:hidden h-16 sm:h-18"></div>
+      <div className="md:hidden h-20"></div>
     </>
   );
 };
