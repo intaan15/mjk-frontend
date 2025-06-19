@@ -31,7 +31,7 @@ const Splashscreen = () => {
 
     <div className='loginapage logo flex flex-col w-100% h-screen justify-center items-center bg-[#F2F2F2] animate-fade-in transition-opacity duration-500'> 
       <div className='absolute top-3 md:top-3 lg:top-3'>
-        <img className='w-30 md:w-30 lg:w-35 ' src="FElogo.png" alt="" /> 
+        <img className='w-30 md:w-30 lg:w-35 ' src="FElogo.svg" alt="" /> 
       </div>
 
       <animated.div style={fadeInStyles} className='logo flex flex-col items-center pb-16'>
