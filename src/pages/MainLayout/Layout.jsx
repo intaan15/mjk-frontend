@@ -5,14 +5,14 @@ import "../../App.css"
 
 const Layout = () => {
   return (
-    <div className='flex flex-row min-h-screen transition-all duration-300 ease-in-out bg-gray-50'>
+    <div className='flex flex-row min-h-screen transition-all duration-300 ease-in-out bg-gray-50 '>
       {/* Sidebar - Always visible with responsive width */}
       <div className='flex-shrink-0 h-screen overflow-y-auto bg-white shadow-lg'>
         <Sidebar/>
       </div>
       
       {/* Main Content Area */}
-      <div className='flex-1 min-h-screen overflow-y-auto scrollable scrollbar-thin scrollbar-thumb-blue-gray-300 scrollbar-track-blue-gray-50'>
+      <div className='flex-1 min-h-screen overflow-y-auto scrollable scrollbar-thin scrollbar-thumb-blue-gray-300 scrollbar-track-blue-gray-50 '>
         <div className='w-full h-full'>
           <Outlet/> 
         </div>

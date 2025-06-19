@@ -159,24 +159,24 @@ function Konsultasi() {
       
   // FRONT END
   return (
-    <div className="flex flex-row min-h-screen">
-      <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 w-full">
+    <div className="flex flex-row min-h-screen ">
+      <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 w-full mb-20 sm:mb-24 md:mb-16 lg:mb-8">
         {/* Navbar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-[raleway] font-bold text-[#004A76]">
             Konsultasi
           </h1>
           
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto sm:items-center">
             {/* Search Bar */}
-            <div className="flex items-center rounded-xl px-3 py-1 border-[1.5px] border-gray-300 gap-3 w-full sm:w-auto">
-              <IoIosSearch className="text-gray-400 text-lg" />
+            <div className="flex items-center rounded-xl px-3 py-2 border-[1.5px] border-gray-300 gap-3 w-full sm:w-auto  min-w-0 h-10 sm:h-11">
+              <IoIosSearch className="text-gray-400 text-lg flex-shrink-0  sm:text-xl" />
               <input
                 type="text"
                 placeholder="Cari Nama"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="text-gray-700 text-sm outline-none bg-transparent flex-1 sm:w-40"
+                className="text-gray-700 text-sm outline-none bg-transparent flex-1 sm:w-48 md:w-56 min-w-0"
               />
             </div>
 
@@ -184,9 +184,10 @@ function Konsultasi() {
             <div className="flex flex-row gap-4 relative">
               <button
                 onClick={toggleDropdown}
-                className="flex items-center space-x-2 focus:outline-none cursor-pointer"
+                className="flex items-center  justify-center focus:outline-none cursor-pointer w-10 h-10 sm:w-11 sm:h-11 md:w-11 md:h-11 lg:w-11 lg:h-11 rounded-full hover:bg-gray-100 transition-colors"
               >
-                <TiUser className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 text-[#292D32]" />
+                 <TiUser className="w-6 h-6 sm:w-8 sm:h-8 md:w-9 md:h-9 text-[#292D32]" />
+         
               </button>
 
               <div>
@@ -196,10 +197,10 @@ function Konsultasi() {
                       className="fixed inset-0 bg-black/30 z-40"
                       onClick={() => setIsOpen(false)}
                     ></div>
-                    <div className="absolute right-0 origin-top-right mt-8 w-48 px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50">
+                    <div className="absolute right-0 origin-top-right mt-10 sm:mt-12 w-48 sm:w-52 px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50">
                       <div className="py-1 justify-center">
                         <a className="flex flex-row py-2 text-sm sm:text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
-                          <HiOutlineUser className="text-xl sm:text-2xl md:text-[30px]" />
+                          <HiOutlineUser className="text-xl sm:text-2xl md:text-[28px]" />
                           {user?.username}
                         </a>
 

@@ -1,7 +1,7 @@
 import { useState,useEffect, useCallback } from "react";
-import axios from "axios";
 import { useAuth } from "../../components/Auth";
-import { useMemo } from "react";
+import useDataDokter from "../../components/_hooks/useDataDokter";
+import useLogout from "../../components/_hooks/useLogout";
 
 
 
@@ -25,21 +25,35 @@ import.meta.env.VITE_BASE_URL
 
 function Dokter() {
   const token = localStorage.getItem("token");
+  const {handleLogout:handleLogout}=useLogout()
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("null");
-  const [searchTerm, setSearchTerm] = useState("");
-  const toggleDropdown = () => {setIsOpen(!isOpen);};
-  const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedData, setSelectedData] = useState(null);
-  const [selectedId, setSelectedId] = useState(null);
-  const [dataDokterbyId, setdataDokterbyId] = useState(null);
-  const [reloadTrigger, setReloadTrigger] = useState(0);
-  const [dokter, setDokter] = useState([]); 
   const { user } = useAuth();
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const {
+    data,
+    loading,
+    selectedId,
+    setSelectedId,
+    setdataDokterbyId,
+    dataDokterbyId,
+    searchTerm,
+    setSearchTerm,
+    itemsPerPage,
+    setItemsPerPage,
+    currentPage,
+    setCurrentPage,
+    filteredDokter,
+    totalItems,
+    totalPages,
+    paginatedData,
+    fetchDokter,
+    handleDelete,
+    handleAfterAddDokter,
+    formatTanggal,
+    toggleDropdown,
+    isOpen
+  } = useDataDokter();
 
  const openModalWithId = (type,id) => {
     if (!id) {
@@ -55,6 +69,7 @@ function Dokter() {
     setModalType(type);
     setSelectedId(id);
     setIsModalOpen(true);
+    setdataDokterbyId(id);
   };
 
   
@@ -64,175 +79,11 @@ function Dokter() {
     setModalType("");
   };
 
-  
-  const formatTanggal = (isoDateString) => {
-  const date = new Date(isoDateString);
-    return date.toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
 
-  const handleEdit = (data) => {
-    setSelectedData(data);
-    setIsModalOpen(true);
-    navigate(`/detail/${data._id}`);
-  };
-
-  const handleLogout = () => {
-    // Hapus token dari localStorage
-    localStorage.removeItem("token");
-
-    // Redirect ke halaman login
-    navigate("/login");
-  };
-
-  // ENDPOINT GET DATA DOKTER
-  const fetchDokter = useCallback(async () => {
-    setLoading(true); // Set loading state saat mulai fetch
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/api/dokter/getall`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setDokter(res.data);
-      setData(res.data); // Update kedua state sekaligus
-      setLoading(false);
-    } catch (err) {
-      console.error("Gagal fetch dokter:", err);
-      setLoading(false);
-    }
-  }, [token]);
-
-  useEffect(() => {
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
     fetchDokter();
-  }, [fetchDokter, reloadTrigger]);
-
-
-  useEffect(() => {
-    if (!selectedId) return; 
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/dokter/getbyid/${selectedId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("datadokter",response.data)
-        setdataDokterbyId(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  },[selectedId, token]);
-  
-  const handleDelete = async (_id) => {
-     const result = await Swal.fire({
-        title: "Apakah Anda yakin?",
-        text: "Data ini akan dihapus!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Ya, Hapus!",
-        cancelButtonText: "Batal",
-        reverseButtons: true,
-      });
-
-      if (result.isConfirmed) {
-        try {
-          const res = await axios.delete(
-            `${import.meta.env.VITE_BASE_URL}/api/dokter/delete/${_id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-          console.log(res.data)
-          console.log("Berhasil hapus:", res.data);
-         fetchDokter();
-         Swal.fire("Berhasil!", "Data dokter berhasil dihapus.", "success");
-      } catch (err) {
-      console.error("Gagal hapus:", err);
-      Swal.fire("Gagal!", "Terjadi kesalahan saat menghapus data.", "error");
-    }
-  }
-};
-
-const filteredDokter = useMemo(() => {
-  const search = searchTerm.toLowerCase();
-
-  return data.filter((item) => {
-    return (
-      item.nama_dokter?.toLowerCase().includes(search) ||
-      item.email_dokter?.toLowerCase().includes(search) ||
-      item.spesialisasi?.toLowerCase().includes(search) ||
-      item.no_hp?.toLowerCase().includes(search)
-    );
-  });
-}, [data, searchTerm]);
-
-
-const handleAfterAddDokter = (dokterData) => {
-  Swal.fire({
-    title: "Berhasil Menambahkan Dokter",
-    text: "Apakah Anda ingin mengirim email verifikasi ke dokter?",
-    icon: "success",
-    showCancelButton: true,
-    confirmButtonText: "Ya",
-    cancelButtonText: "Tidak",
-  }).then((result) => {
-    if (result.isConfirmed) {
-      const subject = encodeURIComponent("Verifikasi Akun Dokter - Mojokerto Sehat");
-      const body = encodeURIComponent(`Halo Dr. ${dokterData.nama_dokter},
-
-Anda telah berhasil terdaftar di sistem Mojokerto Sehat.
-
-Berikut detail akun Anda:
-- Username: ${dokterData.username_dokter}
-- Spesialis: ${dokterData.spesialis_dokter}
-- No. STR: ${dokterData.str_dokter}
-- Password : ${dokterData.password_dokter}
-
-(SILAHKAN SEGERA GANTI PASSWORD ANDA!)
-Silakan login dan lengkapi profil Anda.
-
-Salam,
-Admin Mojokerto Sehat`);
-
-      const mailtoLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${dokterData.email_dokter}&subject=${subject}&body=${body}`;
-      window.open(mailtoLink, "_blank");
-    }
-  });
-};
-
-
-
-
-const handleCloseModal = () => {
-  setIsModalOpen(false);
-  fetchDokter();
-};
-
-const totalItems = filteredDokter.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-  const paginatedData = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filteredDokter.slice(start, start + itemsPerPage);
-}, [filteredDokter, currentPage, itemsPerPage]);
-
-
-
+  };
 
   // paramater tabel
   const columns = [
@@ -304,7 +155,7 @@ const totalItems = filteredDokter.length;
           <button
             onClick={() => openModal("detailprofildokter", row.original._id)}
             title="Detail"
-          >
+            >
             <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg cursor-pointer" />
           </button>
 
@@ -328,7 +179,7 @@ const totalItems = filteredDokter.length;
 
   return (
     <div className="flex flex-row min-h-screen">
-      <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 w-full">
+      <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 w-full mb-20 sm:mb-24 md:mb-16 lg:mb-8">
         
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-[raleway] font-bold text-[#004A76]">
@@ -500,6 +351,7 @@ const totalItems = filteredDokter.length;
           <ModalContent
             modalType={modalType}
             idDokter={selectedId}
+            dataDokterbyId={dataDokterbyId}
             onClose={handleCloseModal}
             onAddSuccess={handleAfterAddDokter}
           />

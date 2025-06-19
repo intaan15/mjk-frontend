@@ -1413,7 +1413,7 @@ export default function ModalContent({
                  Tutup
                 </button>
             </div>
-            </div>
+          </div>
           </div>
         </>
       );

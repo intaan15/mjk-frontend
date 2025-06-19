@@ -263,7 +263,7 @@ export default function Artikel() {
   
 return (
   <div className="flex flex-row h-screen">
-    <main className="flex flex-col pl-4 md:pl-8 gap-1 w-full pr-2 md:pr-3">
+    <main className="flex flex-col pl-4 md:pl-8 gap-1 w-full pr-2 md:pr-3 mb-20 sm:mb-24 md:mb-16 lg:mb-8">
       {/* Navbar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pt-2 gap-3 sm:gap-0">
         <div className="text-xl sm:text-2xl md:text-3xl font-[Nunito Sans] font-bold text-[#004A76]">

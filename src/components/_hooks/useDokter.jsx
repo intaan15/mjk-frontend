@@ -51,6 +51,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
     
             //console.log("Data diterima:", response.data);
             setDataDokterbyId(response.data);
+            console.log("Data dokter by ID:", response.data);
         } catch (error) {
             console.error("Gagal fetch dokter:", {
             status: error.response?.status,

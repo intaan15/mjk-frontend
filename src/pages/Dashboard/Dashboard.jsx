@@ -55,7 +55,7 @@ function Dashboard() {
   } = useDashboard(selectedDate);
 
   return (
-    <div className="flex flex-row min-h-screen ">
+    <div className="flex flex-row min-h-screen sm:mb-2 md:mb-4 lg:mb-5 bg-gray-50 transition-all duration-300 ease-in-out ">
      {/* container main */}
       <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1">
 

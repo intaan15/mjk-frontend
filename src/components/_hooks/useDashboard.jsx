@@ -51,7 +51,7 @@ const useDashboard = (selectedDate) => {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
-
+        console.log("✅ Fetch data berhasil:");
         // Masyarakat
         const masyarakat = masyarakatRes.data;
         setJumlahPengguna(masyarakat.length);

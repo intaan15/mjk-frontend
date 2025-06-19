@@ -8,101 +8,34 @@ import { motion } from "framer-motion";
 import axios from "axios";
 import.meta.env.VITE_BASE_URL
 import "../../index.css";
+import useLogin from "../../components/_hooks/useLogin";
 
 
 function Loginakun() {
-  const [showPassword, setShowPassword] = useState(false);
-  const [captcha, setCaptcha] = useState("");
-  const [captchaId, setCaptchaId] = useState("");
-  const [text, setText] = useState("");
-  const [valid, setValid] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState("");
-  const [loading, setLoading] = useState(false);
-  
+ const {
+    // State
+    showPassword,
+    captcha,
+    text,
+    valid,
+    username,
+    password,
+    loginError,
+    loading,
+    
+    // State setters
+    setText,
+    setUsername,
+    setPassword,
+    setValid,
+    
+    // Functions
+    togglePassword,
+    fetchCaptcha,
+    handleSubmit,
+    handleCaptchaFocus,
+  } = useLogin();
   const navigate = useNavigate();
-  const togglePassword = () => setShowPassword((prev) => !prev);
-
-  const fetchCaptcha = async () => {
-    try {
-      // console.log("API URL:",import.meta.env.VITE_BASE_URL);
-      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/captcha/captcha`);
-      setCaptcha(res.data.captcha);
-      setCaptchaId(res.data.captchaId);
-      setText("");
-      setValid(false);
-      setSuccess(false);
-      setLoginError("");
-    } catch (error) {
-      console.error("❌ Gagal ambil captcha:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCaptcha();
-    const interval = setInterval(fetchCaptcha, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  
-const MotionButton = ({ isLoading }) => (
-  <motion.button
-    whileTap={{ scale: 0.95 }}
-    className="bg-indigo-600 text-white px-4 py-2 rounded"
-    disabled={isLoading}
-  >
-    {isLoading ? 'Loading...' : 'Click Me'}
-  </motion.button>
-);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      // Validasi CAPTCHA
-      const captchaRes = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/captcha/validate`,
-        {
-          captchaId,
-          userInput: text,
-        }
-      );
-      // console.log("CAPTCHA Response:", captchaRes.data);
-
-      if (!captchaRes.data.success) {
-        setValid(true);
-        setSuccess(false);
-        return;
-      }
-
-      setValid(false);
-      setLoading(true);
-
-      // Login
-      const loginRes = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/api/auth/login_superadmin`,
-        {
-          username_superadmin: username,
-          password_superadmin: password,
-        }
-      );
-
-      console.log(loginRes.data);
-      localStorage.setItem("token", loginRes.data.token);
-      navigate("/dashboardadmin");
-    } catch (error) {
-      console.error("Error saat login:", error);
-      setLoginError(
-        error.response?.data?.message || "❌Terjadi kesalahan saat login"
-        
-      );
-      console.error("Login error:", error.response);
-
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen w-full flex flex-col justify-center items-center px-4 py-6 bg-gray-50">
