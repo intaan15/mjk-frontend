@@ -136,7 +136,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
 
         try {
 
-            const token = localStorage.getItem("token");
+            // const token = localStorage.getItem("token");
             const data = new FormData();
 
             data.append("foto", formData.foto_profil_dokter);

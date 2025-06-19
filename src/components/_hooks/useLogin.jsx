@@ -77,7 +77,7 @@ const useLogin = () => {
 
         console.log(loginRes.data.message || "Login berhasil");
         localStorage.setItem("token", loginRes.data.token);
-        navigate("/dashboardadmin", { replace: true });
+        navigate("/dashboardadmin");
         } catch (error) {
         console.error("Error saat login:", error);
         setLoginError(
@@ -91,7 +91,7 @@ const useLogin = () => {
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
-            navigate("/dashboardadmin", { replace: true }); // Langsung pindah
+            navigate("/dashboardadmin"); // Langsung pindah
         }
     }, []);
 
