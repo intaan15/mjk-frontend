@@ -1,5 +1,3 @@
-import React, { use } from 'react'
-import axios from 'axios' //library untuk melakukan request HTTP
 import { useState, useEffect,useCallback,useMemo } from 'react' //hook untuk state dan efek samping
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../../components/Auth";
@@ -9,36 +7,46 @@ import.meta.env.VITE_BASE_URL
 import { TiUser } from 'react-icons/ti'
 import { FaEdit } from "react-icons/fa";
 import { IoIosSearch } from "react-icons/io";
-import { FaUserAlt } from "react-icons/fa";
-import { HiOutlineUser } from "react-icons/hi2";
-import { BsExclamationCircle } from "react-icons/bs";
+import { HiOutlineExclamationCircle, HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
-import { HiOutlineUsers } from "react-icons/hi2";
-import { HiOutlineUserAdd } from "react-icons/hi";
-import { HiOutlineUserMinus } from "react-icons/hi2";
 import Basetable from "../../components/Table/Basetable";
 import ModalContent  from "../../components/Modal/ModalContent";
 import Modal from "../../components/Modal/ModalTemplate";
+import { useDataMasyarakat } from '../../components/_hooksPages/useDataMasyarakat';
+
 
 
 
 function DataMasyarakat() {
   
   const token = localStorage.getItem("token");
-  const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedData, setSelectedData] = useState(null);
   const [modalType, setModalType] = useState("");
   const [isModalVisible, setModalVisible] = useState(true);
   const [DataMasyarakat, setDataMasyarakat] = useState([]);
-  const [dataMasyarakatbyId, setDataMasyarakatbyId] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
   const [reloadTrigger, setReloadTrigger] = useState(0);
   const {user} = useAuth();
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [currentPage, setCurrentPage] = useState(1);
+
+  const {
+    searchTerm,
+    dataMasyarakatbyId,
+    selectedId,
+    isModalOpen,
+    fetchDataMasyarakat,
+    paginatedData,
+    totalItems,
+    totalPages,
+    setCurrentPage,
+    currentPage,
+    itemsPerPage,
+    formatTanggal,
+    setSelectedId,
+    setIsModalOpen,
+    dataMasyarakat,
+    handleUpdateMasyarakat
+  }= useDataMasyarakat(token);
 
 
   const openModalWithId = (type,id) => {
@@ -84,88 +92,7 @@ function DataMasyarakat() {
       setIsOpen(!isOpen);
   };
 
-  
-
-
-  const fetchDataMasyarakat = useCallback(async () => {
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // Filter data untuk verifikasi_akun_masyarakat === 'diterima'
-      const filteredData = res.data.filter(
-        (item) => item.verifikasi_akun_masyarakat === "diterima"
-      );
-      // .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Uncomment jika perlu sorting
-
-      setDataMasyarakat(filteredData);
-    } catch (err) {
-      console.error("Gagal fetch DataMasyarakat:", err);
-    }
-  }, [token]);
-
-
-  //mengambil data by id
-  useEffect(() => {
-     if (!selectedId) return; 
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/masyarakat/getbyid/${selectedId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setDataMasyarakatbyId(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  },[selectedId, token]);
-
-
-  const formatTanggal = (isoDateString) => {
-  const date = new Date(isoDateString);
-    return date.toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
-
-
-    
-  const filteredRows = DataMasyarakat.filter(
-    (item) => {
-      const search = searchTerm.toLowerCase().trim();
-      return (
-        item.nama_masyarakat?.toLowerCase().includes(search) ||
-        item.email_masyarakat?.toLowerCase().includes(search) ||
-        item.notlp_masyarakat?.toLowerCase().includes(search) ||
-        item.nik_masyarakat?.includes(search)
-      );
-    },
-    [DataMasyarakat, searchTerm]
-  );
-
-  console.log("datamasyarakat diterima",filteredRows) //debug
-
-  useEffect(() => {
-    fetchDataMasyarakat();
-  }, [fetchDataMasyarakat, reloadTrigger]);
-  
-
-      
+ 
 
   // paramater tabel
   const columns = [
@@ -235,33 +162,34 @@ function DataMasyarakat() {
     },
     {
       accessorKey: "Edit",
-      header: "Edit",
+      header: "Aksi",
       enableSorting: false,
       cell: ({ row }) => (
-        <div className="flex items-center justify-center p-2 w-10 h-10">
+        <div className="grid grid-cols-2 gap-2 items-center bg-[#FAFBFD] p-1 rounded-xl border-1 border-[#979797]">
+          <button
+            onClick={() => openModal("detailprofilmasyarakat", row.original._id)}
+            title="Detail"
+            className="flex items-center justify-center p-1 rounded-lg hover:bg-blue-50 transition-colors duration-200"
+          >
+            <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg cursor-pointer transition-colors duration-200" />
+          </button>
+
           <button
             onClick={() => openModal("formeditmasyarakat", row.original._id)}
             title="Edit"
+            className="flex items-center justify-center p-1 rounded-lg hover:bg-blue-50 transition-colors duration-200"
           >
-            <FaEdit className="text-gray-600 hover:text-[#004A76] text-xl cursor-pointer" />
+            <FaEdit className="text-gray-600 hover:text-[#004A76] text-lg cursor-pointer transition-colors duration-200" />
           </button>
         </div>
       ),
     },
   ];
-  const totalItems = filteredRows.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
+ 
   
-    const paginatedData = useMemo(() => {
-      const start = (currentPage - 1) * itemsPerPage;
-      return filteredRows.slice(start, start + itemsPerPage);
-  }, [filteredRows, currentPage, itemsPerPage]);
-
-    
-
   return (
     <div className="flex flex-row min-h-screen">
-      <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1">
+      <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 w-full mb-20 sm:mb-24 md:mb-16 lg:mb-8">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-[raleway] font-bold text-[#004A76]">
@@ -319,7 +247,7 @@ function DataMasyarakat() {
             </div>
         </div>
         
-        <img src="/line style.svg" alt=""className='w-screen' />
+        <img src="/line style.svg" alt=""className='w-full' />
 
         {/* Statistics Card */}
         <div className="flex flex-row justify-start sm:justify-between w-full items-center px-2 sm:px-6 md:px-10 py-2">
@@ -336,7 +264,7 @@ function DataMasyarakat() {
                 Jumlah Pengguna
               </div>
               <div className="font-[Nunito] text-white font-medium text-[13px] sm:text-[14px] md:text-[15px]">
-                {DataMasyarakat.length}
+                {dataMasyarakat.length}
               </div>
             </div>
           </div>
@@ -436,6 +364,7 @@ function DataMasyarakat() {
             token={token}
             dataMasyarakatbyId={dataMasyarakatbyId}
             onClose={handleCloseModal}
+            onAddSuccess={handleUpdateMasyarakat}
           />
         </Modal>
       </main>

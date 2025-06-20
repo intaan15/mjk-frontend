@@ -1,8 +1,8 @@
 import React from 'react';
 import { useMemo } from 'react';
 import Basetable from "../../components/Table/Basetable";
-import useLogout from "../../components/_hooks/useLogout";
-import useJadwal from '../../components/_hooks/useJadwal';
+import useLogout from "../../components/_hooksPages/useLogout";
+import useJadwal from '../../components/_hooksPages/useJadwal';
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 

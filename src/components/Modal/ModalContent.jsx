@@ -34,12 +34,13 @@ export default function ModalContent({
       handleFileChangeArtikel,
       handleSubmit: handleSubmitArtikel,
       handleChangeKategoriArtikel,
+      handleResetFile:handleResetFileArtikel,
       handleImageClick: handleImageClickArtikel,
       closeImageModal, 
       showImageModal, 
       selectedImage, 
       selectedImageAlt,
-      dataArtikel: dataArtikelFromHook  // TAMBAHKAN INI
+      dataArtikel: dataArtikelFromHook 
    } = useArtikel({idArtikel, token, dataArtikel, onClose});
 
    const {
@@ -48,7 +49,7 @@ export default function ModalContent({
     handleEditSubmit: handleEditSubmitMasyarakat,
     handleFotoKTPChange: handleFotoKTPChange,
     previewFotoKTP: previewFotoKTP,
-   }= useMasyarakat({idMasyarakat, token, onClose,dataMasyarakatbyId});
+   }= useMasyarakat({idMasyarakat, token, onClose,dataMasyarakatbyId,onAddSuccess});
 
    console.log("Data Masyarakat by ID:", formMasyarakat);
 
@@ -109,7 +110,7 @@ export default function ModalContent({
     case "editdataartikel":
       return (
         <>
-          <div className="text-start w-full">
+          <div className="text-start w-full relative">
             <button
               onClick={onClose}
               className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
@@ -143,44 +144,59 @@ export default function ModalContent({
               </div>
 
               {/* Foto Artikel */}
-              <div className="flex items-start gap-4 ">
+              <div className="flex flex-column w-full justify-center items-start gap-4 mt-6 ">
                 <label
                   htmlFor="dropzone-file"
-                  className="w-1/5 font-medium text-gray-900 dark:text-black "
-                >
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
+                  >
                   Sampul Artikel
                 </label>
 
-                <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-2">
-                  <div className="flex items-center justify-center w-full">
+                <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-6">
+                  <div className="flex flex-col items-center justify-center w-full">
                     <label
                       htmlFor="gambar_artikel"
-                      className="flex flex-col items-center justify-center w-full h-28 border-1 border-gray-300 border-dashed rounded-md  cursor-pointer bg-gray-30  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
-                    >
-                      <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                      className="flex flex-col items-center justify-center w-full h-36 border-1 border-gray-300 border-dashed rounded-md cursor-pointer bg-gray-30 dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                      >
+                        <div className="flex flex-col items-center justify-center pt-10 ">
                         <svg
-                          className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 16"
-                        >
-                          <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                          />
-                        </svg>
-                        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                          <span className="font-semibold">
-                            Klik untuk Mengunggah
-                          </span>
+                            className="w-10 h-10 mb-3 text-gray-400 group-hover:text-gray-500"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 20 16"
+                          >
+                            <path
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                            />
+                          </svg>
+                        <p className="mb-2 text-sm text-gray-500 flex flex-col items-center">
+                          <span className="font-semibold">Klik untuk Mengunggah</span>
+                          <span className="font-semibold">Foto Memperbarui Setelah Mengunggah</span>
                         </p>
                         <p className="text-xs text-gray-500 dark:text-gray-400">
                           SVG, PNG, JPG or GIF (MAX. 800x400px)
                         </p>
+                        {formArtikel.gambar_artikel && (
+                          <div className="flex items-center space-x-2 text-sm">
+                            <div className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span className="text-green-700 font-medium">
+                              {formArtikel.gambar_artikel.name}
+                            </span>
+                            <span className="text-gray-500">
+                              ({(formArtikel.gambar_artikel.size / 1024 / 1024).toFixed(2)} MB)
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="text-sm font-bold underline font-[raleway] pt-8 self-start text-black">
+                          {formArtikel.gambar_artikel
+                            ? `Preview : ` 
+                            : " Preview Gambar Lama : "}
                       </div>
                       <input
                         name="gambar_artikel"
@@ -191,45 +207,40 @@ export default function ModalContent({
                       />
                     </label>
                     {/* Preview gambar */}
-                    {formArtikel.gambar_artikel && typeof formArtikel.gambar_artikel === 'object' ? (
+                    {formArtikel.gambar_artikel ? (
+                    // Jika ada file baru yang dipilih (untuk tambah atau edit dengan file baru)
+                    <div className="mt-2 relative inline-block">
                       <img
                         src={URL.createObjectURL(formArtikel.gambar_artikel)}
-                        alt="preview"
-                        className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                        alt="Preview foto artikel"
+                        className="w-full h-50 object-cover rounded-md shadow-md"
                       />
-                    ) : (dataArtikelFromHook || dataArtikel)?.gambar_artikel ? (
+                      <button
+                        type="button"
+                        onClick={handleResetFileArtikel}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors duration-200"
+                      >
+                        ×
+                      </button>
+                    </div>
+                    ) : dataArtikel?.gambar_artikel ? (
+                    // Jika tidak ada file baru tapi ada foto existing (untuk edit)
+                    <div className="mt-4 relative inline-block">
                       <img
-                        src={`${import.meta.env.VITE_BASE_URL}${(dataArtikelFromHook || dataArtikel)?.gambar_artikel}`}
-                        alt="current"
-                        className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
+                        src={`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`}
+                        alt="Foto artikel existing"
+                        className="w-full h-50 object-cover rounded-md shadow-md"
                       />
-                    ) : null}
-                  </div>
-                  
-                  {/* Status File */}
-                  <div className="font-light text-[14px] self-start">
-                    {formArtikel.gambar_artikel && formArtikel.gambar_artikel.name ? (
-                      <span className="text-green-600">
-                        ✅ File baru: {formArtikel.gambar_artikel.name}
-                      </span>
-                    ) : (dataArtikelFromHook || dataArtikel)?.gambar_artikel ? (
-                      <span className="text-blue-600">
-                        📷 Menggunakan gambar saat ini: {(dataArtikelFromHook || dataArtikel)?.gambar_artikel.split('/').pop()}
-                      </span>
-                    ) : (
-                      <span className="text-gray-400">
-                        ❌ Belum ada file yang dipilih
-                      </span>
-                    )}
-                  </div>
-
-                  <button
-                    type="button"
-                    className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"
-                    style={{ fontFamily: "Nunito Sans" }}
-                  >
-                    Batalkan
-                  </button>
+                      <button
+                        type="button"
+                        onClick={handleResetFileArtikel}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors duration-200"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
                 </div>
               </div>
 
@@ -317,25 +328,24 @@ export default function ModalContent({
               </div>
               <div className="flex flex-column w-full justify-center items-start gap-10 mt-8">
                 <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5">
-                  Foto Artikel
+                  Sampul Artikel
                 </label>
                 <div className="flex flex-col h-auto w-4/5 justify-center items-start gap-2">
-                  <div className="flex w-full">
-                    :
-                     <img
-                          src={
-                            dataArtikel?.gambar_artikel
-                              ? `${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`
-                              : null
-                          }
-                          alt="Sampul Artikel"
-                          onClick={() => openPreview(
-                            `${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`,
-                            "Sampul Artikel"
-                          )}
-                          className="cursor-pointer rounded-xl p-2 w-60 h-40 border-2 border-[#025F96] object-cover "
-                    />
-                   
+                
+                  <div className="flex w-full pl-2">
+                   :
+                    <img
+                        src={
+                          dataArtikel?.gambar_artikel
+                            ? `${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`
+                            : null
+                        }
+                        alt="Sampul Artikel"
+                        onClick={() => openPreview(
+                          `${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`,
+                          "Sampul Artikel"
+                        )}
+                        className="w-md h-50 object-cover rounded-md shadow-md"                    />
                   </div>
                    <ImagePreviewModal
                 isOpen={isPreviewOpen}
@@ -405,7 +415,7 @@ export default function ModalContent({
               <div className="flex items-center gap-4">
                 <label
                   htmlFor="judul"
-                  className="w-1/5 font-medium text-black dark:text-black" style={{fontFamily: 'Nunito Sans'}}
+                  className="block mb-2 text-md font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
                 >
                   Judul
                 </label>
@@ -422,78 +432,89 @@ export default function ModalContent({
               </div>
               
               {/* Add foto */}
-              <div className="flex items-center gap-4">
+              <div className="flex flex-column w-full justify-center items-start gap-4 mt-6">
                 <label
                   htmlFor="foto"
-                  className="w-1/5 font-medium text-gray-900 dark:text-black " 
+                  className="block mb-2 text-md font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
                 >
                   Sampul Artikel
                 </label>
-                <div className="w-4/5">
-                  <label
-                    htmlFor="foto"
-                    className="flex flex-col items-center justify-center w-full h-28 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-30 hover:bg-gray-100"
-                  >
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <svg
-                        className="w-8 h-8 mb-4 text-gray-500"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 20 16"
-                      >
-                        <path
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                        />
-                      </svg>
-                      <p className="mb-2 text-sm text-gray-500">
-                        <span className="font-semibold">Klik untuk mengunggah</span>{" "}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        SVG, PNG, JPG or GIF (MAX. 800x400px)
-                      </p>
-                    </div>
-                    <input
-                      id="foto"
-                      name="foto"
-                      type="file"
-                      className="hidden"
-                      onChange={handleFileChangeArtikel}
-                    />
-                  </label>
-                  <div className="font-light text-[14px] self-start text-lime-500">
-                    {formArtikel.gambar_artikel
-                      ? formArtikel.gambar_artikel.name
-                      : "Belum ada file yang dipilih"}
-                  </div>
+                <div className="flex flex-col h-auto w-4/5 justify-center items-start gap-6">
+                 <div className="flex flex-col items-center justify-center w-full">
+                    <label
+                        htmlFor="foto"
+                        className="flex flex-col items-center justify-center w-full h-36 border-1 border-gray-300 border-dashed rounded-md cursor-pointer bg-gray-30 dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                        >
+                        <div className="flex flex-col items-center justify-center pt-10 ">
+                          <svg
+                            className="w-10 h-10 mb-3 text-gray-400 group-hover:text-gray-500"
+                            aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 20 16"
+                            >
+                              <path
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                              />
+                          </svg>
+                          <p className="mb-2 text-sm text-gray-500 flex flex-col items-center">
+                            <span className="font-semibold">Klik untuk Mengunggah</span>
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            SVG, PNG, JPG or GIF (MAX. 800x400px)
+                          </p>
 
-                  {/* Preview Gambar */}
-                  <div className="mt-4">
-                    {formArtikel.gambar_artikel ? (
-                      <img
-                        src={URL.createObjectURL(formArtikel.gambar_artikel)}
-                        alt="Preview"
-                        className="w-[200px] h-[100px] object-cover rounded-lg border border-gray-400"
-                      />
-                    ) : dataArtikel?.gambar_artikel ? (
-                      <img
-                        src={`${import.meta.env.VITE_BASE_URL}${dataArtikel.gambar_artikel}`}
-                        alt="Sampul Lama"
-                        className="w-[200px] h-[100px] object-cover rounded-lg border border-gray-400"
-                      />
-                    ) : null}
-                  </div>
-                    <button  
-                      onClick={() => FormArtikel({ ...formArtikel, gambar_artikel: null })}
-                      className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
-                      Batalkan
-                    </button>
+                          {formArtikel.gambar_artikel && (
+                            <div className="flex items-center space-x-2 text-sm">
+                              <div className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></div>
+                              <span className="text-green-700 font-medium">
+                                {formArtikel.gambar_artikel.name}
+                              </span>
+                              <span className="text-gray-500">
+                                ({(formArtikel.gambar_artikel.size / 1024 / 1024).toFixed(2)} MB)
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-sm font-bold underline font-[raleway] pt-8 self-start text-black">
+                          {formArtikel.gambar_artikel
+                            ? `Preview: `
+                            : "  "}
+                        </div>
+                        <input
+                          id="foto"
+                          name="foto"
+                          type="file"
+                          className="hidden"
+                          onChange={handleFileChangeArtikel}
+                        />
+                      </label>
+
+                      {/* Preview Gambar */}
+                      {formArtikel.gambar_artikel && (
+                      <div className="mt-2 relative inline-block">
+                        <img
+                          src={URL.createObjectURL(formArtikel.gambar_artikel)}
+                          alt="Preview foto profil dokter"
+                          className="w-full h-50 object-cover rounded-md shadow-md pt-2"
+                        />
+                        <button
+                          type="button"
+                          onClick= {handleResetFileArtikel}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors duration-200"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    )}
+                    
+                 </div>
                 </div>
-              </div>
+             </div>
 
               {/* Update Kategori */}
               <div className="flex items-center gap-4">
@@ -534,7 +555,9 @@ export default function ModalContent({
                     rows="4"
                     name="deskripsi"
                     value={formArtikel.deskripsi} 
-                    onChange={(html) => handleChangeArtikel("deskripsi", html)}/>
+                    onChange={(html) => 
+                      handleChangeArtikel("deskripsi", html)
+                    }/>
                 </div>
               </div>
 
@@ -556,26 +579,30 @@ export default function ModalContent({
       // console.log("Data di modal:", dataMasyarakat);
       return (
         <>
-          <div className="text-start flex flex-col justify-center items-center ">
+          <div className="text-start flex flex-col justify-center items-center transsition-all ease-in-out duration-300">
             <button
               onClick={onClose}
-              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
+              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold transition-all duration-300 hover:scale-125"
             >
               &times;
             </button>
-            <h1 className="text-xl font-bold text-[#004A76] underline text-center">Detail Profil Masyarakat</h1>
-
-            <div className="flex flex-col justify-center items-center gap-4 py-3">
-              {/* <div className=" border-2 border-[#025F96] rounded-full p-12">foto</div> */}
-              <div className=" rounded-full p-1 w-40 h-40 border-2 border-[#025F96] font-bold">
-                 {dataMasyarakatbyId?.foto_profil_masyarakat && (
-                    <img
-                      src={`${import.meta.env.VITE_BASE_URL}${dataMasyarakatbyId?.foto_profil_masyarakat}`}
-                      alt="foto"
-                      className="w-40 h-40 rounded-full object-cover"
-                    />
-                  )}
+            <h1 className="text-lg sm:text-xl font-bold text-[#004A76] underline text-center mb-4">Detail Profil Masyarakat</h1>
+            <div className="flex flex-col  justify-center items-center gap-4">
+              
+              {/* Foto Profil */}
+              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
+                <img
+                  src={
+                        dataMasyarakatbyId?.foto_profil_masyarakat
+                          ? `${import.meta.env.VITE_BASE_URL}${dataMasyarakatbyId.foto_profil_masyarakat}`
+                          : "/default-avatar.jpg" 
+                      }
+                  alt="foto_profil_masyarakat"
+                  className="w-32 h-32 sm:w-40 sm:h-40 p-1 border-2 border-[#025F96] rounded-full object-cover"
+                />
               </div>
+
+              {/* Nama */}
               <div className=" grid grid-cols-2 gap-5 w-full text-center p-4">
                 <div className=" grid grid-rows-2 gap-2 w-full text-left px-10  ">
                   <span className="text-[#025F96] font-bold underline ">Nama</span>
@@ -672,17 +699,17 @@ export default function ModalContent({
           <div className="text-start ">
             <button
               onClick={onClose}
-              className="absolute top-0 right-2 text-gray-600 hover:text-red-500 text-3xl font-bold"
+              className="absolute top-2 right-4 text-gray-600 hover:text-red-500 text-3xl font-bold z-10 cursor-pointer"
             >
               &times;
             </button>
-            <h1 className="text-xl font-bold text-[#004A76] underline text-center" >
+            <h1 className="text-lg sm:text-xl font-bold text-[#004A76] underline text-center mb-4" >
               Edit Profil Masyarakat 
             </h1>
 
             <form onSubmit={handleEditSubmitMasyarakat} className="py-3">
               <div className="flex flex-col  justify-center items-center gap-4">
-                <div className="w-40 h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center ">
+                <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
                   <img
                     src={
                           dataMasyarakatbyId?.foto_profil_masyarakat
@@ -690,17 +717,17 @@ export default function ModalContent({
                             : "/default-avatar.jpg" 
                         }
                     alt="foto_profil_masyarakat"
-                    className="w-40 h-40 p-1 border-2 border-[#025F96] rounded-full object-cover"
+                    className="w-32 h-32 sm:w-40 sm:h-40 p-1 border-2 border-[#025F96] rounded-full object-cover"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4 w-full text-center">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full max-w-6xl px-4 sm:px-6">
                   <div className="flex flex-col gap-2 w-full text-left px-10">
                     <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Nama</label>
                     <input
                       type="text"
                       name="nama"
                       defaultValue={formMasyarakat.nama}
-                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      className="bg-[#f5f5f5] text-overflow: ellipsis; text-black border border-blue-300 rounded-md px-4 py-2 w-4/5 focus:outline-none focus:ring-2 focus:ring-blue-400"
                       onChange={handleChangeMasyarakat}
                       maxLength={50}
                       required
@@ -875,7 +902,7 @@ export default function ModalContent({
     case "tambahdatadokter":
       return (
         <>
-          <div className="text-start w-full ">
+          <div className="text-start w-full transition-all ease-in-out duration-300">
             <button
               onClick={onClose}
               className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
@@ -906,23 +933,25 @@ export default function ModalContent({
                     ></textarea>
                 
                 </div>
+              
                 <div className=" flex flex-column w-full justify-center items-start gap-10 mt-6">
                   <label
                     htmlFor="foto_profil_dokter"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" 
+                    style={{fontFamily: 'Nunito Sans'}}
                   >
                     Foto Profil
                   </label>
 
-                  <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-6">
+                  <div className=" flex flex-col h-auto w-4/5 justify-center items-center gap-6">
                     <div className="flex items-center justify-center w-full">
                       <label
                         htmlFor="foto_profil_dokter"
-                        className="flex flex-col items-center justify-center w-full h-28 border-1 border-gray-300 border-dashed rounded-md  cursor-pointer bg-gray-30  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                        className="flex flex-col items-center justify-center w-full h-36 border-1 border-gray-300 border-dashed rounded-md cursor-pointer bg-gray-30 dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
                       >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <div className="flex flex-col items-center justify-center pt-5 ">
                           <svg
-                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                            className="w-10 h-10 mb-2 text-gray-400 group-hover:text-gray-500"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -936,17 +965,28 @@ export default function ModalContent({
                               d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                             />
                           </svg>
-                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <p className="mb-2 text-sm text-gray-500">
                             <span className="font-semibold">Klik untuk Mengunggah</span>
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
                             SVG, PNG, JPG or GIF (MAX. 800x400px)
                           </p>
+                          {formDokter.foto_profil_dokter && (
+                            <div className="flex items-center space-x-2 text-sm">
+                              <div className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></div>
+                              <span className="text-green-700 font-medium">
+                                {formDokter.foto_profil_dokter.name}
+                              </span>
+                              <span className="text-gray-500">
+                                ({(formDokter.foto_profil_dokter.size / 1024 / 1024).toFixed(2)} MB)
+                              </span>
+                            </div>
+                          )}
                         </div>
-                        <div className="font-light text-[14px] self-start text-lime-500">
+                        <div className="text-sm font-bold underline font-[raleway] pt-8 self-start text-black">
                           {formDokter.foto_profil_dokter
-                            ?  `Upload 📷 : ${formDokter.foto_profil_dokter.name}`
-                            : "❌ Belum ada file yang dipilih"}
+                            ? `Preview :${formDokter.foto_profil_dokter.name}` 
+                            : ""}
                         </div>
                         <input 
                           name="foto_profil_dokter"
@@ -954,32 +994,29 @@ export default function ModalContent({
                           type="file" 
                           className="hidden"
                           onChange={handleFileChangeDokter}
-                          />
+                        />
                       </label>
-
                     </div>
 
                     {/* Preview gambar yang dipilih */}
-                    <div className="mt-4" >
-                        {formDokter.foto_profil_dokter ? (
-                          <img
-                            src={URL.createObjectURL(formDokter.foto_profil_dokter)}
-                            alt="preview"
-                            className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
-                          />
-                        ) : dataDokterbyId?.foto_profil_dokter ? ( // <-- tambahkan tanda tanya (optional chaining)
-                          <img
-                            src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
-                            alt=""
-                            className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
-                          />
-                        ) : null}
-                    </div>
-                   
-                  </div >
+                    {formDokter.foto_profil_dokter && (
+                      <div className="mt-2 relative inline-block">
+                        <img
+                          src={URL.createObjectURL(formDokter.foto_profil_dokter)}
+                          alt="Preview foto profil dokter"
+                          className="w-50 h-50 object-cover rounded-md shadow-md"
+                        />
+                        <button
+                          type="button"
+                          onClick= {handleResetFileDokter}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors duration-200"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-
-
                 <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
                   <label
                     htmlFor="spesialis"
@@ -998,10 +1035,10 @@ export default function ModalContent({
                     styles={{
                       control: (base, state) => ({
                         ...base,
-                        borderColor: state.isFocused ? '#6B7280' : base.borderColor,
-                        boxShadow: state.isFocused ? '0 0 0 2px rgba(107,114,128,0.5)' : base.boxShadow,
+                        borderColor: state.isFocused ? 'black' : base.borderColor,
+                        boxShadow: state.isFocused ? '0 0 0 2px rgba(0,0,0,0.5)' : base.boxShadow,
                         '&:hover': {
-                          borderColor: '#6B7280',
+                          borderColor: 'black',
                         },}),}}
                     onChange={handleChangeSelectDokter}
               
@@ -1142,7 +1179,6 @@ export default function ModalContent({
             </button>
             <h1 className="text-2xl font-bold font-[raleway] underline text-[#004A76]">Edit Data Dokter</h1>
              <form onSubmit={handleEditSubmitDokter} className="space-y-6" >
-              
                 <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-8">
                   <label
                     htmlFor="message"
@@ -1172,15 +1208,15 @@ export default function ModalContent({
                     Foto Profil
                   </label>
 
-                  <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-2">
-                    <div className="flex items-center justify-center w-full">
+                  <div className="flex flex-col h-auto w-4/5 justify-center items-start gap-6">
+                    <div className="flex flex-col items-center justify-center w-full">
                       <label
                         htmlFor="foto_profil_dokter"
-                        className="flex flex-col items-center justify-center w-full h-28 border-1 border-gray-300 border-dashed rounded-md  cursor-pointer bg-gray-30  dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                        className="flex flex-col items-center justify-center w-full h-36 border-1 border-gray-300 border-dashed rounded-md cursor-pointer bg-gray-30 dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
                       >
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                        <div className="flex flex-col items-center justify-center pt-10 ">
                           <svg
-                            className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                            className="w-10 h-10 mb-3 text-gray-400 group-hover:text-gray-500"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -1194,12 +1230,29 @@ export default function ModalContent({
                               d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                             />
                           </svg>
-                          <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                          <p className="mb-2 text-sm text-gray-500 flex flex-col items-center">
                             <span className="font-semibold">Klik untuk Mengunggah</span>
+                            <span className="font-semibold">Foto Memperbarui Setelah Mengunggah</span>
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400">
                             SVG, PNG, JPG or GIF (MAX. 800x400px)
                           </p>
+                          {formDokter.foto_profil_dokter && (
+                            <div className="flex items-center space-x-2 text-sm">
+                              <div className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></div>
+                              <span className="text-green-700 font-medium">
+                                {formDokter.foto_profil_dokter.name}
+                              </span>
+                              <span className="text-gray-500">
+                                ({(formDokter.foto_profil_dokter.size / 1024 / 1024).toFixed(2)} MB)
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-sm font-bold underline font-[raleway] pt-8 self-start text-black">
+                          {formDokter.foto_profil_dokter
+                            ? `Preview : ` 
+                            : " "}
                         </div>
                         <input 
                           name="foto_profil_dokter"
@@ -1210,29 +1263,40 @@ export default function ModalContent({
                           />
                       </label>
                        {/* Preview gambar yang dipilih */}
-                      {formDokter.foto_profil_dokter && typeof formDokter.foto_profil_dokter === 'object' ? (
-                        <img
-                          src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
-                          alt="preview"
-                          className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
-                        />
-                      ) : dataDokterbyId?.foto_profil_dokter ? ( 
-                        <img
-                          src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
-                          alt=""
-                          className="w-[200px] h-[100px] object-cover rounded-xl border border-black"
-                        />
-                  ) : null}
-                    </div>
-                    <div className="font-light text-[14px] self-start text-lime-500">
-                    {formDokter.foto_profil_dokter
-                      ? formDokter.foto_profil_dokter.name
-                      : "Belum ada file yang dipilih"}
-                    </div>
-
-                    <button type="button" className=" px-3 py-1 border-2 rounded-xl font-sm cursor-pointer text-[#0c4a6e] hover:bg-[#004A76] hover:text-white"style={{fontFamily: 'Nunito Sans'}}>
-                    Batalkan
-                    </button>
+                        {formDokter.foto_profil_dokter ? (
+                            // Jika ada file baru yang dipilih (untuk tambah atau edit dengan file baru)
+                            <div className="mt-2 relative inline-block">
+                              <img
+                                src={URL.createObjectURL(formDokter.foto_profil_dokter)}
+                                alt="Preview foto profil dokter"
+                                className="w-50 h-50 object-cover rounded-md shadow-md"
+                              />
+                              <button
+                                type="button"
+                                onClick={handleResetFileDokter}
+                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors duration-200"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ) : dataDokterbyId?.foto_profil_dokter ? (
+                            // Jika tidak ada file baru tapi ada foto existing (untuk edit)
+                            <div className="mt-4 relative inline-block">
+                              <img
+                                src={`${import.meta.env.VITE_BASE_URL}${dataDokterbyId?.foto_profil_dokter}`}
+                                alt="Foto profil dokter existing"
+                                className="w-50 h-50 object-cover rounded-md shadow-md"
+                              />
+                              <button
+                                type="button"
+                                onClick={handleResetFileDokter}
+                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors duration-200"
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ) : null}
+                      </div>                     
                   </div>
                 </div>
                 <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
@@ -1331,10 +1395,8 @@ export default function ModalContent({
                       placeholder="Masukkan Username"
                       value={formDokter.username_dokter}
                       onChange={handleChangeDokter}
-                    ></textarea>
-                
+                    ></textarea>     
                 </div>
-             
               <div className=" text-center">
                 <button 
                   type="submit" 
@@ -1351,19 +1413,17 @@ export default function ModalContent({
     case "detailprofildokter":
       return (
         <>
-          <div className="">
+          <div className="text-start flex flex-col justify-center items-center transition-all ease-in-out duration-300">
             <button
               onClick={onClose}
               className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
             >
               &times;
             </button>
-            <p className="text-center text-xl font-bold items-center py-2 font-[raleway] underline text-[#004A76]">
-              Detail Profil Dokter
-            </p>
+            <h1 className="text-lg sm:text-xl font-bold text-[#004A76] underline text-center mb-4">Detail Profil Dokter</h1>
 
-            <div className="flex flex-col justify-center items-center gap-4 py-3">
-              <div className="w-40 h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
+            <div className="flex flex-col  justify-center items-center gap-4">
+              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
                 <img
                   src={
                     dataDokterbyId?.foto_profil_dokter
@@ -1374,33 +1434,33 @@ export default function ModalContent({
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4 w-full text-center px-10 ">
-                <div className="flex flex-col gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Nama</div>
+              <div className="grid grid-cols-2 gap-5 w-full text-center p-4">
+                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 ">
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Nama</div>
                   <div>{dataDokterbyId?.nama_dokter}</div>
                 </div>
-                <div className="flex flex-col gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Username</div>
+                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 ">
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Username</div>
                   <div>{dataDokterbyId?.username_dokter}</div>
                 </div>
-                <div className="flex flex-col gap-2 w-full text-left px-10"> 
-                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Email</div>
+                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 "> 
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Email</div>
                   <div>{dataDokterbyId?.email_dokter}</div>
                 </div>
-                <div className="flex flex-col gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Rating Dokter</div>
+                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 ">
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Rating Dokter</div>
                   <div>{dataDokterbyId?.rating_dokter}</div>
                 </div>
-                <div className="flex flex-col gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Bidang Dokter</div>
+                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 ">
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Bidang Dokter</div>
                   <div>{dataDokterbyId?.spesialis_dokter}</div>
                 </div>
-                <div className="flex flex-col gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway] ">Nomor Telepon</div>
+                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 ">
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway] ">Nomor Telepon</div>
                   <div>{dataDokterbyId?.notlp_dokter}</div>
                 </div>
-                <div className="flex flex-col gap-2 w-full text-left px-10"> 
-                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Nomor.STR Kedokteran</div>
+                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 "> 
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Nomor.STR Kedokteran</div>
                   <div>{dataDokterbyId?.str_dokter}</div>
                 </div>
                 

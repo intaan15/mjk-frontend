@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export const useDataMasyarakat = (token) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -7,7 +8,7 @@ export const useDataMasyarakat = (token) => {
   const [dataMasyarakatbyId, setDataMasyarakatbyId] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [reloadTrigger, setReloadTrigger] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -65,6 +66,58 @@ export const useDataMasyarakat = (token) => {
     return filteredRows.slice(start, start + itemsPerPage);
   }, [filteredRows, currentPage, itemsPerPage]);
 
+  const formatTanggal = (isoDateString) => {
+  const date = new Date(isoDateString);
+    return date.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  };
+
+  const toggleDropdown = () => { // Toggle dropdown for dropdown user
+      setIsOpen(!isOpen);
+  };
+
+    const handleUpdateMasyarakat = useCallback((DataMasyarakat) => {
+        Swal.fire({
+        title: "Berhasil Memperbarui Data Masyarakat",
+        text: "Apakah Anda ingin mengirim email pemberitahuan ke masyarakat?",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "Ya",
+        cancelButtonText: "Tidak",
+        }).then((result) => {
+        if (result.isConfirmed) {
+            const subject = encodeURIComponent("Pemberitahuan Perubahan Data - Mojokerto Sehat");
+            const body = encodeURIComponent(`Halo ${DataMasyarakat.nama_masyarakat},
+
+            Anda telah berhasil memperbarui data Anda di sistem Mojokerto Sehat.
+
+            Berikut detail akun Anda:
+            - Username: ${DataMasyarakat.username_masyarakat}
+            - Email: ${DataMasyarakat.email_masyarakat}
+            - No. Telepon: ${DataMasyarakat.notlp_masyarakat}
+            - NIK: ${DataMasyarakat.nik_masyarakat}
+            - Alamat: ${DataMasyarakat.alamat_masyarakat}
+            - Jenis Kelamin: ${DataMasyarakat.jeniskelamin_masyarakat}
+            - Tanggal Lahir: ${formatTanggal(DataMasyarakat.tgl_lahir_masyarakat)}
+
+
+            Silakan login kembali dan lengkapi profil Anda.
+
+            Salam,
+            Admin Mojokerto Sehat`);
+
+            const mailtoLink = `https://mail.google.com/mail/?view=cm&fs=1&to=${DataMasyarakat.email_masyarakat}&subject=${subject}&body=${body}`;
+            window.open(mailtoLink, "_blank");
+        }
+        });
+    
+        // Refresh data setelah add
+        setReloadTrigger(prev => prev + 1);
+    }, []);
+
   return {
     searchTerm,
     setSearchTerm,
@@ -81,5 +134,8 @@ export const useDataMasyarakat = (token) => {
     setCurrentPage,
     itemsPerPage,
     setItemsPerPage,
+    formatTanggal,
+    dataMasyarakat,
+    handleUpdateMasyarakat
   };
 };

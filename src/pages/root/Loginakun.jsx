@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { VscAccount } from "react-icons/vsc";
 import { HiEye, HiEyeOff, HiOutlineRefresh } from "react-icons/hi";
 import { TbLockPassword } from "react-icons/tb";
 import { FaSpinner } from 'react-icons/fa';
 import { motion } from "framer-motion";
-import axios from "axios";
 import.meta.env.VITE_BASE_URL
 import "../../index.css";
-import useLogin from "../../components/_hooks/useLogin";
+import useLogin from "../../components/_hooksPages/useLogin";
 
 
 function Loginakun() {
@@ -33,13 +31,13 @@ function Loginakun() {
     togglePassword,
     fetchCaptcha,
     handleSubmit,
-    handleCaptchaFocus,
   } = useLogin();
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen w-full flex flex-col justify-center items-center px-4 py-6 bg-gray-50">
       <div className="bg-[#025F96]/10 px-4 sm:px-6 md:px-8 lg:px-10 py-6 rounded-[10px] w-xl max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl shadow-lg">
+        
         {/* Logo */}
         <div className="flex flex-col items-center mb-5">
           <img
@@ -57,6 +55,7 @@ function Loginakun() {
 
         {/* Form Login */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 sm:gap-5">
+
           {/* Username */}
           <div className="relative">
             <VscAccount className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
@@ -96,6 +95,7 @@ function Loginakun() {
 
           {/* Captcha */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+          
             {/* Captcha Display and Refresh Button */}
             <div className="flex items-center gap-2 flex-shrink-0">
               <div className="bg-white px-2 sm:px-3 md:px-4 py-2 rounded text-sm sm:text-lg md:text-xl font-[Nunito] font-bold tracking-widest min-w-0 overflow-hidden flex-1 sm:w-32 md:w-40 lg:w-48">

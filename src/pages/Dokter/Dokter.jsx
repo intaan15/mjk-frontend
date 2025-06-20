@@ -1,7 +1,7 @@
 import { useState,useEffect, useCallback } from "react";
 import { useAuth } from "../../components/Auth";
-import useDataDokter from "../../components/_hooks/useDataDokter";
-import useLogout from "../../components/_hooks/useLogout";
+import useDataDokter from "../../components/_hooksPages/useDataDokter";
+import useLogout from "../../components/_hooksPages/useLogout";
 
 
 
@@ -19,7 +19,6 @@ import { FaEdit } from "react-icons/fa";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import ModalContent from "../../components/Modal/ModalContent";
-import Swal from "sweetalert2";
 import.meta.env.VITE_BASE_URL
 
 

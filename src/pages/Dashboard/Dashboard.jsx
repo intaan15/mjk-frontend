@@ -2,8 +2,8 @@
 import React from 'react'
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from "../../components/Auth";
-import useDashboard from '../../components/_hooks/useDashboard';
-import useLogout  from '../../components/_hooks/useLogout';
+import useDashboard from '../../components/_hooksPages/useDashboard';
+import useLogout  from '../../components/_hooksPages/useLogout';
 import Calendar from '../../components/Dashboard/Calendar';
 import Bar from '../../components/Bar/Bar';
 import "../../index.css";

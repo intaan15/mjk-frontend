@@ -1,7 +1,7 @@
 import React from 'react'
 import Basetable from "../../components/Table/Basetable";
-import useLogout from "../../components/_hooks/useLogout";
-import useKonsultasi from "../../components/_hooks/useKonsultasi";
+import useLogout from "../../components/_hooksPages/useLogout";
+import useKonsultasi from "../../components/_hooksPages/useKonsultasi";
 import { useAuth } from "../../components/Auth";
 import.meta.env.VITE_BASE_URL
 
@@ -107,8 +107,8 @@ function Konsultasi() {
 
                 switch (status) {
                   case "selesai": //selesai konsultasi
-                    bgColor = "bg-[#27AE60]";
-                    textColor = "text-white" ;
+                    bgColor = "bg-[#E5E7EB]";
+                    textColor = "text-black" ;
                     label = "Selesai";
                     fontstyle ="font-[raleway] font-semibold";
                     break;
@@ -125,8 +125,8 @@ function Konsultasi() {
                     fontstyle ="font-[raleway] font-semibold";
                     break;
                   case "berlangsung": //sedang terjadi konsultasi
-                    bgColor = "bg-[#3498DB]";
-                    textColor = "text-white";
+                    bgColor = "bg-[#BFDBFE]";
+                    textColor = "text-[#025f96]";
                     label = "Berlangsung";
                     fontstyle ="font-[raleway] font-semibold";
                     break;

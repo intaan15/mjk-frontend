@@ -1,14 +1,10 @@
 import React from 'react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { ToastContainer } from 'react-toastify';
 import { showSuccessToast, showErrorToast } from '../Modal/ToastModal';
-import { rating } from '@material-tailwind/react';
 import.meta.env.VITE_BASE_URL
 
 export default function useDokter ({idDokter,token,onClose,modalType,onAddSuccess}) {
-    // console.log("idDokter:", idDokter);
-    // console.log("token:", token);
     const [dataDokterbyId, setDataDokterbyId] = useState(null);
 
     //Menyimpan data inputan 
@@ -62,6 +58,27 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
         };
             fetchData();
     }, [idDokter, token]);
+
+      useEffect(() => {
+        if (modalType === "tambahdatadokter") {
+            // Reset semua data termasuk dataDokterbyId
+            setDataDokterbyId(null);
+            
+            // Reset form data ke default
+            const newPassword = generatePassword(8);
+            setFormData({
+                nama_dokter: "",
+                username_dokter: "",
+                email_dokter:"",
+                rating_dokter:"",
+                spesialis:"",
+                password_dokter: newPassword,
+                str_dokter :"",
+                notlp_dokter:"",
+                foto_profil_dokter:null,
+            });
+      }
+    }, [modalType]);
 
 
         
@@ -136,7 +153,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
 
         try {
 
-            // const token = localStorage.getItem("token");
+            const token = localStorage.getItem("token");
             const data = new FormData();
 
             data.append("foto", formData.foto_profil_dokter);
@@ -211,6 +228,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
 
     //UPDATE DATA
     const handleEditSubmitDokter = async (e) => {
+      const token = localStorage.getItem("token");
       e.preventDefault();
       try {
         // Ambil path foto lama dari data yang sudah ada
@@ -320,6 +338,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
 
     useEffect(() => {
         if (modalType === "tambahdatadokter") {
+            setDataDokterbyId(null);
             const newPassword = generatePassword(8); 
             setFormData(prev => ({
                 ...prev,

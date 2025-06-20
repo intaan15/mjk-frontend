@@ -8,7 +8,7 @@ import.meta.env.VITE_BASE_URL
 
 
 
-export default function useMasyarakat({idMasyarakat,token,onClose}) {
+export default function useMasyarakat({idMasyarakat,token,onClose, onAddSuccess}) {
   const [previewImage, setPreviewImage] = useState(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [dataMasyarakatbyId, setDataMasyarakatbyId] = useState(null);
@@ -150,9 +150,9 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
         alamat_masyarakat: formData.alamat,
         jeniskelamin_masyarakat: formData.jeniskelamin_masyarakat,
         tgl_lahir_masyarakat: formData.tanggalLahir,
-        foto_ktp_masyarakat: imagePath,
-        selfie_ktp_masyarakat:imagePath,
-        foto_profil_masyarakat:imagePath
+        // foto_ktp_masyarakat: imagePath,
+        // selfie_ktp_masyarakat:imagePath,
+        // foto_profil_masyarakat:imagePath
     };
     console.log("inimasyarakat",masyarakatData)
 
@@ -164,8 +164,11 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
-        });
-
+    
+      });
+      if (onAddSuccess) {
+        onAddSuccess(masyarakatData); // data masyarakat baru dari response
+      }
       showSuccessToast("Data masyarakat berhasil diubah");
       onClose(false);
       return;
@@ -174,7 +177,9 @@ export default function useMasyarakat({idMasyarakat,token,onClose}) {
           showErrorToast("Gagal mengubah Data Masyarakat");
       }
     };
- const openPreview = (imageSrc, imageAlt) => {
+
+
+    const openPreview = (imageSrc, imageAlt) => {
         setPreviewImage({ src: imageSrc, alt: imageAlt });
         setIsPreviewOpen(true);
     };

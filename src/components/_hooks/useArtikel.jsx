@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ToastContainer } from "react-toastify";
 import { showSuccessToast, showErrorToast } from "../Modal/ToastModal";
 import DOMPurify from "dompurify";
@@ -8,51 +8,52 @@ export default function useArtikel({ idArtikel, token, onClose }) {
   const [dataArtikel, setDataArtikel] = useState(null);
   const [showImageModal, setShowImageModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState("");
-  // UBAH NAMA DARI formData JADI formArtikel
+  const [isLoading, setIsLoading] = useState(false);
   const [formArtikel, setFormArtikel] = useState({
     judul: "",
-    gambar_artikel: null, // UBAH DARI foto JADI gambar_artikel
+    gambar_artikel: null, 
     kategori: "",
     deskripsi: "",
   });
 
-  useEffect(() => {
-    // Debug: pastikan props valid
+
+  const fetchArtikel = useCallback(async () => {
     if (!idArtikel || !token) {
-      // console.error("Tidak bisa fetch: idArtikel/token tidak ada");
       return;
     }
 
-    // console.log("Fetching artikel...", { idArtikel, token });
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/api/artikel/getbyid/${idArtikel}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/artikel/getbyid/${idArtikel}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-        // console.log("Data diterima:", response.data);
-        setDataArtikel(response.data);
-      } catch (error) {
-        console.error("Gagal fetch artikel:", {
-          status: error.response?.status,
-          message: error.message,
-          data: error.response?.data,
-        });
-      }
-    };
-
-    fetchData();
+      setDataArtikel(response.data);
+    } catch (error) {
+      console.error("Gagal fetch artikel:", {
+        status: error.response?.status,
+        message: error.message,
+        data: error.response?.data,
+      });
+      showErrorToast("Gagal memuat data artikel");
+    } finally {
+      setIsLoading(false);
+    }
   }, [idArtikel, token]);
+
+  
+
+  useEffect(() => {
+    fetchArtikel(); 
+  }, [fetchArtikel]);
 
   useEffect(() => {
     if (!dataArtikel) return;
-
-    // console.log("Data artikel diterima:", dataArtikel); // Debug
 
     setFormArtikel({
       judul: dataArtikel.nama_artikel || "",
@@ -71,11 +72,10 @@ export default function useArtikel({ idArtikel, token, onClose }) {
   }
 
   // UBAH NAMA FUNGSI JADI handleChangeArtikel
-  const handleChangeArtikel = (eOrname, value) => {
+  const handleChangeArtikel = useCallback((eOrname, value) => {
     if (typeof eOrname === "string") {
       // dari TipTap
       const sanitizedValue = DOMPurify.sanitize(value);
-      // console.log(sanitizedValue)
       setFormArtikel((prev) => ({
         ...prev,
         [eOrname]: sanitizedValue, // gunakan value yang sudah di-escape
@@ -88,14 +88,14 @@ export default function useArtikel({ idArtikel, token, onClose }) {
         [name]: value,
       }));
     }
-  };
+  }, []);
 
   // UBAH NAMA FUNGSI JADI handleFileChangeArtikel
   const handleFileChangeArtikel = (e) => {
     console.log("File selected:", e.target.files[0]); // Debug
     setFormArtikel((prev) => ({
       ...prev,
-      gambar_artikel: e.target.files[0], // UBAH DARI foto JADI gambar_artikel
+      gambar_artikel: e.target.files[0], 
     }));
   };
 
@@ -107,9 +107,29 @@ export default function useArtikel({ idArtikel, token, onClose }) {
       [name]: value,
     }));
   };
+
   // SUBMIT FORM
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formArtikel.judul.trim()) {
+      showErrorToast("Judul artikel wajib diisi.");
+      return;
+    }
+    if (!formArtikel.kategori.trim()) {
+      showErrorToast("Kategori artikel wajib diisi.");
+      return;
+    }
+    if (!formArtikel.deskripsi.trim()) {
+      showErrorToast("Deskripsi artikel wajib diisi.");
+      return;
+    }
+    if (!formArtikel.gambar_artikel) {
+      showErrorToast("Gambar artikel wajib dipilih.");
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
       const data = new FormData();
@@ -136,7 +156,6 @@ export default function useArtikel({ idArtikel, token, onClose }) {
         detail_artikel: DOMPurify.sanitize(formArtikel.deskripsi),
         gambar_artikel: imagePath,
       };
-      // console.log("Token:", token);
 
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/artikel/create`,
@@ -150,7 +169,6 @@ export default function useArtikel({ idArtikel, token, onClose }) {
       );
 
       showSuccessToast("Artikel berhasil dibuat!");
-      // console.log("Artikel berhasil dibuat:", res.data);
       onClose(false);
     } catch (error) {
       const message =
@@ -232,7 +250,6 @@ export default function useArtikel({ idArtikel, token, onClose }) {
   
 
   const handleImageClick = (imageSrc) => {
-    console.log("Klik gambar:", imageSrc); // Debug
     setSelectedImage(imageSrc);
     setShowImageModal(true);
   };
@@ -242,11 +259,22 @@ export default function useArtikel({ idArtikel, token, onClose }) {
     setSelectedImage("");
   };
 
+  //UPDATE UPLOAD GAMBAR
+  const handleResetFile = () => {
+    setFormArtikel((prev) => ({
+        ...prev,
+        gambar_artikel: null,
+    }));
+
+    // Reset input file supaya UI input juga kosong
+    const inputFile = document.getElementById("gambar_artikel");
+    if (inputFile) inputFile.value = "";
+  };
+
   return {
-    // UBAH NAMA RETURN
-    formArtikel, // UBAH DARI formData
+    formArtikel, 
     dataArtikel,
-    handleChangeArtikel, // UBAH DARI handleChange
+    handleChangeArtikel, 
     handleFileChangeArtikel, // UBAH DARI handleFileChange
     handleChangeKategoriArtikel, // UBAH DARI handleChangeKategori
     handleSubmit,
@@ -255,5 +283,6 @@ export default function useArtikel({ idArtikel, token, onClose }) {
     closeImageModal,
     showImageModal,
     selectedImage,
+    handleResetFile, 
   };
 }

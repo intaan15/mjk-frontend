@@ -1,15 +1,13 @@
 import axios from "axios";
 import.meta.env.VITE_BASE_URL
-import { useState,useEffect,useCallback } from "react";
+import { useState} from "react";
 import Modal from "../../components/Modal/ModalTemplate";
 import ModalContent from "../../components/Modal/ModalContent";
+import { useDataArtikel } from "../../components/_hooksPages/useDataArtikel";
 import Basetable from "../../components/Table/Basetable";
 import { useAuth } from "../../components/Auth";
-import { useMemo } from "react";
-import { showSuccessToast, showErrorToast } from '../../components/Modal/ToastModal'
 
 
-import { FaUser } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
 import { TiUser } from 'react-icons/ti';
 import { FaEdit } from "react-icons/fa";
@@ -17,7 +15,6 @@ import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
 import { IoIosSearch } from "react-icons/io";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
-import Swal from "sweetalert2";
 
 
 
@@ -28,15 +25,36 @@ export default function Artikel() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [modalType, setModalType] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
   const toggleDropdown = () => {setIsOpen(!isOpen);};
-  const [selectedKategori, setSelectedKategori] = useState("");
-  const [artikel, setArtikel] = useState([]); 
-  const [selectedId, setSelectedId] = useState(null);
-  const [dataArtikel, setDataArtikel] = useState(null);
+  
+  const {
+    // Data
+    filteredArtikel,
+    fetchArtikel,
+    selectedId,
+    dataArtikel,
+    loading,
+    error,
+    
+    // Filter states
+    searchTerm,
+    setSearchTerm,
+    selectedKategori,
+    setSelectedKategori,
+    setSelectedId,
+    
+    // Actions
+    deleteArtikel,
+    setSelectedArtikelId,
+    clearSelectedArtikel,
+    refreshData,
+    formatTanggal,
+    handleDelete
+  } = useDataArtikel(token);
+
+
   const openModalWithId = (id, type) => {
-    console.log("Membuka modal dengan ID:", id); // Debug
+    // console.log("Membuka modal dengan ID:", id); // Debug
     if (!id) {
       alert("ID artikel tidak valid!");
       return;
@@ -65,117 +83,6 @@ export default function Artikel() {
     navigate("/login");
   };
 
-  // FILTER ARTIKEL
-  const filteredArtikel = useMemo(() => {
-    const search = searchTerm.toLowerCase();
-
-    return artikel
-      .filter((item) =>
-        selectedKategori === "" ? true : item.kategori_artikel === selectedKategori
-      )
-      .filter((item) => {
-        const judul = item.nama_artikel?.toLowerCase() || "";
-        const kategori = item.kategori_artikel?.toLowerCase() || "";
-        const isi = item.isi_artikel?.toLowerCase() || "";
-
-        return (
-          judul.includes(search) ||
-          kategori.includes(search) ||
-          isi.includes(search)
-        );
-      });
-  }, [artikel, selectedKategori, searchTerm]);
-
-  // console.log("inikh",filteredData)
-  const formatTanggal = (isoDateString) => {
-  const date = new Date(isoDateString);
-    return date.toLocaleDateString("id-ID", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
-  };
-
-  const handleDelete = (id) => {
-    Swal.fire({
-      title: "Yakin mau hapus?",
-      text: "Data yang dihapus tidak bisa dikembalikan!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Ya, hapus!",
-      cancelButtonText: "Batal",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.delete(
-            `${import.meta.env.VITE_BASE_URL}/api/artikel/delete/${id}` , {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              }
-            }
-          );
-
-          Swal.fire("Terhapus!", "Data berhasil dihapus.", "success");
-          fetchArtikel();
-          // handleRefresh(); // Refresh data setelah hapus
-        } catch (error) {
-          console.error("Gagal menghapus artikel:", error);
-          Swal.fire(
-            "Gagal!",
-            "Terjadi kesalahan saat menghapus data.",
-            "error"
-          );
-        }
-      }
-    });
-  };
-
-
-  const fetchArtikel = useCallback(async () => {
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BASE_URL}/api/artikel/getall`, 
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }}
-      );
-      setArtikel(res.data);
-    } catch (err) {
-      console.error("Gagal fetch artikel:", err);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!selectedId) return; 
-     const fetchData = async () => {
-      try {
-          const response = await axios.get(
-            `${import.meta.env.VITE_BASE_URL}/api/artikel/getbyid/${selectedId}`,
-            {
-                headers: {
-                Authorization: `Bearer ${token}`,
-                }}
-            );
-            // console.log("Data diterima:", response.data);
-            setDataArtikel(response.data);
-          } catch (error) {
-              console.error("Gagal fetch artikel:", {
-              status: error.response?.status,
-              message: error.message,
-              data: error.response?.data,
-              });
-          }
-          };
-        fetchData()
-    },[selectedId, token]);
-
-  useEffect(() => {
-    fetchArtikel();
-  }, [fetchArtikel]);
-
   const handleCloseModal = () => {
     setIsModalOpen(false);
     fetchArtikel(); 
@@ -188,7 +95,7 @@ export default function Artikel() {
       enableSorting: false,
       cell: ({ getValue }) => {
         const imageUrl = getValue();
-        console.log("Image URL:", imageUrl);
+        // console.log("Image URL:", imageUrl);
 
         return imageUrl ? (
           <img

@@ -1,11 +1,11 @@
-import React from 'react'
-import axios from 'axios' //library untuk melakukan request HTTP
+
 import { useState,useEffect,useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import Basetable from "../../components/Table/Basetable";
 import Modal from "../../components/Modal/ModalTemplate";
 import ModalContent from "../../components/Modal/ModalContent";
+import useVerifikasi from "../../components/_hooksPages/useVerifikasi";
 import { useAuth } from "../../components/Auth";
 import.meta.env.VITE_BASE_URL
 
@@ -14,29 +14,40 @@ import { TiUser } from 'react-icons/ti'
 import { IoIosSearch } from "react-icons/io";
 import { HiOutlineUser } from "react-icons/hi2";
 import { IoLogOutOutline } from "react-icons/io5";
-import { HiOutlineUsers } from "react-icons/hi2";
-import { HiOutlineUserAdd } from "react-icons/hi";
-import { HiOutlineUserMinus } from "react-icons/hi2";
 import { HiOutlineExclamationCircle } from "react-icons/hi2";
 import Swal from "sweetalert2";
 
 function Verifikasi() {
 
-    const token = localStorage.getItem("token");
-    const { user } = useAuth();
-    const [searchTerm, setSearchTerm] = useState("");
-    const [filterStatus, setFilterStatus] = useState("semua");
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [modalType, setModalType] = useState(null);
     const [allRows, setAllRows] = useState([]);
     const [data, setData] = useState([]);
-    const [isOpen, setIsOpen] = useState(false);
-    const [dataMasyarakatbyId, setDataMasyarakatbyId] = useState(null);
-    const [selectedId, setSelectedId] = useState(null);
-    const [loading, setLoading] = useState(true);
     const navigate = useNavigate(); 
     const [selectedData, setSelectedData] = useState(null);
-    const toggleDropdown = () => {setIsOpen(!isOpen);};
+    const { user } = useAuth();
+
+    // Menggunakan custom hook
+    const {
+        searchTerm,
+        setSearchTerm,
+        filterStatus,
+        setFilterStatus,
+        isModalOpen,
+        modalType,
+        filteredData,
+        countStatus,
+        isOpen,
+        dataMasyarakatbyId,
+        selectedId,
+        loading,
+        toggleDropdown,
+        handleLogout,
+        formatTanggal,
+        handleVerifikasi,
+        token,
+        setModalType,
+        setSelectedId,
+        setIsModalOpen,
+    } = useVerifikasi();
 
     
     const openModalWithId = (type,id) => {
@@ -66,230 +77,11 @@ function Verifikasi() {
       setSelectedData(data);
       setIsModalOpen(true);
     };
-
-    const handleLogout = () => {
-        // Hapus token dari localStorage
-        localStorage.removeItem("token");
-
-        // Redirect ke halaman login
-        navigate("/login");
-    };
-
     const handleCloseModal = () => {
       setIsModalOpen(false);
       fetchArtikel();
     };
     
-
-    // component Filtersearch
-    const filteredData = useMemo(() => {
-    const search = searchTerm.toLowerCase();
-
-    return allRows.filter((item) => {
-        // Match status
-        const matchStatus =
-        filterStatus === "semua"
-            ? item.verifikasi_akun_masyarakat === "pending"
-            : item.verifikasi_akun_masyarakat === filterStatus;
-
-        // Match keyword
-        const matchSearch =
-        item.nama_masyarakat?.toLowerCase().includes(search) ||
-        item.email_masyarakat?.toLowerCase().includes(search) ||
-        item.notlp_masyarakat?.toLowerCase().includes(search) ||
-        item.nik_masyarakat?.includes(search);
-
-        return matchStatus && matchSearch;
-    });
-    }, [allRows, filterStatus, searchTerm]);
-
-
-    // Swtich status
-    const countStatus = useMemo(() => {
-        return allRows.reduce((acc, item) => {
-            const status = item.verifikasi_akun_masyarakat;
-            if (status === "pending") acc.pending += 1;
-            if (status === "diterima") acc.diterima += 1;
-            if (status === "ditolak") acc.ditolak += 1;
-            return acc;
-        }, { pending: 0, diterima: 0, ditolak: 0 });
-    }, [allRows]);
-
-
-    // mengatur format tanggal 
-    const formatTanggal = (isoDateString) => {
-    const date = new Date(isoDateString);
-        return date.toLocaleDateString("id-ID", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        });
-    };
-    
-
-    // ENDPOINT UPDATE STATUS VERIFIKASI
-    const handleVerifikasi = (status, _id, email_masyarakat) => {
-    Swal.fire({
-        title: `Yakin ingin ${status === "diterima" ? "menerima" : "menolak"} data ini?`,
-        text: "Pastikan semua data sudah diperiksa dengan benar.",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: status === "diterima" ? "#27AE60" : "#FF1700",
-        cancelButtonColor: "#d33",
-        confirmButtonText: `Ya, ${status === "diterima" ? "terima" : "tolak"}`,
-        cancelButtonText: "Batal"
-    }).then((result) => {
-        if (result.isConfirmed) {
-        if (status === "ditolak") {
-            // Konfirmasi tambahan untuk kirim pesan email
-            Swal.fire({
-            title: `Kirim pesan konfirmasi ke ${email_masyarakat}?`,
-            icon: "info",
-            showCancelButton: true,
-            confirmButtonText: "Kirim Email",
-            cancelButtonText: "Tidak",
-            }).then((res) => {
-            if (res.isConfirmed) {
-                // Buka Gmail dengan draft email
-                const subject = encodeURIComponent("Konfirmasi Penolakan Verifikasi");
-                const body = encodeURIComponent(`Halo,\n\nData Anda ditolak. Mohon periksa kembali informasi yang diberikan.\n\nTerima kasih.`);
-                window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email_masyarakat}&su=${subject}&body=${body}`);
-            }
-
-            // Lanjut update status di backend
-            axios
-                .patch(
-                `${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${_id}`,
-                {
-                    verifikasi_akun_masyarakat: status,
-                },
-                {
-                    headers: {
-                    Authorization: `Bearer ${token}`,
-                    },
-                }
-                )
-                .then(() => {
-                console.log("Status verifikasi berhasil diperbarui (PATCH)");
-                setAllRows((prevRows) =>
-                    prevRows.map((item) =>
-                    item._id === _id ? { ...item, verifikasi_akun_masyarakat: status } : item
-                    )
-                );
-                setFilterStatus(status);
-                setData((prevData) => prevData.filter((item) => item._id !== _id));
-
-                Swal.fire({
-                    icon: "success",
-                    title: `Data berhasil ditolak`,
-                    showConfirmButton: false,
-                    timer: 2000,
-                });
-
-                navigate("/masyarakat/verifikasi");
-                })
-                .catch((err) => {
-                console.error("Gagal update status", err);
-                Swal.fire("Gagal!", "Terjadi kesalahan saat memperbarui status.", "error");
-                });
-            });
-        } else {
-            // Jika status diterima, langsung update backend seperti biasa
-            axios
-            .patch(
-                `${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${_id}`,
-                {
-                verifikasi_akun_masyarakat: status,
-                },
-                {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-                }
-            )
-            .then(() => {
-                console.log("Status verifikasi berhasil diperbarui (PATCH)");
-                setAllRows((prevRows) =>
-                prevRows.map((item) =>
-                    item._id === _id ? { ...item, verifikasi_akun_masyarakat: status } : item
-                )
-                );
-                setFilterStatus(status);
-                setData((prevData) => prevData.filter((item) => item._id !== _id));
-
-                Swal.fire({
-                icon: "success",
-                title: `Data berhasil diterima`,
-                showConfirmButton: false,
-                timer: 2000,
-                });
-
-                navigate("/masyarakat/verifikasi");
-            })
-            .catch((err) => {
-                console.error("Gagal update status", err);
-                Swal.fire("Gagal!", "Terjadi kesalahan saat memperbarui status.", "error");
-            });
-        }
-        }
-    });
-    };
-
-
-
-
-
-
-
-
-
-
-    // ENDPOINT MENDAPATKAN DATA
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/masyarakat/getall`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-                );
-                // const filteredData = res.data.filter(item => item.verifikasi_akun_masyarakat === 'pending');
-                const filteredData = res.data;
-                setAllRows(filteredData);
-                console.log(filteredData);
-                setData(filteredData);
-            } catch (err) {
-                console.error('Error fetching data:', err);
-            } finally {
-                setLoading(false);}
-        };
-
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        if (!selectedId) return; 
-        const fetchData = async () => {
-        try {
-            const response = await axios.get(
-            `${import.meta.env.VITE_BASE_URL}/api/masyarakat/getbyid/${selectedId}`,
-            {
-                headers: {
-                Authorization: `Bearer ${token}`,
-                },
-            });
-            setDataMasyarakatbyId(response.data);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }};
-
-        fetchData();
-  },[selectedId, token]);
-
-    
-
 
     // HEADER TABLE
     const columns = [

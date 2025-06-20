@@ -56,6 +56,7 @@ const MenuBar = ({editor}) => {
           {/* Text Formatting */}
           <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
+              type="button"
               onClick={() => editor.chain().focus().toggleBold().run()}
               disabled={!editor.can().chain().focus().toggleBold().run()}
               className={`${buttonClass} ${editor.isActive('bold') ? activeClass : ''}`}
@@ -64,6 +65,7 @@ const MenuBar = ({editor}) => {
               <FaBold />
             </button>
             <button
+              type="button"
               onClick={() => editor.chain().focus().toggleItalic().run()}
               disabled={!editor.can().chain().focus().toggleItalic().run()}
               className={`${buttonClass} ${editor.isActive('italic') ? activeClass : ''}`}
@@ -72,6 +74,7 @@ const MenuBar = ({editor}) => {
               <FaItalic />
             </button>
             <button
+              type="button"
               onClick={() => editor.chain().focus().toggleStrike().run()}
               disabled={!editor.can().chain().focus().toggleStrike().run()}
               className={`${buttonClass} ${editor.isActive('strike') ? activeClass : ''}`}
@@ -80,6 +83,7 @@ const MenuBar = ({editor}) => {
               <FaStrikethrough />
             </button>
             <button
+              type="button"
               onClick={() => editor.chain().focus().toggleCode().run()}
               disabled={!editor.can().chain().focus().toggleCode().run()}
               className={`${buttonClass} ${editor.isActive('code') ? activeClass : ''}`}
@@ -92,6 +96,7 @@ const MenuBar = ({editor}) => {
           {/* Clear Formatting */}
           <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button 
+              type="button"
               onClick={() => editor.chain().focus().unsetAllMarks().run()}
               disabled={!editor.can().chain().focus().unsetAllMarks().run()}
               className={buttonClass}
@@ -104,6 +109,7 @@ const MenuBar = ({editor}) => {
           {/* Paragraph & Headings */}
           <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
+              type="button"
               onClick={() => editor.chain().focus().setParagraph().run()}
               disabled={!editor.can().chain().focus().setParagraph().run()}
               className={`${buttonClass} ${editor.isActive('paragraph') ? activeClass : ''}`}
@@ -114,6 +120,7 @@ const MenuBar = ({editor}) => {
 
             {[1, 2, 3, 4, 5, 6].map(level => (
               <button
+                type="button"
                 key={level}
                 onClick={() => editor.chain().focus().toggleHeading({ level }).run()}
                 className={`${buttonClass} text-xs sm:text-sm ${editor.isActive('heading', { level }) ? activeClass : ''}`}
@@ -127,6 +134,7 @@ const MenuBar = ({editor}) => {
           {/* Lists */}
           <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
+              type="button"
               onClick={() => editor.chain().focus().toggleBulletList().run()}
               className={`${buttonClass} ${editor.isActive('bulletList') ? activeClass : ''}`}
               title="Bullet List"
@@ -134,6 +142,7 @@ const MenuBar = ({editor}) => {
               <FaListUl />
             </button>
             <button
+              type="button"
               onClick={() => editor.chain().focus().toggleOrderedList().run()}
               className={`${buttonClass} ${editor.isActive('orderedList') ? activeClass : ''}`}
               title="Ordered List"
@@ -145,6 +154,7 @@ const MenuBar = ({editor}) => {
           {/* Blocks */}
           <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
+              type="button"
               onClick={() => editor.chain().focus().toggleCodeBlock().run()}
               className={`${buttonClass} ${editor.isActive('codeBlock') ? activeClass : ''}`}
               title="Code Block"
@@ -152,6 +162,7 @@ const MenuBar = ({editor}) => {
               <TbCodeCircle2 />
             </button>
             <button
+              type="button"
               onClick={() => editor.chain().focus().toggleBlockquote().run()}
               className={`${buttonClass} ${editor.isActive('blockquote') ? activeClass : ''}`}
               title="Blockquote"
@@ -159,6 +170,7 @@ const MenuBar = ({editor}) => {
               <FaQuoteRight />
             </button>
             <button
+              type="button"
               onClick={() => editor.chain().focus().setHorizontalRule().run()}
               className={buttonClass}
               title="Horizontal Rule"
@@ -170,6 +182,7 @@ const MenuBar = ({editor}) => {
           {/* Text Alignment */}
           <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
+              type="button"
               onClick={() => editor.chain().focus().setTextAlign('left').run()}
               className={`${buttonClass} ${editor.isActive({ textAlign: 'left' }) ? activeClass : ''}`}
               title="Align Left"
@@ -177,6 +190,7 @@ const MenuBar = ({editor}) => {
               <MdFormatAlignLeft />
             </button>
             <button
+              type="button"
               onClick={() => editor.chain().focus().setTextAlign('center').run()}
               className={`${buttonClass} ${editor.isActive({ textAlign: 'center' }) ? activeClass : ''}`}
               title="Align Center"
@@ -184,6 +198,7 @@ const MenuBar = ({editor}) => {
               <MdFormatAlignCenter />
             </button>
             <button
+              type="button"
               onClick={() => editor.chain().focus().setTextAlign('right').run()}
               className={`${buttonClass} ${editor.isActive({ textAlign: 'right' }) ? activeClass : ''}`}
               title="Align Right"
@@ -191,6 +206,7 @@ const MenuBar = ({editor}) => {
               <MdFormatAlignRight />
             </button>
             <button
+              type="button"
               onClick={() => editor.chain().focus().setTextAlign('justify').run()}
               className={`${buttonClass} ${editor.isActive({ textAlign: 'justify' }) ? activeClass : ''}`}
               title="Justify"
@@ -202,6 +218,7 @@ const MenuBar = ({editor}) => {
           {/* Utilities */}
           <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
+              type="button"
               onClick={() => editor.chain().focus().setHardBreak().run()}
               className={buttonClass}
               title="Line Break"
@@ -209,6 +226,7 @@ const MenuBar = ({editor}) => {
               <RiTextSpacing />
             </button>
             <button
+              type="button"
               onClick={() => editor.chain().focus().setColor('#958DF1').run()}
               className={`${buttonClass} ${editor.isActive('textStyle', { color: '#958DF1' }) ? 'bg-purple-200 text-purple-700' : ''}`}
               title="Text Color"
@@ -220,6 +238,7 @@ const MenuBar = ({editor}) => {
           {/* History */}
           <div className="flex items-center gap-1">
             <button
+              type="button"
               onClick={() => editor.chain().focus().undo().run()}
               disabled={!editor.can().chain().focus().undo().run()}
               className={buttonClass}
@@ -228,6 +247,7 @@ const MenuBar = ({editor}) => {
               <FaUndo />
             </button>
             <button
+              type="button"
               onClick={() => editor.chain().focus().redo().run()}
               disabled={!editor.can().chain().focus().redo().run()}
               className={buttonClass}
@@ -243,9 +263,16 @@ const MenuBar = ({editor}) => {
 }
 
 
+ // Handler untuk mencegah form submit
+ const handleButtonClick = (callback) => (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    callback();
+  };
 
 
 const TipTap = ({ value = '', onChange, placeholder = "Start typing..." }) => {
+  const [isUpdating, setIsUpdating] = useState(false);
   const editor = useEditor({
     extensions,
     content: value,
