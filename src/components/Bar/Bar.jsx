@@ -5,7 +5,7 @@ import { Doughnut } from "react-chartjs-2";
 
 
 
-function Bar({ values }) {
+function Bar({ values,className }) {
 
   const data = {
     labels: [
@@ -49,7 +49,7 @@ function Bar({ values }) {
         position: "right",
         labels: {
           color: "#333",
-          font: { size: 13 },
+          font: { size: 15 },
           
         },
       },
@@ -57,7 +57,7 @@ function Bar({ values }) {
   };
 
   return (
-    <div className="">
+    <div className={className}>
       <Doughnut data={data} options={options}  />
     </div>
   );

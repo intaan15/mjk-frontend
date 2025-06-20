@@ -22,13 +22,13 @@ import { IoStatsChart } from "react-icons/io5";
 
 // kenapa diluar func? agar tidak boros memori,dan efisien apabila terdapat elemen dashboard yg dirender ulang
 const StatBox = ({ icon, title, value }) => (
-  <div className='w-[400px] h-[90px] flex flex-row justify-center gap-3 items-center'>
-    <div className='bg-[#38B6FE]/30 rounded-full p-4'>
+  <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg h-20 sm:h-24 lg:h-28 flex items-center gap-2 sm:gap-4 sm: font-[raleway]">
+    <div className='bg-[#38B6FE]/30 rounded-full p-2 sm:p-3 lg:p-4 flex-shrink-0'>
       {icon}
     </div>
-    <div className='flex flex-col'>
-      <p className='text-[18px] font-bold text-white underline'>{title}</p>
-      <p className='text-[17px] font-medium italic text-white'>{value}</p>
+    <div className='flex flex-col flex-1 min-w-0'>
+      <p className='text-sm sm:text-base lg:text-[18px] font-bold text-white underline truncate'>{title}</p>
+      <p className='text-sm sm:text-base lg:text-[17px] font-medium italic text-white'>{value}</p>
     </div>
   </div>
 );
@@ -57,7 +57,7 @@ function Dashboard() {
   return (
     <div className="flex flex-row min-h-screen sm:mb-2 md:mb-4 lg:mb-5 bg-gray-50 transition-all duration-300 ease-in-out ">
      {/* container main */}
-      <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1">
+      <main className="flex flex-col sm:p-10 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1">
 
         {/* navbar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
@@ -100,8 +100,9 @@ function Dashboard() {
 
         {/* header */}
         <div className='relative w-full'>
+          
           {/* Gambar sebagai latar */}
-          <img src="img_org.svg" alt="" className="w-full object-cover h-48 sm:h-56 md:h-64 lg:h-auto rounded-lg"/>
+          <img src="img_org.svg" alt="section img" className="w-full object-cover h-48 sm:h-56 md:h-64 lg:h-auto rounded-lg"/>
 
           {/* Overlay teks dan kalender */}
           <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-3 sm:p-4 md:p-5">
@@ -110,7 +111,7 @@ function Dashboard() {
               < Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
             </div>
             {/* Heading */}
-             <div className="text-white text-center md:text-left">
+             <div className="text-white text-left">
               <h2 className="font-[Poppins] text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold">
                 Halo, Admin
               </h2>
@@ -122,32 +123,31 @@ function Dashboard() {
         </div>
 
         {/* statistik  */}
-        <div className="bg-[#004A76] flex flex-row rounded-lg mt-2">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 text-white items-center font-[raleway]">
-               <div className="flex items-center gap-3">
-                   <StatBox
-                      icon={
-                      <BsFillBarChartFill className="w-[30px] h-[30px] text-white font-[raleway]"/>}
-                      title="Jumlah Pengguna"
-                      value={jumlahPengguna}
-                    />
-               </div>
-
-               <div className="flex items-center gap-3">
-                    <StatBox
-                      icon={<GrArticle className="w-[30px] h-[30px] text-white"/>}
-                      title="Artikel Publish"
-                      value={artikelPublish}
-                    />
-                </div>
-
-               <div className="flex items-center gap-3">
+        <div className="bg-[#004A76] rounded-lg mt-2 sm:p-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="flex items-left justify-center">
                   <StatBox
-                    icon={<FaUserClock className="w-[30px] h-[30px] text-white" />}
-                    title="Verifikasi Pengguna"
-                    value={verifikasiAkun}
+                    icon={<BsFillBarChartFill className="w-6 h-6 sm:w-7 sm:h-7 lg:w-[30px] lg:h-[30px] text-white"/>}
+                    title="Jumlah Pengguna"
+                    value={jumlahPengguna}
                   />
-               </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                  <StatBox
+                    icon={<GrArticle className="w-6 h-6 sm:w-7 sm:h-7 lg:w-[30px] lg:h-[30px] text-white"/>}
+                    title="Artikel Publish"
+                    value={artikelPublish}
+                  />
+              </div>
+
+              <div className="flex items-center gap-3">
+                <StatBox
+                  icon={<FaUserClock className="w-6 h-6 sm:w-7 sm:h-7 lg:w-[30px] lg:h-[30px] text-white"/>}
+                  title="Verifikasi Pengguna"
+                  value={verifikasiAkun}
+                />
+              </div>
           </div>
         </div>
 
@@ -233,7 +233,7 @@ function Dashboard() {
                 <div className="w-full max-w-lg bg-white rounded-xl shadow-md p-4 sm:p-6">
                   <span className='text-lg sm:text-xl md:text-2xl font-bold font-[raleway] text-[#025f96] underline text-center mb-4'>Statistik Total Data</span>
                   <div className='flex-1 flex items-center justify-center'>
-                    <Bar values={dataBar} className="w-full h-full min-h-[400px] sm:min-h-[400px] md:min-h-[500px]"/>
+                    <Bar values={dataBar} className="w-full h-xl "/>
                   </div>
                 </div>
               </div>
