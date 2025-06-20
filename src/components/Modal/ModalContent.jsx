@@ -77,15 +77,14 @@ export default function ModalContent({
       { value: "Jantung", label: <><img src="../icon_poli/poli_jantung.svg" className="inline mr-2 w-5 h-5"/>Spesialis Jantung </> },
       { value: "Kandungan", label: <><img src="../icon_poli/poli_kandungan.svg" className="inline mr-2 w-5 h-5"/> Spesialis Kandungan</> },
       { value: "Bedah", label: <><img src="../icon_poli/poli_bedah.svg" className="inline mr-2 w-5 h-5"/> Spesialis Bedah</> },
-      { value: "Syaraf", label: <><img src="../icon_poli/poli_syaraf.svg" className="inline mr-2 w-5 h-5"/> Spesialis syaraf</> },
-      { value: "Paru", label: <><img src="../icon_poli/poli_paru.svg" className="inline mr-2 w-5 h-5"/> Spesialis Paru</> },
+      { value: "Syaraf", label: <><img src="../icon_poli/poli_syaraf.svg" className="inline mr-2 w-5 h-5"/> Spesialis Syaraf</> },
       { value: "Paru", label: <><img src="../icon_poli/poli_paru.svg" className="inline mr-2 w-5 h-5"/> Spesialis Paru</> },
       { value: "Kulit", label: <><img src="../icon_poli/kulit.png" className="inline mr-2 w-6 h-6"/> Spesialis Kulit</> },
-      { value: "Darah", label: <><img src="../icon_poli/darah.svg" className="inline mr-2 w-5 h-5"/> Darah</> },
+      { value: "Darah", label: <><img src="../icon_poli/darah.svg" className="inline mr-2 w-5 h-5"/> Spesialis Darah</> },
+      { value: "Lambung", label: <><img src="../icon_poli/lambung.png" className="inline mr-2 w-5 h-5"/> Spesialis Lambung</> },
+      { value: "Hati", label: <><img src="../icon_poli/hati.svg" className="inline mr-2 w-5 h-5"/> Spesialis Hati</> },
+      { value: "Ginjal", label: <><img src="../icon_poli/ginjal.svg" className="inline mr-2 w-5 h-5"/> Spesialis Ginjal</> },
       { value: "Fisioterapi", label: <><img src="../icon_poli/fisioterapi.svg" className="inline mr-2 w-5 h-5"/> Fisioterapi</> },
-      { value: "Lambung", label: <><img src="../icon_poli/lambung.png" className="inline mr-2 w-5 h-5"/> Lambung</> },
-      { value: "Hati", label: <><img src="../icon_poli/hati.svg" className="inline mr-2 w-5 h-5"/> Hati</> },
-      { value: "Ginjal", label: <><img src="../icon_poli/ginjal.svg" className="inline mr-2 w-5 h-5"/> Ginjal</> },
     ];
     
     const [showPassword, setShowPassword] = useState(false);
