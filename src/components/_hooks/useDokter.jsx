@@ -236,8 +236,8 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
 
         if (formData.foto_profil_dokter) {
           // ✅ VALIDASI UKURAN MAKSIMAL 2MB
-          if (formData.foto_profil_dokter.size > 2 * 1024 * 1024) {
-            showErrorToast(`Ukuran gambar terlalu besar (${(file.size / 1024 / 1024).toFixed(2)}MB). Maksimal 2MB.`);
+          if (formData.foto_profil_dokter.size > 20 * 1024 * 1024) {
+            showErrorToast(` ❗Ukuran gambar terlalu besar (${(file.size / 1024 / 1024).toFixed(2)}MB). Maksimal 20MB.`);
             return;
           }
         }

@@ -191,7 +191,7 @@ export default function useArtikel({ idArtikel, token, onClose }) {
       if (formArtikel.gambar_artikel) {
         // ✅ VALIDASI UKURAN MAKSIMAL 2MB
         if (formArtikel.gambar_artikel.size > 20 * 1024 * 1024) {
-          showErrorToast("Ukuran gambar maksimal 20MB.");
+          showErrorToast(` ❗Ukuran gambar terlalu besar (${(file.size / 1024 / 1024).toFixed(2)}MB). Maksimal 20MB.`);
           return;
         }
 
