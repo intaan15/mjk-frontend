@@ -195,11 +195,12 @@ export default function useArtikel({ idArtikel, token, onClose }) {
       let imagePath = dataArtikel?.gambar_artikel || null;
 
       if (formArtikel.gambar_artikel) {
-        // ✅ VALIDASI UKURAN MAKSIMAL 2MB
-        if (formArtikel.gambar_artikel.size > 20 * 1024 * 1024) {
-          showErrorToast(` ❗Ukuran gambar terlalu besar (${(file.size / 1024 / 1024).toFixed(20)}MB). Maksimal 20MB.`);
+        // ✅ VALIDASI UKURAN MAKSIMAL 20MB
+        if (formArtikel.gambar_artikel.size > 20 * 1024 * 1024) { //validasi ukuran 20MB
+          const sizeMB = Math.round(formArtikel.gambar_artikel.size / (1024 * 1024)); // Hitung ukuran dalam MB
+          showErrorToast(` ❗Ukuran gambar terlalu besar (${sizeMB}MB). Maksimal 20MB.`);
           return;
-        }
+        } 
 
         // Upload gambar
         const data = new FormData();
@@ -246,7 +247,7 @@ export default function useArtikel({ idArtikel, token, onClose }) {
         "Terjadi kesalahan saat mengubah artikel.";
 
       if (status === 413) {
-        message = "Ukuran file terlalu besar. Maksimal 2MB.";
+        message = "Ukuran file terlalu besar. Maksimal 20MB.";
       }
 
       console.error("Gagal update artikel:", message);
@@ -281,10 +282,10 @@ export default function useArtikel({ idArtikel, token, onClose }) {
     formArtikel, 
     dataArtikel,
     handleChangeArtikel, 
-    handleFileChangeArtikel, // UBAH DARI handleFileChange
-    handleChangeKategoriArtikel, // UBAH DARI handleChangeKategori
+    handleFileChangeArtikel,
+    handleChangeKategoriArtikel, 
     handleSubmit,
-    handleEditSubmitArtikel, // UBAH DARI handleEditSubmit
+    handleEditSubmitArtikel, 
     handleImageClick,
     closeImageModal,
     showImageModal,

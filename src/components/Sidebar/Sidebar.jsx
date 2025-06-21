@@ -86,8 +86,8 @@ const ResponsiveSidebar = () => {
     <>
       {/* Desktop/Tablet: Original Left Sidebar */}
       <div
-        className="hidden md:block bg-white h-full shadow-lg transition-all duration-400
-                     md:w-48 lg:w-56 xl:w-64 p-2 sm:p-3 md:p-4 pt-4 sm:pt-6 md:pt-8 lg:pt-10"
+        className="hidden md:block bg-white h-full shadow-2xl transition-all duration-400
+                   md:w-48 lg:w-56 xl:w-64 p-2 sm:p-3 md:p-4 pt-4 sm:pt-6 md:pt-8 lg:pt-10"
       >
         {/* Header Logo */}
         <div className="flex items-center justify-center mb-4 sm:mb-5 md:mb-6">

@@ -6,6 +6,7 @@ import { Doughnut } from "react-chartjs-2";
 
 
 function Bar({ values,className }) {
+  
 
   const data = {
     labels: [
@@ -18,10 +19,10 @@ function Bar({ values,className }) {
       {
         label: "Statistik",
         data: [
-          values?.masyarakat ?? 0,
+          values?.konsultasi ?? 0,
           values?.artikel ?? 0,
           values?.dokter ?? 0,
-          values?.konsultasi ?? 0,
+          values?.masyarakat ?? 0,
         ],                       
         backgroundColor: [
           "#FD809B", // pink untuk Konsultasi
@@ -30,10 +31,10 @@ function Bar({ values,className }) {
           "#4CD7D7", // tosca untuk Masyarakat
         ],
         borderColor: [
-          "#FF6B9D",
-          "#FFD93D", 
-          "#4ECDC4",
-          "#45B7D1",
+         "#FD809B", // pink untuk Konsultasi
+          "#FDD576", // kuning untuk Artikel  
+          "#5CB3ED", // biru muda untuk Dokter
+          "#4CD7D7", // tosca untuk Masyarakat
         ],
         borderWidth: 0,
         borderRadius: 5,
@@ -46,10 +47,15 @@ function Bar({ values,className }) {
     plugins: {
       legend: {
         display: true,
-        position: "right",
+        position: "left",
         labels: {
           color: "#333",
-          font: { size: 15 },
+          font: { size: 13 },
+          boxWidth: 20,
+          boxHeight: 20,
+          padding: 20,
+          usePointStyle: true,
+
           
         },
       },

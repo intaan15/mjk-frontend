@@ -149,7 +149,12 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
 
     // SUBMIT FORM TAMBAH DOKTER
     const handleSubmit = async (e) => {
+
         e.preventDefault();
+        if (formData.foto_profil_dokter.size > 20 * 1024 * 1024) {
+          showErrorToast(` ❗Ukuran gambar terlalu besar (${(formData.foto_profil_dokter.size / 1024 / 1024).toFixed(2)}MB). Maksimal 20MB.`);
+          return;
+        }
 
         try {
 

@@ -16,7 +16,6 @@ import { LuSquareArrowRight } from "react-icons/lu";
 import { FaCalendarDays } from "react-icons/fa6";
 
 const Jadwal = () => {
-  // Hooks
   const { handleLogout } = useLogout();
   const {
     // Data
@@ -70,15 +69,15 @@ const Jadwal = () => {
   );
 
   return (
-    <div className="flex flex-row min-h-screen">
-      <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 w-full mb-20 sm:mb-24 md:mb-16 lg:mb-8">
+    <div className="min-h-screen sm:mb-2 md:mb-4 lg:mb-5 lg:mt-0 bg-gray-50 transition-all duration-300 ease-in-out overflow-x-hidden">
+      <main className="flex flex-col pt-4 px-4 xs:p-8 sm:p-10 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 md:pt-5  mb-20 sm:mb-0 w-full max-w-full">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex flex-row items-center justify-between gap-3 sm:gap-4">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-[raleway] font-bold text-[#004A76]">
             Jadwal Praktek Dokter
           </h1>
           
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <div className="flex items-center justify-between gap-3 sm:gap-4">
             {/* Profile Dropdown */}
             <div className="flex flex-row gap-4 relative">
               <button
@@ -92,7 +91,7 @@ const Jadwal = () => {
                 {isOpen && (
                   <>
                     <div
-                      className="fixed inset-0 bg-black/30 z-40"
+                      className="fixed inset-0 bg-black/30 z-40 transition-all duration-200"
                       onClick={() => setIsOpen(false)}
                     ></div>
                     <div className="absolute right-0 origin-top-right mt-8 w-48 px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50">

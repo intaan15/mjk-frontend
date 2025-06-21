@@ -48,6 +48,7 @@ function Konsultasi() {
     getPaginationRange,
 
   } = useKonsultasi(token);
+  
 
   //kolom konsultasi 
   const columns = [
@@ -159,17 +160,17 @@ function Konsultasi() {
       
   // FRONT END
   return (
-    <div className="flex flex-row min-h-screen ">
-      <main className="flex flex-col sm:p-4 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 w-full mb-20 sm:mb-24 md:mb-16 lg:mb-8">
-        {/* Navbar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+    <div className="min-h-screen sm:mb-2 md:mb-4 lg:mb-5 lg:mt-0 bg-gray-50 transition-all duration-300 ease-in-out overflow-x-hidden">
+      <main className="flex flex-col pt-4 px-4 xs:p-8 sm:p-10 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 md:pt-5  mb-20 sm:mb-0 w-full max-w-full">
+      {/* Navbar */}
+        <div className="flex flex-col md:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 transition-all duration-200 ">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-[raleway] font-bold text-[#004A76]">
             Konsultasi
           </h1>
           
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto sm:items-center">
+          <div className="flex sm:flex-row gap-2 w-full sm:w-auto sm:items-center transition-all duration-200  ">
             {/* Search Bar */}
-            <div className="flex items-center rounded-xl px-3 py-2 border-[1.5px] border-gray-300 gap-3 w-full sm:w-auto  min-w-0 h-10 sm:h-11">
+            <div className="flex items-center rounded-xl px-3 py-2 border-[1.5px] border-gray-300 gap-3 w-full sm:w-full  min-w-0 h-10 sm:h-11">
               <IoIosSearch className="text-gray-400 text-lg flex-shrink-0  sm:text-xl" />
               <input
                 type="text"
@@ -181,12 +182,12 @@ function Konsultasi() {
             </div>
 
             {/* Profile Dropdown */}
-            <div className="flex flex-row gap-4 relative">
+            <div className="flex flex-row gap-4 relative transition-all duration-200 ">
               <button
                 onClick={toggleDropdown}
                 className="flex items-center  justify-center focus:outline-none cursor-pointer w-10 h-10 sm:w-11 sm:h-11 md:w-11 md:h-11 lg:w-11 lg:h-11 rounded-full hover:bg-gray-100 transition-colors"
               >
-                 <TiUser className="w-6 h-6 sm:w-8 sm:h-8 md:w-9 md:h-9 text-[#292D32]" />
+                <TiUser className="w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 text-[#292D32]" />
          
               </button>
 
@@ -194,13 +195,15 @@ function Konsultasi() {
                 {isOpen && (
                   <>
                     <div
-                      className="fixed inset-0 bg-black/30 z-40"
+                      className="fixed inset-0 bg-black/30 z-40 transition-all duration-200"
                       onClick={() => setIsOpen(false)}
                     ></div>
-                    <div className="absolute right-0 origin-top-right mt-10 sm:mt-12 w-48 sm:w-52 px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50">
-                      <div className="py-1 justify-center">
-                        <a className="flex flex-row py-2 text-sm sm:text-md font-[raleway] items-center font-bold text-[#004A76] gap-3">
-                          <HiOutlineUser className="text-xl sm:text-2xl md:text-[28px]" />
+                  <div className="absolute right-0 origin-top-right mt-8 w-48 px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 transition-all duration-200">
+                      <div className="py-1 justify-center transition-all duration-200">
+                        <a
+                          href="#"
+                          className="flex flex-row py-2 text-sm sm:text-md font-[raleway] items-center font-bold text-[#004A76] gap-3 transition-all ">
+                          <HiOutlineUser className="text-xl sm:text-2xl md:text-[30px]" />
                           {user?.username}
                         </a>
 
@@ -223,15 +226,15 @@ function Konsultasi() {
         <img src="/line style.svg" alt="" className="w-full" />
 
         {/* Filter Buttons */}
-        <div className="flex flex-row justify-center w-full py-2 gap-2 sm:gap-4">
+        <div className="flex flex-row justify-center w-full py-2 gap-2 sm:gap-4 transition-all duration-200 ">
           <button
             onClick={() => setFilterStatus("Diproses")}
             className={`${
               filterStatus === "Diproses"
                 ? "bg-[#004A76] font-bold"
                 : "bg-[#B3B3B3]"
-            } hover:opacity-80 text-white px-4 sm:px-6 md:px-8 h-10 rounded-md text-sm sm:text-md font-[raleway] cursor-pointer flex-1 sm:flex-initial`}
-          >
+              } text-white px-4 xs:px-6 sm:px-8 md:px-12 h-12 rounded-lg text-sm xs:text-base font-[raleway] cursor-pointer flex-1 sm:flex-initial transition-all duration-200 active:scale-95`}
+              >
             Diproses
           </button>
           <div className="h-10 bg-[#004A76] w-1"></div>
@@ -241,14 +244,14 @@ function Konsultasi() {
               filterStatus === "Selesai"
                 ? "bg-[#004A76] font-bold"
                 : "bg-[#B3B3B3]"
-            } hover:opacity-80 text-white px-4 sm:px-6 md:px-8 h-10 rounded-md text-sm sm:text-md font-[raleway] cursor-pointer flex-1 sm:flex-initial`}
-          >
+              } text-white px-4 xs:px-6 sm:px-8 md:px-12 h-12 rounded-lg text-sm xs:text-base font-[raleway] cursor-pointer flex-1 sm:flex-initial transition-all duration-200 active:scale-95`}
+            >
             Riwayat
           </button>
         </div>
 
         {/* Filter Controls */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 py-3 px-2 sm:px-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 py-3 px-2 sm:px-6 transition-all duration-200 ">
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center">
             <label className="font-[raleway] font-bold text-[#004A76] text-sm sm:text-base">
               Tanggal
@@ -261,7 +264,7 @@ function Konsultasi() {
             />
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center transition-all duration-200 ">
             <label className="font-[raleway] font-bold text-[#004A76] text-sm sm:text-base whitespace-nowrap">
               Filter Poli
             </label>
@@ -278,10 +281,10 @@ function Konsultasi() {
             </select>
           </div>
 
-          <div className="flex items-center justify-center sm:justify-start">
+          <div className="flex items-center justify-start sm:items-start gap-2 sm:gap-3 transition-all duration-200 ">
             <button
               onClick={handleResetFilter}
-              className="bg-[#004A76] hover:bg-[#38B6FE]/50 text-white p-3 items-center rounded-md text-sm font-[raleway] cursor-pointer"
+              className="bg-[#004A76] hover:bg-[#38B6FE] active:bg-[#0066CC] text-white p-3 rounded-lg text-sm font-[raleway] cursor-pointer transition-all duration-200 hover:shadow-lg active:scale-95 flex items-center justify-center"
             >
               <TbReload />
             </button>
@@ -290,15 +293,22 @@ function Konsultasi() {
 
         {/* Table */}
         <div className="py-1 overflow-x-auto">
-          {loading ? (
-            <div className="flex justify-center items-center py-8">
-              <p className="text-gray-600">Loading data...</p>
-            </div>
-          ) : (
-            <div className="min-w-full">
-              <Basetable data={paginatedData} columns={columns} />
-            </div>
-          )}
+            {loading ? (
+              <div className="flex justify-center items-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#004A76]"></div>
+                <p className="text-gray-600">Loading data...</p>
+              </div>
+            ) : paginatedData && paginatedData.length > 0 ?(
+              <div className="min-w-full">
+                <Basetable data={paginatedData} columns={columns} /> 
+              </div>
+            ) : (
+              <div className="flex flex-col justify-center items-center py-8">
+                <div className="text-gray-400 text-4xl">📋</div>
+                <p className="text-gray-600 text-base">Tidak ada data yang ditemukan</p>
+                <p className="text-gray-400 text-sm">Coba ubah filter atau kriteria pencarian</p>
+              </div>
+            )}
         </div>
 
         {/* Pagination */}
@@ -318,7 +328,7 @@ function Konsultasi() {
                   ${
                     currentPage === 1
                       ? "opacity-50 cursor-not-allowed border-gray-300"
-                      : "hover:bg-[#004A76] hover:text-white"
+                      : "hover:bg-[#004A76] hover:text-white hover:border-[#004A76] border-gray-300 text-gray-700 active:scale-95"
                   }
                 `}
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -343,8 +353,8 @@ function Konsultasi() {
                       <>
                         <button
                           onClick={() => setCurrentPage(1)}
-                          className="px-2 sm:px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white border-gray-300 text-sm"
-                        >
+                          className="px-2 xs:px-3 py-2 border rounded-lg transition-all duration-200 hover:bg-[#004A76] hover:text-white hover:border-[#004A76] border-gray-300 text-gray-700 text-sm font-medium active:scale-95"
+                          >
                           1
                         </button>
                         {paginationRange[0] > 2 && (
@@ -358,7 +368,7 @@ function Konsultasi() {
                       <button
                         key={pageNum}
                         onClick={() => setCurrentPage(pageNum)}
-                        className={`px-2 sm:px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white text-sm
+                          className={`px-2 xs:px-3 py-2 border rounded-lg transition-all duration-200 text-sm font-medium active:scale-95
                           ${
                             currentPage === pageNum
                               ? "bg-[#004A76] text-white border-[#004A76]"
@@ -378,7 +388,7 @@ function Konsultasi() {
                         )}
                         <button
                           onClick={() => setCurrentPage(totalPages)}
-                          className="px-2 sm:px-3 py-1 border rounded-md transition duration-200 hover:bg-[#004A76] hover:text-white border-gray-300 text-sm"
+                          className="px-2 xs:px-3 py-2 border rounded-lg transition-all duration-200 hover:bg-[#004A76] hover:text-white hover:border-[#004A76] border-gray-300 text-gray-700 text-sm font-medium active:scale-95"
                         >
                           {totalPages}
                         </button>

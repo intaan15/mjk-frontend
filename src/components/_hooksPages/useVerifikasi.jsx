@@ -60,11 +60,6 @@ export default function useVerifikasi() {
     fetchData(); // Refresh data after modal close
   };
 
-  // Authentication
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
 
   // Data filtering
   const filteredData = useMemo(() => {
@@ -151,6 +146,7 @@ export default function useVerifikasi() {
 
   // Update verification status
   const updateVerificationStatus = async (status, _id) => {
+    set
     try {
       await axios.patch(
         `${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${_id}`,
@@ -238,6 +234,34 @@ export default function useVerifikasi() {
     fetchDataById(selectedId);
   }, [selectedId, token]);
 
+  // Constants
+  const animasi_gambar = {
+    colors: {
+      primary: '#004A76',
+      primaryHover: '#0066A3',
+      secondary: '#033E61',
+      gray: {
+        50: '#FAFBFD',
+        100: '#F3F4F6',
+        300: '#D1D5DB',
+        400: '#9CA3AF',
+        600: '#4B5563',
+        700: '#374151'
+      }
+    },
+    animations: {
+      fast: 'transition-all duration-200 ease-in-out',
+      normal: 'transition-all duration-300 ease-in-out',
+      slow: 'transition-all duration-500 ease-in-out'
+    },
+    spacing: {
+      cardPadding: 'p-2 sm:p-3 md:p-4',
+      containerPadding: 'px-4 xs:px-8 sm:px-10 md:px-6 lg:px-5'
+    }
+  };
+  
+
+
   // Return all necessary data and functions
   return {
     // State
@@ -252,6 +276,7 @@ export default function useVerifikasi() {
     allRows,
     data,
     isOpen,
+    setIsOpen,
     dataMasyarakatbyId,
     selectedId,
     setSelectedId,
@@ -270,11 +295,11 @@ export default function useVerifikasi() {
     closeModal,
     handleEdit,
     handleCloseModal,
-    handleLogout,
     formatTanggal,
     handleVerifikasi,
     fetchData,
     fetchDataById,
+    animasi_gambar,
     
     // Constants
     token,

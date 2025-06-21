@@ -23,12 +23,12 @@ import { IoStatsChart } from "react-icons/io5";
 // kenapa diluar func? agar tidak boros memori,dan efisien apabila terdapat elemen dashboard yg dirender ulang
 const StatBox = ({ icon, title, value }) => (
   <div className="w-full max-w-sm sm:max-w-md lg:max-w-lg h-20 sm:h-24 lg:h-28 flex items-center gap-2 sm:gap-4 sm: font-[raleway]">
-    <div className='bg-[#38B6FE]/30 rounded-full p-2 sm:p-3 lg:p-4 flex-shrink-0'>
+    <div className='bg-[#38B6FE]/30 rounded-full p-2 sm:p-3 lg:p-4 flex-shrink-0 shadow-lg'>
       {icon}
     </div>
     <div className='flex flex-col flex-1 min-w-0'>
-      <p className='text-sm sm:text-base lg:text-[18px] font-bold text-white underline truncate'>{title}</p>
-      <p className='text-sm sm:text-base lg:text-[17px] font-medium italic text-white'>{value}</p>
+      <p className='text-sm sm:text-md lg:text-xl font-bold text-white underline truncate'>{title}</p>
+      <p className='text-sm  sm:text-md lg:text-xl font-medium italic text-white'>{value}</p>
     </div>
   </div>
 );
@@ -55,12 +55,12 @@ function Dashboard() {
   } = useDashboard(selectedDate);
 
   return (
-    <div className="flex flex-row min-h-screen sm:mb-2 md:mb-4 lg:mb-5 bg-gray-50 transition-all duration-300 ease-in-out ">
+    <div className="min-h-screen sm:mb-2 md:mb-4 lg:mb-5 lg:mt-0 bg-gray-50 transition-all duration-300 ease-in-out overflow-x-hidden">
      {/* container main */}
-      <main className="flex flex-col sm:p-10 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1">
+      <main className="flex flex-col pt-4 px-4 sm:p-10 md:p-6 lg:p-5 gap-3 sm:gap-0 md:gap-1 md:pt-5  w-full max-w-full">
 
         {/* navbar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+        <div className="flex md:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
           <h1 className="text-xl sm:text-2xl md:text-3xl font-[raleway] font-bold text-[#004A76]">
             Dashboard
           </h1>
@@ -96,13 +96,13 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        <img src="line style.svg" alt="" className='w-screen' />
+        <img src="line style.svg" alt="" className=' w-full max-w-full' />
 
         {/* header */}
-        <div className='relative w-full'>
+        <div className='relative w-full max-w-full mt-2 sm:mt-0 overflow-hidden'>
           
           {/* Gambar sebagai latar */}
-          <img src="img_org.svg" alt="section img" className="w-full object-cover h-48 sm:h-56 md:h-64 lg:h-auto rounded-lg"/>
+          <img src="img_org.svg" alt="section img" className="w-full p-1 object-cover h-48 sm:h-56 md:h-64 lg:h-auto rounded-lg backdrop-blur-md"/>
 
           {/* Overlay teks dan kalender */}
           <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-3 sm:p-4 md:p-5">
@@ -112,20 +112,20 @@ function Dashboard() {
             </div>
             {/* Heading */}
              <div className="text-white text-left">
-              <h2 className="font-[Poppins] text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold">
+              <h2 className="font-[Poppins] text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold drop-shadow-md">
                 Halo, Admin
               </h2>
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl italic text-[#004A76] font-medium font-[Poppins]">
-                Selamat datang di Website Mojokerto Sehat
+              <p className="text-sm sm:text-base md:text-lg lg:text-xl italic text-white sm:text-[#004A76] font-medium font-[Poppins] drop-shadow-md">
+              Selamat datang di Website Mojokerto Sehat
               </p>
             </div>
           </div>
         </div>
 
         {/* statistik  */}
-        <div className="bg-[#004A76] rounded-lg mt-2 sm:p-3">
+        <div className="bg-gradient-to-br from-[#004A76] via-[#0066A0] to-[#004A76] rounded-2xl mt-2 sm:p-4 shadow-xl border border-white/10 backdrop-blur-sm">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <div className="flex items-left justify-center">
+              <div className="flex pl-2 md:pl-3 items-left justify-center">
                   <StatBox
                     icon={<BsFillBarChartFill className="w-6 h-6 sm:w-7 sm:h-7 lg:w-[30px] lg:h-[30px] text-white"/>}
                     title="Jumlah Pengguna"
@@ -133,7 +133,7 @@ function Dashboard() {
                   />
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex pl-2 md:pl-3 items-left justify-center">
                   <StatBox
                     icon={<GrArticle className="w-6 h-6 sm:w-7 sm:h-7 lg:w-[30px] lg:h-[30px] text-white"/>}
                     title="Artikel Publish"
@@ -141,7 +141,7 @@ function Dashboard() {
                   />
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex pl-2 md:pl-3 items-left justify-center">
                 <StatBox
                   icon={<FaUserClock className="w-6 h-6 sm:w-7 sm:h-7 lg:w-[30px] lg:h-[30px] text-white"/>}
                   title="Verifikasi Pengguna"
@@ -154,90 +154,92 @@ function Dashboard() {
         {/* LogPengguna */}
         <div className='flex flex-col gap-4'>
           <div className='flex items-center justify-between'>
-           <h2 className='text-lg sm:text-xl md:text-2xl font-bold text-[#025f96]'>
+           <h2 className='text-lg sm:text-xl md:text-2xl font-bold text-[#025f96] pt-6'>
               Log Pengguna Harian
            </h2>
           </div>
 
           <div className='flex flex-col xl:flex-row gap-6'>
-            <div className="w-full xl:w-1/2">
+              <div className="w-full xl:w-1/2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  {/* Kartu 1 */}
+                  <div className="group bg-gradient-to-br from-white to-gray-50/50 shadow-lg hover:shadow-2xl p-4 sm:p-6 rounded-2xl flex flex-col items-start border border-gray-100/50 backdrop-blur-sm transition-all duration-300 hover:transform relative overflow-hidden">
+                    <div className='flex justify-between items-center w-full mb-2'>
+                      <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#004A76] font-[raleway]">
+                        {jadwalByTanggal}
+                      </p>
+                      <IoStatsChart className='w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-22 lg:w-24 lg:h-24 text-[#FF8FA7]/70'/>
+                    </div>
+                    <a href='/konsultasi' className="cursor-pointer text-sm sm:text-base md:text-lg text-[#004A76] font-bold underline hover:text-[#025f96]">
+                      Konsultasi
+                    </a>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                      {formatTanggal(selectedDate)}
+                    </p>
+                  </div>
+                  
+                  {/* Kartu 2 */}
+                  <div className="group bg-gradient-to-br from-white to-gray-50/50 shadow-lg hover:shadow-2xl p-4 sm:p-6 rounded-2xl flex flex-col items-start border border-gray-100/50 backdrop-blur-sm transition-all duration-300 hover:transform relative overflow-hidden">
+                    <div className='flex justify-between items-center w-full mb-2'>
+                      <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#004A76] font-[raleway]">
+                        {akunBaru}
+                      </p>
+                      <IoStatsChart className='w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-22 lg:w-24 lg:h-24 text-[#4ED9D9]/70'/>
+                    </div>
+                    <a href='/datamasyarakat' className="cursor-pointer text-sm sm:text-base md:text-lg text-[#004A76] font-bold underline hover:text-[#025f96]">
+                      Akun Baru
+                    </a>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                      {formatTanggal(selectedDate)}
+                    </p>
+                  </div>
+                  
+                  {/* Card 3 - Dokter Terdaftar */}
+                  <div className="group bg-gradient-to-br from-white to-gray-50/50 shadow-lg hover:shadow-2xl p-4 sm:p-6 rounded-2xl flex flex-col items-start border border-gray-100/50 backdrop-blur-sm transition-all duration-300 hover:transform relative overflow-hidden">
+                    <div className='flex justify-between items-center w-full mb-2'>
+                      <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#004A76] font-[raleway]">
+                        {allDokter}
+                      </p>
+                      <IoStatsChart className='w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-22 lg:w-24 lg:h-24 text-[#5EB5EF]/70'/>
+                    </div>
+                    <a href='/datadokter' className="text-sm sm:text-base md:text-lg text-[#004A76] font-semibold underline">
+                      Dokter Terdaftar
+                    </a>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                      {formatTanggal(selectedDate)}
+                    </p>
+                  </div>
 
-             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                {/* Kartu 1 */}
-                <div className="bg-white shadow-md p-4 sm:p-6 rounded-xl flex flex-col items-start">
-                  <div className='flex justify-between items-center w-full mb-2'>
-                    <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#004A76] font-[raleway]">
-                      {jadwalByTanggal}
-                    </p>
-                    <IoStatsChart className='w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 text-[#FF8FA7]/70'/>
-                  </div>
-                  <a href='/konsultasi' className="cursor-pointer text-sm sm:text-base md:text-lg text-[#004A76] font-bold underline hover:text-[#025f96]">
-                    Konsultasi
-                  </a>
-                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                    {formatTanggal(selectedDate)}
-                  </p>
-                </div>
-                
-                {/* Kartu 2 */}
-                <div className="bg-white shadow-md p-4 sm:p-6 rounded-xl flex flex-col items-start">
-                  <div className='flex justify-between items-center w-full mb-2'>
-                    <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#004A76] font-[raleway]">
-                      {akunBaru}
-                    </p>
-                    <IoStatsChart className='w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 text-[#4ED9D9]/70'/>
-                  </div>
-                  <a href='/datamasyarakat' className="cursor-pointer text-sm sm:text-base md:text-lg text-[#004A76] font-bold underline hover:text-[#025f96]">
-                    Akun Baru
-                  </a>
-                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                    {formatTanggal(selectedDate)}
-                  </p>
-                </div>
-                
-                
-                {/* Card 3 - Dokter Terdaftar */}
-                <div className="bg-white shadow-md p-4 sm:p-6 rounded-xl flex flex-col items-start">
-                  <div className='flex justify-between items-center w-full mb-2'>
-                    <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#004A76] font-[raleway]">
-                      {allDokter}
-                    </p>
-                    <IoStatsChart className='w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 text-[#5EB5EF]/70'/>
-                  </div>
-                  <p className="text-sm sm:text-base md:text-lg text-[#004A76] font-semibold underline">
-                    Dokter Terdaftar
-                  </p>
-                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                    {formatTanggal(selectedDate)}
-                  </p>
-                </div>
-
-                {/* Card 4 - Artikel Publish */}
-                <div className="bg-white shadow-md p-4 sm:p-6 rounded-xl flex flex-col items-start">
+                  {/* Card 4 - Artikel Publish */}
+                  <div className="group bg-gradient-to-br from-white to-gray-50/50 shadow-lg hover:shadow-2xl p-4 sm:p-6 rounded-2xl flex flex-col items-start border border-gray-100/50 backdrop-blur-sm transition-all duration-300 hover:transform relative overflow-hidden">
                     <div className='flex justify-between items-center w-full mb-2'>
                       <p className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#004A76] font-[raleway]">
                         {artikelLog}
                       </p>
-                      <IoStatsChart className='w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 text-[#FFD778]/70'/>
+                      <IoStatsChart className='w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-22 lg:w-24 lg:h-24 text-[#FFD778]/70'/>
                     </div>
-                    <p className="text-sm sm:text-base md:text-lg text-[#004A76] font-semibold underline">
+                    <a href='/dataartikel' className="text-sm sm:text-base md:text-lg text-[#004A76] font-semibold underline">
                       Artikel Publish
-                    </p>
+                    </a>
                     <p className="text-xs sm:text-sm text-gray-500 mt-1">
                       {formatTanggal(selectedDate)}
                     </p>
                   </div>
                 </div>
               </div>
-              <div className='w-full xl:w-1/2 flex justify-center'>
-                <div className="w-full max-w-lg bg-white rounded-xl shadow-md p-4 sm:p-6">
-                  <span className='text-lg sm:text-xl md:text-2xl font-bold font-[raleway] text-[#025f96] underline text-center mb-4'>Statistik Total Data</span>
-                  <div className='flex-1 flex items-center justify-center'>
-                    <Bar values={dataBar} className="w-full h-xl "/>
+              
+              <div className='w-full xl:w-1/2 flex items-stretch'>
+                <div className="w-full roup bg-gradient-to-br from-white to-gray-50/50 shadow-lg hover:shadow-2xl rounded-xl flex flex-col h-full">
+                  <span className='p-2 text-lg sm:text-xl md:text-2xl font-bold font-[raleway] text-[#025f96] underline text-center'>
+                    Statistik Total Data
+                  </span>
+                  <div className='flex-1 flex items-center justify-center min-h-0 '>
+                    <div className="w-4/5 max-w-sm aspect-square">
+                      <Bar values={dataBar} className="w-full h-full"/>
+                    </div>
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
       </main>

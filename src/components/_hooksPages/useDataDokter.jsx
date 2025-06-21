@@ -152,12 +152,34 @@ export default function useDataDokter() {
     }, [data, searchTerm]);
 
     const totalItems = filteredDokter.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-
+    const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+  
     const paginatedData = useMemo(() => {
-        const start = (currentPage - 1) * itemsPerPage;
-        return filteredDokter.slice(start, start + itemsPerPage);
-    }, [filteredDokter, currentPage, itemsPerPage]);
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      
+      console.log(`Menampilkan data ${start + 1}-${Math.min(end, totalItems)} dari ${totalItems}`);
+
+      return filteredDokter.slice(start, end);
+    }, [filteredDokter, currentPage, itemsPerPage, totalItems]);
+
+    
+  const getPaginationRange = (currentPage, totalPages, maxVisible = 5) => {
+    if (totalPages <= maxVisible) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    const half = Math.floor(maxVisible / 2);
+    let start = Math.max(1, currentPage - half);
+    let end = Math.min(totalPages, start + maxVisible - 1);
+
+    if (end - start + 1 < maxVisible) {
+      start = Math.max(1, end - maxVisible + 1);
+    }
+
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
+  
 
     
     // Format tanggal helper
@@ -209,6 +231,7 @@ export default function useDataDokter() {
     toggleDropdown,
     setIsOpen,
     isOpen,
+    getPaginationRange,
 
     filteredDokter,
     totalItems,
@@ -220,7 +243,8 @@ export default function useDataDokter() {
     handleAfterAddDokter,
     reloadData,
     formatTanggal,
-    clearSelectedData
+    clearSelectedData,
+    getPaginationRange
     
     })
 }

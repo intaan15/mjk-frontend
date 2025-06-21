@@ -7,7 +7,7 @@ const Layout = () => {
   return (
     <div className='flex flex-row min-h-screen transition-all duration-300 ease-in-out bg-gray-50 '>
       {/* Sidebar - Always visible with responsive width */}
-      <div className='flex-shrink-0 h-screen overflow-y-auto bg-white shadow-lg'>
+      <div className='flex-shrink-0 h-screen overflow-y-auto bg-white shadow-2xl' >
         <Sidebar/>
       </div>
       

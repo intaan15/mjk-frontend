@@ -83,7 +83,6 @@ const useKonsultasi = (token) => {
     return ["Semua", ...new Set(allPoli)];
   }, [data]);
 
-  console.log()
 
   const handleResetFilter = () => {
     setSelectedDate("");     
