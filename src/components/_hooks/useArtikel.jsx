@@ -130,15 +130,21 @@ export default function useArtikel({ idArtikel, token, onClose }) {
     }
 
     setIsLoading(true);
-
+    // ✅ VALIDASI UKURAN MAKSIMAL 20MB
+      if (formArtikel.gambar_artikel.size > 20 * 1024 * 1024) {
+        showErrorToast(` ❗Ukuran gambar terlalu besar (${(formArtikel.gambar_artikel.size / 1024 / 1024).toFixed(20)}MB). Maksimal 20MB.`);
+        return;
+      }
     try {
       const data = new FormData();
       data.append("foto", formArtikel.gambar_artikel); // UBAH DARI formData.foto
+      
 
       // Langkah 1: Upload gambar
       const uploadRes = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/artikel/upload`,
         data,
+
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -191,7 +197,7 @@ export default function useArtikel({ idArtikel, token, onClose }) {
       if (formArtikel.gambar_artikel) {
         // ✅ VALIDASI UKURAN MAKSIMAL 2MB
         if (formArtikel.gambar_artikel.size > 20 * 1024 * 1024) {
-          showErrorToast(` ❗Ukuran gambar terlalu besar (${(file.size / 1024 / 1024).toFixed(2)}MB). Maksimal 20MB.`);
+          showErrorToast(` ❗Ukuran gambar terlalu besar (${(file.size / 1024 / 1024).toFixed(20)}MB). Maksimal 20MB.`);
           return;
         }
 
