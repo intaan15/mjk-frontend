@@ -6,6 +6,7 @@ import ModalContent from "../../components/Modal/ModalContent";
 import { useDataArtikel } from "../../components/_hooksPages/useDataArtikel";
 import Basetable from "../../components/Table/Basetable";
 import { useAuth } from "../../components/Auth";
+import useLogout from '../../components/_hooksPages/useLogout';
 
 
 import { FaTrashAlt } from "react-icons/fa";
@@ -21,6 +22,7 @@ import { HiOutlineExclamationCircle } from "react-icons/hi2";
 export default function Artikel() {
 
   const token = localStorage.getItem("token");
+  const {handleLogout:handleLogout}=useLogout()
   const { user } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -76,12 +78,6 @@ export default function Artikel() {
     setModalType(null);
   };
   
-
-  const handleLogout = () => {
-    // Hapus token dari localStorage
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);

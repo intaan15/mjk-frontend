@@ -35,7 +35,6 @@ const Jadwal = () => {
     // Functions
     toggleDropdown,
     
-    // Auth
     user,
   } = useJadwal();
 

@@ -95,12 +95,14 @@ const useLogin = () => {
         }
     }, []);
 
+    
+
   // Handle captcha input focus
   const handleCaptchaFocus = () => {
     setValid(false);
   };
 
-  // Clear error messages
+
   const clearErrors = () => {
     setLoginError("");
     setValid(false);

@@ -132,7 +132,8 @@ export default function useArtikel({ idArtikel, token, onClose }) {
     setIsLoading(true);
     // ✅ VALIDASI UKURAN MAKSIMAL 20MB
       if (formArtikel.gambar_artikel.size > 20 * 1024 * 1024) {
-        showErrorToast(` ❗Ukuran gambar terlalu besar (${(formArtikel.gambar_artikel.size / 1024 / 1024).toFixed(20)}MB). Maksimal 20MB.`);
+        const sizeMB = Math.round(formArtikel.gambar_artikel.size / (1024 * 1024)); // Hitung ukuran dalam MB
+        showErrorToast(` ❗Ukuran gambar terlalu besar (${sizeMB}MB). Maksimal 20MB.`);
         return;
       }
     try {

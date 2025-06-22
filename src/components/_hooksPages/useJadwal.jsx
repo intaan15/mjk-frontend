@@ -135,16 +135,24 @@ export default function useJadwal() {
           const d = dayjs(tgl).locale("id");
           return (
             <div className="flex flex-row items-center leading-tight">
-              <div className='flex flex-col items-center border-r-2 px-2 '>
-                <span className="text-xs font-medium">{d.format("dddd")}</span>
-                <span className="text-sm font-semibold">{d.format("DD‑MM‑YYYY")}</span>
+            <div className="flex flex-col items-center border-r-2 border-[#004a76] px-3 py-1 min-w-[120px]">
+              <span className="text-xs font-medium text-[#004a76] uppercase tracking-wide">
+                {d.format("dddd")}
+              </span>
+              <span className="text-sm font-semibold text-[#004a76] mt-1">
+                {d.format("DD‑MM‑YYYY")}
+              </span>
               </div>
             </div>
           );
         },
         cell: ({ row }) => (
-          <div className="flex justify-center items-center h-full">
-            {findSlotDokterPadaTanggal(row.original, tgl) || "-"}
+          <div className="flex justify-center items-center h-full min-h-[48px] px-2">
+           <span className="text-sm text-gray-700">
+              {findSlotDokterPadaTanggal(row.original, tgl) || (
+                <span className="text-gray-400 font-light">—</span>
+              )}
+            </span>
           </div>
         )
       })),

@@ -9,7 +9,7 @@ export const useDataMasyarakat = (token) => {
   const [selectedId, setSelectedId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [reloadTrigger, setReloadTrigger] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [isOpen, setIsOpen] = useState(false);
@@ -128,7 +128,7 @@ export const useDataMasyarakat = (token) => {
             const subject = encodeURIComponent("Pemberitahuan Perubahan Data - Mojokerto Sehat");
             const body = encodeURIComponent(`Halo ${DataMasyarakat.nama_masyarakat},
 
-            Anda telah berhasil memperbarui data Anda di sistem Mojokerto Sehat.
+            Admin telah berhasil memperbarui data Anda di Sistem Mojokerto Sehat.
 
             Berikut detail akun Anda:
             - Username: ${DataMasyarakat.username_masyarakat}

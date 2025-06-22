@@ -27,7 +27,7 @@ const Basetable = ({ data, columns }) => {
       <div className="border-1 border-gray-300 rounded-xl md:max-h-[400px] lg:max-h-auto lg:min-h-[70vh] w-full overscroll-contain  overflow-x-auto scrollbar-rounded  ">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
         <table className="w-full min-w-max table-auto text-left overflow-y-auto" style={{ fontFamily: '"Nunito Sans"' }}>
           {/* Header */}
-        <thead className="sticky z-30 top-0 ">
+        <thead className="sticky z-30 top-0 bg-[#C3E9FF] ">
           {table.getHeaderGroups().map(headerGroup => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map(header => {
@@ -35,19 +35,23 @@ const Basetable = ({ data, columns }) => {
                 const sortDir = header.column.getIsSorted();
 
                 return (
-                  <th
-                    key={header.id}
-                    className="border-b border-[#004A76] font-bold text-[#004A76]  bg-[#C3E9FF]" 
-                    style={{ fontFamily: '"Nunito Sans"' }}
-                    onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
-                  >
+                    <th
+                        key={header.id}
+                        className={`border-b border-[#004A76] font-bold text-[#004A76] bg-[#C3E9FF] ${
+                        isSortable ? 'cursor-pointer hover:bg-[#B0E0FF] transition-colors' : ''
+                        }`}
+                        style={{ fontFamily: '"Nunito Sans"' }}
+                        onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
+                    >
                     <div className="flex gap-3 p-4 border-blue-gray-50 justify-start items-center text-center ">
                       {flexRender(header.column.columnDef.header, header.getContext())}
                     {isSortable && (
-  <>
-                        {sortDir === "asc" && <HiSortAscending size={14} />}
-                        {sortDir === "desc" && <HiSortDescending size={14} />}
-                        {!sortDir && <FaSort size={14} className="text-[#033E61]" />}
+                      <>
+                        <div className="flex-shrink-0">
+                        {sortDir === "asc" && <HiSortAscending size={16} className="text-[#004A76]" />}
+                        {sortDir === "desc" && <HiSortDescending size={16} className="text-[#004A76]" />}
+                        {!sortDir && <FaSort size={14} className="text-[#033E61] opacity-60" />}
+                      </div>
                       </>
                     )}
                     </div>
@@ -57,7 +61,7 @@ const Basetable = ({ data, columns }) => {
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody  className="bg-white">
           {table.getRowModel().rows.map(row => (
             <tr key={row.id} className="hover:bg-gray-100 text-sm  ">
               {row.getVisibleCells().map(cell => (

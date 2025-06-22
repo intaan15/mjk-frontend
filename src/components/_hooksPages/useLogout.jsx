@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const useAuth = () => {
+const useLogout = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -28,4 +28,4 @@ const useAuth = () => {
   };
 };
 
-export default useAuth;
+export default useLogout;
