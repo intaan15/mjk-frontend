@@ -244,7 +244,6 @@ export default function useDataDokter() {
     reloadData,
     formatTanggal,
     clearSelectedData,
-    getPaginationRange
     
     })
 }
