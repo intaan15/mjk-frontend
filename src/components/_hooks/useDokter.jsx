@@ -385,6 +385,35 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
 
     const validateEditForm = () => {
       const errors = {};
+      const fieldkosong = [];
+
+      const requiredFields = [
+        { key: 'nama_dokter', label: 'Nama Dokter' },
+        { key: 'username_dokter', label: 'Username' },
+        { key: 'email_dokter', label: 'Email' },
+        { key: 'NIK', label: 'NIK' },
+        { key: 'notlp_dokter', label: 'Nomor Telepon' },
+        { key: 'alamat', label: 'Alamat' },
+        { key: 'jeniskelamin_masyarakat', label: 'Jenis Kelamin' },
+        { key: 'tanggalLahir', label: 'Tanggal Lahir' },
+        { key: 'str_dokter', label: 'Nomor STR' }
+      ];
+
+      requiredFields.forEach(field => {
+        if (!formData[field.key]?.toString().trim()) {
+          fieldkosong.push(field.label);
+        }
+      });
+    
+
+      if (fieldkosong.length > 0) {
+        return {
+          isValid: false,
+          errors: { general: 'Data tidak boleh kosong' },
+          fieldkosong: fieldkosong
+        };
+      }
+
       
       // Validasi nama dokter
       if (!formData.nama_dokter?.trim()) {

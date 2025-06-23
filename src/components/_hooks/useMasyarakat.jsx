@@ -127,7 +127,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose, onAddSuccess}
     // 1. Cek validasi Update inputan 
     const validateUpdateForm = (formData) => {
       const errors = {};
-      const emptyFields = [];
+      const fieldkosong = [];
     
       // Daftar field yang wajib diisi
       const requiredFields = [
@@ -144,16 +144,16 @@ export default function useMasyarakat({idMasyarakat,token,onClose, onAddSuccess}
       // Cek field yang kosong terlebih dahulu
       requiredFields.forEach(field => {
         if (!formData[field.key] || (typeof formData[field.key] === 'string' && formData[field.key].trim() === '')) {
-          emptyFields.push(field.label);
+          fieldkosong.push(field.label);
         }
       });
 
       // Jika ada field yang kosong, return dengan pesan error umum
-      if (emptyFields.length > 0) {
+      if (fieldkosong.length > 0) {
         return {
           isValid: false,
           errors: { general: 'Data tidak boleh kosong' },
-          emptyFields: emptyFields
+          fieldkosong: fieldkosong
         };
       }
 

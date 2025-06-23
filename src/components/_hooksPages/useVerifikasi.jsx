@@ -146,7 +146,6 @@ export default function useVerifikasi() {
 
   // Update verification status
   const updateVerificationStatus = async (status, _id) => {
-    set
     try {
       await axios.patch(
         `${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${_id}`,
