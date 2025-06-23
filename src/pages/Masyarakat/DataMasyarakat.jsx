@@ -31,6 +31,7 @@ function DataMasyarakat() {
     setIsOpen,
     selectedId,
     loading,
+    setLoading,
     isModalOpen,
     fetchDataMasyarakat,
     paginatedData,

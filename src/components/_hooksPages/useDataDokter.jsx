@@ -42,8 +42,8 @@ export default function useDataDokter() {
     const fetchDokterById = useCallback(async (id) => {
         if (!id || !token) return;
         
-        try {
         setLoading(true);
+        try {
         const response = await axios.get(
             `${import.meta.env.VITE_BASE_URL}/api/dokter/getbyid/${id}`,
             {

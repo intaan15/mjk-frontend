@@ -26,11 +26,12 @@ export const useDataMasyarakat = (token) => {
         const filtered = res.data
         .filter(item => item.verifikasi_akun_masyarakat === 'diterima')
         .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // <- SORT terbaru dulu
-
-        setLoading(false);
+        
         setDataMasyarakat(filtered);
       } catch (err) {
         console.error("Gagal fetch DataMasyarakat:", err);
+    } finally {
+      setLoading(false); // ✅ ini akan selalu dipanggil, baik berhasil atau gagal
     }
    }, [token]);
 
@@ -204,6 +205,7 @@ export const useDataMasyarakat = (token) => {
     itemsPerPage,
     setItemsPerPage,
     loading,
+    setLoading,
     formatTanggal,
     dataMasyarakat,
     handleUpdateMasyarakat,
