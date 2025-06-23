@@ -1158,7 +1158,7 @@ export default function ModalContent({
               <div className=" text-center">
                 <button 
                   type="submit" 
-                  onClick={() => console.log("Tombol ditekan")}
+                  // onClick={() => console.log("Tombol ditekan")}
                   className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5 transition duration-200 ease-in-out"
                 >
                   Tambah Data dokter

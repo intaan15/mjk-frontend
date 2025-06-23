@@ -70,14 +70,14 @@ const Jadwal = (dokterId ) => {
           }))
         );
           
-        console.log("inisorted",allJadwal)
+        // console.log("inisorted",allJadwal)
         
        
         const semuaTanggal = mapDokter.flatMap(d => d.jadwal.map(j => j.tanggal));
         const tanggalUnik = [...new Set(semuaTanggal)];
         setTanggalHeader(tanggalUnik);
         
-        console.log("nihasilmap",mapDokter); // ✅ Lihat struktur data
+        // console.log("nihasilmap",mapDokter); // ✅ Lihat struktur data
         const nama = mapDokter.map((dokter) => dokter.nama);
         // console.log(nama)
         setDataDokter(mapDokter);

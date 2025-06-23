@@ -92,7 +92,7 @@ export default function useArtikel({ idArtikel, token, onClose }) {
 
   // UBAH NAMA FUNGSI JADI handleFileChangeArtikel
   const handleFileChangeArtikel = (e) => {
-    console.log("File selected:", e.target.files[0]); // Debug
+    // console.log("File selected:", e.target.files[0]); // Debug
     setFormArtikel((prev) => ({
       ...prev,
       gambar_artikel: e.target.files[0], 

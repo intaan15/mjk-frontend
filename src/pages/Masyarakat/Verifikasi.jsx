@@ -64,7 +64,6 @@ function Verifikasi() {
     };
     
     const closeModal = () => {
-        console.log("closeModal");
         setIsModalOpen(false);
         setModalType(null);
         setSelectedData(null);
@@ -417,7 +416,7 @@ function Verifikasi() {
               <div className="flex flex-col justify-center items-center py-8">
                 <div className="text-gray-400 text-4xl">📋</div>
                 <p className="text-gray-600 text-base">Tidak ada data yang ditemukan</p>
-                <p className="text-gray-400 text-sm">Pencarian berdasarkan Nama</p>
+                <p className="text-gray-400 text-sm"> Data Verifikasi Kosong</p>
               </div>
             )}
           </div>

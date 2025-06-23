@@ -44,7 +44,7 @@ export default function useVerifikasi() {
   };
 
   const closeModal = () => {
-    console.log("closeModal");
+    // console.log("closeModal");
     setIsModalOpen(false);
     setModalType(null);
     setSelectedData(null);
@@ -159,7 +159,7 @@ export default function useVerifikasi() {
         }
       );
 
-      console.log("Status verifikasi berhasil diperbarui (PATCH)");
+      // console.log("Status verifikasi berhasil diperbarui (PATCH)");
       
       // Update local state
       setAllRows((prevRows) =>
@@ -196,7 +196,7 @@ export default function useVerifikasi() {
       
       const filteredData = res.data;
       setAllRows(filteredData);
-      console.log(filteredData);
+      // console.log(filteredData);
       setData(filteredData);
     } catch (err) {
       console.error('Error fetching data:', err);

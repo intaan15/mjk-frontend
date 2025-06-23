@@ -11,7 +11,7 @@ const Outtabel = () => {
 
   // Ganti dengan endpoint asli untuk dokter
   const endpoint = "https://mjk-backend-production.up.railway.app/api/dokter/getall";
-  console.log("endpoint", data);
+  // console.log("endpoint", data);
 
   useEffect(() => {
     axios.get(endpoint)

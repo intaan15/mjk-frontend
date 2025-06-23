@@ -80,7 +80,7 @@ export const useDataMasyarakat = (token) => {
      const start = (currentPage - 1) * itemsPerPage;
      const end = start + itemsPerPage;
      
-     console.log(`Menampilkan data ${start + 1}-${Math.min(end, totalItems)} dari ${totalItems}`);
+    //  console.log(`Menampilkan data ${start + 1}-${Math.min(end, totalItems)} dari ${totalItems}`);
      
      return filteredRows.slice(start, end);
    }, [filteredRows, currentPage, itemsPerPage, totalItems]);

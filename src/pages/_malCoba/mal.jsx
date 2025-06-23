@@ -9,7 +9,7 @@ const Mal = async (loginData) => {
     // Contoh: panggil API login dan dapat token
     const response = await axios.get("https://mjk-backend-production.up.railway.app/api/admin/getall", loginData);
     const token = response.data.token;
-    console.log(token)
+    // console.log(token)
 
     // Simpan token ke localStorage
     localStorage.setItem("token", token);

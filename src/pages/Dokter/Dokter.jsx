@@ -99,7 +99,7 @@ function Dokter() {
       enableSorting: false,
       cell: ({ getValue }) => {
         const imageUrl = getValue();
-        console.log("Image URL:", imageUrl);
+        // console.log("Image URL:", imageUrl);
 
         return imageUrl ? (
           <img

@@ -155,7 +155,7 @@ function Dokter() {
               </thead>
               <tbody>
                 {filteredRows.map(({ nama_dokter,username_dokter,spesialis_dokter, str_dokter,p_masyarakat}, index) => {
-                  console.log({ foto_profil_dokter, username_dokter, email_masyarakat, notlp_masyarakat, nik_masyarakat }); 
+                  // console.log({ foto_profil_dokter, username_dokter, email_masyarakat, notlp_masyarakat, nik_masyarakat }); 
                   const isLast = index === filteredRows.length - 1;
                   const classes = isLast
                     ? "p-4"

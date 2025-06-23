@@ -34,7 +34,7 @@ const useKonsultasi = (token) => {
     });
   }, [token]);
 
-  console.log(data)
+  // console.log('☑️ Data berhasil load')
   const filteredRows = data.filter((row) => {
     const statusMatch =
       filterStatus === "Diproses"
@@ -62,7 +62,7 @@ const useKonsultasi = (token) => {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     
-    console.log(`Menampilkan data ${start + 1}-${Math.min(end, totalItems)} dari ${totalItems}`);
+
     
     return filteredRows.slice(start, end);
   }, [filteredRows, currentPage, itemsPerPage, totalItems]);
@@ -91,7 +91,7 @@ const useKonsultasi = (token) => {
     setCurrentPage(1);       
   };
 
-  console.log(handleResetFilter)
+  // console.log(handleResetFilter)
 
   const getPaginationRange = (currentPage, totalPages, maxVisible = 5) => {
     if (totalPages <= maxVisible) {

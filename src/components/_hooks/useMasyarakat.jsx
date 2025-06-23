@@ -41,8 +41,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose, onAddSuccess}
     // Debug: pastikan props valid
     const token = localStorage.getItem("token");
     if (!idMasyarakat || !token) {
-        console.error("Tidak bisa fetch: idMasyarakat/token tidak ada");
-    return;
+      return;
     }
 
     const fetchData = async () => {
@@ -57,7 +56,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose, onAddSuccess}
           );
 
           setDataMasyarakatbyId(response.data);
-          console.log("☑️Data diterima:", response.data);
+          // console.log("☑️Data diterima:", response.data);
       } catch (error) {
           console.error("Gagal fetch masyarakat:", {
               status: error.response?.status,
@@ -78,7 +77,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose, onAddSuccess}
   useEffect(() => {
     if (!dataMasyarakatbyId) return;
 
-    console.log("📦 Data dari API:", dataMasyarakatbyId); // Debug
+    // console.log("📦 Data dari API:", dataMasyarakatbyId); // Debug
 
     setFormData({
       nama: dataMasyarakatbyId.nama_masyarakat || "",
@@ -97,8 +96,8 @@ export default function useMasyarakat({idMasyarakat,token,onClose, onAddSuccess}
 
 
     });
-    console.log("iniform",formData); // Debug
-    console.log("inifotoktp",formData.selfie_ktp_masyarakat); // Debug
+    // console.log("iniform",formData); // Debug
+    // console.log("inifotoktp",formData.selfie_ktp_masyarakat); // Debug
   }, [dataMasyarakatbyId]);
 
  
@@ -249,7 +248,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose, onAddSuccess}
       if (!validation.isValid) {
         const firstError = Object.values(validation.errors)[0];
         showErrorToast(firstError);
-        console.log("Validation errors:", validation.errors);
+        // console.log("Validation errors:", validation.errors);
         return;
       }
 
@@ -288,7 +287,7 @@ export default function useMasyarakat({idMasyarakat,token,onClose, onAddSuccess}
           // selfie_ktp_masyarakat:imagePath,
           // foto_profil_masyarakat:imagePath
       };
-      console.log("inimasyarakat",masyarakatData)
+      // console.log("inimasyarakat",masyarakatData)
 
       const updateResponse = await axios.patch(
         `${import.meta.env.VITE_BASE_URL}/api/masyarakat/update/${idMasyarakat}`,

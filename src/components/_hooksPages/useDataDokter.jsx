@@ -52,7 +52,7 @@ export default function useDataDokter() {
             },
             }
         );
-        console.log("Data dokter by ID:", response.data);
+        // console.log("Data dokter by ID:", response.data);
         setDataDokterbyId(response.data);
         setLoading(false);
         } catch (error) {
@@ -158,7 +158,6 @@ export default function useDataDokter() {
       const start = (currentPage - 1) * itemsPerPage;
       const end = start + itemsPerPage;
       
-      console.log(`Menampilkan data ${start + 1}-${Math.min(end, totalItems)} dari ${totalItems}`);
 
       return filteredDokter.slice(start, end);
     }, [filteredDokter, currentPage, itemsPerPage, totalItems]);

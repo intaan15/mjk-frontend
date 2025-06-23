@@ -47,7 +47,6 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
     
             setDataDokterbyId(response.data);
             // console.log("Data dokter by ID:", response.data);
-            console.log("☑️ Data diterima oleh form");
         } catch (error) {
             console.error("Gagal fetch dokter:", {
             status: error.response?.status,
@@ -87,8 +86,6 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
       
       const token = localStorage.getItem("token");
       if (!dataDokterbyId) return;
-
-      console.log("☑️ Data dokter diterima");
 
       setFormData({
         nama_dokter: dataDokterbyId.nama_dokter || "",
@@ -235,7 +232,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
           
           if (checkUsername.data.exists) {
               showErrorToast("Username sudah digunakan oleh dokter lain");
-              return false;
+              return;
           }
   
           // Cek email duplikat
@@ -248,7 +245,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
           
           if (checkEmail.data.exists) {
               showErrorToast("Email sudah digunakan oleh dokter lain");
-              return false;
+              return ;
           }
   
           // Cek STR duplikat
@@ -261,7 +258,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
           
           if (checkSTR.data.exists) {
               showErrorToast("Nomor STR sudah terdaftar");
-              return false;
+              return ;
           }
   
           return true;
@@ -383,7 +380,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
 
     // UPDATE DATA DOKTER
 
-    const validateEditForm = () => {
+    const validateEditForm = (formData) => {
       const errors = {};
       const fieldkosong = [];
 
@@ -391,25 +388,21 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
         { key: 'nama_dokter', label: 'Nama Dokter' },
         { key: 'username_dokter', label: 'Username' },
         { key: 'email_dokter', label: 'Email' },
-        { key: 'NIK', label: 'NIK' },
         { key: 'notlp_dokter', label: 'Nomor Telepon' },
-        { key: 'alamat', label: 'Alamat' },
-        { key: 'jeniskelamin_masyarakat', label: 'Jenis Kelamin' },
-        { key: 'tanggalLahir', label: 'Tanggal Lahir' },
         { key: 'str_dokter', label: 'Nomor STR' }
       ];
 
       requiredFields.forEach(field => {
-        if (!formData[field.key]?.toString().trim()) {
-          fieldkosong.push(field.label);
-        }
+        if (!formData[field.key] || (typeof formData[field.key] === 'string' && formData[field.key].trim() === '')) {
+            fieldkosong.push(field.label);
+          }
       });
     
 
       if (fieldkosong.length > 0) {
         return {
           isValid: false,
-          errors: { general: 'Data tidak boleh kosong' },
+          errors: { general: 'Data tidak boleh kosong',fieldkosong },
           fieldkosong: fieldkosong
         };
       }
@@ -425,74 +418,78 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
       } else if (formData.nama_dokter.trim().length > 100) {
           errors.nama_dokter = "Nama dokter maksimal 100 karakter";
       }
+
+        // Validasi foto profil (jika ada file baru)
+        if (formData.foto_profil_dokter && formData.foto_profil_dokter instanceof File) {
+            // Cek ukuran file (20MB)
+            if (formData.foto_profil_dokter.size > 20 * 1024 * 1024) {
+                const sizeMB = Math.round(formData.foto_profil_dokter.size / (1024 * 1024));
+                errors.foto_profil_dokter = `Ukuran gambar terlalu besar (${sizeMB}MB). Maksimal 20MB`;
+            }
+            
+            // Cek ukuran minimum (1KB)
+            if (formData.foto_profil_dokter.size < 1024) {
+                errors.foto_profil_dokter = "File gambar terlalu kecil. Minimal 1KB";
+            }
+            
+            // Cek tipe file
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+            if (!allowedTypes.includes(formData.foto_profil_dokter.type)) {
+                errors.foto_profil_dokter = "Format file harus JPG, JPEG, PNG, atau WEBP";
+            }
+        }
+
+        // Validasi spesialis
+        if (!formData.spesialis?.value) {
+            errors.spesialis = "Spesialis dokter wajib dipilih";
+        }   
   
-      // Validasi username
-      if (!formData.username_dokter?.trim()) {
-          errors.username_dokter = "Username wajib diisi";
-      } else if (formData.username_dokter.trim().length < 4) {
-          errors.username_dokter = "Username minimal 4 karakter";
-      } else if (formData.username_dokter.trim().length > 50) {
-          errors.username_dokter = "Username maksimal 50 karakter";
-      } else if (!/^[a-zA-Z0-9._-]+$/.test(formData.username_dokter.trim())) {
-          errors.username_dokter = "Username hanya boleh berisi huruf, angka, titik, underscore, dan tanda hubung";
-      }
+        // Validasi email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!formData.email_dokter?.trim()) {
+            errors.email_dokter = "Email wajib diisi";
+        } else if (!emailRegex.test(formData.email_dokter.trim())) {
+            errors.email_dokter = "Format email tidak valid";
+        } else if (formData.email_dokter.trim().length > 100) {
+            errors.email_dokter = "Email maksimal 100 karakter";
+        }
+    
+        // Validasi nomor telepon Indonesia
+        const phoneRegex = /^(\+62|62|0)[0-9]{9,13}$/;
+        if (!formData.notlp_dokter?.trim()) {
+            errors.notlp_dokter = "Nomor telepon wajib diisi";
+        } else {
+            const cleanPhone = formData.notlp_dokter.replace(/\s+/g, '');
+            if (!phoneRegex.test(cleanPhone)) {
+                errors.notlp_dokter = "Format nomor telepon tidak valid (contoh: 081234567890 atau +6281234567890)";
+            }
+        }
   
-      // Validasi email
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!formData.email_dokter?.trim()) {
-          errors.email_dokter = "Email wajib diisi";
-      } else if (!emailRegex.test(formData.email_dokter.trim())) {
-          errors.email_dokter = "Format email tidak valid";
-      } else if (formData.email_dokter.trim().length > 100) {
-          errors.email_dokter = "Email maksimal 100 karakter";
-      }
+        // Validasi STR dokter
+        if (!formData.str_dokter?.trim()) {
+            errors.str_dokter = "Nomor STR wajib diisi";
+        } else if (formData.str_dokter.trim().length < 10) {
+            errors.str_dokter = "Nomor STR minimal 10 karakter";
+        } else if (formData.str_dokter.trim().length > 50) {
+            errors.str_dokter = "Nomor STR maksimal 50 karakter";
+        }
+
+        // Validasi username
+        if (!formData.username_dokter?.trim()) {
+            errors.username_dokter = "Username wajib diisi";
+        } else if (formData.username_dokter.trim().length < 4) {
+            errors.username_dokter = "Username minimal 4 karakter";
+        } else if (formData.username_dokter.trim().length > 50) {
+            errors.username_dokter = "Username maksimal 50 karakter";
+        } else if (!/^[a-zA-Z0-9._-]+$/.test(formData.username_dokter.trim())) {
+            errors.username_dokter = "Username hanya boleh berisi huruf, angka, titik, underscore, dan tanda hubung";
+        }
+
   
-      // Validasi nomor telepon Indonesia
-      const phoneRegex = /^(\+62|62|0)[0-9]{9,13}$/;
-      if (!formData.notlp_dokter?.trim()) {
-          errors.notlp_dokter = "Nomor telepon wajib diisi";
-      } else {
-          const cleanPhone = formData.notlp_dokter.replace(/\s+/g, '');
-          if (!phoneRegex.test(cleanPhone)) {
-              errors.notlp_dokter = "Format nomor telepon tidak valid (contoh: 081234567890 atau +6281234567890)";
-          }
-      }
-  
-      // Validasi STR dokter
-      if (!formData.str_dokter?.trim()) {
-          errors.str_dokter = "Nomor STR wajib diisi";
-      } else if (formData.str_dokter.trim().length < 10) {
-          errors.str_dokter = "Nomor STR minimal 10 karakter";
-      } else if (formData.str_dokter.trim().length > 50) {
-          errors.str_dokter = "Nomor STR maksimal 50 karakter";
-      }
-  
-      // Validasi spesialis
-      if (!formData.spesialis?.value) {
-          errors.spesialis = "Spesialis dokter wajib dipilih";
-      }
-  
-      // Validasi foto profil (jika ada file baru)
-      if (formData.foto_profil_dokter && formData.foto_profil_dokter instanceof File) {
-          // Cek ukuran file (20MB)
-          if (formData.foto_profil_dokter.size > 20 * 1024 * 1024) {
-              const sizeMB = Math.round(formData.foto_profil_dokter.size / (1024 * 1024));
-              errors.foto_profil_dokter = `Ukuran gambar terlalu besar (${sizeMB}MB). Maksimal 20MB`;
-          }
-          
-          // Cek ukuran minimum (1KB)
-          if (formData.foto_profil_dokter.size < 1024) {
-              errors.foto_profil_dokter = "File gambar terlalu kecil. Minimal 1KB";
-          }
-          
-          // Cek tipe file
-          const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-          if (!allowedTypes.includes(formData.foto_profil_dokter.type)) {
-              errors.foto_profil_dokter = "Format file harus JPG, JPEG, PNG, atau WEBP";
-          }
-      }
-  
-      return errors;
+        return {
+            isValid: Object.keys(errors).length === 0,
+            errors: errors
+        };
     };
     
     const checkDuplicateDataForEdit = async () => {
@@ -515,7 +512,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
               
               if (checkUsername.data.exists) {
                   showErrorToast("❗ Username sudah digunakan oleh dokter lain");
-                  return false;
+                  return ;
               }
           } catch (error) {
               if (error.response?.status !== 404) {
@@ -535,7 +532,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
               
               if (checkEmail.data.exists) {
                   showErrorToast("❗ Email sudah digunakan oleh dokter lain");
-                  return false;
+                  return;
               }
           } catch (error) {
               if (error.response?.status !== 404) {
@@ -555,7 +552,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
               
               if (checkSTR.data.exists) {
                   showErrorToast("❗ Nomor STR sudah terdaftar");
-                  return false;
+                  return;
               }
           } catch (error) {
               if (error.response?.status !== 404) {
@@ -565,7 +562,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
   
           return true;
       } catch (error) {
-          console.error("Error in checkDuplicateDataForEdit:", error);
+          console.error("Data Error:", error);
           // Tidak memblokir proses jika pengecekan duplikasi gagal
           return true;
       }
@@ -573,15 +570,24 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
   
     // POST -- UPDATE DATA
     const handleEditSubmitDokter = async (e) => {
-      const token = localStorage.getItem("token");
-      e.preventDefault();
+        e.preventDefault();
+        const token = localStorage.getItem("token");
 
-      const validationErrors = validateEditForm();
-      if (Object.keys(validationErrors).length > 0) {
-          const firstError = Object.values(validationErrors)[0];
-          showErrorToast(`❗ ${firstError}`);
-          return;
-      }
+        const validation = validateEditForm(formData);
+        if (!validation.isValid) {
+            // ✅ PERBAIKAN: Akses error dengan benar
+            const errors = validation.errors;
+            if (errors.general) {
+                // showErrorToast(`❗ ${errors.general}`);
+                console.log(errors)
+            } else {
+                // Tampilkan error pertama yang ditemukan
+                const firstErrorKey = Object.keys(errors)[0];
+                const firstErrorMessage = errors[firstErrorKey];
+                showErrorToast(`❗ ${firstErrorMessage}`);
+            }
+            return; 
+        }
 
        // 2. CEK DUPLIKASI DATA (jika fungsi tersedia)
       if (typeof checkDuplicateDataForEdit === 'function') {
@@ -678,7 +684,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
           message = "Ukuran file terlalu besar. Maksimal 2MB.";
         }
 
-        console.error("Gagal update artikel:", message);
+        console.error("Gagal update");
         showErrorToast(message); // <-- ini toast yang akan muncul
       }
     };
@@ -690,7 +696,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
       for (let i = 0; i < length; i++) {
         password += charset.charAt(Math.floor(Math.random() * charset.length));
       }
-      console.log("👌generate password succes")
+    //   console.log("👌generate password succes")
       return password;
     };
 
@@ -701,7 +707,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
         password_dokter: newPassword,
         
       }));
-      console.log("☑️regenerate password succes")
+    //   console.log("☑️regenerate password succes")
     };
 
 
