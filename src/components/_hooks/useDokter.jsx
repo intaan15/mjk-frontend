@@ -149,6 +149,28 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
 
     const validateForm = () => {
       const errors = {};
+      const fieldkosong = [];
+
+      const requiredFields = [
+        { key: 'nama_dokter', label: 'Nama Dokter' },
+        { key: 'username_dokter', label: 'Username' },
+        { key: 'email_dokter', label: 'Email' },
+        { key: 'notlp_dokter', label: 'Nomor Telepon' },
+        { key: 'str_dokter', label: 'Nomor STR' }
+      ];
+
+      requiredFields.forEach(field => {
+        if (!formData[field.key] || (typeof formData[field.key] === 'string' && formData[field.key].trim() === '')) {
+            fieldkosong.push(field.label);
+        }
+    });
+      if (fieldkosong.length > 0) {
+        return {
+          isValid: false,
+          errors: { general: 'Data tidak boleh kosong',fieldkosong },
+          fieldkosong: fieldkosong};
+       }
+
       
       // Validasi nama dokter
       if (!formData.nama_dokter?.trim()) {
@@ -214,6 +236,10 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
               errors.foto_profil_dokter = "Format file harus JPG, JPEG, atau PNG";
           }
       }
+
+      if (!formData.password_dokter){
+        errors.password_dokter = "Password Wajib Diisi"
+      }
   
       return errors;
     };
@@ -275,18 +301,39 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
 
         e.preventDefault();
 
-        const validationErrors = validateForm();
-        if (Object.keys(validationErrors).length > 0) {
-          // Tampilkan error pertama
-          const firstError = Object.values(validationErrors)[0];
-          showErrorToast(`❗ ${firstError}`);
-          
-          // Atau tampilkan semua error
-          // const errorList = Object.values(validationErrors).join('\n');
-          showErrorToast(`❗ Mohon perbaiki error berikut:\n${errorList}`);
-          
-          return;
+        const validation = validateForm();
+        if (!validation.isValid) {
+            const errors = validation.errors;
+        
+            if (errors.general) {
+                // Jika ada field kosong
+                showErrorToast(`❗ ${errors.general}`);
+                if (validation.fieldkosong && validation.fieldkosong.length > 0) {
+                    // console.log("Field yang kosong:", validation.fieldkosong.join(', '));
+                }
+            } else {
+                const firstError = Object.values(errors)[0];
+                showErrorToast(`❗ ${firstError}`);
+            }
+            return;
         }
+            
+        const requiredFields = [
+            { key: 'nama_dokter', label: 'Nama Dokter' },
+            { key: 'username_dokter', label: 'Username' },
+            { key: 'email_dokter', label: 'Email' },
+            { key: 'notlp_dokter', label: 'Nomor Telepon' },
+            { key: 'str_dokter', label: 'Nomor STR' },
+            { key: 'password_dokter', label: 'Password' }
+        ];
+
+        const emptyFields = [];
+        requiredFields.forEach(field => {
+            if (!formData[field.key] || 
+                (typeof formData[field.key] === 'string' && formData[field.key].trim() === '')) {
+                emptyFields.push(field.label);
+            }
+        });
 
         // 2. CEK DUPLIKASI DATA (OPSIONAL)
         if (typeof checkDuplicateData === 'function') {
@@ -402,7 +449,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
       if (fieldkosong.length > 0) {
         return {
           isValid: false,
-          errors: { general: 'Data tidak boleh kosong',fieldkosong },
+          errors: { general: 'Data tidak boleh kosong'},
           fieldkosong: fieldkosong
         };
       }
@@ -578,8 +625,8 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
             // ✅ PERBAIKAN: Akses error dengan benar
             const errors = validation.errors;
             if (errors.general) {
-                // showErrorToast(`❗ ${errors.general}`);
-                console.log(errors)
+                showErrorToast(`❗ ${errors.general}`);
+                // console.log(errors)
             } else {
                 // Tampilkan error pertama yang ditemukan
                 const firstErrorKey = Object.keys(errors)[0];

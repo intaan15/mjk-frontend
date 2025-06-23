@@ -71,6 +71,7 @@ export default function useArtikel({ idArtikel, token, onClose }) {
       .replace(/>/g, "&gt;");
   }
 
+
   // UBAH NAMA FUNGSI JADI handleChangeArtikel
   const handleChangeArtikel = useCallback((eOrname, value) => {
     if (typeof eOrname === "string") {
@@ -108,9 +109,10 @@ export default function useArtikel({ idArtikel, token, onClose }) {
     }));
   };
 
-  // SUBMIT FORM
+  // SUBMIT TAMBAH DATA ARTIKEL
   const handleSubmit = async (e) => {
     e.preventDefault();
+
 
     if (!formArtikel.judul.trim()) {
       showErrorToast("Judul artikel wajib diisi.");
@@ -129,13 +131,13 @@ export default function useArtikel({ idArtikel, token, onClose }) {
       return;
     }
 
+    if (formArtikel.gambar_artikel.size > 20 * 1024 * 1024) {
+      const sizeMB = Math.round(formArtikel.gambar_artikel.size / (1024 * 1024)); // Hitung ukuran dalam MB
+      showErrorToast(` ❗Ukuran gambar terlalu besar (${sizeMB}MB). Maksimal 20MB.`);
+      return;
+    }
     setIsLoading(true);
     // ✅ VALIDASI UKURAN MAKSIMAL 20MB
-      if (formArtikel.gambar_artikel.size > 20 * 1024 * 1024) {
-        const sizeMB = Math.round(formArtikel.gambar_artikel.size / (1024 * 1024)); // Hitung ukuran dalam MB
-        showErrorToast(` ❗Ukuran gambar terlalu besar (${sizeMB}MB). Maksimal 20MB.`);
-        return;
-      }
     try {
       const data = new FormData();
       data.append("foto", formArtikel.gambar_artikel); // UBAH DARI formData.foto
