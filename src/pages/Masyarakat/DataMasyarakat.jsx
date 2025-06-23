@@ -47,23 +47,14 @@ function DataMasyarakat() {
     dataMasyarakat,
     handleUpdateMasyarakat,
     getPaginationRange,
-    ANIMASI_GAMBAR
+    ANIMASI_GAMBAR,
+    fetchDataById
   }= useDataMasyarakat(token);
-
-
-  const openModalWithId = (type,id) => {
-    if (!id) {
-    alert("ID artikel tidak valid!");
-    return;
-    }
-    setSelectedId(id);
-    setModalType(type);
-    setIsModalOpen(true);
-  };
 
   const openModal = (type, id) => {
     setModalType(type);
     setSelectedId(id);
+    fetchDataById(id);
     setIsModalOpen(true);
   };
 

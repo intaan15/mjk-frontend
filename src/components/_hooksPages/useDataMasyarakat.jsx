@@ -190,6 +190,7 @@ export const useDataMasyarakat = (token) => {
     isOpen,
     toggleDropdown,
     dataMasyarakatbyId,
+    fetchDataById,
     selectedId,
     setSelectedId,
     isModalOpen,

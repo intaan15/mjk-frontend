@@ -51,7 +51,7 @@ export default function ModalContent({
     previewFotoKTP: previewFotoKTP,
    }= useMasyarakat({idMasyarakat, token, onClose,dataMasyarakatbyId,onAddSuccess});
 
-   console.log("Data Masyarakat by ID:", formMasyarakat);
+  //  console.log("Data Masyarakat by ID:", formMasyarakat);
 
   const {
     formData: formDokter,
@@ -111,23 +111,23 @@ export default function ModalContent({
     case "editdataartikel":
       return (
         <>
-          <div className="text-start w-full relative">
+          <div className="text-start w-full relative p-4 sm:p-6">
             <button
               onClick={onClose}
-              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
+              className="cursor-pointer absolute top-2 sm:top-4 right-2 sm:right-4 text-gray-600 hover:text-red-500 text-2xl sm:text-3xl lg:text-4xl font-bold z-10"
             >
               &times;
             </button>
-            <h1 className="text-xl font-[raleway] text-[#004A76] underline font-extrabold mb-6">
-              Edit Data Artikel
-            </h1>
+              <h1 className="text-lg sm:text-xl lg:text-2xl font-[raleway] text-[#004A76] underline font-extrabold mb-4 sm:mb-6 pr-8 sm:pr-10">
+                Edit Data Artikel
+              </h1>
 
-            <form onSubmit={handleEditSubmitArtikel} className="space-y-6">
+            <form onSubmit={handleEditSubmitArtikel} className="space-y-4 sm:space-y-6">
               {/* Judul */}
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                 <label
                   htmlFor="judul"
-                  className="w-1/5 font-medium text-black dark:text-black"
+                  className="w-full sm:w-1/5 font-medium text-black dark:text-black text-sm sm:text-base"
                   style={{ fontFamily: "Nunito Sans" }}
                 >
                   Judul
@@ -136,7 +136,7 @@ export default function ModalContent({
                   id="judul"
                   name="judul"
                   rows="1"
-                  className="block p-2.5 w-4/5 text-sm  text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-[#004A76]"
+                  className="block p-10 w-full h-auto sm:w-4/5 text-sm text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-[#004A76] focus:border-[#004A76] resize-none"
                   placeholder="judul artikel"
                   value={formArtikel.judul}
                   onChange={handleChangeArtikel}
@@ -145,23 +145,24 @@ export default function ModalContent({
               </div>
 
               {/* Foto Artikel */}
-              <div className="flex flex-column w-full justify-center items-start gap-4 mt-6 ">
+              <div className="flex flex-col gap-2 sm:gap-4 mt-4 sm:mt-6">
                 <label
                   htmlFor="dropzone-file"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-black w-1/5" style={{fontFamily: 'Nunito Sans'}}
-                  >
+                  className="block text-sm sm:text-base font-medium text-gray-900 dark:text-black w-full sm:w-1/5"
+                  style={{fontFamily: 'Nunito Sans'}}
+                >
                   Sampul Artikel
                 </label>
 
-                <div className=" flex flex-col h-auto w-4/5 justify-center items-start gap-6">
+                <div className="flex flex-col h-auto w-full sm:w-4/5 sm:ml-auto justify-center items-start gap-4 sm:gap-6">
                   <div className="flex flex-col items-center justify-center w-full">
                     <label
                       htmlFor="gambar_artikel"
-                      className="flex flex-col items-center justify-center w-full h-36 border-1 border-gray-300 border-dashed rounded-md cursor-pointer bg-gray-30 dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white"
+                      className="flex flex-col items-center justify-center w-full h-32 sm:h-36 lg:h-40 border-2 border-gray-300 border-dashed rounded-md cursor-pointer bg-gray-30 dark:bg-white hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-white transition-colors"
                       >
-                        <div className="flex flex-col items-center justify-center pt-10 ">
-                        <svg
-                            className="w-10 h-10 mb-3 text-gray-400 group-hover:text-gray-500"
+                        <div className="flex flex-col items-center justify-center pt-6 sm:pt-8 lg:pt-10 px-4">
+                          <svg
+                            className="w-8 h-8 sm:w-10 sm:h-10 mb-2 sm:mb-3 text-gray-400 group-hover:text-gray-500"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
@@ -175,26 +176,27 @@ export default function ModalContent({
                               d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
                             />
                           </svg>
-                        <p className="mb-2 text-sm text-gray-500 flex flex-col items-center">
+                        <p className="mb-1 sm:mb-2 text-xs sm:text-sm text-gray-500 flex flex-col items-center text-center">
                           <span className="font-semibold">Klik untuk Mengunggah</span>
                           <span className="font-semibold">Foto Memperbarui Setelah Mengunggah</span>
                         </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 text-center px-2">
                           SVG, PNG, JPG or GIF (MAX. 800x400px)
                         </p>
                         {formArtikel.gambar_artikel && (
-                          <div className="flex items-center space-x-2 text-sm">
+                          <div className="flex flex-col sm:flex-row items-center space-y-1 sm:space-y-0 sm:space-x-2 text-xs sm:text-sm mt-2">
+                            <div className="flex items-center space-x-2"></div>
                             <div className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></div>
-                            <span className="text-green-700 font-medium">
+                            <span className="text-green-700 font-medium text-center">
                               {formArtikel.gambar_artikel.name}
                             </span>
                             <span className="text-gray-500">
-                              ({(formArtikel.gambar_artikel.size / 1024 / 1024).toFixed(2)} MB)
+                              ({(formArtikel.gambar_artikel.size / 1024 / 1024).toFixed(20)} MB)
                             </span>
                           </div>
                         )}
                       </div>
-                      <div className="text-sm font-bold underline font-[raleway] pt-8 self-start text-black">
+                      <div className="text-xs sm:text-sm font-bold underline font-[raleway] pt-4 sm:pt-6 lg:pt-8 self-start text-black">
                           {formArtikel.gambar_artikel
                             ? `Preview : ` 
                             : " Preview Gambar Lama : "}
@@ -210,32 +212,32 @@ export default function ModalContent({
                     {/* Preview gambar */}
                     {formArtikel.gambar_artikel ? (
                     // Jika ada file baru yang dipilih (untuk tambah atau edit dengan file baru)
-                    <div className="mt-2 relative inline-block">
+                    <div className="mt-2 relative inline-block w-full">
                       <img
                         src={URL.createObjectURL(formArtikel.gambar_artikel)}
                         alt="Preview foto artikel"
-                        className="w-full h-50 object-cover rounded-md shadow-md"
+                        className="w-full max-w-md h-40 sm:h-48 lg:h-56 object-cover rounded-md shadow-md mx-auto block"
                       />
                       <button
                         type="button"
                         onClick={handleResetFileArtikel}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors duration-200"
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-xs sm:text-sm hover:bg-red-600 transition-colors duration-200"
                       >
                         ×
                       </button>
                     </div>
                     ) : dataArtikel?.gambar_artikel ? (
                     // Jika tidak ada file baru tapi ada foto existing (untuk edit)
-                    <div className="mt-4 relative inline-block">
+                    <div className="mt-4 relative inline-block w-full">
                       <img
                         src={`${import.meta.env.VITE_BASE_URL}${dataArtikel?.gambar_artikel}`}
                         alt="Foto artikel existing"
-                        className="w-full h-50 object-cover rounded-md shadow-md"
+                        className="w-full max-w-md h-40 sm:h-48 lg:h-56 object-cover rounded-md shadow-md mx-auto block"
                       />
                       <button
                         type="button"
                         onClick={handleResetFileArtikel}
-                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors duration-200"
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center text-xs sm:text-sm hover:bg-red-600 transition-colors duration-200"
                       >
                         ×
                       </button>
@@ -246,17 +248,17 @@ export default function ModalContent({
               </div>
 
               {/* Kategori */}
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                 <label
                   htmlFor="kategori"
-                  className="w-1/5 font-medium text-gray-900 dark:text-black"
+                  className="w-full sm:w-1/5 font-medium text-gray-900 dark:text-black text-sm sm:text-base"
                 >
                   Kategori
                 </label>
                 <select
                   id="kategori"
                   name="kategori"
-                  className="bg-gray-30 border border-gray-300 text-gray-900 text-sm rounded-lg block w-4/5 p-2.5"
+                  className="bg-gray-30 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full sm:w-4/5 p-2.5 focus:ring-[#004A76] focus:border-[#004A76]"
                   value={formArtikel.kategori}
                   onChange={handleChangeKategoriArtikel}
                   required
@@ -271,18 +273,18 @@ export default function ModalContent({
               </div>
 
               {/* Deskripsi */}
-              <div className="flex items-start gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4">
                 <label
                   htmlFor="deskripsi"
-                  className="w-1/5 font-medium text-gray-900 dark:text-black"
+                  className="w-full sm:w-1/5 font-medium text-gray-900 dark:text-black text-sm sm:text-base"
                 >
                   Deskripsi
                 </label>
-                <div className="w-4/5 h-auto  border-2 border-gray-100 rounded-lg">
-                  <TipTap
+                <div className="w-full sm:w-4/5 h-auto border-2 border-gray-100 rounded-lg">
+                <TipTap
                     id="deskripsi"
                     rows="4"
-                    className="w-4/5 p-2 border rounded"
+                    className="w-full p-2 border rounded"
                     name="deskripsi"
                     value={formArtikel.deskripsi}
                     onChange={(html) => handleChangeArtikel("deskripsi", html)}
@@ -292,10 +294,10 @@ export default function ModalContent({
               </div>
 
               {/* Tombol Submit */}
-              <div className="text-center mt-5">
+              <div className="text-center mt-6 sm:mt-8">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5"
+                  className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer transition-colors duration-200 text-sm sm:text-base font-medium"
                 >
                   Simpan Perubahan
                 </button>
@@ -1365,15 +1367,15 @@ export default function ModalContent({
                 </div>
                 <div className=" flex flex-column h-auto w-full justify-center items-center gap-10 mt-6">
                   <label
-                    htmlFor="no_str"
+                    htmlFor="str_dokter"
                     className="block mb-2 text-sm  font-medium text-gray-900 dark:text-black w-1/5"
                   >
                     No. STR
                   </label>
 
                     <textarea
-                      id="no_str"
-                      name="no_str"
+                      id="str_dokter"
+                      name="str_dokter"
                       rows="1"
                       className="block p-2.5 text-sm w-4/5 text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Masukkan No. STR"
