@@ -33,10 +33,15 @@ function Loginakun() {
     handleSubmit,
   } = useLogin();
   const navigate = useNavigate();
+  
+  
+
 
   return (
     <div className="min-h-screen w-full flex flex-col justify-center items-center px-4 py-6 bg-gray-50">
+      
       <div className="bg-[#025F96]/10 px-4 sm:px-6 md:px-8 lg:px-10 py-6 rounded-[10px] w-xl max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl shadow-lg">
+      
         
         {/* Logo */}
         <div className="flex flex-col items-center mb-5">
@@ -103,7 +108,7 @@ function Loginakun() {
               </div>
               <button
                 type="button"
-                className="bg-[#004A76] text-white px-2 sm:px-3 py-2  border rounded shadow-sm focus:ring-2 focus:ring-blue-100  flex-shrink-0"
+                className="bg-[#004A76] text-white px-2 sm:px-3 py-2  border rounded shadow-sm focus:ring-2 hover:bg-[#003252] focus:ring-blue-100  flex-shrink-0"
                 onClick={fetchCaptcha}
               >
                 <HiOutlineRefresh className="w-4 h-4 sm:w-5 sm:h-5" />

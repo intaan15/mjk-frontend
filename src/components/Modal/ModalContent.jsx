@@ -1079,7 +1079,7 @@ export default function ModalContent({
                       name="notlp_dokter"
                       rows="1"
                       className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Masukkan No. Handphone"
+                      placeholder="Masukkan dengan awalan (62/08)"
                       value={formDokter.notlp_dokter||""}
                       onChange={handleChangeDokter}
                     ></textarea>
@@ -1360,7 +1360,7 @@ export default function ModalContent({
                       name="notlp_dokter"
                       rows="1"
                       className="block p-2.5 w-4/5 text-sm text-gray-900 bg-gray-30 rounded-md border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-white dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Masukkan No. Handphone"
+                      placeholder="Masukkan dengan awalan (62/08)"
                       value={formDokter.notlp_dokter}
                       onChange={handleChangeDokter}
                     ></textarea>

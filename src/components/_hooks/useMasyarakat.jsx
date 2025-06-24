@@ -147,14 +147,6 @@ export default function useMasyarakat({idMasyarakat,token,onClose, onAddSuccess}
         }
       });
 
-      // Jika ada field yang kosong, return dengan pesan error umum
-      if (fieldkosong.length > 0) {
-        return {
-          isValid: false,
-          errors: { general: 'Data tidak boleh kosong' },
-          fieldkosong: fieldkosong
-        };
-      }
 
       // Validasi Nama (required, min 2 karakter)
       if (!formData.nama || formData.nama.trim() === '') {
@@ -235,6 +227,16 @@ export default function useMasyarakat({idMasyarakat,token,onClose, onAddSuccess}
           errors.foto = 'Ukuran foto maksimal 2MB';
         }
       }
+
+      // Jika ada field yang kosong, return dengan pesan error umum
+      if (fieldkosong.length > 0) {
+        return {
+          isValid: false,
+          errors: { general: 'Data tidak boleh kosong' },
+          fieldkosong: fieldkosong
+        };
+      }
+      
     
       return {
         isValid: Object.keys(errors).length === 0,
