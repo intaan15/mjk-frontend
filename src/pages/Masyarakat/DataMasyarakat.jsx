@@ -160,7 +160,7 @@ function DataMasyarakat() {
           <button
             onClick={() => openModal("detailprofilmasyarakat", row.original._id)}
             title="Detail"
-            className="p-1.5 rounded-lg hover:bg-blue-100 transition-all duration-200 hover:scale-110"
+            className="p-1,5 rounded-lg hover:bg-blue-100 transition-all duration-200 hover:scale-110"
           >
             <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg cursor-pointer transition-colors duration-200" />
           </button>

@@ -99,7 +99,7 @@ function Dashboard() {
         <img src="line style.svg" alt="" className=' w-full max-w-full' />
 
         {/* header */}
-        <div className='relative w-full max-w-full mt-2 sm:mt-0 overflow-hidden'>
+        <div className='relative w-full max-w-full mt-2 sm:mt-0 '>
           
           {/* Gambar sebagai latar */}
           <img src="img_org.svg" alt="section img" className="w-full p-1 object-cover h-48 sm:h-56 md:h-64 lg:h-auto rounded-lg backdrop-blur-md"/>
