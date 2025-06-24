@@ -36,6 +36,7 @@ const StatBox = ({ icon, title, value }) => (
 
 function Dashboard() {
   const { user } = useAuth();
+  const {handleLogout:handleLogout}=useLogout()
   const [selectedDate, setSelectedDate] = useState(new Date());
   const {
     setIsOpen,
@@ -51,7 +52,6 @@ function Dashboard() {
     toggleDropdown,
     isOpen,
     dataBar,
-    handleLogout,
   } = useDashboard(selectedDate);
 
   return (

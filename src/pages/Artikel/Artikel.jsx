@@ -209,7 +209,6 @@ return (
                   <div className="absolute right-0 origin-top-right mt-8 w-48 px-3 rounded-xl shadow-lg bg-[#FFFFFF] z-50 transition-all duration-200">
                     <div className="py-1 justify-center transition-all duration-200">
                       <a
-                        href=""
                         className="flex flex-row py-2 text-sm sm:text-md font-[raleway] items-center font-bold text-[#004A76] gap-3"
                       >
                         <HiOutlineUser className="text-[24px] sm:text-[30px]" />
@@ -217,7 +216,6 @@ return (
                       </a>
 
                       <a
-                        href=""
                         onClick={handleLogout}
                          className="flex flex-row py-2 text-sm sm:text-md font-[raleway] items-center font-medium text-[#004A76] hover:bg-gray-100 gap-3 cursor-pointer"
                       >
