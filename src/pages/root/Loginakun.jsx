@@ -64,7 +64,7 @@ function Loginakun() {
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="pl-8 sm:pl-10 pr-3 h-[36px] sm:h-[40px] w-full border rounded-md text-gray-700 shadow-sm text-xs sm:text-sm focus:ring-2 focus:ring-blue-100 focus:outline-none"
+              className="pl-10 pr-10 h-[40px] w-full border rounded-md text-gray-700 shadow-sm focus:ring-2 focus:ring-blue-100 text-sm" 
               style={{ fontFamily: "Nunito Sans" }}
             />
           </div>
@@ -103,7 +103,7 @@ function Loginakun() {
               </div>
               <button
                 type="button"
-                className="bg-[#004A76] text-white px-2 sm:px-3 py-2 rounded hover:bg-blue-800 flex-shrink-0"
+                className="bg-[#004A76] text-white px-2 sm:px-3 py-2  border rounded shadow-sm focus:ring-2 focus:ring-blue-100  flex-shrink-0"
                 onClick={fetchCaptcha}
               >
                 <HiOutlineRefresh className="w-4 h-4 sm:w-5 sm:h-5" />

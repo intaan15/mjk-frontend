@@ -280,15 +280,15 @@ export default function ModalContent({
                 >
                   Deskripsi
                 </label>
-                <div className="w-full sm:w-4/5 h-auto border-2 border-gray-100 rounded-lg">
-                <TipTap
-                    id="deskripsi"
-                    rows="4"
-                    className="w-full p-2 border rounded"
-                    name="deskripsi"
-                    value={formArtikel.deskripsi}
-                    onChange={(html) => handleChangeArtikel("deskripsi", html)}
-                    required
+                <div className="w-full sm:w-4/5 h-auto border-2 border-gray-200 rounded-lg shadow-sm hover:border-gray-300 focus-within:border-blue-500 transition-colors duration-200">
+                  <TipTap
+                      id="deskripsi"
+                      rows="4"
+                      className="w-full p-2 border rounded"
+                      name="deskripsi"
+                      value={formArtikel.deskripsi}
+                      onChange={(html) => handleChangeArtikel("deskripsi", html)}
+                      required
                   />
                 </div>
               </div>

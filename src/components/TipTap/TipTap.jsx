@@ -50,9 +50,9 @@ const MenuBar = ({editor}) => {
   const activeClass = "bg-blue-200 text-blue-700";
 
   return (
-    <div className="control-group border-b border-gray-200 mb-4">
+    <div className="control-group border-bmb-4">
       <div className="button-group">
-        <div className="flex flex-wrap items-center gap-1 sm:gap-2 bg-gray-100 p-2 sm:p-3 rounded-md shadow-sm">
+        <div className="flex flex-wrap items-center gap-1 sm:gap-2 bg-gray-200 p-2 sm:p-3 shadow-sm">
           {/* Text Formatting */}
           <div className="flex items-center gap-1 border-r border-gray-300 pr-2 mr-2">
             <button
