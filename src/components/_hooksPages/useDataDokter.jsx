@@ -3,6 +3,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useState,useEffect, useCallback } from "react";
 import { useMemo } from "react";
+import.meta.env.VITE_BASE_URL
 
 export default function useDataDokter() {
     const token = localStorage.getItem("token");

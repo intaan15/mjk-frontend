@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import.meta.env.VITE_BASE_URL
 
 export const useDataMasyarakat = (token) => {
   const [searchTerm, setSearchTerm] = useState("");

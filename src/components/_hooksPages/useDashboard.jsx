@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import useLogout  from './useLogout';
-
+import.meta.env.VITE_BASE_URL
 
 const useDashboard = (selectedDate) => {
   const [jumlahKonsultasi, setJumlahKonsultasi] = useState(0);

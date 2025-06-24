@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import.meta.env.VITE_BASE_URL
 
 export default function useVerifikasi() {
   // State management

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import.meta.env.VITE_BASE_URL
 
 const useLogout = () => {
   const navigate = useNavigate();

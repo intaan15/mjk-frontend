@@ -5,6 +5,7 @@ import { groupBy, orderBy, uniq } from 'lodash';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 import { useAuth } from "../Auth";
+import.meta.env.VITE_BASE_URL
 
 dayjs.locale('id');
 

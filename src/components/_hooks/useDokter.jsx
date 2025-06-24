@@ -27,7 +27,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (!idDokter || !token) {
-            console.error("Tidak bisa fetch: idDokter/token tidak ada");
+            // console.error("Tidak bisa fetch: idDokter/token tidak ada");
         return;
         }
         // console.log("Fetching Dokter...", { idDokter, token });

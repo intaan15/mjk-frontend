@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import.meta.env.VITE_BASE_URL
 
 export const useDataArtikel = (token) => {
   const [artikel, setArtikel] = useState([]);
