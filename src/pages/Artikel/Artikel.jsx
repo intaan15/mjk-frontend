@@ -146,7 +146,7 @@ export default function Artikel() {
       header: "Aksi",
       enableSorting: false,
       cell: ({ row }) => (
-        <div className="inline-flex overflow-hidden items-center bg-[#FAFBFD] p-2 gap-3 rounded-xl border-1 border-[#979797]">
+        <div className="inline-flex items-center bg-[#FAFBFD] p-2 gap-3 rounded-xl border-1 border-[#979797]">
           <button
             onClick={() => openModal("editdataartikel", row.original._id)}
             title="Edit"

@@ -152,7 +152,7 @@ function Dokter() {
       header: "Aksi",
       enableSorting: false,
       cell: ({ row }) => (
-        <div className="grid grid-cols-3 gap-2 items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797] shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="inline-flex gap-2 items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797] shadow-sm hover:shadow-md transition-all duration-300">
           <button
             onClick={() => openModal("detailprofildokter", row.original._id)}
             title="Detail"

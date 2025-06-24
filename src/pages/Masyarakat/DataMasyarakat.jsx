@@ -156,22 +156,22 @@ function DataMasyarakat() {
       header: "Aksi",
       enableSorting: false,
       cell: ({ row }) => (
-        <div className="grid grid-cols-2 gap-2 items-center bg-[#FAFBFD] p-2 rounded-xl border-1 border-[#979797] shadow-sm hover:shadow-md transition-all duration-300">
+        <div className="inline-flex items-center bg-[#FAFBFD] p-2 gap-3 rounded-xl border-1 border-[#979797]">
           <button
             onClick={() => openModal("detailprofilmasyarakat", row.original._id)}
             title="Detail"
-            className="p-1,5 rounded-lg hover:bg-blue-100 transition-all duration-200 hover:scale-110"
+            className="p-1.5 rounded-lg hover:bg-blue-100 transition-all duration-200 group"
           >
-            <HiOutlineExclamationCircle className="text-black hover:text-[#004A76] text-lg cursor-pointer transition-colors duration-200" />
+            <HiOutlineExclamationCircle className="text-black justify-center  hover:text-[#004A76] text-xl cursor-pointer transition-colors duration-200" />
           </button>
 
           <button
             onClick={() => openModal("formeditmasyarakat", row.original._id)}
             title="Edit"
-            className="p-1.5 rounded-lg hover:bg-gray-100 transition-all duration-200 hover:scale-110"
+            className="p-1.5 rounded-lg hover:bg-gray-100 transition-all duration-200 group items-center"
           >
-            <FaEdit className="text-gray-600 hover:text-[#004A76] text-lg cursor-pointer transition-colors duration-200" />
-            </button>
+            <FaEdit className="text-gray-600 hover:text-[#004A76] text-xl cursor-pointer transition-colors duration-200" />
+          </button>
         </div>
       ),
     },
