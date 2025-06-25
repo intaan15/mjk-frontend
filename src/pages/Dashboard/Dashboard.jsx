@@ -186,7 +186,7 @@ function Dashboard() {
                       </p>
                       <IoStatsChart className='w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-22 lg:w-24 lg:h-24 text-[#4ED9D9]/70'/>
                     </div>
-                    <a href='/datamasyarakat' className="cursor-pointer text-sm sm:text-base md:text-lg text-[#004A76] font-bold underline hover:text-[#025f96]">
+                    <a href='/masyarakat/verifikasi' className="cursor-pointer text-sm sm:text-base md:text-lg text-[#004A76] font-bold underline hover:text-[#025f96]">
                       Akun Baru
                     </a>
                     <p className="text-xs sm:text-sm text-gray-500 mt-1">
@@ -202,7 +202,7 @@ function Dashboard() {
                       </p>
                       <IoStatsChart className='w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-22 lg:w-24 lg:h-24 text-[#5EB5EF]/70'/>
                     </div>
-                    <a href='/datadokter' className="text-sm sm:text-base md:text-lg text-[#004A76] font-semibold underline">
+                    <a href='/dokter/datadokter' className="text-sm sm:text-base md:text-lg text-[#004A76] font-semibold underline">
                       Dokter Terdaftar
                     </a>
                     <p className="text-xs sm:text-sm text-gray-500 mt-1">
@@ -218,7 +218,7 @@ function Dashboard() {
                       </p>
                       <IoStatsChart className='w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-22 lg:w-24 lg:h-24 text-[#FFD778]/70'/>
                     </div>
-                    <a href='/dataartikel' className="text-sm sm:text-base md:text-lg text-[#004A76] font-semibold underline">
+                    <a href='/artikel' className="text-sm sm:text-base md:text-lg text-[#004A76] font-semibold underline">
                       Artikel Publish
                     </a>
                     <p className="text-xs sm:text-sm text-gray-500 mt-1">

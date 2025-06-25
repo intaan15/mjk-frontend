@@ -267,6 +267,5 @@ export const useDataArtikel = (token) => {
     currentPage,
     itemsPerPage,
     totalItems,
-    totalPages
   };
 };

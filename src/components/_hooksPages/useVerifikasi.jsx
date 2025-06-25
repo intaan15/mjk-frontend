@@ -118,30 +118,40 @@ export default function useVerifikasi() {
       cancelButtonText: "Batal"
     }).then((result) => {
       if (result.isConfirmed) {
-        if (status === "ditolak") {
-          // Additional confirmation for email
-          Swal.fire({
+        // Email confirmation for both accept and reject
+        const emailConfig = {
+          diterima: {
             title: `Kirim pesan konfirmasi ke ${email_masyarakat}?`,
-            icon: "info",
-            showCancelButton: true,
-            confirmButtonText: "Kirim Email",
-            cancelButtonText: "Tidak",
-          }).then((res) => {
-            if (res.isConfirmed) {
-              // Open Gmail with draft
-              const subject = encodeURIComponent("Konfirmasi Penolakan Verifikasi");
-              const body = encodeURIComponent(`Halo,\n\nData Anda ditolak. Mohon periksa kembali informasi yang diberikan.\n\nTerima kasih.`);
-              window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email_masyarakat}&su=${subject}&body=${body}`);
-            }
-
-            // Update status in backend
-            updateVerificationStatus(status, _id);
-          });
-        } else {
-          // Direct update for acceptance
+            subject: "Konfirmasi Verifikasi Diterima",
+            body: `Halo,\n\nSelamat! Data Anda sudah terverifikasi dan diterima. Silakan melakukan login dengan data yang benar.\n\nTerima kasih.`
+          },
+          ditolak: {
+            title: `Kirim pesan konfirmasi ke ${email_masyarakat}?`,
+            subject: "Konfirmasi Penolakan Verifikasi",
+            body: `Halo,\n\nMohon maaf, data Anda ditolak. Mohon periksa kembali informasi yang diberikan dan ajukan ulang.\n\nTerima kasih.`
+          }
+        };
+  
+        const config = emailConfig[status];
+        
+        Swal.fire({
+          title: config.title,
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonText: "Kirim Email",
+          cancelButtonText: "Tidak",
+        }).then((res) => {
+          if (res.isConfirmed) {
+            // Open Gmail with draft
+            const subject = encodeURIComponent(config.subject);
+            const body = encodeURIComponent(config.body);
+            window.open(`https://mail.google.com/mail/?view=cm&fs=1&to=${email_masyarakat}&su=${subject}&body=${body}`);
+          }
+          
+          // Always update status regardless of email choice
           updateVerificationStatus(status, _id);
-        }
-      }
+        });
+      1}
     });
   };
 
