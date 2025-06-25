@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'
 import { useSpring, animated } from '@react-spring/web';
@@ -29,7 +27,7 @@ const Splashscreen = () => {
 
   return (
 
-    <div className='loginapage logo flex flex-col w-100% h-screen justify-center items-center bg-[#F2F2F2] animate-fade-in transition-opacity duration-500'> 
+    <div className='flex flex-col w-100% h-screen justify-center items-center bg-[#F2F2F2] animate-fade-in transition-opacity duration-500'> 
       <div className='absolute top-3 md:top-3 lg:top-3'>
         <img className='w-30 md:w-30 lg:w-35 ' src="FElogo.svg" alt="" /> 
       </div>

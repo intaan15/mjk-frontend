@@ -62,7 +62,11 @@ export default function ModalContent({
     handleSubmit:handleSubmitDokter,
     handleResetFile:handleResetFileDokter,
     regeneratePassword:regeneratePasswordDokter,
-    generatePassword:generatePasswordDokter
+    generatePassword:generatePasswordDokter,
+    isLoading,
+    loadingText,
+    totalRatings,
+    averageRating
     
   } = useDokter({idDokter, token,dataDokterbyId, onClose,onAddSuccess, modalType });
   
@@ -582,18 +586,20 @@ export default function ModalContent({
       // console.log("Data di modal:", dataMasyarakat);
       return (
         <>
-          <div className="text-start flex flex-col justify-center items-center transsition-all ease-in-out duration-300">
+          <div className="text-start flex flex-col justify-center items-center transition-all ease-in-out duration-300 px-2 sm:px-4">
             <button
               onClick={onClose}
-              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold transition-all duration-300 hover:scale-125"
+              className="cursor-pointer absolute top-2 right-2 sm:top-3 sm:right-3 text-gray-600 hover:text-red-500 text-2xl sm:text-3xl lg:text-4xl font-bold transition-all duration-300 hover:scale-125 z-10"
             >
               &times;
             </button>
-            <h1 className="text-lg sm:text-xl font-bold text-[#004A76] underline text-center mb-4">Detail Profil Masyarakat</h1>
-            <div className="flex flex-col  justify-center items-center gap-4">
+            <h1 className="text-base sm:text-lg lg:text-xl font-bold text-[#004A76] underline text-center mb-4 sm:mb-6 mt-2 sm:mt-0">
+              Detail Profil Masyarakat
+            </h1>
+            <div className="flex flex-col justify-center items-center gap-4 sm:gap-6 w-full">
               
               {/* Foto Profil */}
-              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
                 <img
                   src={
                         dataMasyarakatbyId?.foto_profil_masyarakat
@@ -601,47 +607,47 @@ export default function ModalContent({
                           : "/default-avatar.jpg" 
                       }
                   alt="foto_profil_masyarakat"
-                  className="w-32 h-32 sm:w-40 sm:h-40 p-1 border-2 border-[#025F96] rounded-full object-cover"
+                  className="w-24 h-24 sm:w-32 sm:h-32 lg:w-40 lg:h-40 p-1 border-2 border-[#025F96] rounded-full object-cover"
                 />
               </div>
 
               {/* Nama */}
-              <div className=" grid grid-cols-2 gap-5 w-full text-center p-4">
-                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10  ">
-                  <span className="text-[#025F96] font-bold underline ">Nama</span>
-                  <div className="">{dataMasyarakatbyId?.nama_masyarakat || " "}</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 lg:gap-5 w-full text-center p-2 sm:p-4">
+                <div className="grid grid-rows-2 gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10">
+                  <span className="text-[#025F96] font-bold underline text-sm sm:text-base">Nama</span>
+                  <div className="text-sm sm:text-base break-words">{dataMasyarakatbyId?.nama_masyarakat || " "}</div>
                 </div>
-                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold underline">Username</div>
+                <div className="grid grid-rows-2 gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10">
+                  <div className="text-[#025F96] font-bold underline text-sm sm:text-base">Username</div>
                   <div>{dataMasyarakatbyId?.username_masyarakat || " "}</div>
                 </div>
-                <div className="grid grid-rows-2 gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold underline">Email</div>
+                <div className="grid grid-rows-2 gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10">
+                  <div className="text-[#025F96] font-bold underline text-sm sm:text-base">Email</div>
                   <div>{dataMasyarakatbyId?.email_masyarakat || " "}</div>
                 </div>
-                <div className="grid grid-rows-2 gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold underline">NIK</div>
+                <div className="grid grid-rows-2 gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10">
+                  <div className="text-[#025F96] font-bold underline text-sm sm:text-base">NIK</div>
                   <div>{dataMasyarakatbyId?.nik_masyarakat}</div>
                 </div>
-                <div className="grid grid-rows-2 gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold underline">Alamat</div>
+                <div className="grid grid-rows-2 gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10">
+                  <div className="text-[#025F96] font-bold underline text-sm sm:text-base">Alamat</div>
                   <div>{dataMasyarakatbyId?.alamat_masyarakat}</div>
                 </div>
-                <div className="grid grid-rows-2 gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold underline">Nomor Telepon</div>
+                <div className="grid grid-rows-2 gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10">
+                  <div className="text-[#025F96] font-bold underline text-sm sm:text-base">Nomor Telepon</div>
                   <div>{dataMasyarakatbyId?.notlp_masyarakat}</div>
                 </div>
-                <div className="grid grid-rows-2 gap-2 w-full text-left px-10">
+                <div className="grid grid-rows-2 gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10">
 
-                  <div className="text-[#025F96] font-bold underline">Jenis Kelamin</div>
+                  <div className="text-[#025F96] font-bold underline text-sm sm:text-base">Jenis Kelamin</div>
                   <div>{dataMasyarakatbyId?.jeniskelamin_masyarakat}</div>
                 </div>
-                <div className="grid grid-rows-2 gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold underline">Tanggal Lahir</div>
+                <div className="grid grid-rows-2 gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10">
+                  <div className="text-[#025F96] font-bold underline text-sm sm:text-base">Tanggal Lahir</div>
                   <div>{dataMasyarakatbyId?.tgl_lahir_masyarakat?.slice(0, 10)}</div>
                 </div>
-                <div className="flex flex-col gap-2 w-full text-left px-10" >
-                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Foto KTP</div>
+                <div className="flex flex-col gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10 col-span-1 sm:col-span-2 lg:col-span-1">
+                  <div className="text-[#025F96] font-bold underline font-[raleway] text-sm sm:text-base">Foto KTP</div>
                   <div className=" rounded-xl p-2 w-60 h-40 flex items-center justify-center ">
                       <img
                           src={
@@ -658,8 +664,8 @@ export default function ModalContent({
                       />
                   </div>
                 </div>
-                <div className="flex flex-col gap-2 w-full text-left px-10">
-                  <div className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Selfie dengan KTP</div>
+                <div className="flex flex-col gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10 col-span-1 sm:col-span-2 lg:col-span-1">
+                  <div  className="text-[#025F96] font-bold underline font-[raleway] text-sm sm:text-base">Selfie dengan KTP</div>
                   <div className="rounded-xl p-2 w-60 h-40 flex items-center justify-center ">
                      <img
                           src={
@@ -710,9 +716,9 @@ export default function ModalContent({
               Edit Profil Masyarakat 
             </h1>
 
-            <form onSubmit={handleEditSubmitMasyarakat} className="py-3">
-              <div className="flex flex-col  justify-center items-center gap-4">
-                <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
+            <form onSubmit={handleEditSubmitMasyarakat} className="py-3 ">
+              <div className="flex flex-col justify-center items-center gap-4">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
                   <img
                     src={
                           dataMasyarakatbyId?.foto_profil_masyarakat
@@ -720,10 +726,10 @@ export default function ModalContent({
                             : "/default-avatar.jpg" 
                         }
                     alt="foto_profil_masyarakat"
-                    className="w-32 h-32 sm:w-40 sm:h-40 p-1 border-2 border-[#025F96] rounded-full object-cover"
+                    className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 p-1 border-2 border-[#025F96] rounded-full object-cover"
                   />
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full max-w-6xl px-4 sm:px-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 w-full max-w-6xl px-4 sm:px-6 ">
                   <div className="flex flex-col gap-2 w-full text-left px-10">
                     <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Nama</label>
                     <input
@@ -831,7 +837,7 @@ export default function ModalContent({
                     />
                   </div>
                  
-                  <div className="flex flex-col gap-2 w-full text-left px-10">
+                  <div className="flex flex-col gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10 col-span-1 sm:col-span-2 lg:col-span-1">
                     <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Foto KTP</label>
                       <div className=" rounded-xl p-2 w-60 h-40 flex items-center justify-center gap-2">
                         <img
@@ -850,7 +856,7 @@ export default function ModalContent({
                       </div>
                       
                   </div>
-                  <div className="flex flex-col gap-2 w-full text-left px-10" >
+                  <div className="flex flex-col gap-1 sm:gap-2 w-full text-left px-2 sm:px-4 lg:px-10 col-span-1 sm:col-span-2 lg:col-span-1">
                     <label className="text-[#025F96] font-bold items-start px-1 underline font-[raleway]">Selfie dengan KTP</label>
                     <div className="rounded-xl p-2 w-60 h-40 flex items-center justify-center gap-2">
                        <img
@@ -870,19 +876,19 @@ export default function ModalContent({
                    
                   </div>
                 </div>
-                <div className=" text-center flex flex-row gap-4 mt-5 items-center">
+                <div className="text-center flex flex-col gap-4 mt-5 items-center w-full px-4 sm:flex-row sm:justify-center">
                    <button
                         type="button" 
-                        className="w-50 px-4 py-2 bg-white text-[#004A76] border-2 hover:bg-gray-600 hover:text-white rounded-xl cursor-pointer mt-5 transition duration-200 ease-in-out"
+                        className="w-full sm:w-40 px-6 py-3 bg-white text-[#004A76] border-2 border-[#004A76] hover:bg-gray-100 hover:text-[#004A76] rounded-xl cursor-pointer transition duration-200 ease-in-out text-sm sm:text-base font-medium"
                         onClick={onClose}// Fungsi untuk handle cancel
                       >
                         Batal
                     </button>
                  
                   <button
-                    className="w-50 px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5 transition duration-200 ease-in-out"
+                    className="w-full sm:w-50 px-6 py-3 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer transition duration-200 ease-in-out text-sm sm:text-base font-medium"
                     onClick={handleEditSubmitMasyarakat}
-                    
+                        
                   >
                     Simpan Perubahan
                   </button>
@@ -1155,14 +1161,30 @@ export default function ModalContent({
                   </div>
               
               </div>
-              <div className=" text-center">
+              <div className="flex  text-center justify-center">
                 <button 
                   type="submit" 
-                  // onClick={() => console.log("Tombol ditekan")}
-                  className="px-4 py-2 bg-[#004A76] hover:bg-[#039FFC]/70 text-white rounded-xl cursor-pointer mt-5 transition duration-200 ease-in-out"
+                  disabled={isLoading}
+                  className={`px-4 py-2 rounded-xl mt-5 transition duration-200 ease-in-out ${
+                    isLoading 
+                      ? 'bg-gray-400 cursor-not-allowed' 
+                      : 'bg-[#004A76] hover:bg-[#039FFC]/70 cursor-pointer'
+                  } text-white flex items-center justify-center gap-2`}
                 >
-                  Tambah Data dokter
+                  {isLoading ? (
+                    <span className="flex items-center justify-center gap-1">
+                      Memproses
+                      <span className="flex gap-1">
+                        <span className="w-1 h-1 bg-white rounded-full animate-bounce" style={{animationDelay: '0ms'}}></span>
+                        <span className="w-1 h-1 bg-white rounded-full animate-bounce" style={{animationDelay: '150ms'}}></span>
+                        <span className="w-1 h-1 bg-white rounded-full animate-bounce" style={{animationDelay: '300ms'}}></span>
+                      </span>
+                  </span>
+                  ) : (
+                    'Tambah Data Dokter'
+                  )}
                 </button>
+
               </div>
             </form>
           
@@ -1414,20 +1436,21 @@ export default function ModalContent({
       );
 
     case "detailprofildokter":
+      console.log(dataDokterbyId)
       return (
         <>
-          <div className="text-start flex flex-col justify-center items-center transition-all ease-in-out duration-300">
+          <div className="text-start flex flex-col justify-center items-center transition-all ease-in-out duration-300 p-4 sm:p-6">
             <button
               onClick={onClose}
-              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
+              className="cursor-pointer absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-600 hover:text-red-500 text-3xl sm:text-4xl font-bold z-10"
             >
               &times;
             </button>
-            <h1 className="text-lg sm:text-xl font-bold text-[#004A76] underline text-center mb-4">Detail Profil Dokter</h1>
+            <h1 className="text-base sm:text-lg md:text-xl font-bold text-[#004A76] underline text-center mb-4 sm:mb-6 px-4">Detail Profil Dokter</h1>
 
-            <div className="flex flex-col  justify-center items-center gap-4">
-              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
-                <img
+            <div className="flex flex-col justify-center items-center gap-4 sm:gap-6 w-full max-w-4xl">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full border-2 border-[#025F96] overflow-hidden flex items-center justify-center">
+              <img
                   src={
                     dataDokterbyId?.foto_profil_dokter
                       ? `${import.meta.env.VITE_BASE_URL}${dataDokterbyId.foto_profil_dokter}`
@@ -1437,33 +1460,40 @@ export default function ModalContent({
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="grid grid-cols-2 gap-5 w-full text-center p-4">
-                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 ">
-                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Nama</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 w-full text-center p-2 sm:p-4">
+                <div  className="grid grid-rows-2 gap-2 w-full text-left px-2 sm:px-4 md:px-6 lg:px-10">
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway] text-sm sm:text-base">Nama</div>
                   <div>{dataDokterbyId?.nama_dokter}</div>
                 </div>
-                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 ">
-                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Username</div>
+                <div  className="grid grid-rows-2 gap-2 w-full text-left px-2 sm:px-4 md:px-6 lg:px-10">
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway] text-sm sm:text-base">Username</div>
                   <div>{dataDokterbyId?.username_dokter}</div>
                 </div>
-                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 "> 
-                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Email</div>
+                <div  className="grid grid-rows-2 gap-2 w-full text-left px-2 sm:px-4 md:px-6 lg:px-10"> 
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway] text-sm sm:text-base">Email</div>
                   <div>{dataDokterbyId?.email_dokter}</div>
                 </div>
-                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 ">
-                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Rating Dokter</div>
-                  <div>{dataDokterbyId?.rating_dokter}</div>
+                <div  className="grid grid-rows-2 gap-2 w-full text-left px-2 sm:px-4 md:px-6 lg:px-10">
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway] text-sm sm:text-base">Rating Dokter</div>
+                  <div>{totalRatings > 0 ? (
+                        <span className="text-lg font-semibold text-yellow-600">
+                          ⭐ {averageRating} 
+                        </span>
+                      ) : (
+                        <span className="text-gray-500 italic">Belum ada rating</span>
+                      )}
+                  </div>
                 </div>
-                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 ">
-                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Bidang Dokter</div>
+                <div  className="grid grid-rows-2 gap-2 w-full text-left px-2 sm:px-4 md:px-6 lg:px-10">
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway] text-sm sm:text-base">Bidang Dokter</div>
                   <div>{dataDokterbyId?.spesialis_dokter}</div>
                 </div>
-                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 ">
+                <div  className="grid grid-rows-2 gap-2 w-full text-left px-2 sm:px-4 md:px-6 lg:px-10">
                   <div className="text-[#025F96] font-bold items-start underline font-[raleway] ">Nomor Telepon</div>
                   <div>{dataDokterbyId?.notlp_dokter}</div>
                 </div>
-                <div className=" grid grid-rows-2 gap-2 w-full text-left px-10 "> 
-                  <div className="text-[#025F96] font-bold items-start underline font-[raleway]">Nomor.STR Kedokteran</div>
+                <div  className="grid grid-rows-2 gap-2 w-full text-left px-2 sm:px-4 md:px-6 lg:px-10"> 
+                  <div className="text-[#025F96] font-bold items-start underline font-[raleway] text-sm sm:text-base">Nomor.STR Kedokteran</div>
                   <div>{dataDokterbyId?.str_dokter}</div>
                 </div>
                 
