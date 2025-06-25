@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import.meta.env.VITE_BASE_URL
+import CryptoJS from "crypto-js";
 
 const useLogin = () => {
   // State management
@@ -15,8 +15,26 @@ const useLogin = () => {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [loading, setLoading] = useState(false);
-  
+
   const navigate = useNavigate();
+
+  // Encryption key - dalam produksi, ini harus dari environment variable
+  const ENCRYPTION_KEY =
+    import.meta.env.VITE_ENCRYPTION_KEY
+
+  // Function to encrypt password
+  const encryptPassword = (password) => {
+    try {
+      const encrypted = CryptoJS.AES.encrypt(
+        password,
+        ENCRYPTION_KEY
+      ).toString();
+      return encrypted;
+    } catch (error) {
+      console.error("Error encrypting password:", error);
+      throw new Error("Failed to encrypt password");
+    }
+  };
 
   // Toggle password visibility
   const togglePassword = () => setShowPassword((prev) => !prev);
@@ -24,7 +42,9 @@ const useLogin = () => {
   // Fetch captcha function
   const fetchCaptcha = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/api/captcha/captcha`);
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/captcha/captcha`
+      );
       setCaptcha(res.data.captcha);
       setCaptchaId(res.data.captchaId);
       setText("");
@@ -36,8 +56,6 @@ const useLogin = () => {
     }
   };
 
-
-
   // Auto-fetch captcha on mount and set interval
   useEffect(() => {
     fetchCaptcha();
@@ -46,63 +64,64 @@ const useLogin = () => {
   }, []);
 
   // Handle form submission
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     try {
       // Validate CAPTCHA
       const captchaRes = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/captcha/validate`,
-            {
-            captchaId,
-            userInput: text,
-            }
-        );
-
-        if (!captchaRes.data.success) {
-            setValid(true);
-            setSuccess(false);
-            return;
+        {
+          captchaId,
+          userInput: text,
         }
-        setValid(false);
-        setLoading(true);
+      );
 
-        // Login
-        const loginRes = await axios.post(
-            `${import.meta.env.VITE_BASE_URL}/api/auth/login_superadmin`,
-            {
-            username_superadmin: username,
-            password_superadmin: password,
-            }
-        );
+      if (!captchaRes.data.success) {
+        setValid(true);
+        setSuccess(false);
+        return;
+      }
+      setValid(false);
+      setLoading(true);
 
-        console.log(loginRes.data.message || "Login berhasil");
-        localStorage.setItem("token", loginRes.data.token);
-        navigate("/dashboardadmin");
-        } catch (error) {
-        console.error("Error saat login:", error);
-        setLoginError(
-            error.response?.data?.message || "❌Terjadi kesalahan saat login"
-        );
-        console.error("Login error:", error.response);
-        setLoading(false);
+      // Encrypt password before sending
+      const encryptedPassword = encryptPassword(password);
+
+      // Login with encrypted password
+      const loginRes = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/api/auth/login_superadmin`,
+        {
+          username_superadmin: username,
+          password_superadmin: encryptedPassword,
+          encrypted: true, // Flag to indicate password is encrypted
         }
-    };
+      );
 
-    useEffect(() => {
-        const token = localStorage.getItem("token");
-        if (token) {
-            navigate("/dashboardadmin"); // Langsung pindah
-        }
-    }, []);
+      console.log(loginRes.data.message || "Login berhasil");
+      localStorage.setItem("token", loginRes.data.token);
+      navigate("/dashboardadmin");
+    } catch (error) {
+      console.error("Error saat login:", error);
+      setLoginError(
+        error.response?.data?.message || "❌Terjadi kesalahan saat login"
+      );
+      console.error("Login error:", error.response);
+      setLoading(false);
+    }
+  };
 
-    
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      navigate("/dashboardadmin");
+    }
+  }, []);
 
   // Handle captcha input focus
   const handleCaptchaFocus = () => {
     setValid(false);
   };
-
 
   const clearErrors = () => {
     setLoginError("");
@@ -133,13 +152,13 @@ const useLogin = () => {
     password,
     loginError,
     loading,
-    
+
     // State setters
     setText,
     setUsername,
     setPassword,
     setValid,
-    
+
     // Functions
     togglePassword,
     fetchCaptcha,
