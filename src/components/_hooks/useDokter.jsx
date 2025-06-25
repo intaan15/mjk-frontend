@@ -177,8 +177,8 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
               value: dataDokterbyId.spesialis_dokter,
             }
           : null,
-        // str_dokter: dataDokterbyId.str_dokter || "",
-        password_dokter: dataDokterbyId.password_dokter || "",
+        str_dokter: dataDokterbyId.str_dokter || "",
+        // password_dokter: dataDokterbyId.password_dokter || "",
       });
     }, [dataDokterbyId]);
 
