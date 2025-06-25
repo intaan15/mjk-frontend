@@ -54,7 +54,7 @@ const useKonsultasi = (token) => {
 
     return statusMatch && nameMatch && poliMatch && dateMatch;
 
-});
+  });
 
   const totalItems = filteredRows.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;

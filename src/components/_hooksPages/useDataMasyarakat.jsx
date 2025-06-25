@@ -85,7 +85,7 @@ export const useDataMasyarakat = (token) => {
     //  console.log(`Menampilkan data ${start + 1}-${Math.min(end, totalItems)} dari ${totalItems}`);
      
      return filteredRows.slice(start, end);
-   }, [filteredRows, currentPage, itemsPerPage, totalItems]);
+  }, [filteredRows, currentPage, itemsPerPage, totalItems]);
 
   const formatTanggal = (isoDateString) => {
   const date = new Date(isoDateString);

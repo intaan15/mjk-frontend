@@ -1,4 +1,3 @@
-import React from 'react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 import { showSuccessToast, showErrorToast } from '../Modal/ToastModal';
@@ -6,6 +5,13 @@ import.meta.env.VITE_BASE_URL
 
 export default function useDokter ({idDokter,token,onClose,modalType,onAddSuccess}) {
     const [dataDokterbyId, setDataDokterbyId] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadingText, setLoadingText] = useState('');
+
+    const [ratingData, setRatingData] = useState([]);
+    const [averageRating, setAverageRating] = useState(0);
+    const [loadingRating, setLoadingRating] = useState(false);
+    const [totalRatings, setTotalRatings] = useState(0);
 
     //Menyimpan data inputan 
     const [formData, setFormData] = useState({
@@ -28,33 +34,107 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
         const token = localStorage.getItem("token");
         if (!idDokter || !token) {
             // console.error("Tidak bisa fetch: idDokter/token tidak ada");
-        return;
+            return;
         }
         // console.log("Fetching Dokter...", { idDokter, token });
-    
+
         const fetchData = async () => {
-        try {
-            const response = await axios.get(
-            `${import.meta.env.VITE_BASE_URL}/api/dokter/getbyid/${idDokter}`,
-            {
-                headers: {
-                Authorization: `Bearer ${token}`,
-                },
+            try {
+                setLoadingRating(true);
+                
+                // 1. Fetch data dokter
+                const doctorResponse = await axios.get(
+                    `${import.meta.env.VITE_BASE_URL}/api/dokter/getbyid/${idDokter}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                const doctorData = doctorResponse.data;
+                // console.log("Data dokter by ID:", doctorData);
+
+                // 2. Fetch rating data secara bersamaan
+                try {
+                    const ratingResponse = await axios.get(
+                        `${import.meta.env.VITE_BASE_URL}/api/rating/dokter/${idDokter}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
+                    );
+
+                    const ratingResult = ratingResponse.data;
+                    
+                    if (ratingResult.success && ratingResult.data.length > 0) {
+                        setRatingData(ratingResult.data);
+                        setTotalRatings(ratingResult.data.length);
+                        
+                        // Hitung rata-rata rating
+                        const totalRating = ratingResult.data.reduce((sum, rating) => sum + rating.rating, 0);
+                        const calculatedAverage = (totalRating / ratingResult.data.length).toFixed(1);
+                        setAverageRating(parseFloat(calculatedAverage));
+                        
+                        // Update data dokter dengan rating yang dihitung
+                        const updatedDoctorData = {
+                            ...doctorData,
+                            rating_dokter: calculatedAverage,
+                            total_ratings: ratingResult.data.length,
+                            rating_details: ratingResult.data // Menyimpan detail rating juga
+                        };
+                        setDataDokterbyId(updatedDoctorData);
+                        
+                        console.log("Rating data berhasil diambil:", {
+                            totalRatings: ratingResult.data.length,
+                            averageRating: calculatedAverage
+                        });
+                    } else {
+                        // Jika tidak ada rating, set default
+                        setRatingData([]);
+                        setAverageRating(0);
+                        setTotalRatings(0);
+                        setDataDokterbyId({
+                            ...doctorData,
+                            rating_dokter: 0,
+                            total_ratings: 0,
+                            rating_details: [],
+                        });
+                        console.log("Tidak ada rating untuk dokter ini");
+                    }
+                } catch (ratingError) {
+                    console.error("Error fetching rating:", {
+                        status: ratingError.response?.status,
+                        message: ratingError.message,
+                        data: ratingError.response?.data,
+                    });
+                    // Jika rating gagal, tetap lanjutkan dengan data dokter
+                    setRatingData([]);
+                    setAverageRating(0);
+                    setTotalRatings(0);
+                    setDataDokterbyId(doctorData);
+                }
+
+            } catch (error) {
+                console.error("Gagal fetch dokter:", {
+                    status: error.response?.status,
+                    message: error.message,
+                    data: error.response?.data,
+                });
+                
+                // Reset semua state jika gagal
+                setDataDokterbyId(null);
+                setRatingData([]);
+                setAverageRating(0);
+                setTotalRatings(0);
+            } finally {
+                setLoadingRating(false);
             }
-            );
-    
-            setDataDokterbyId(response.data);
-            // console.log("Data dokter by ID:", response.data);
-        } catch (error) {
-            console.error("Gagal fetch dokter:", {
-            status: error.response?.status,
-            message: error.message,
-            data: error.response?.data,
-            });
-        }
         };
-            fetchData();
-    }, [idDokter, token]);
+
+        fetchData();
+    }, [idDokter]);
 
     //reload tambah data ke null
     useEffect(() => {
@@ -97,7 +177,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
               value: dataDokterbyId.spesialis_dokter,
             }
           : null,
-        str_dokter: dataDokterbyId.str_dokter || "",
+        // str_dokter: dataDokterbyId.str_dokter || "",
         password_dokter: dataDokterbyId.password_dokter || "",
       });
     }, [dataDokterbyId]);
@@ -246,6 +326,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
     const handleSubmit = async (e) => {
 
         e.preventDefault();
+        
 
         const validation = validateForm();
         if (!validation.isValid) {
@@ -294,7 +375,7 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
             }
         }
             
-
+        setIsLoading(true);
         try {
 
             const token = localStorage.getItem("token");
@@ -353,6 +434,9 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
 
           console.error("Gagal menambah data dokter:", message);
           showErrorToast(message);
+        }finally{
+            setIsLoading(false)
+            setLoadingText('');
         }
     };
 
@@ -727,7 +811,11 @@ export default function useDokter ({idDokter,token,onClose,modalType,onAddSucces
     handleChangeSelect,
     handleResetFile,
     generatePassword,  
-    regeneratePassword      
+    regeneratePassword,
+    isLoading,
+    loadingText,
+    totalRatings,
+    averageRating    
     
     }
   )

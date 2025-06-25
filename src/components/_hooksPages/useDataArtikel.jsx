@@ -11,6 +11,8 @@ export const useDataArtikel = (token) => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedKategori, setSelectedKategori] = useState("");
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch semua artikel
   const fetchArtikel = useCallback(async () => {
@@ -204,15 +206,42 @@ export const useDataArtikel = (token) => {
       });
     };
 
+    const totalItems = filteredArtikel.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
+
+    const paginatedData = useMemo(() => {
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+            
+      return filteredArtikel.slice(start, end);
+    }, [filteredArtikel, currentPage, itemsPerPage, totalItems]);
+ 
+    const getPaginationRange = (currentPage, totalPages, maxVisible = 5) => {
+      if (totalPages <= maxVisible) {
+        return Array.from({ length: totalPages }, (_, i) => i + 1);
+      }
+  
+      const half = Math.floor(maxVisible / 2);
+      let start = Math.max(1, currentPage - half);
+      let end = Math.min(totalPages, start + maxVisible - 1);
+  
+      if (end - start + 1 < maxVisible) {
+        start = Math.max(1, end - maxVisible + 1);
+      }
+  
+      return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+    }; 
+    
+
   return {
     // Data states
     artikel,
     selectedId,
     dataArtikel,
     loading,
-    error,
     filteredArtikel,
     handleDelete,
+    paginatedData,
     
     // Filter states
     searchTerm,
@@ -220,6 +249,9 @@ export const useDataArtikel = (token) => {
     selectedKategori,
     setSelectedKategori,
     setSelectedId,
+    setItemsPerPage,
+    setCurrentPage,
+    getPaginationRange,
     
     // Actions
     fetchArtikel,
@@ -228,8 +260,13 @@ export const useDataArtikel = (token) => {
     setSelectedArtikelId,
     clearSelectedArtikel,
     refreshData,
-    
+
     // Utilities
     formatTanggal,
+    totalPages  ,
+    currentPage,
+    itemsPerPage,
+    totalItems,
+    totalPages
   };
 };
