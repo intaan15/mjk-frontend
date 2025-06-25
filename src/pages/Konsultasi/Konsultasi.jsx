@@ -19,6 +19,13 @@ function Konsultasi() {
   const token = localStorage.getItem("token");
   const {
 
+    // search
+    filterStatus,
+    searchTerm,
+    selectedPoli,
+    selectedDate,
+    setSelectedDate,
+
     //state updater
     setFilterStatus,
     setSearchTerm,
@@ -26,23 +33,18 @@ function Konsultasi() {
     setIsOpen,
     setCurrentPage,
     setSelectedPoli,
-    setSelectedDate,
 
     
     //state
-    filterStatus,
-    searchTerm,
     isOpen,
     loading,
     currentPage,
     itemsPerPage,
     formatTanggal,
-    selectedDate,
     toggleDropdown,
     paginatedData,
     totalItems,
     totalPages,
-    selectedPoli,
     poliOptions,
     handleResetFilter,
     getPaginationRange,
@@ -223,7 +225,7 @@ function Konsultasi() {
           </div>
         </div>
         
-        <img src="/line style.svg" alt="" className="w-full" />
+       <div className="h-1 w-full max-w-full bg-[#004a76]"/>
 
         {/* Filter Buttons */}
         <div className="flex flex-row justify-center w-full py-2 gap-2 sm:gap-4 transition-all duration-200 ">

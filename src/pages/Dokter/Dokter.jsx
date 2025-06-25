@@ -246,7 +246,7 @@ function Dokter() {
         </div>
         
 
-        <img src="/line style.svg" alt="" className="w-full" />
+       <div className="h-1 w-full max-w-full bg-[#004a76]"/>
 
         {/* Stats and Add Button Section - responsive seperti dashboard */}
         <div className="flex flex-col sm:flex-row justify-between w-full items-start sm:items-center px-2 sm:px-5 py-1 gap-4 sm:gap-0">

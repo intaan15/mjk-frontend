@@ -238,7 +238,7 @@ function DataMasyarakat() {
             </div>
         </div>
         
-        <img src="/line style.svg" alt=""className='w-full' />
+        <div className="h-1 w-full max-w-full bg-[#004a76]"/>
 
         {/* Statistics Card */}
         <div className="flex flex-row justify-start sm:justify-between w-full items-center  py-3 px-2 sm:px-4 lg:px-6 gap-4 lg:gap-2">

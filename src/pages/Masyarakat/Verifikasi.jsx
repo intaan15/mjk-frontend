@@ -279,7 +279,7 @@ function Verifikasi() {
             </div>
           </div>
           
-          <img src="/line style.svg" alt="" className="w-full" />
+         <div className="h-1 w-full max-w-full bg-[#004a76]"/>
 
           {/* Statistics Cards */}
           <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center py-3 px-2 sm:px-4 lg:px-6 gap-3 lg:gap-2 ">

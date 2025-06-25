@@ -31,27 +31,29 @@ export default function Artikel() {
   
   const {
     // Data
-    filteredArtikel,
+    paginatedData,
     fetchArtikel,
     selectedId,
     dataArtikel,
-    loading,
-    error,
     
     // Filter states
+    loading,
     searchTerm,
     setSearchTerm,
     selectedKategori,
     setSelectedKategori,
     setSelectedId,
+    setCurrentPage,
+    getPaginationRange,
+    totalPages,
+
     
     // Actions
-    deleteArtikel,
-    setSelectedArtikelId,
-    clearSelectedArtikel,
-    refreshData,
     formatTanggal,
-    handleDelete
+    currentPage,
+    itemsPerPage,
+    totalItems,
+    handleDelete,
   } = useDataArtikel(token);
 
 
@@ -231,7 +233,7 @@ return (
         </div>
       </div>
 
-      <img src="line style.svg" alt="" className="w-full" />
+      <div className="h-1 w-full max-w-full bg-[#004a76]"/>
 
       {/* Category Selection & Add Button */}
       <div className="flex flex-col lg:flex-row justify-between w-full items-start lg:items-center px-2 py-2 gap-3 lg:gap-0">
@@ -276,16 +278,122 @@ return (
         </div>
       </div>
 
-      {/* Main Content */}
+      {/* Main Content Tabel */}
       <div className="py-2 flex-1">
         {loading ? (
           <div className="flex items-center justify-center h-32">
             <p className="text-gray-600">Loading data...</p>
           </div>
         ) : (
-          <Basetable data={filteredArtikel} columns={columns} />
+          <Basetable data={paginatedData} columns={columns} />
         )}
       </div>
+
+      {/* Pagination */}
+      <div className="flex flex-col sm:grid sm:grid-cols-3 gap-4 sm:gap-0 items-center justify-center mt-4">
+          {/* Results info */}
+          <div className="text-xs sm:text-sm text-gray-600 text-center sm:text-left order-2 sm:order-1">
+            Menampilkan {(currentPage - 1) * itemsPerPage + 1} - {" "}
+            {Math.min(currentPage * itemsPerPage, totalItems)} dari {totalItems}{" "}
+            hasil
+          </div>
+          {/* Navigation */}
+          <div className="flex items-center gap-2 sm:gap-4 order-1 sm:order-2 overflow-x-auto">
+            <div className="flex items-center space-x-1 sm:space-x-2">
+              <button
+                className={`px-2 py-1 border-2 rounded-md transition duration-200 text-sm
+                  ${
+                    currentPage === 1
+                      ? "opacity-50 cursor-not-allowed border-gray-300"
+                      : "hover:bg-[#004A76] hover:text-white hover:border-[#004A76] border-gray-300 text-gray-700 active:scale-95"
+                  }
+                `}
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                &lt;
+              </button>
+
+              {/* Show limited page numbers on mobile */}
+              {(() => {
+                const maxVisible = window.innerWidth < 640 ? 3 : 5; // Responsive max visible
+                const paginationRange = getPaginationRange(
+                  currentPage,
+                  totalPages,
+                  maxVisible
+                );
+
+                return (
+                  <>
+                    {/* First page + ellipsis */}
+                    {paginationRange[0] > 1 && (
+                      <>
+                        <button
+                          onClick={() => setCurrentPage(1)}
+                          className="px-2 xs:px-3 py-2 border rounded-lg transition-all duration-200 hover:bg-[#004A76] hover:text-white hover:border-[#004A76] border-gray-300 text-gray-700 text-sm font-medium active:scale-95"
+                          >
+                          1
+                        </button>
+                        {paginationRange[0] > 2 && (
+                          <span className="px-1 sm:px-2 py-1 text-gray-500 text-sm">...</span>
+                        )}
+                      </>
+                    )}
+
+                    {/* Range pages */}
+                    {paginationRange.map((pageNum) => (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                          className={`px-2 xs:px-3 py-2 border rounded-lg transition-all duration-200 text-sm font-medium active:scale-95
+                          ${
+                            currentPage === pageNum
+                              ? "bg-[#004A76] text-white border-[#004A76]"
+                              : "border-gray-300"
+                          }
+                        `}
+                      >
+                        {pageNum}
+                      </button>
+                    ))}
+
+                    {/* Ellipsis + Last page */}
+                    {paginationRange[paginationRange.length - 1] < totalPages && (
+                      <>
+                        {paginationRange[paginationRange.length - 1] < totalPages - 1 && (
+                          <span className="px-1 sm:px-2 py-1 text-gray-500 text-sm">...</span>
+                        )}
+                        <button
+                          onClick={() => setCurrentPage(totalPages)}
+                          className="px-2 xs:px-3 py-2 border rounded-lg transition-all duration-200 hover:bg-[#004A76] hover:text-white hover:border-[#004A76] border-gray-300 text-gray-700 text-sm font-medium active:scale-95"
+                        >
+                          {totalPages}
+                        </button>
+                      </>
+                    )}
+                  </>
+                );
+              })()}
+
+              <button
+                className={`px-2 py-1 border-2 rounded-md transition duration-200 text-sm
+                  ${
+                    currentPage === totalPages
+                      ? "opacity-50 cursor-not-allowed border-gray-300"
+                      : "hover:bg-[#004A76] hover:text-white"
+                  }
+                `}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              >
+                &gt;
+              </button>
+            </div>
+          </div>
+          <div className="hidden sm:block order-3"></div>
+        </div>
 
       <Modal open={isModalOpen} onClose={closeModal}>
         <ModalContent

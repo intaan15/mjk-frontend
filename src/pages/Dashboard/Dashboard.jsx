@@ -96,7 +96,7 @@ function Dashboard() {
             </div>
           </div>
         </div>
-        <img src="line style.svg" alt="" className=' w-full max-w-full' />
+        <div className="h-1 w-full max-w-full bg-[#004a76]"/>
 
         {/* header */}
         <div className='relative w-full max-w-full mt-2 sm:mt-0 '>

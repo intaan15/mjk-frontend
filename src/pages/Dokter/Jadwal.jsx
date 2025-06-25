@@ -116,7 +116,7 @@ const Jadwal = () => {
           </div>
         </div>
         
-        <img src="/line style.svg" alt="" className="w-full" />
+       <div className="h-1 w-full max-w-full bg-[#004a76]"/>
 
         {/* Date Navigation */}
         <div className="flex flex-row items-center justify-center text-center pt-3">
