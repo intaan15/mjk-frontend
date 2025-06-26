@@ -94,7 +94,7 @@ const useLogin = () => {
         {
           username_superadmin: username,
           password_superadmin: encryptedPassword,
-          // encrypted: true, // Flag to indicate password is encrypted
+          encrypted: true, // Flag to indicate password is encrypted
         }
       );
 
