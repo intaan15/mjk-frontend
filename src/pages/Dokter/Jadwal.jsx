@@ -120,7 +120,7 @@ const Jadwal = () => {
 
         {/* Date Navigation */}
         <div className="flex flex-row items-center justify-center text-center pt-3">
-          <div className="flex items-center bg-gradient-to-r from-[#004A76]/5 to-[#0077B6]/5 backdrop-blur-sm rounded-2xl p-1 shadow-lg border border-white/20">
+          <div className="flex items-center ">
             <button
               onClick={() => setMingguPage(mingguPage - 1)}
                 className="group flex items-center justify-center w-10 h-10 rounded-xl bg-white/80 backdrop-blur-sm shadow-md border border-[#004A76]/10 text-[#004A76] transition-all duration-300 hover:bg-[#004A76] hover:text-white hover:shadow-xl hover:scale-105 active:scale-95"
@@ -129,7 +129,7 @@ const Jadwal = () => {
             </button>
               
             
-            <div className="mx-4 px-6 py-3 bg-white/90 backdrop-blur-sm rounded-xl shadow-sm border border-[#004A76]/10 min-w-[200px] transition-all duration-300 hover:shadow-lg hover:bg-white">
+            <div className="mx-4 px-6 py-3 bg-white/50 backdrop-blur-sm rounded-xl shadow-sm border border-[#004A76]/10 min-w-[200px] transition-all duration-300 hover:shadow-lg hover:bg-white">
               <div className="flex items-center justify-center gap-3">
                 <div className="flex items-center justify-center w-8 h-8 bg-gradient-to-br from-[#004A76] to-[#0077B6] rounded-lg shadow-sm">
                   <FaCalendarDays className="text-white text-xs" />
