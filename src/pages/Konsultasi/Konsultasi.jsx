@@ -255,6 +255,7 @@ function Konsultasi() {
         {/* Filter Controls */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 py-3 px-2 sm:px-6 transition-all duration-200 ">
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center">
+            <div className="w-2 h-2 bg-[#004A76] rounded-xl animate-pulse"></div>
             <label className="font-[raleway] font-bold text-[#004A76] text-sm sm:text-base">
               Tanggal
             </label>
@@ -262,26 +263,81 @@ function Konsultasi() {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="border rounded p-2 text-gray-700 border-[#004A76] h-10 cursor-pointer w-full sm:w-auto text-sm"
+              className="appearance-none w-full sm:w-50 bg-white border-2 border-[#004A76]/20 rounded-md px-4 py-3 pr-12 text-gray-700 text-sm font-medium
+                        hover:border-[#004A76]/40 hover:shadow-md
+                          focus:outline-none focus:ring-2 focus:ring-[#004A76]/20 focus:border-[#004A76] focus:shadow-lg
+                          transition-all duration-300 ease-out
+                          cursor-pointer
+                          backdrop-blur-sm"            
             />
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 items-start sm:items-center transition-all duration-200 ">
-            <label className="font-[raleway] font-bold text-[#004A76] text-sm sm:text-base whitespace-nowrap">
-              Filter Poli
-            </label>
-            <select
-              value={selectedPoli}
-              onChange={(e) => setSelectedPoli(e.target.value)}
-              className="border rounded p-2 text-gray-700 border-[#004A76] h-10 cursor-pointer w-full sm:w-auto text-sm"
-            >
-              {poliOptions.map((poli, idx) => (
-                <option key={idx} value={poli}>
-                  {poli}
-                </option>
-              ))}
-            </select>
+          
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start sm:items-center transition-all duration-300">
+            {/* Enhanced Label */}
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-[#004A76] rounded-xl animate-pulse"></div>
+              <label className="font-semibold text-[#004A76] text-sm sm:text-base whitespace-nowrap tracking-wide">
+                Filter Poli
+              </label>
+            </div>
+
+            {/* Modern Select Wrapper */}
+            <div className="relative w-full sm:w-auto group">
+              <select
+                value={selectedPoli}
+                onChange={(e) => setSelectedPoli(e.target.value)}
+                className="appearance-none w-full sm:w-64 bg-white border-2 border-[#004A76]/20 rounded-md px-4 py-3 pr-12 text-gray-700 text-sm font-medium
+                          hover:border-[#004A76]/40 hover:shadow-md
+                          focus:outline-none focus:ring-2 focus:ring-[#004A76]/20 focus:border-[#004A76] focus:shadow-lg
+                          transition-all duration-300 ease-out
+                          cursor-pointer
+                          backdrop-blur-sm"
+                style={{
+                  backgroundImage: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)'
+                }}
+              >
+                {poliOptions.map((poli, idx) => (
+                  <option 
+                    key={idx} 
+                    value={poli}
+                    className="py-2 text-gray-700 bg-white hover:bg-[#004A76]/5"
+                  >
+                    {poli}
+                  </option>
+                ))}
+              </select>
+
+              {/* Custom Dropdown Arrow */}
+              <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                <svg 
+                  className="w-5 h-5 text-[#004A76] group-hover:text-[#0066A3] transition-colors duration-300 group-focus-within:rotate-180 transform transition-transform duration-300" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+
+              {/* Active Indicator */}
+              {selectedPoli !== "Semua" && (
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#004A76] to-[#0066A3] rounded-l-xl animate-pulse"></div>
+              )}
+
+              {/* Subtle Glow Effect */}
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-[#004A76]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+            </div>
+
+            {/* Active Filter Badge */}
+            {selectedPoli !== "Semua" && (
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-[#004A76]/10 to-[#0066A3]/10 text-[#004A76] rounded-full text-xs font-semibold border border-[#004A76]/20 animate-slideIn">
+                <div className="w-1.5 h-1.5 bg-[#004A76] rounded-full animate-pulse"></div>
+                <span>Filter: {selectedPoli}</span>
+              </div>
+            )}
           </div>
+
 
           <div className="flex items-center justify-start sm:items-start gap-2 sm:gap-3 transition-all duration-200 ">
             <button

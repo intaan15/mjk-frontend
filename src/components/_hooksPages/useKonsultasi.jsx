@@ -1,100 +1,129 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import axios from "axios";
-import.meta.env.VITE_BASE_URL
 
 const useKonsultasi = (token) => {
   const [filterStatus, setFilterStatus] = useState("");
   const [allRows, setAllRows] = useState([]);
   const [data, setData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const toggleDropdown = () => setIsOpen(!isOpen);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [selectedPoli, setSelectedPoli] = useState("Semua");
   const [selectedDate, setSelectedDate] = useState(""); 
+  const [error, setError] = useState(null);
 
+  // Toggle dropdown handler
+  const toggleDropdown = useCallback(() => {
+    setIsOpen(prev => !prev);
+  }, []);
+
+  // Fetch data effect
   useEffect(() => {
-    setLoading(true);
-    axios.get(`${import.meta.env.VITE_BASE_URL}/api/jadwal/getall`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        const data = res.data;
-        setAllRows(data);
-        setData(data);
-      })
-      .catch((err) => {
+    if (!token) return;
+    
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_URL}/api/jadwal/getall`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        
+        const responseData = response.data;
+        setAllRows(responseData);
+        setData(responseData);
+      } catch (err) {
         console.error("Error fetching data:", err);
-      })
-      .finally(() => {
+        setError(err.message || "Failed to fetch data");
+      } finally {
         setLoading(false);
-    });
+      }
+    };
+
+    fetchData();
   }, [token]);
 
-  // console.log('☑️ Data berhasil load')
-  const filteredRows = data.filter((row) => {
-    const statusMatch =
-      filterStatus === "Diproses"
-        ? row.status_konsul === "menunggu" || row.status_konsul === "berlangsung" || row.status_konsul === "diterima"
-        : filterStatus === "Selesai"
-        ? row.status_konsul === "selesai" || row.status_konsul === "ditolak"
-        : true;
+  // Memoized filtered data
+  const filteredRows = useMemo(() => {
+    return data.filter((row) => {
+      // Status filter logic
+      const statusMatch = (() => {
+        if (filterStatus === "Diproses") {
+          return ["menunggu", "berlangsung", "diterima"].includes(row.status_konsul);
+        }
+        if (filterStatus === "Selesai") {
+          return ["selesai", "ditolak"].includes(row.status_konsul);
+        }
+        return true;
+      })();
 
-    const nameMatch = row.masyarakat_id?.nama_masyarakat?.toLowerCase().includes(searchTerm.toLowerCase());
+      // Name search filter
+      const nameMatch = !searchTerm || 
+        row.masyarakat_id?.nama_masyarakat?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const poliMatch = selectedPoli === "Semua" || row.dokter_id?.spesialis_dokter === selectedPoli;
+      // Poli filter
+      const poliMatch = selectedPoli === "Semua" || 
+        row.dokter_id?.spesialis_dokter === selectedPoli;
 
-    const dateMatch =
-      !selectedDate ||
-    new Date(row.createdAt).toISOString().split("T")[0] === selectedDate;
+      // Date filter
+      const dateMatch = !selectedDate || 
+        new Date(row.createdAt).toISOString().split("T")[0] === selectedDate;
 
-    return statusMatch && nameMatch && poliMatch && dateMatch;
+      return statusMatch && nameMatch && poliMatch && dateMatch;
+    });
+  }, [data, filterStatus, searchTerm, selectedPoli, selectedDate]);
 
-  });
-
+  // Pagination calculations
   const totalItems = filteredRows.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
 
+  // Memoized paginated data
   const paginatedData = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
-    
-
-    
     return filteredRows.slice(start, end);
-  }, [filteredRows, currentPage, itemsPerPage, totalItems]);
+  }, [filteredRows, currentPage, itemsPerPage]);
 
-  
-
-  const formatTanggal = (isoDateString) => {
+  // Date formatting utility
+  const formatTanggal = useCallback((isoDateString) => {
     const date = new Date(isoDateString);
     return date.toLocaleDateString("id-ID", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
     });
-  };
+  }, []);
 
+ 
   const poliOptions = useMemo(() => {
-    const allPoli = data.map((item) => item.dokter_id?.spesialis_dokter).filter(Boolean);
-    return ["Semua", ...new Set(allPoli)];
-  }, [data]);
+    return [
+      "Semua","Umum","Mata",
+      "Anak","Gigi","THT",
+      "Jantung","Kandungan","Bedah",
+      "Syaraf","Darah","Paru paru",
+      "Lambung","Ginjal","Hati","Kulit"
+    ];
+  }, []);
 
-
-  const handleResetFilter = () => {
+  // Reset filters handler
+  const handleResetFilter = useCallback(() => {
     setSelectedDate("");     
     setSelectedPoli("Semua");     
-    setSearchTerm("");       
+    setSearchTerm("");
+    setFilterStatus("");       
     setCurrentPage(1);       
-  };
+  }, []);
 
-  // console.log(handleResetFilter)
-
-  const getPaginationRange = (currentPage, totalPages, maxVisible = 5) => {
+  // Pagination range calculator
+  const getPaginationRange = useCallback((currentPage, totalPages, maxVisible = 5) => {
     if (totalPages <= maxVisible) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
@@ -108,9 +137,15 @@ const useKonsultasi = (token) => {
     }
 
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
-  };
+  }, []);
+
+  // Reset current page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterStatus, searchTerm, selectedPoli, selectedDate]);
 
   return {
+   
     setFilterStatus,
     setSearchTerm,
     setAllRows,
@@ -119,25 +154,30 @@ const useKonsultasi = (token) => {
     setSelectedPoli,
     setSelectedDate,
     
-    //state
+  
     filterStatus,
     selectedDate,
     searchTerm,
     isOpen,
     loading,
+    error,
     currentPage,
     itemsPerPage,
     allRows,
-    formatTanggal,
-    toggleDropdown,
+    selectedPoli,
+    
+    // Computed data
     paginatedData,
     totalItems,
     totalPages,
-    selectedPoli,
     poliOptions,
+    filteredRows,
+    
+    // Utilities
+    formatTanggal,
+    toggleDropdown,
     handleResetFilter,
     getPaginationRange
-
   };
 };
 
