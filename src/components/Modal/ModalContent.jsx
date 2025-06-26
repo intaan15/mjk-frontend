@@ -115,10 +115,10 @@ export default function ModalContent({
     case "editdataartikel":
       return (
         <>
-          <div className="text-start w-full relative ">
+          <div className="text-start w-full ">
             <button
               onClick={onClose}
-              className="cursor-pointer absolute top-2 sm:top-4 right-2 sm:right-4 text-gray-600 hover:text-red-500 text-2xl sm:text-3xl lg:text-4xl font-bold z-10"
+              className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
             >
               &times;
             </button>
@@ -215,7 +215,7 @@ export default function ModalContent({
                           onChange={handleFileChangeArtikel}
                         />
                     </label>
-                    
+
                     {/* Preview gambar */}
                     <div className="mt-2">
                       {/* Preview Gambar Baru */}
@@ -410,11 +410,11 @@ export default function ModalContent({
     case "tambahartikel":
       return (
         <>
-          <div className="text-start w-full relative">
+          <div className="text-start w-full">
             <button
               onClick={onClose}
               className=" cursor-pointer absolute top-0 right-2 text-gray-600 hover:text-red-500 text-4xl font-bold"
-            >
+              >
               &times;
             </button>
             <h1 className="text-xl font-[raleway] text-[#004A76] underline font-extrabold mb-6" >
